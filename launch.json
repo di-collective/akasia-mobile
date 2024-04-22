@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "name": "Dart",
+      "program": "lib/app/main.dart",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}
