@@ -1,15 +1,35 @@
-sealed class AppException {}
+import 'package:equatable/equatable.dart';
 
-final class AppUnexpectedException implements AppException {
+abstract class AppException extends Equatable {
+  final Object? code;
   final String? message;
 
-  AppUnexpectedException({this.message});
+  const AppException({
+    this.code,
+    this.message,
+  });
+
+  @override
+  List<Object?> get props => [code, message];
 }
 
-final class AppNetworkException implements AppException {}
+class AppUnexpectedException extends AppException {
+  const AppUnexpectedException({
+    super.code,
+    super.message,
+  });
+}
 
-final class AppHttpException implements AppException {
-  final int? code;
+class AppNetworkException extends AppException {
+  const AppNetworkException({
+    super.code,
+    super.message,
+  });
+}
 
-  AppHttpException(int? statusCode, {this.code});
+class AppHttpException extends AppException {
+  const AppHttpException({
+    super.code,
+    super.message,
+  });
 }

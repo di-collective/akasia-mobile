@@ -20,6 +20,7 @@ class AppBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppColorScheme colorScheme = context.theme.appColorScheme;
+    
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

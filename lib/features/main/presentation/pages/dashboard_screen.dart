@@ -1,9 +1,9 @@
-import '../../../core/ui/extensions/asset_name_extension.dart';
-import '../../../core/ui/extensions/build_context_extension.dart';
-import 'widget/bottom_nav_item.dart';
+import '../../../../core/ui/extensions/asset_name_extension.dart';
+import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../widget/bottom_nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../feature/dashboard/presentation/widget/bottom_nav_bar.dart';
+import '../widget/bottom_nav_bar.dart';
 
 @immutable
 class DashboardScreen extends StatefulWidget {

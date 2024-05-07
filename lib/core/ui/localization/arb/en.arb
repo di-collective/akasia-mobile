@@ -4,5 +4,6 @@
   "myTreatment": "My Treatment",
   "info": "Info",
   "account": "Account",
-  "chatUs": "Chat Us"
+  "chatUs": "Chat Us",
+  "norInternetConnection": "No internet connection"
 }

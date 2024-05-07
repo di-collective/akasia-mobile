@@ -1,7 +1,9 @@
 import 'dart:async';
-import '../../common/exception.dart';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../common/exception.dart';
 
 @LazySingleton()
 class AppHttpClient {
@@ -26,12 +28,14 @@ class AppHttpClient {
     } on DioException catch (e) {
       final response = e.response;
       if (response != null) {
-        throw AppHttpException(response.statusCode);
+        throw AppHttpException(
+          code: response.statusCode,
+        );
       } else {
-        throw AppUnexpectedException();
+        throw const AppUnexpectedException();
       }
     } catch (e) {
-      throw AppUnexpectedException();
+      throw const AppUnexpectedException();
     }
   }
 
@@ -54,12 +58,14 @@ class AppHttpClient {
     } on DioException catch (e) {
       final response = e.response;
       if (response != null) {
-        throw AppHttpException(response.statusCode);
+        throw AppHttpException(
+          code: response.statusCode,
+        );
       } else {
-        throw AppUnexpectedException();
+        throw const AppUnexpectedException();
       }
     } catch (e) {
-      throw AppUnexpectedException();
+      throw const AppUnexpectedException();
     }
   }
 
@@ -82,12 +88,14 @@ class AppHttpClient {
     } on DioException catch (e) {
       final response = e.response;
       if (response != null) {
-        throw AppHttpException(response.statusCode);
+        throw AppHttpException(
+          code: response.statusCode,
+        );
       } else {
-        throw AppUnexpectedException();
+        throw const AppUnexpectedException();
       }
     } catch (e) {
-      throw AppUnexpectedException();
+      throw const AppUnexpectedException();
     }
   }
 }

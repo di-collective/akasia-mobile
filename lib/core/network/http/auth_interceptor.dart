@@ -4,9 +4,9 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 @LazySingleton()
 class AuthInterceptor extends QueuedInterceptor {
-  AuthInterceptor(this._dio);
+  AuthInterceptor(this.dio);
 
-  final Dio _dio;
+  final Dio dio;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {

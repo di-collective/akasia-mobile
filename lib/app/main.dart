@@ -1,11 +1,36 @@
-import 'app.dart';
-import 'di/di.dart' as di;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-main() {
-  WidgetsFlutterBinding.ensureInitialized();
+import 'app.dart';
+import 'di/depedency_injection.dart' as di;
+import 'observers/bloc_observer_info.dart';
 
-  di.configureDependencies();
+Future<void> main() async {
+  // Initialize app
+  await init();
 
   runApp(const App());
+}
+
+Future<void> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // bloc observer
+  Bloc.observer = BlocObserverInfo();
+
+  // set orientation
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // // firebase init
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
+  // Initialize dependency injection
+  await di.init();
+
 }

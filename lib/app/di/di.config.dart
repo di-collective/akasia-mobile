@@ -16,17 +16,17 @@ import '../../core/network/http/app_http_client.dart' as _i10;
 import '../../core/network/http/auth_interceptor.dart' as _i11;
 import '../../core/network/http/logging_interceptor.dart' as _i3;
 import '../../core/network/network_register_module.dart' as _i16;
-import '../../feature/account/presentation/bloc/account_cubit.dart' as _i8;
-import '../../feature/auth/data/repository/auth_repository_impl.dart' as _i14;
-import '../../feature/auth/data/source/local/auth_local_data_source.dart'
+import '../../features/account/presentation/bloc/account_cubit.dart' as _i8;
+import '../../features/auth/data/repository/auth_repository_impl.dart' as _i14;
+import '../../features/auth/data/source/local/auth_local_data_source.dart'
     as _i4;
-import '../../feature/auth/data/source/remote/auth_remote_data_source.dart'
+import '../../features/auth/data/source/remote/auth_remote_data_source.dart'
     as _i12;
-import '../../feature/auth/domain/repository/auth_repository.dart' as _i13;
-import '../../feature/auth/domain/usecase/login_usecase.dart' as _i15;
-import '../../feature/home/presentation/bloc/home_cubit.dart' as _i5;
-import '../../feature/info/presentation/bloc/info_cubit.dart' as _i7;
-import '../../feature/my_treatment/presentation/bloc/my_treatment_cubit.dart'
+import '../../features/auth/domain/repository/auth_repository.dart' as _i13;
+import '../../features/auth/domain/usecase/login_usecase.dart' as _i15;
+import '../../features/home/presentation/bloc/home_cubit.dart' as _i5;
+import '../../features/info/presentation/bloc/info_cubit.dart' as _i7;
+import '../../features/my_treatment/presentation/bloc/my_treatment_cubit.dart'
     as _i6;
 
 extension GetItInjectableX on _i1.GetIt {

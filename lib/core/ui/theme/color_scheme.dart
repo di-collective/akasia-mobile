@@ -170,7 +170,8 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       surfaceContainer: surfaceContainer ?? this.surfaceContainer,
       surfaceBright: surfaceBright ?? this.surfaceBright,
       onSurfaceBright: onSurfaceBright ?? this.onSurfaceBright,
-      surfaceContainerBright: surfaceContainerBright ?? this.surfaceContainerBright,
+      surfaceContainerBright:
+          surfaceContainerBright ?? this.surfaceContainerBright,
       surfaceDim: surfaceDim ?? this.surfaceDim,
       onSurfaceDim: onSurfaceDim ?? this.onSurfaceDim,
       surfaceContainerDim: surfaceContainerDim ?? this.surfaceContainerDim,
@@ -198,34 +199,45 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       primary: Color.lerp(primary, other.primary, t)!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
       primaryTonal: Color.lerp(primaryTonal, other.primaryTonal, t)!,
-      primaryContainer: Color.lerp(primaryContainer, other.primaryContainer, t)!,
-      onPrimaryContainer: Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
+      primaryContainer:
+          Color.lerp(primaryContainer, other.primaryContainer, t)!,
+      onPrimaryContainer:
+          Color.lerp(onPrimaryContainer, other.onPrimaryContainer, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       onWarning: Color.lerp(onWarning, other.onWarning, t)!,
-      warningContainer: Color.lerp(warningContainer, other.warningContainer, t)!,
-      onWarningContainer: Color.lerp(onWarningContainer, other.onWarningContainer, t)!,
+      warningContainer:
+          Color.lerp(warningContainer, other.warningContainer, t)!,
+      onWarningContainer:
+          Color.lerp(onWarningContainer, other.onWarningContainer, t)!,
       success: Color.lerp(success, other.success, t)!,
       onSuccess: Color.lerp(onSuccess, other.onSuccess, t)!,
-      successContainer: Color.lerp(successContainer, other.successContainer, t)!,
-      onSuccessContainer: Color.lerp(onSuccessContainer, other.onSuccessContainer, t)!,
+      successContainer:
+          Color.lerp(successContainer, other.successContainer, t)!,
+      onSuccessContainer:
+          Color.lerp(onSuccessContainer, other.onSuccessContainer, t)!,
       error: Color.lerp(error, other.error, t)!,
       onError: Color.lerp(onError, other.onError, t)!,
       errorContainer: Color.lerp(errorContainer, other.errorContainer, t)!,
-      onErrorContainer: Color.lerp(onErrorContainer, other.onErrorContainer, t)!,
+      onErrorContainer:
+          Color.lerp(onErrorContainer, other.onErrorContainer, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       onSurface: Color.lerp(onSurface, other.onSurface, t)!,
-      surfaceContainer: Color.lerp(surfaceContainer, other.surfaceContainer, t)!,
+      surfaceContainer:
+          Color.lerp(surfaceContainer, other.surfaceContainer, t)!,
       surfaceBright: Color.lerp(surfaceBright, other.surfaceBright, t)!,
       onSurfaceBright: Color.lerp(onSurfaceBright, other.onSurfaceBright, t)!,
-      surfaceContainerBright: Color.lerp(surfaceContainerBright, other.surfaceContainerBright, t)!,
+      surfaceContainerBright:
+          Color.lerp(surfaceContainerBright, other.surfaceContainerBright, t)!,
       surfaceDim: Color.lerp(surfaceDim, other.surfaceDim, t)!,
       onSurfaceDim: Color.lerp(onSurfaceDim, other.onSurfaceDim, t)!,
-      surfaceContainerDim: Color.lerp(surfaceContainerDim, other.surfaceContainerDim, t)!,
+      surfaceContainerDim:
+          Color.lerp(surfaceContainerDim, other.surfaceContainerDim, t)!,
       outline: Color.lerp(outline, other.outline, t)!,
       outlineBright: Color.lerp(outlineBright, other.outlineBright, t)!,
       outlineDim: Color.lerp(outlineDim, other.outlineDim, t)!,
       outlinePrimary: Color.lerp(outlinePrimary, other.outlinePrimary, t)!,
-      outlinePrimaryFocus: Color.lerp(outlinePrimaryFocus, other.outlinePrimaryFocus, t)!,
+      outlinePrimaryFocus:
+          Color.lerp(outlinePrimaryFocus, other.outlinePrimaryFocus, t)!,
       scrim: Color.lerp(scrim, other.scrim, t)!,
       black: Color.lerp(black, other.black, t)!,
       white: Color.lerp(white, other.white, t)!,
@@ -388,10 +400,12 @@ extension _ColorSwatchExtension on ColorSwatch<_AppColorSpec> {
 
   Color get tint40 => this[_AppColorSpec.tint40]!;
 
+  // ignore: unused_element
   Color get tint50 => this[_AppColorSpec.tint50]!;
 
   Color get tint60 => this[_AppColorSpec.tint60]!;
 
+  // ignore: unused_element
   Color get tint70 => this[_AppColorSpec.tint70]!;
 
   Color get tint80 => this[_AppColorSpec.tint80]!;
@@ -400,12 +414,15 @@ extension _ColorSwatchExtension on ColorSwatch<_AppColorSpec> {
 
   Color get tint100 => this[_AppColorSpec.tint100]!;
 
+  // ignore: unused_element
   Color get shade10 => this[_AppColorSpec.shade10]!;
 
   Color get shade20 => this[_AppColorSpec.shade20]!;
 
+  // ignore: unused_element
   Color get shade30 => this[_AppColorSpec.shade30]!;
 
+  // ignore: unused_element
   Color get shade40 => this[_AppColorSpec.shade40]!;
 
   Color get shade50 => this[_AppColorSpec.shade50]!;
