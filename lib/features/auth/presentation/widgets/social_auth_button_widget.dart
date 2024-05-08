@@ -5,15 +5,17 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 
-class SocialAuthButtonWidget extends StatelessWidget {
+class AuthTypeButtonWidget extends StatelessWidget {
   final String label;
   final String iconPath;
+  final bool isLoading;
   final Function() onTap;
 
-  const SocialAuthButtonWidget({
+  const AuthTypeButtonWidget({
     super.key,
     required this.label,
     required this.iconPath,
+    required this.isLoading,
     required this.onTap,
   });
 
@@ -27,6 +29,7 @@ class SocialAuthButtonWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       borderColor: colorScheme.surfaceDim,
       onTap: onTap,
+      isLoading: isLoading,
       padding: const EdgeInsets.symmetric(
         vertical: 14,
       ),

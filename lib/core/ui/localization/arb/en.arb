@@ -23,5 +23,7 @@
   "passwordsMustBe6Characters": "Passwords must be at least 6 characters",
   "passwordMustContainLetter": "Password must contain at least one letter",
   "passwordMustContainNumber": "Password must contain at least one number",
-  "passwordsDoNotMatch": "Passwords do not match"
+  "passwordsDoNotMatch": "Passwords do not match",
+  "invalidCredential": "Your account and/or password is incorrect, please try again",
+  "notRegistered": "New user detected, please sign up first"
 }

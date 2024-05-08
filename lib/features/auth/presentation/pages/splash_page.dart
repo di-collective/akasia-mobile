@@ -3,11 +3,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/config/asset_path.dart';
+import '../../../../app/di/depedency_injection.dart';
 import '../../../../app/navigation/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_parsing.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_parsing.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../domain/usecase/check_sign_in_status_use_case.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -56,9 +59,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<bool> _isSignIn() async {
     try {
-      await Future.delayed(const Duration(seconds: 2));
-
-      return false;
+      return await sl<CheckSignInStatusUseCase>().call(NoParams());
     } catch (_) {
       rethrow;
     }

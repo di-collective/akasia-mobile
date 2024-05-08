@@ -6,20 +6,26 @@ import 'exception_parsing.dart';
 
 extension CustomExceptionParsing on AppException {
   String errorMessage(BuildContext context) {
-    if (message != null && message!.isNotEmpty) {
-      return message.toString();
-    }
-
     if (this is AppNetworkException) {
       return context.locale.noInternetConnection;
     } else if (this is AppHttpException) {
       if (code != null) {
         if (code is Exception) {
           return (code as Exception).message;
+        } else {
+          return code.toString();
         }
-
-        return code.toString();
       }
+    } else if (this is AuthException) {
+      if (code == 'invalid-credential') {
+        return context.locale.invalidCredential;
+      } else if (code == 'not-registered') {
+        return context.locale.notRegistered;
+      }
+    }
+
+    if (message != null && message!.isNotEmpty) {
+      return message.toString();
     } else if (code != null) {
       return code.toString();
     }

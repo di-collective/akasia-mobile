@@ -33,3 +33,10 @@ class AppHttpException extends AppException {
     super.message,
   });
 }
+
+class AuthException extends AppException {
+  const AuthException({
+    super.code,
+    super.message,
+  });
+}

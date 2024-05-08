@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "914531999231",
+    "project_id": "akasia365-clinic",
+    "storage_bucket": "akasia365-clinic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914531999231:android:13dd6b3b15ccb057ae1bca",
+        "android_client_info": {
+          "package_name": "com.akasia365mc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914531999231-kqacmc9hceaprl87bcpj8altkqbe49bd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWKgcvCFunbLxp1pQTglKQti0xvc4Kg_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914531999231-kqacmc9hceaprl87bcpj8altkqbe49bd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "914531999231-figmknvmfl44tv052f24pv8njro04rjj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akasia365mc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

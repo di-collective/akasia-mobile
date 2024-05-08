@@ -1,37 +1,139 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../../../core/common/exception.dart';
-import '../source/local/auth_local_data_source.dart';
-import '../source/remote/auth_remote_data_source.dart';
-import '../../domain/repository/auth_repository.dart';
-import 'package:injectable/injectable.dart';
+import '../../../../core/network/network_info.dart';
+import '../../../../core/ui/extensions/auth_type_extension.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../datasources/remote/auth_remote_datasource.dart';
 
-import '../../../../core/common/result.dart';
-import '../../domain/model/user.dart';
-
-@LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._authLocalDataSource, this._authRemoteDataSource);
+  final NetworkInfo networkInfo;
+  final AuthRemoteDataSource authRemoteDataSource;
 
-  final AuthLocalDataSource _authLocalDataSource;
-  final AuthRemoteDataSource _authRemoteDataSource;
+  const AuthRepositoryImpl({
+    required this.networkInfo,
+    required this.authRemoteDataSource,
+  });
 
   @override
-  Future<Result<User>> login(String email, String password) async {
-    try {
-      final result = await _authRemoteDataSource.login(email, password);
-      return Result.success(data: result.toUser());
-    } on AppException catch (e) {
-      return Result.error(error: e);
+  Future<bool> checkSignInStatus() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await authRemoteDataSource.checkSignInStatus();
+
+        return result;
+      } on FirebaseAuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
     }
   }
 
   @override
-  Future<Result<User>> updateToken() async {
-    try {
-      final current = await _authLocalDataSource.getUser();
-      final result = await _authRemoteDataSource.updateToken(current.refreshToken);
-      return Result.success(data: result.toUser());
-    } on AppException catch (e) {
-      return Result.error(error: e);
+  Future<void> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await authRemoteDataSource.signUp(
+          name: name,
+          email: email,
+          password: password,
+        );
+      } on FirebaseAuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
+  Future<UserCredential?> signIn({
+    required AuthType authType,
+    String? email,
+    String? password,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return await authRemoteDataSource.signIn(
+          authType: authType,
+          email: email,
+          password: password,
+        );
+      } on FirebaseAuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String email,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await authRemoteDataSource.resetPassword(
+          email: email,
+        );
+      } on FirebaseAuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    if (await networkInfo.isConnected) {
+      try {
+        await authRemoteDataSource.signOut();
+      } on FirebaseAuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
     }
   }
 }

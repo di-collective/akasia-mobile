@@ -90,11 +90,13 @@ class ButtonWidget extends StatelessWidget {
   }) {
     if (isLoading == true) {
       return SizedBox(
-        height: 23,
-        width: 23,
+        height: 11,
+        width: 11,
         child: CircularProgressIndicator(
-          color: textColor ?? Colors.white,
-          strokeWidth: 2,
+          color: buttonTextColor(
+            colorScheme: colorScheme,
+          ),
+          strokeWidth: 1.5,
         ),
       );
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../extensions/build_context_extension.dart';
+import '../../extensions/theme_data_extension.dart';
 import '../../extensions/toast_type_parsing.dart';
 
 abstract class ToastInfo {
@@ -22,13 +24,15 @@ class ToastInfoImpl implements ToastInfo {
     await _cancelAllToasts();
 
     try {
+      final textTheme = context.theme.appTextTheme;
+
       // show toast
       return await Fluttertoast.showToast(
         msg: message,
         gravity: ToastGravity.TOP,
         backgroundColor: type.backgroundColor(context),
         textColor: type.textColor,
-        fontSize: 16,
+        fontSize: textTheme.labelMedium.fontSize,
       );
     } catch (_) {
       rethrow;
