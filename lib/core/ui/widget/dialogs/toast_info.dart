@@ -28,7 +28,7 @@ class ToastInfoImpl implements ToastInfo {
         gravity: ToastGravity.TOP,
         backgroundColor: type.backgroundColor(context),
         textColor: type.textColor,
-        fontSize: 16.0,
+        fontSize: 16,
       );
     } catch (_) {
       rethrow;

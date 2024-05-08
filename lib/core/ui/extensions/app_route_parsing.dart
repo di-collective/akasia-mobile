@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/navigation/app_route.dart';
+import '../../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../../features/auth/presentation/pages/sign_up_page.dart';
 import '../../../features/auth/presentation/pages/splash_page.dart';
 import '../../../features/main/presentation/pages/main_page.dart';
@@ -29,7 +30,7 @@ extension AppRouteParsing on AppRoute {
       case AppRoute.signUp:
         return const SignUpPage();
       case AppRoute.signIn:
-        return const SignUpPage();
+        return const SignInPage();
       case AppRoute.main:
         final params = arguments?['params'] as MainPageParams?;
 

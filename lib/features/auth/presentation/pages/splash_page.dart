@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/config/asset_path.dart';
 import '../../../../app/navigation/app_route.dart';
-import '../../../../core/ui/extensions/app_route_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_parsing.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
@@ -39,13 +39,13 @@ class _SplashPageState extends State<SplashPage> {
 
       if (isSignIn) {
         // go to main page
-        context.go(AppRoute.main.path);
+        context.goNamed(AppRoute.main.name);
 
         return;
       }
 
       // go to sign in page
-      context.go(AppRoute.signIn.path);
+      context.goNamed(AppRoute.signIn.name);
     } catch (error) {
       context.showToast(
         type: ToastType.error,
@@ -75,8 +75,8 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              AssetPath.logoTextWhite,
+            SvgPicture.asset(
+              AssetImagesPath.logoTextWhite,
               height: 35,
             ),
             SizedBox(

@@ -1,10 +1,11 @@
-import '../../../core/common/service_locator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../app/di/depedency_injection.dart';
 import '../../../core/ui/extensions/build_context_extension.dart';
 import '../../../core/ui/extensions/theme_data_extension.dart';
 import 'bloc/my_treatment_cubit.dart';
 import 'bloc/my_treatment_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class MyTreatmentScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _MyTreatmentScreenState extends State<MyTreatmentScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MyTreatmentCubit>(
-      create: (context) => serviceLocator<MyTreatmentCubit>()..onInit(),
+      create: (context) => sl<MyTreatmentCubit>()..onInit(),
       child: BlocBuilder<MyTreatmentCubit, MyTreatmentState>(
         builder: (context, state) {
           return Column(

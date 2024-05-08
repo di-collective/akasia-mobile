@@ -36,6 +36,8 @@ extension BuildContextExtension on BuildContext {
 
   FocusScopeNode get focusScope => FocusScope.of(this);
 
+  void get closeKeyboard => FocusScope.of(this).requestFocus(FocusNode());
+
   ScaffoldState get scaffold => Scaffold.of(this);
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
@@ -56,5 +58,13 @@ extension BuildContextExtension on BuildContext {
     } catch (_) {
       rethrow;
     }
+  }
+
+  double get paddingHorizontal {
+    return width * 0.05;
+  }
+
+  double get paddingVertical {
+    return height * 0.05;
   }
 }

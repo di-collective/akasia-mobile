@@ -1,10 +1,11 @@
-import '../../../core/common/service_locator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../app/di/depedency_injection.dart';
 import '../../../core/ui/extensions/build_context_extension.dart';
 import '../../../core/ui/extensions/theme_data_extension.dart';
 import 'bloc/info_cubit.dart';
 import 'bloc/info_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 @immutable
 class InfoScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _InfoScreenState extends State<InfoScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<InfoCubit>(
-      create: (context) => serviceLocator<InfoCubit>()..onInit(),
+      create: (context) => sl<InfoCubit>()..onInit(),
       child: BlocBuilder<InfoCubit, InfoState>(
         builder: (context, state) {
           return Column(

@@ -11,7 +11,7 @@ extension CustomExceptionParsing on AppException {
     }
 
     if (this is AppNetworkException) {
-      return context.locale.norInternetConnection;
+      return context.locale.noInternetConnection;
     } else if (this is AppHttpException) {
       if (code != null) {
         if (code is Exception) {
