@@ -30,8 +30,9 @@ class AuthTypeButtonWidget extends StatelessWidget {
       borderColor: colorScheme.surfaceDim,
       onTap: onTap,
       isLoading: isLoading,
+      textColor: colorScheme.onSurface,
       padding: const EdgeInsets.symmetric(
-        vertical: 14,
+        vertical: 11,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

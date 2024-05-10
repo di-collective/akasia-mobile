@@ -35,9 +35,13 @@ extension TextEditingControllerExtension on TextEditingController {
       return context.locale.cannotBeEmpty;
     }
 
-    // if (text.length < 6) {
-    //   return context.locale.passwordsMustBe6Characters;
-    // }
+    if (text.length < 12) {
+      return context.locale.passwordsMustBeCharacters(12);
+    }
+
+    if (text.length > 125) {
+      return context.locale.maximumLength(125);
+    }
 
     // if (!text.isContainsLetter) {
     //   return context.locale.passwordMustContainLetter;
@@ -60,6 +64,38 @@ extension TextEditingControllerExtension on TextEditingController {
 
     if (text != anotherPassword) {
       return context.locale.passwordsDoNotMatch;
+    }
+
+    return null;
+  }
+
+  String? validateKtp({
+    required BuildContext context,
+  }) {
+    if (text.length < 16) {
+      return context.locale.minimumLength(16);
+    }
+
+    if (text.length > 16) {
+      return context.locale.maximumLength(16);
+    }
+
+    return null;
+  }
+
+  String? validatePhoneNumber({
+    required BuildContext context,
+  }) {
+    if (text.isEmpty) {
+      return context.locale.cannotBeEmpty;
+    }
+
+    if (text.length < 8) {
+      return context.locale.minimumLength(8);
+    }
+
+    if (text.length > 13) {
+      return context.locale.maximumLength(13);
     }
 
     return null;

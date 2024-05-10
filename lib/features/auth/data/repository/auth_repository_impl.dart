@@ -38,15 +38,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> signUp({
-    required String name,
-    required String email,
-    required String password,
+  Future<UserCredential?> signUp({
+    required AuthType authType,
+    String? email,
+    String? password,
   }) async {
     if (await networkInfo.isConnected) {
       try {
-        await authRemoteDataSource.signUp(
-          name: name,
+        return await authRemoteDataSource.signUp(
+          authType: authType,
           email: email,
           password: password,
         );

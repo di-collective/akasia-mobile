@@ -14,6 +14,7 @@ import '../../features/auth/domain/usecase/sign_in_use_case.dart';
 import '../../features/auth/domain/usecase/sign_out_use_case.dart';
 import '../../features/auth/domain/usecase/sign_up_usecase.dart';
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
+import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -104,6 +105,11 @@ Future<void> _auth() async {
   sl.registerFactory<SignInCubit>(() {
     return SignInCubit(
       signInUseCase: sl(),
+    );
+  });
+  sl.registerFactory<SignUpCubit>(() {
+    return SignUpCubit(
+      signUpUseCase: sl(),
     );
   });
 }

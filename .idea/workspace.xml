@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1a89e404-5520-42be-a775-8cd30b7288af" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/ui/localization/arb/en.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/ui/localization/arb/en.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/pages/sign_up_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/pages/sign_up_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/widgets/social_auth_button_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/widgets/social_auth_button_widget.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,12 +43,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "hutomosaktikartiko"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;hutomosaktikartiko&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -87,7 +91,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "flutter.settings",
+    "settings.editor.selected.configurable": "AndroidSdkUpdater",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>

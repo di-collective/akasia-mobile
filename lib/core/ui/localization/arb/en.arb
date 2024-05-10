@@ -20,10 +20,44 @@
   "newToAkasia": "New to Akasia356mc",
   "cannotBeEmpty": "Cannot be empty",
   "invalidEmail": "Invalid email",
-  "passwordsMustBe6Characters": "Passwords must be at least 6 characters",
+  "passwordsMustBeCharacters": "Passwords must be at least {length} characters",
+  "@passwordsMustBeCharacters": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+  },
   "passwordMustContainLetter": "Password must contain at least one letter",
   "passwordMustContainNumber": "Password must contain at least one number",
   "passwordsDoNotMatch": "Passwords do not match",
   "invalidCredential": "Your account and/or password is incorrect, please try again",
-  "notRegistered": "New user detected, please sign up first"
+  "notRegistered": "New user detected, please sign up first",
+  "createYourAccount": "Create your account",
+  "registrationIsEasy": "Registration is easy, just fill in your data",
+  "eKtpNumber": "E-KTP Number",
+  "fullName": "Full Name",
+  "phoneNumber": "Phone Number",
+  "password": "Password",
+  "repeatPassword": "Repeat Password",
+  "register": "Register",
+  "alreadyHaveAnAccount": "Already have an account",
+  "registerWithGoogle": "Register with Google",
+  "registerWithApple": "Register with Apple",
+  "minimumLength": "Minumum length is {length} characters",
+  "@minimumLength": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+  },
+  "maximumLength": "Maximum length is {length} characters",
+  "@maximumLength": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+  }
 }

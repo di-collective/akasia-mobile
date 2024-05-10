@@ -28,6 +28,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onEditingComplete;
   final bool? isDisabled;
   final Function()? onClear;
+  final bool? isRequired;
 
   const TextFormFieldWidget({
     super.key,
@@ -52,6 +53,7 @@ class TextFormFieldWidget extends StatefulWidget {
     this.onEditingComplete,
     this.isDisabled,
     this.onClear,
+    this.isRequired,
   });
 
   @override
@@ -77,9 +79,20 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.title != null) ...[
-          Text(
-            widget.title!,
-            style: textTheme.labelMedium,
+          Text.rich(
+            TextSpan(
+              text: widget.title,
+              children: [
+                if (widget.isRequired == true)
+                  TextSpan(
+                    text: ' *',
+                    style: textTheme.labelMedium.copyWith(
+                      color: colorScheme.error,
+                    ),
+                  ),
+              ],
+              style: textTheme.labelMedium,
+            ),
           ),
           const SizedBox(
             height: 8,

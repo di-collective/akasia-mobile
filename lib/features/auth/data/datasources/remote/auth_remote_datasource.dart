@@ -7,10 +7,16 @@ import '../../../../../core/ui/extensions/auth_type_extension.dart';
 
 abstract class AuthRemoteDataSource {
   Future<bool> checkSignInStatus();
-  Future<void> signUp({
-    required String name,
-    required String email,
-    required String password,
+
+  /// Register
+  ///
+  /// [authType] can be [AuthType.emailPassword], [AuthType.google], [AuthType.apple]
+  ///
+  /// [email] and [password] are required if [authType] is [AuthType.emailPassword]
+  Future<UserCredential?> signUp({
+    required AuthType authType,
+    String? email,
+    String? password,
   });
   Future<UserCredential?> signIn({
     required AuthType authType,
@@ -54,21 +60,65 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> signUp({
-    required String name,
-    required String email,
-    required String password,
+  Future<UserCredential?> signUp({
+    required AuthType authType,
+    String? email,
+    String? password,
   }) async {
     try {
       Logger.info(
-          'signUp params: name $name, email $email, password $password');
+          'signUp params: authType $authType, email $email, password $password');
 
-      // create user
-      final result = await firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Logger.success('signUp result: $result');
+      UserCredential? userCredential;
+      switch (authType) {
+        case AuthType.emailPassword:
+          if (email != null && password != null) {
+            userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
+          }
+
+          break;
+        case AuthType.google:
+          final googleSignInAccount = await signInWithGoogle();
+          if (googleSignInAccount != null) {
+            // obtain auth credential
+            final googleAuth = await googleSignInAccount.authentication;
+
+            // get oauth credential
+            final credential = GoogleAuthProvider.credential(
+              accessToken: googleAuth.accessToken,
+              idToken: googleAuth.idToken,
+            );
+
+            // sign in with credential
+            userCredential = await firebaseAuth.signInWithCredential(
+              credential,
+            );
+          }
+
+          break;
+        case AuthType.apple:
+          final credential = await signInWithApple();
+
+          if (credential != null) {
+            // get oauth credential
+            final oAuthProvider = OAuthProvider('apple.com');
+            final oAuthCredential = oAuthProvider.credential(
+              idToken: credential.identityToken,
+              accessToken: credential.authorizationCode,
+            );
+
+            // sign in with credential
+            userCredential = await firebaseAuth.signInWithCredential(
+              oAuthCredential,
+            );
+          }
+      }
+      Logger.success('signUp userCredential: $userCredential');
+
+      return userCredential;
     } catch (error) {
       Logger.error('signUp error: $error');
 

@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../../core/ui/extensions/auth_type_extension.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/auth_repository.dart';
 
@@ -9,9 +12,9 @@ class SignUpUseCase extends UseCase<void, SignUpParams> {
   });
 
   @override
-  Future<void> call(SignUpParams params) async {
+  Future<UserCredential?> call(SignUpParams params) async {
     return await authRepository.signUp(
-      name: params.name,
+      authType: params.authType,
       email: params.email,
       password: params.password,
     );
@@ -19,12 +22,12 @@ class SignUpUseCase extends UseCase<void, SignUpParams> {
 }
 
 class SignUpParams {
-  final String name;
-  final String email;
-  final String password;
+  final AuthType authType;
+  final String? email;
+  final String? password;
 
   SignUpParams({
-    required this.name,
+    required this.authType,
     required this.email,
     required this.password,
   });

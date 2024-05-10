@@ -3,45 +3,45 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/ui/extensions/auth_type_extension.dart';
-import '../../../domain/usecase/sign_in_use_case.dart';
+import '../../../domain/usecase/sign_up_usecase.dart';
 
-part 'sign_in_state.dart';
+part 'sign_up_state.dart';
 
-class SignInCubit extends Cubit<SignInState> {
-  final SignInUseCase signInUseCase;
+class SignUpCubit extends Cubit<SignUpState> {
+  final SignUpUseCase signUpUseCase;
 
-  SignInCubit({
-    required this.signInUseCase,
-  }) : super(const SignInInitial(
+  SignUpCubit({
+    required this.signUpUseCase,
+  }) : super(const SignUpInitial(
           authType: AuthType.emailPassword,
         ));
 
-  Future<UserCredential?> signIn({
+  Future<UserCredential?> signUp({
     required AuthType authType,
     String? email,
     String? password,
   }) async {
     try {
-      emit(SignInLoading(
+      emit(SignUpLoading(
         authType: authType,
       ));
 
-      final result = await signInUseCase.call(
-        SignInParams(
+      final result = await signUpUseCase.call(
+        SignUpParams(
           authType: authType,
           email: email,
           password: password,
         ),
       );
 
-      emit(SignInLoaded(
+      emit(SignUpLoaded(
         authType: AuthType.emailPassword,
         userCredential: result,
       ));
 
       return result;
     } catch (error) {
-      emit(SignInError(
+      emit(SignUpError(
         error: error,
         authType: AuthType.emailPassword,
       ));
