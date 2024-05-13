@@ -17,6 +17,7 @@ import '../../features/auth/domain/usecase/sign_up_usecase.dart';
 import '../../features/auth/presentation/cubit/create_new_password/create_new_password_cubit.dart';
 import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
+import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -112,6 +113,11 @@ Future<void> _auth() async {
   sl.registerFactory<SignInCubit>(() {
     return SignInCubit(
       signInUseCase: sl(),
+    );
+  });
+  sl.registerFactory<SignUpCubit>(() {
+    return SignUpCubit(
+      signUpUseCase: sl(),
     );
   });
   sl.registerFactory<ForgotPasswordCubit>(() {

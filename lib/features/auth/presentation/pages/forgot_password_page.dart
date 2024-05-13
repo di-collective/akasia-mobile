@@ -49,69 +49,72 @@ class __BodyState extends State<_Body> {
 
     return BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              context.locale.forgotPassword,
+        return GestureDetector(
+          onTap: () => context.closeKeyboard,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                context.locale.forgotPassword,
+              ),
             ),
-          ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.paddingHorizontal,
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: context.paddingTop,
-                ),
-                // TODO: Add a image
-                const SizedBox(
-                  height: 120,
-                ),
-                Text(
-                  context.locale.enterYourEmail,
-                  style: textTheme.bodyMedium.copyWith(
-                    color: colorScheme.onSurface,
-                    height: 0,
+            body: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.paddingHorizontal,
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: context.paddingTop,
                   ),
-                  maxLines: 2,
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Form(
-                  key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: TextFormFieldWidget(
-                    controller: _emailTextController,
-                    title: context.locale.emailAddress,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (val) {
-                      return _emailTextController.validateEmail(
-                        context: context,
-                      );
-                    },
-                    onChanged: (val) {
-                      // reload
-                      setState(() {});
-                    },
+                  // TODO: Add a image
+                  const SizedBox(
+                    height: 120,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ButtonWidget(
-                  text: context.locale.sendLinkToEmail,
-                  width: context.width,
-                  isDisabled: _emailTextController.text.isEmpty ||
-                      _formKey.currentState?.validate() == false,
-                  isLoading: state is ForgotPasswordLoading,
-                  onTap: _onSendLinkToEmail,
-                ),
-                SizedBox(
-                  height: context.paddingBottom,
-                ),
-              ],
+                  Text(
+                    context.locale.enterYourEmail,
+                    style: textTheme.bodyMedium.copyWith(
+                      color: colorScheme.onSurface,
+                      height: 0,
+                    ),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: TextFormFieldWidget(
+                      controller: _emailTextController,
+                      title: context.locale.emailAddress,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (val) {
+                        return _emailTextController.validateEmail(
+                          context: context,
+                        );
+                      },
+                      onChanged: (val) {
+                        // reload
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ButtonWidget(
+                    text: context.locale.sendLinkToEmail,
+                    width: context.width,
+                    isDisabled: _emailTextController.text.isEmpty ||
+                        _formKey.currentState?.validate() == false,
+                    isLoading: state is ForgotPasswordLoading,
+                    onTap: _onSendLinkToEmail,
+                  ),
+                  SizedBox(
+                    height: context.paddingBottom,
+                  ),
+                ],
+              ),
             ),
           ),
         );

@@ -125,8 +125,8 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             isCollapsed: true,
             prefixIcon: widget.prefixIcon,
             suffixIcon: _buildSuffixIcon(colorScheme),
-            hintStyle: textTheme.bodyMedium.copyWith(
-              color: colorScheme.onSurface,
+            hintStyle: textTheme.bodyLarge.copyWith(
+              color: colorScheme.onSurfaceBright,
             ),
             border: _buildOutlineInputBorder(
               borderColor: colorScheme.surfaceDim,
@@ -137,12 +137,20 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             focusedBorder: _buildOutlineInputBorder(
               borderColor: colorScheme.primaryContainer,
             ),
-            contentPadding: const EdgeInsets.fromLTRB(
-              12,
-              20,
-              12,
-              18.5,
-            ),
+            contentPadding:
+                widget.hintText != null && widget.hintText!.isNotEmpty
+                    ? const EdgeInsets.fromLTRB(
+                        12,
+                        18.5,
+                        12,
+                        20,
+                      )
+                    : const EdgeInsets.fromLTRB(
+                        12,
+                        20,
+                        12,
+                        18.5,
+                      ),
             errorBorder: _buildOutlineInputBorder(
               borderColor: colorScheme.error,
             ),

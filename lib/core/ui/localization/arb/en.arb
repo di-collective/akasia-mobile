@@ -69,5 +69,8 @@
   "createNewPassword": "Create New Password",
   "newPassword": "New Password",
   "passwordMustContains": "Password must contain at least more 12 characters.",
-  "resetPassword": "Reset Password"
+  "resetPassword": "Reset Password",
+  "inputNewPassword": "Input new password",
+  "successResetPassword": "Password Successfully Reset",
+  "loginNow": "Login Now"
 }

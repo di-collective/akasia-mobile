@@ -7,6 +7,7 @@ import '../../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../../features/auth/presentation/pages/sign_up_page.dart';
 import '../../../features/auth/presentation/pages/splash_page.dart';
+import '../../../features/auth/presentation/pages/success_create_new_password_page.dart';
 import '../../../features/main/presentation/pages/main_page.dart';
 
 extension AppRouteParsing on AppRoute {
@@ -20,6 +21,8 @@ extension AppRouteParsing on AppRoute {
         return 'forgot-password';
       case AppRoute.createNewPassword:
         return 'create-new-password';
+      case AppRoute.successCreateNewPassword:
+        return 'success-create-new-password';
       case AppRoute.signUp:
         return 'sign-up';
       case AppRoute.main:
@@ -39,6 +42,8 @@ extension AppRouteParsing on AppRoute {
         return const ForgotPasswordPage();
       case AppRoute.createNewPassword:
         return const CreateNewPasswordPage();
+      case AppRoute.successCreateNewPassword:
+        return const SuccessCreateNewPasswordPage();
       case AppRoute.signUp:
         return const SignUpPage();
       case AppRoute.main:

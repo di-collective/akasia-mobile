@@ -10,6 +10,7 @@ enum AppRoute {
   signUp,
   forgotPassword,
   createNewPassword,
+  successCreateNewPassword,
 }
 
 class AppRouteInfo {
@@ -24,6 +25,7 @@ class AppRouteInfo {
           AppRoute.forgotPassword.route(
             routes: [
               AppRoute.createNewPassword.route(),
+              AppRoute.successCreateNewPassword.route(),
             ],
           ),
         ],
