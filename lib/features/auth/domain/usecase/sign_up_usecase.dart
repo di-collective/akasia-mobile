@@ -23,11 +23,13 @@ class SignUpUseCase extends UseCase<void, SignUpParams> {
 
 class SignUpParams {
   final AuthType authType;
+  final String? name;
   final String? email;
   final String? password;
 
   SignUpParams({
     required this.authType,
+    required this.name,
     required this.email,
     required this.password,
   });

@@ -58,15 +58,3 @@ class AppBottomNavItem extends StatelessWidget {
     );
   }
 }
-
-class AppBottomNavItemData {
-  const AppBottomNavItemData({
-    this.index,
-    required this.label,
-    required this.iconAssetName,
-  });
-
-  final int? index;
-  final String label;
-  final String iconAssetName;
-}

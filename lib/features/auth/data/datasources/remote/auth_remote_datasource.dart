@@ -15,6 +15,7 @@ abstract class AuthRemoteDataSource {
   /// [email] and [password] are required if [authType] is [AuthType.emailPassword]
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? name,
     String? email,
     String? password,
   });
@@ -66,14 +67,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? name,
     String? email,
     String? password,
   }) async {
+    UserCredential? userCredential;
+
     try {
       Logger.info(
           'signUp params: authType $authType, email $email, password $password');
 
-      UserCredential? userCredential;
+      String? displayName;
       switch (authType) {
         case AuthType.emailPassword:
           if (email != null && password != null) {
@@ -81,6 +85,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               email: email,
               password: password,
             );
+
+            displayName = name;
           }
 
           break;
@@ -100,6 +106,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             userCredential = await firebaseAuth.signInWithCredential(
               credential,
             );
+
+            displayName = googleSignIn.currentUser?.displayName;
           }
 
           break;
@@ -118,15 +126,46 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             userCredential = await firebaseAuth.signInWithCredential(
               oAuthCredential,
             );
+
+            displayName = credential.givenName;
           }
       }
       Logger.success('signUp userCredential: $userCredential');
 
-      // TODO: update name
+      // check is new user
+      if (userCredential?.additionalUserInfo?.isNewUser == false) {
+        // sign out from firebase auth
+        await signOut();
+
+        // throw already registered exception
+        throw FirebaseAuthException(code: "already-registered");
+      }
+
+      if (userCredential != null) {
+        // update name on firebase auth
+        Logger.info('signUp displayName: $displayName');
+        if (displayName != null) {
+          await userCredential.user?.updateDisplayName(
+            displayName,
+          );
+          Logger.success('signUp updateDisplayName displayName: $displayName');
+        }
+
+        // TODO: Submit user data to backend
+      }
 
       return userCredential;
     } catch (error) {
       Logger.error('signUp error: $error');
+
+      // check is new user
+      if (userCredential?.additionalUserInfo?.isNewUser == true) {
+        // if new user, delete created account
+        await userCredential?.user?.delete();
+
+        // sign out
+        await signOut();
+      }
 
       rethrow;
     }
@@ -201,7 +240,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await userCredential?.user?.delete();
 
         // sign out
-        await firebaseAuth.signOut();
+        await signOut();
 
         // throw not registered exception
         throw FirebaseAuthException(code: "not-registered");

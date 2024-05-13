@@ -387,6 +387,7 @@ class __BodyState extends State<_Body> {
         authType: authType,
         email: _emailTextController.text,
         password: _passwordTextController.text,
+        name: _nameTextController.text,
       );
 
       if (userCredential == null) {

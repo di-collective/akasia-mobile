@@ -40,6 +40,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? name,
     String? email,
     String? password,
   }) async {
@@ -47,6 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
       try {
         return await authRemoteDataSource.signUp(
           authType: authType,
+          name: name,
           email: email,
           password: password,
         );

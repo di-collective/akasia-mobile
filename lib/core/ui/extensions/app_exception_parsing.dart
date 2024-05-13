@@ -21,6 +21,8 @@ extension CustomExceptionParsing on AppException {
         return context.locale.invalidCredential;
       } else if (code == 'not-registered') {
         return context.locale.notRegistered;
+      } else if (code == 'already-registered') {
+        return context.locale.alreadyRegistered;
       }
     }
 

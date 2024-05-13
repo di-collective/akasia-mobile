@@ -72,5 +72,6 @@
   "resetPassword": "Reset Password",
   "inputNewPassword": "Input new password",
   "successResetPassword": "Password Successfully Reset",
-  "loginNow": "Login Now"
+  "loginNow": "Login Now",
+  "alreadyRegistered": "You already have an account"
 }

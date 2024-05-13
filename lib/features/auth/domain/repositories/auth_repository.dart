@@ -6,6 +6,7 @@ abstract class AuthRepository {
   Future<bool> checkSignInStatus();
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? name,
     String? email,
     String? password,
   });
