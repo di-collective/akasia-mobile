@@ -1,21 +1,20 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/theme/color_scheme.dart';
 import 'bottom_nav_item.dart';
-import 'package:flutter/material.dart';
 
-@immutable
 class AppBottomNavBar extends StatelessWidget {
+  final BottomNavigationItem selectedItem;
+  final Function(BottomNavigationItem item) onTap;
+
   const AppBottomNavBar({
     super.key,
-    required this.selectedIndex,
+    required this.selectedItem,
     required this.onTap,
-    required this.items,
   });
-
-  final int selectedIndex;
-  final Function(int? index) onTap;
-  final Iterable<AppBottomNavItemData> items;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +28,8 @@ class AppBottomNavBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: items.map((itemData) {
-              if (itemData.index == null) {
+            children: BottomNavigationItem.values.map((item) {
+              if (item == BottomNavigationItem.chatUs) {
                 return Expanded(
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -48,7 +47,7 @@ class AppBottomNavBar extends StatelessWidget {
                               ),
                             ),
                             child: AppBottomNavItem(
-                              itemData: itemData,
+                              item: item,
                               iconColor: colorScheme.onPrimary,
                               labelColor: colorScheme.onPrimary,
                               onTap: onTap,
@@ -60,11 +59,11 @@ class AppBottomNavBar extends StatelessWidget {
                   ),
                 );
               } else {
-                bool isSelected = selectedIndex == itemData.index;
+                final isSelected = selectedItem == item;
 
                 return Expanded(
                   child: AppBottomNavItem(
-                    itemData: itemData,
+                    item: item,
                     iconColor: isSelected
                         ? colorScheme.primary
                         : colorScheme.onSurface,

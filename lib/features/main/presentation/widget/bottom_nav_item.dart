@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 
 class AppBottomNavItem extends StatelessWidget {
+  final BottomNavigationItem item;
+  final Color iconColor;
+  final Color labelColor;
+  final EdgeInsetsGeometry? padding;
+  final Function(BottomNavigationItem item) onTap;
+
   const AppBottomNavItem({
     super.key,
-    required this.itemData,
+    required this.item,
     required this.iconColor,
     required this.labelColor,
     this.padding,
     required this.onTap,
   });
 
-  final AppBottomNavItemData itemData;
-  final Color iconColor;
-  final Color labelColor;
-  final EdgeInsetsGeometry? padding;
-  final Function(int? index) onTap;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       highlightColor: Colors.transparent,
-      onTap: () => onTap(itemData.index),
+      onTap: () => onTap(item),
       child: Padding(
         padding: padding ??
             const EdgeInsets.symmetric(
@@ -35,8 +36,8 @@ class AppBottomNavItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              itemData.iconAssetName,
-              semanticsLabel: itemData.label,
+              item.iconPath,
+              semanticsLabel: item.label(context),
               colorFilter: ColorFilter.mode(
                 iconColor,
                 BlendMode.srcIn,
@@ -46,7 +47,7 @@ class AppBottomNavItem extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              itemData.label,
+              item.label(context),
               style: context.theme.appTextTheme.bodySmall.copyWith(
                 color: labelColor,
               ),
