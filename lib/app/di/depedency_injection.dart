@@ -9,12 +9,14 @@ import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart'
 import '../../features/auth/data/repository/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecase/check_sign_in_status_use_case.dart';
+import '../../features/auth/domain/usecase/confirm_password_reset_usecase.dart';
 import '../../features/auth/domain/usecase/reset_password_usecase.dart';
 import '../../features/auth/domain/usecase/sign_in_use_case.dart';
 import '../../features/auth/domain/usecase/sign_out_use_case.dart';
 import '../../features/auth/domain/usecase/sign_up_usecase.dart';
+import '../../features/auth/presentation/cubit/create_new_password/create_new_password_cubit.dart';
+import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
-import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -95,6 +97,11 @@ Future<void> _auth() async {
       authRepository: sl(),
     );
   });
+  sl.registerLazySingleton<ConfirmPasswordResetUseCase>(() {
+    return ConfirmPasswordResetUseCase(
+      authRepository: sl(),
+    );
+  });
   sl.registerLazySingleton<SignOutUseCase>(() {
     return SignOutUseCase(
       authRepository: sl(),
@@ -107,9 +114,14 @@ Future<void> _auth() async {
       signInUseCase: sl(),
     );
   });
-  sl.registerFactory<SignUpCubit>(() {
-    return SignUpCubit(
-      signUpUseCase: sl(),
+  sl.registerFactory<ForgotPasswordCubit>(() {
+    return ForgotPasswordCubit(
+      resetPasswordUseCase: sl(),
+    );
+  });
+  sl.registerFactory<CreateNewPasswordCubit>(() {
+    return CreateNewPasswordCubit(
+      confirmPasswordResetUseCase: sl(),
     );
   });
 }

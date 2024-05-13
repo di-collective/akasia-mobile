@@ -8,6 +8,8 @@ enum AppRoute {
   main,
   signIn,
   signUp,
+  forgotPassword,
+  createNewPassword,
 }
 
 class AppRouteInfo {
@@ -19,6 +21,11 @@ class AppRouteInfo {
       AppRoute.signIn.route(
         routes: [
           AppRoute.signUp.route(),
+          AppRoute.forgotPassword.route(
+            routes: [
+              AppRoute.createNewPassword.route(),
+            ],
+          ),
         ],
       ),
       AppRoute.main.route(),

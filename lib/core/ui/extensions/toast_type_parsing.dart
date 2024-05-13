@@ -19,7 +19,7 @@ extension ToastTypeParsing on ToastType {
       case ToastType.success:
         return color.successContainer;
       case ToastType.warning:
-        return color.warningContainer;
+        return color.onPrimaryContainer;
     }
   }
 

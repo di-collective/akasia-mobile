@@ -26,6 +26,10 @@ abstract class AuthRemoteDataSource {
   Future<void> resetPassword({
     required String email,
   });
+  Future<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  });
   Future<void> signOut();
 }
 
@@ -281,6 +285,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.success('resetPassword success');
     } catch (error) {
       Logger.error('resetPassword error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  }) async {
+    try {
+      Logger.info(
+          'confirmPasswordReset params: code $code, newPassword $newPassword');
+
+      // confirm password reset
+      await firebaseAuth.confirmPasswordReset(
+        code: code,
+        newPassword: newPassword,
+      );
+
+      Logger.success('confirmPasswordReset success');
+    } catch (error) {
+      Logger.error('confirmPasswordReset error: $error');
 
       rethrow;
     }

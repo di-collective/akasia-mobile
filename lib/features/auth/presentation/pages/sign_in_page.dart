@@ -130,16 +130,24 @@ class __BodyState extends State<_Body> {
                         },
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
-                      Text(
-                        context.locale.forgotPassword,
-                        style: textTheme.labelMedium.copyWith(
-                          color: colorScheme.primary,
+                      GestureDetector(
+                        onTap: _onForgotPassword,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                          ),
+                          child: Text(
+                            context.locale.forgotPassword,
+                            style: textTheme.labelMedium.copyWith(
+                              color: colorScheme.primary,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       ButtonWidget(
                         text: context.locale.login,
@@ -239,6 +247,10 @@ class __BodyState extends State<_Body> {
         );
       },
     );
+  }
+
+  void _onForgotPassword() {
+    context.goNamed(AppRoute.forgotPassword.name);
   }
 
   void _onSignUp() {

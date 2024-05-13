@@ -61,5 +61,13 @@
         }
   },
   "invalidPhoneNumber": "Invalid phone number",
-  "invalidEKtp": "Invalid E-KTP"
+  "invalidEKtp": "Invalid E-KTP",
+  "enterYourEmail": "Enter your email and we’ll send you a link to reset your password",
+  "emailAddress": "Email address",
+  "sendLinkToEmail": "Send link to email",
+  "emailSent": "Email sent. Check your email and open the link we sent to continue.",
+  "createNewPassword": "Create New Password",
+  "newPassword": "New Password",
+  "passwordMustContains": "Password must contain at least more 12 characters.",
+  "resetPassword": "Reset Password"
 }
