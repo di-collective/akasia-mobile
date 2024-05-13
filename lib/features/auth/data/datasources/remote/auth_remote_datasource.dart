@@ -8,7 +8,7 @@ import '../../../../../core/ui/extensions/auth_type_extension.dart';
 abstract class AuthRemoteDataSource {
   Future<bool> checkSignInStatus();
 
-  /// Register
+  /// Register new user
   ///
   /// [authType] can be [AuthType.emailPassword], [AuthType.google], [AuthType.apple]
   ///

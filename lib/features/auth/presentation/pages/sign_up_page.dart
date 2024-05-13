@@ -37,6 +37,7 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
+  final _eKtpFormKey = GlobalKey<FormState>();
   final _nameFormKey = GlobalKey<FormState>();
   final _phoneFormKey = GlobalKey<FormState>();
   final _emailPasswordFormKey = GlobalKey<FormState>();
@@ -99,19 +100,27 @@ class __BodyState extends State<_Body> {
                     const SizedBox(
                       height: 25,
                     ),
-                    TextFormFieldWidget(
-                      controller: _eKtpTextController,
-                      title: context.locale.eKtpNumber,
-                      keyboardType: TextInputType.number,
-                      validator: (val) {
-                        return _eKtpTextController.validateKtp(
-                          context: context,
-                        );
-                      },
-                      onChanged: (val) {
-                        // reload
-                        setState(() {});
-                      },
+                    Form(
+                      key: _eKtpFormKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormFieldWidget(
+                        controller: _eKtpTextController,
+                        title: context.locale.eKtpNumber,
+                        keyboardType: TextInputType.number,
+                        validator: (val) {
+                          if (_eKtpTextController.text.isEmpty) {
+                            return null;
+                          }
+
+                          return _eKtpTextController.validateKtp(
+                            context: context,
+                          );
+                        },
+                        onChanged: (val) {
+                          // reload
+                          setState(() {});
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -191,7 +200,7 @@ class __BodyState extends State<_Body> {
                             title: context.locale.password,
                             keyboardType: TextInputType.visiblePassword,
                             validator: (val) {
-                              if (state.authType != AuthType.emailPassword) {
+                              if (_passwordTextController.text.isEmpty) {
                                 return null;
                               }
 
@@ -217,7 +226,7 @@ class __BodyState extends State<_Body> {
                               );
                             },
                             validator: (val) {
-                              if (state.authType != AuthType.emailPassword) {
+                              if (_confirmPasswordTextController.text.isEmpty) {
                                 return null;
                               }
 

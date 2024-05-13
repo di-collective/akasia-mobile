@@ -59,5 +59,7 @@
                 "type": "int"
             }
         }
-  }
+  },
+  "invalidPhoneNumber": "Invalid phone number",
+  "invalidEKtp": "Invalid E-KTP"
 }

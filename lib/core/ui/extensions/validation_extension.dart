@@ -72,6 +72,11 @@ extension TextEditingControllerExtension on TextEditingController {
   String? validateKtp({
     required BuildContext context,
   }) {
+    // validate only number
+    if (text.isContainsLetter || text.isContainsSpecialCharacter) {
+      return context.locale.invalidEKtp;
+    }
+
     if (text.length < 16) {
       return context.locale.minimumLength(16);
     }
@@ -88,6 +93,11 @@ extension TextEditingControllerExtension on TextEditingController {
   }) {
     if (text.isEmpty) {
       return context.locale.cannotBeEmpty;
+    }
+
+    // validate only number
+    if (text.isContainsLetter || text.isContainsSpecialCharacter) {
+      return context.locale.invalidPhoneNumber;
     }
 
     if (text.length < 8) {
