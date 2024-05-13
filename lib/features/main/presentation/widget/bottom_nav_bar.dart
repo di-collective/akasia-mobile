@@ -20,7 +20,7 @@ class AppBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppColorScheme colorScheme = context.theme.appColorScheme;
-    
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -42,7 +42,10 @@ class AppBottomNavBar extends StatelessWidget {
                           child: Material(
                             color: colorScheme.primary,
                             shape: CircleBorder(
-                              side: BorderSide(color: colorScheme.outlinePrimary, width: 1.5),
+                              side: BorderSide(
+                                color: colorScheme.outlinePrimary,
+                                width: 1.5,
+                              ),
                             ),
                             child: AppBottomNavItem(
                               itemData: itemData,
@@ -58,11 +61,16 @@ class AppBottomNavBar extends StatelessWidget {
                 );
               } else {
                 bool isSelected = selectedIndex == itemData.index;
+
                 return Expanded(
                   child: AppBottomNavItem(
                     itemData: itemData,
-                    iconColor: isSelected ? colorScheme.primary : colorScheme.onSurface,
-                    labelColor: isSelected ? colorScheme.primary : colorScheme.onSurface,
+                    iconColor: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.onSurface,
+                    labelColor: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.onSurface,
                     onTap: onTap,
                   ),
                 );

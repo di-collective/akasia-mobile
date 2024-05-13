@@ -46,4 +46,27 @@ extension StringExtension on String {
 
     return result;
   }
+
+  Uri? get toUri {
+    try {
+      if (isTelpUrl) {
+        return Uri(
+          scheme: 'tel',
+          path: split(':')[1], // remove tel:
+        );
+      }
+
+      return Uri.tryParse(this);
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  String get toTelpUrl {
+    return 'tel:$this';
+  }
+
+  bool get isTelpUrl {
+    return RegExp(r'^tel:[0-9]+$').hasMatch(this);
+  }
 }

@@ -122,6 +122,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       Logger.success('signUp userCredential: $userCredential');
 
+      // TODO: update name
+
       return userCredential;
     } catch (error) {
       Logger.error('signUp error: $error');

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../core/common/open_app_info.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -18,6 +19,7 @@ import '../../features/auth/presentation/cubit/create_new_password/create_new_pa
 import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
+import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -27,6 +29,8 @@ Future<void> init() async {
   await _core();
 
   await _auth();
+
+  await _main();
 }
 
 Future<void> _external() async {
@@ -57,6 +61,11 @@ Future<void> _core() async {
     return NetworkInfoImpl(
       connectivity: sl(),
     );
+  });
+
+  // open app info
+  sl.registerLazySingleton<OpenAppInfo>(() {
+    return const OpenAppInfoImpl();
   });
 }
 
@@ -129,5 +138,12 @@ Future<void> _auth() async {
     return CreateNewPasswordCubit(
       confirmPasswordResetUseCase: sl(),
     );
+  });
+}
+
+Future<void> _main() async {
+  // cubit
+  sl.registerFactory<BottomNavigationCubit>(() {
+    return BottomNavigationCubit();
   });
 }

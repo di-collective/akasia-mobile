@@ -1,9 +1,9 @@
-import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/theme_data_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-@immutable
+import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/theme_data_extension.dart';
+
 class AppBottomNavItem extends StatelessWidget {
   const AppBottomNavItem({
     super.key,
@@ -26,7 +26,10 @@ class AppBottomNavItem extends StatelessWidget {
       highlightColor: Colors.transparent,
       onTap: () => onTap(itemData.index),
       child: Padding(
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 6.0),
+        padding: padding ??
+            const EdgeInsets.symmetric(
+              vertical: 6.0,
+            ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +42,9 @@ class AppBottomNavItem extends StatelessWidget {
                 BlendMode.srcIn,
               ),
             ),
-            const SizedBox(height: 4.0),
+            const SizedBox(
+              height: 4.0,
+            ),
             Text(
               itemData.label,
               style: context.theme.appTextTheme.bodySmall.copyWith(
