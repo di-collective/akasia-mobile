@@ -73,5 +73,10 @@
   "inputNewPassword": "Input new password",
   "successResetPassword": "Password Successfully Reset",
   "loginNow": "Login Now",
-  "alreadyRegistered": "You already have an account"
+  "alreadyRegistered": "You already have an account",
+  "myRewardPoints": "My Reward Points",
+  "nextSchedule": "Next Schedule",
+  "successStory": "Success story",
+  "treatment": "Treatment",
+  "dietPlan": "Diet plan"
 }

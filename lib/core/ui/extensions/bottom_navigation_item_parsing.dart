@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../features/account/presentation/pages/account_page.dart';
-import '../../../features/home/presentation/home_page.dart';
+import '../../../features/home/presentation/pages/home_page.dart';
 import '../../../features/info/presentation/pages/info_page.dart';
 import '../../../features/my_treatment/presentation/pages/my_treatment_page.dart';
 import 'asset_name_extension.dart';
