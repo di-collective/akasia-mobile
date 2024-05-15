@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "914531999231-5n26iqpahbsq8q8hdjdpktve1ofd9rkr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akasia365mc",
+            "certificate_hash": "51dbbd700d5421905e63c1145c34618fa6cd2d9f"
+          }
+        },
+        {
           "client_id": "914531999231-kqacmc9hceaprl87bcpj8altkqbe49bd.apps.googleusercontent.com",
           "client_type": 3
         }
