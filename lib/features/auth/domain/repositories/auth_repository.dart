@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/ui/extensions/auth_type_extension.dart';
 
 abstract class AuthRepository {
-  Future<bool> checkSignInStatus();
   Future<UserCredential?> signUp({
     required AuthType authType,
     String? name,
@@ -14,6 +13,10 @@ abstract class AuthRepository {
     required AuthType authType,
     String? email,
     String? password,
+  });
+  String? getAccessToken();
+  Future<bool> saveAccessToken({
+    required String accessToken,
   });
   Future<void> resetPassword({
     required String email,

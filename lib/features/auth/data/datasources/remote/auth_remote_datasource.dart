@@ -2,23 +2,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import '../../../../../app/config/env_config.dart';
 import '../../../../../app/observers/logger.dart';
+import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/auth_type_extension.dart';
+import '../local/auth_local_datasource.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<bool> checkSignInStatus();
-
   /// Register new user
   ///
   /// [authType] can be [AuthType.emailPassword], [AuthType.google], [AuthType.apple]
   ///
   /// [email] and [password] are required if [authType] is [AuthType.emailPassword]
+  ///
+  /// return: [UserCredential] if success, [null] if cancelled
   Future<UserCredential?> signUp({
     required AuthType authType,
     String? name,
     String? email,
     String? password,
   });
+
+  /// Sign in user
+  ///
+  /// [authType] can be [AuthType.emailPassword], [AuthType.google], [AuthType.apple]
+  ///
+  /// [email] and [password] are required if [authType] is [AuthType.emailPassword]
+  ///
+  /// return: [UserCredential] if success, [null] if cancelled
   Future<UserCredential?> signIn({
     required AuthType authType,
     String? email,
@@ -37,32 +48,15 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
+  final AppHttpClient appHttpClient;
+  final AuthLocalDataSource authLocalDataSource;
 
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
     required this.googleSignIn,
+    required this.appHttpClient,
+    required this.authLocalDataSource,
   });
-
-  @override
-  Future<bool> checkSignInStatus() async {
-    try {
-      Logger.info("checkSignInStatus");
-
-      final user = firebaseAuth.currentUser;
-
-      Logger.success("checkSignInStatus user: $user");
-
-      if (user == null) {
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      Logger.error('checkSignInStatus error: $error');
-
-      rethrow;
-    }
-  }
 
   @override
   Future<UserCredential?> signUp({
@@ -177,10 +171,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     String? email,
     String? password,
   }) async {
+    UserCredential? userCredential;
+
     try {
       Logger.info('signIn params: email $email, password $password');
-
-      UserCredential? userCredential;
 
       switch (authType) {
         case AuthType.emailPassword:
@@ -234,21 +228,59 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       Logger.success('signIn userCredential: $userCredential');
 
-      // check is new user
-      if (userCredential?.additionalUserInfo?.isNewUser == true) {
-        // delete user from firebase
-        await userCredential?.user?.delete();
+      if (userCredential != null) {
+        // check is new user
+        if (userCredential.additionalUserInfo?.isNewUser == true) {
+          // delete user from firebase
+          await userCredential.user?.delete();
 
-        // sign out
-        await signOut();
+          // sign out
+          await signOut();
 
-        // throw not registered exception
-        throw FirebaseAuthException(code: "not-registered");
+          // throw not registered exception
+          throw FirebaseAuthException(code: "not-registered");
+        }
+
+        // request get access token to backend
+        final idToken = await userCredential.user?.getIdToken();
+        if (idToken == null) {
+          throw FirebaseAuthException(code: 'invalid-id-token');
+        }
+        final result = await appHttpClient.post(
+          url: "${EnvConfig.baseAkasiaApiUrl}/credentials/firebase-auth",
+          queryParameters: {
+            'idToken': idToken,
+          },
+        );
+        Logger.success('signIn getAccessToken result: $result');
+
+        final String? accessToken = result.data['access_token'];
+        final String? refreshToken = result.data['refresh_token'];
+        if (accessToken == null || refreshToken == null) {
+          throw FirebaseAuthException(code: 'invalid-access-token');
+        }
+
+        await Future.wait([
+          // save access token
+          authLocalDataSource.saveAccessToken(
+            accessToken: accessToken,
+          ),
+
+          // save refresh token
+          authLocalDataSource.saveRefreshToken(
+            refreshToken: refreshToken,
+          ),
+        ]);
       }
 
       return userCredential;
     } catch (error) {
       Logger.error('signIn error: $error');
+
+      if (userCredential != null) {
+        // sign out
+        await signOut();
+      }
 
       rethrow;
     }

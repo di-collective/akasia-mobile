@@ -1,15 +1,15 @@
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/auth_repository.dart';
 
-class CheckSignInStatusUseCase extends UseCase<bool, NoParams> {
+class GetAccessTokenUseCase extends UseCase<String?, NoParams> {
   final AuthRepository authRepository;
 
-  CheckSignInStatusUseCase({
+  GetAccessTokenUseCase({
     required this.authRepository,
   });
 
   @override
-  Future<bool> call(NoParams params) async {
-    return await authRepository.checkSignInStatus();
+  Future<String?> call(NoParams params) async {
+    return authRepository.getAccessToken();
   }
 }

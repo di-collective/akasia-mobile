@@ -1,30 +1,31 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 
 import '../../common/exception.dart';
 
-@LazySingleton()
 class AppHttpClient {
-  AppHttpClient(this._dio);
+  final Dio dio;
 
-  final Dio _dio;
+  AppHttpClient({
+    required this.dio,
+  });
 
-  Future<dynamic> get({
+  Future<Response> get({
     required String url,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
   }) async {
     try {
-      final response = await _dio.get(
+      final response = await dio.get(
         url,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+
+      return response;
     } on DioException catch (e) {
       final response = e.response;
       if (response != null) {
@@ -39,7 +40,7 @@ class AppHttpClient {
     }
   }
 
-  Future<dynamic> post({
+  Future<Response> post({
     required String url,
     data,
     Map<String, dynamic>? queryParameters,
@@ -47,14 +48,15 @@ class AppHttpClient {
     CancelToken? cancelToken,
   }) async {
     try {
-      final response = await _dio.post(
+      final response = await dio.post(
         url,
         data: data,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+
+      return response;
     } on DioException catch (e) {
       final response = e.response;
       if (response != null) {
@@ -69,7 +71,7 @@ class AppHttpClient {
     }
   }
 
-  Future<dynamic> patch({
+  Future<Response> patch({
     required String url,
     data,
     Map<String, dynamic>? queryParameters,
@@ -77,14 +79,15 @@ class AppHttpClient {
     CancelToken? cancelToken,
   }) async {
     try {
-      final response = await _dio.patch(
+      final response = await dio.patch(
         url,
         data: data,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+
+      return response;
     } on DioException catch (e) {
       final response = e.response;
       if (response != null) {

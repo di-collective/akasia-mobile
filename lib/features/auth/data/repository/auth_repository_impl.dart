@@ -4,38 +4,19 @@ import '../../../../core/common/exception.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/ui/extensions/auth_type_extension.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/local/auth_local_datasource.dart';
 import '../datasources/remote/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final NetworkInfo networkInfo;
   final AuthRemoteDataSource authRemoteDataSource;
+  final AuthLocalDataSource authLocalDataSource;
 
   const AuthRepositoryImpl({
     required this.networkInfo,
     required this.authRemoteDataSource,
+    required this.authLocalDataSource,
   });
-
-  @override
-  Future<bool> checkSignInStatus() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final result = await authRemoteDataSource.checkSignInStatus();
-
-        return result;
-      } on FirebaseAuthException catch (error) {
-        throw AuthException(
-          code: error.code,
-          message: error.message,
-        );
-      } catch (error) {
-        throw AppHttpException(
-          code: error,
-        );
-      }
-    } else {
-      throw const AppNetworkException();
-    }
-  }
 
   @override
   Future<UserCredential?> signUp({
@@ -92,6 +73,32 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     } else {
       throw const AppNetworkException();
+    }
+  }
+
+  @override
+  String? getAccessToken() {
+    try {
+      return authLocalDataSource.getAccessToken();
+    } catch (error) {
+      throw AuthException(
+        code: error,
+      );
+    }
+  }
+
+  @override
+  Future<bool> saveAccessToken({
+    required String accessToken,
+  }) async {
+    try {
+      return await authLocalDataSource.saveAccessToken(
+        accessToken: accessToken,
+      );
+    } catch (error) {
+      throw AuthException(
+        code: error,
+      );
     }
   }
 

@@ -1,17 +1,23 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/common/open_app_info.dart';
+import '../../core/network/http/app_http_client.dart';
+import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
+import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import '../../features/auth/data/repository/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/domain/usecase/check_sign_in_status_use_case.dart';
 import '../../features/auth/domain/usecase/confirm_password_reset_usecase.dart';
+import '../../features/auth/domain/usecase/get_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/reset_password_usecase.dart';
+import '../../features/auth/domain/usecase/save_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/sign_in_use_case.dart';
 import '../../features/auth/domain/usecase/sign_out_use_case.dart';
 import '../../features/auth/domain/usecase/sign_up_usecase.dart';
@@ -25,6 +31,8 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   await _external();
+
+  await _app();
 
   await _core();
 
@@ -48,7 +56,20 @@ Future<void> _external() async {
   sl.registerLazySingleton<GoogleSignIn>(() {
     return GoogleSignIn();
   });
+
+  // Shared Preferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() {
+    return sharedPreferences;
+  });
+
+  // dio
+  sl.registerLazySingleton<Dio>(() {
+    return Dio()..interceptors.add(DioInterceptor());
+  });
 }
+
+Future<void> _app() async {}
 
 Future<void> _core() async {
   // toast info
@@ -63,6 +84,13 @@ Future<void> _core() async {
     );
   });
 
+  // app http client
+  sl.registerLazySingleton<AppHttpClient>(() {
+    return AppHttpClient(
+      dio: sl(),
+    );
+  });
+
   // open app info
   sl.registerLazySingleton<OpenAppInfo>(() {
     return const OpenAppInfoImpl();
@@ -71,10 +99,17 @@ Future<void> _core() async {
 
 Future<void> _auth() async {
   // data source
+  sl.registerLazySingleton<AuthLocalDataSource>(() {
+    return AuthLocalDataSourceImpl(
+      sharedPreferences: sl(),
+    );
+  });
   sl.registerLazySingleton<AuthRemoteDataSource>(() {
     return AuthRemoteDataSourceImpl(
       firebaseAuth: sl(),
       googleSignIn: sl(),
+      appHttpClient: sl(),
+      authLocalDataSource: sl(),
     );
   });
 
@@ -83,15 +118,11 @@ Future<void> _auth() async {
     return AuthRepositoryImpl(
       networkInfo: sl(),
       authRemoteDataSource: sl(),
+      authLocalDataSource: sl(),
     );
   });
 
   // use case
-  sl.registerLazySingleton<CheckSignInStatusUseCase>(() {
-    return CheckSignInStatusUseCase(
-      authRepository: sl(),
-    );
-  });
   sl.registerLazySingleton<SignUpUseCase>(() {
     return SignUpUseCase(
       authRepository: sl(),
@@ -114,6 +145,16 @@ Future<void> _auth() async {
   });
   sl.registerLazySingleton<SignOutUseCase>(() {
     return SignOutUseCase(
+      authRepository: sl(),
+    );
+  });
+  sl.registerLazySingleton<GetAccessTokenUseCase>(() {
+    return GetAccessTokenUseCase(
+      authRepository: sl(),
+    );
+  });
+  sl.registerLazySingleton<SaveAccessTokenUseCase>(() {
+    return SaveAccessTokenUseCase(
       authRepository: sl(),
     );
   });

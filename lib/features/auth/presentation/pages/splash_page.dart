@@ -10,7 +10,7 @@ import '../../../../core/ui/extensions/object_parsing.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_parsing.dart';
 import '../../../../core/usecases/usecase.dart';
-import '../../domain/usecase/check_sign_in_status_use_case.dart';
+import '../../domain/usecase/get_access_token_usecase.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -59,7 +59,13 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<bool> _isSignIn() async {
     try {
-      return await sl<CheckSignInStatusUseCase>().call(NoParams());
+      final token = await sl<GetAccessTokenUseCase>().call(NoParams());
+
+      if (token != null) {
+        return true;
+      }
+
+      return false;
     } catch (_) {
       rethrow;
     }
