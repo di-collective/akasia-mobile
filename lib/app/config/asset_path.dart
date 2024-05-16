@@ -16,4 +16,6 @@ class AssetIconsPath {
   static String icSuccessStory = 'ic_success_story.svg'.iconAsset;
   static String icTreatment = 'ic_treatment.svg'.iconAsset;
   static String icDietPlan = 'ic_diet_plan.svg'.iconAsset;
+  static String icSun = 'ic_sun.svg'.iconAsset;
+  static String icClose = 'ic_close.svg'.iconAsset;
 }

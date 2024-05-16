@@ -80,5 +80,8 @@
   "treatment": "Treatment",
   "dietPlan": "Diet plan",
   "phoneNumberCannotStartWithZero": "Phone number cannot start from 0",
-  "startTypingToSearch": "Start typing to search"
+  "startTypingToSearch": "Start typing to search",
+  "membership": "Membership",
+  "askCashierToScanThisBarcode": "Ask cashier to scan this barcode",
+  "brightness": "Brightness"
 }
