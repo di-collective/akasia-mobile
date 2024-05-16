@@ -455,9 +455,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       Logger.info("signOut");
 
+      final accessToken = authLocalDataSource.getAccessToken();
+      if (accessToken != null) {
+        // logout from backend
+        final resultLogoutBackend = await appHttpClient.post(
+          url: "${EnvConfig.baseAkasiaApiUrl}/credentials/logout",
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+            },
+          ),
+        );
+        Logger.success('signOut resultLogoutBackend: $resultLogoutBackend');
+      }
+
       await firebaseAuth.signOut();
 
-      Logger.success("signOut success");
+      Logger.success("signOut");
     } catch (error) {
       Logger.error('signOut error: $error');
 

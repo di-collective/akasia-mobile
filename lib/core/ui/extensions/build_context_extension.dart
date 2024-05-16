@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../app/di/depedency_injection.dart';
 import '../widget/dialogs/toast_info.dart';
+import '../widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import 'theme_data_extension.dart';
 import 'toast_type_parsing.dart';
 
@@ -128,5 +129,17 @@ extension BuildContextExtension on BuildContext {
         ),
       ),
     );
+  }
+
+  void showFullScreenLoading({
+    String? message,
+  }) {
+    BlocProvider.of<FullScreenLoadingCubit>(this).show(
+      message: message,
+    );
+  }
+
+  void get hideFullScreenLoading {
+    BlocProvider.of<FullScreenLoadingCubit>(this).hide();
   }
 }

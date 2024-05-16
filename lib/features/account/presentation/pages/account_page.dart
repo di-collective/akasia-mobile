@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/di/depedency_injection.dart';
+import '../../../../app/navigation/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/object_parsing.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/extensions/toast_type_parsing.dart';
+import '../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../widgets/account_item_widget.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
@@ -142,7 +155,101 @@ class AccountPage extends StatelessWidget {
     // TODO: Implement this method
   }
 
-  void _onLogout() {
-    // TODO: Implement this method
+  Future<void> _onLogout() async {
+    try {
+      // show confirmation dialog
+      final isLogout = await showDialog<bool?>(
+        context: context,
+        builder: (context) {
+          final textTheme = context.theme.appTextTheme;
+          final colorScheme = context.theme.appColorScheme;
+
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 24,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.locale.loggingOut,
+                    style: textTheme.titleMedium.copyWith(
+                      color: colorScheme.onSurfaceDim,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    context.locale.logOutConfirmation,
+                    maxLines: 2,
+                    style: textTheme.labelLarge.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w500,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ButtonWidget(
+                          text: context.locale.yes,
+                          onTap: () {
+                            Navigator.pop(context, true);
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: ButtonWidget(
+                          text: context.locale.no,
+                          borderColor: Colors.transparent,
+                          textColor: colorScheme.onSurfaceBright,
+                          backgroundColor: Colors.transparent,
+                          onTap: () {
+                            Navigator.pop(context, false);
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      );
+
+      if (isLogout == null || !isLogout) {
+        return;
+      }
+
+      // show full screen loading
+      context.showFullScreenLoading();
+
+      // logout
+      await sl<AuthRepository>().signOut();
+
+      // go to splash page
+      context.goNamed(AppRoute.splash.name);
+    } catch (error) {
+      sl<ToastInfo>().show(
+        type: ToastType.error,
+        message: error.message(context),
+        context: context,
+      );
+    } finally {
+      // hide full screen loading
+      context.hideFullScreenLoading;
+    }
   }
 }

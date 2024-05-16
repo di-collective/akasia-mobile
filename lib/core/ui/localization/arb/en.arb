@@ -93,5 +93,10 @@
   "privacyPolicy": "Privacy Policy",
   "ratings": "Ratings",
   "logout": "Logout",
-  "appVersion": "App version"
+  "appVersion": "App version",
+  "loading": "Loading",
+  "loggingOut": "Logging Out",
+  "logOutConfirmation": "Are you sure want to sign out from your Akasia365mc account",
+  "yes": "Yes",
+  "no": "No"
 }

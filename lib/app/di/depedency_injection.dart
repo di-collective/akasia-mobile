@@ -10,6 +10,7 @@ import '../../core/network/http/app_http_client.dart';
 import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
+import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -99,6 +100,11 @@ Future<void> _core() async {
   // open app info
   sl.registerLazySingleton<OpenAppInfo>(() {
     return const OpenAppInfoImpl();
+  });
+
+  // full screen loading cubit
+  sl.registerFactory<FullScreenLoadingCubit>(() {
+    return FullScreenLoadingCubit();
   });
 }
 

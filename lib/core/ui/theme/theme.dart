@@ -34,6 +34,13 @@ abstract final class AppTheme {
       ],
       appBarTheme: appBarTheme,
       scaffoldBackgroundColor: colorScheme.onPrimary,
+      dialogTheme: DialogTheme(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
     );
   }
 }
