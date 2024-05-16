@@ -64,7 +64,7 @@ extension BuildContextExtension on BuildContext {
   }
 
   double get paddingHorizontal {
-    return width * 0.05;
+    return 16;
   }
 
   double get paddingVertical {

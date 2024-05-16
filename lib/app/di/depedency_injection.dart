@@ -11,11 +11,15 @@ import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
+import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
-import '../../features/auth/data/repository/auth_repository_impl.dart';
+import '../../features/auth/data/repositories/auth_repository_impl.dart';
+import '../../features/auth/data/repositories/config_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/repositories/config_repository.dart';
 import '../../features/auth/domain/usecase/confirm_password_reset_usecase.dart';
 import '../../features/auth/domain/usecase/get_access_token_usecase.dart';
+import '../../features/auth/domain/usecase/get_yaml_usecase.dart';
 import '../../features/auth/domain/usecase/reset_password_usecase.dart';
 import '../../features/auth/domain/usecase/save_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/sign_in_use_case.dart';
@@ -25,6 +29,7 @@ import '../../features/auth/presentation/cubit/create_new_password/create_new_pa
 import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
+import '../../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 
 final sl = GetIt.instance;
@@ -99,6 +104,9 @@ Future<void> _core() async {
 
 Future<void> _auth() async {
   // data source
+  sl.registerLazySingleton<ConfigLocalDataSource>(() {
+    return ConfigLocalDataSourceImpl();
+  });
   sl.registerLazySingleton<AuthLocalDataSource>(() {
     return AuthLocalDataSourceImpl(
       sharedPreferences: sl(),
@@ -114,6 +122,11 @@ Future<void> _auth() async {
   });
 
   // repository
+  sl.registerLazySingleton<ConfigRepository>(() {
+    return ConfigRepositoryImpl(
+      configLocalDataSource: sl(),
+    );
+  });
   sl.registerLazySingleton<AuthRepository>(() {
     return AuthRepositoryImpl(
       networkInfo: sl(),
@@ -123,6 +136,11 @@ Future<void> _auth() async {
   });
 
   // use case
+  sl.registerLazySingleton<GetYamlUseCase>(() {
+    return GetYamlUseCase(
+      configRepository: sl(),
+    );
+  });
   sl.registerLazySingleton<SignUpUseCase>(() {
     return SignUpUseCase(
       authRepository: sl(),
@@ -160,6 +178,11 @@ Future<void> _auth() async {
   });
 
   // cubit
+  sl.registerFactory<YamlCubit>(() {
+    return YamlCubit(
+      getYamlUseCase: sl(),
+    );
+  });
   sl.registerFactory<SignInCubit>(() {
     return SignInCubit(
       signInUseCase: sl(),

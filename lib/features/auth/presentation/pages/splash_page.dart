@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,6 +12,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_parsing.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecase/get_access_token_usecase.dart';
+import '../cubit/yaml/yaml_cubit.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -35,6 +37,9 @@ class _SplashPageState extends State<SplashPage> {
 
         // check sign in status
         _isSignIn(),
+
+        // get yaml
+        BlocProvider.of<YamlCubit>(context).getYaml(),
       ]);
 
       // check sign in status

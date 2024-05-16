@@ -7,7 +7,7 @@ import '../../../../../app/config/env_config.dart';
 import '../../../../../app/observers/logger.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/auth_type_extension.dart';
-import '../../model/token_model.dart';
+import '../../models/token_model.dart';
 import '../local/auth_local_datasource.dart';
 
 abstract class AuthRemoteDataSource {

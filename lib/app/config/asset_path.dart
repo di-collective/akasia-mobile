@@ -3,6 +3,7 @@ import '../../core/ui/extensions/asset_name_extension.dart';
 class AssetImagesPath {
   static String logoTextWhite = 'logo_text_white.svg'.imageAsset;
   static String logoTextColored = 'logo_text_colored.svg'.imageAsset;
+  static String placeholder = 'placeholder.jpg'.imageAsset;
 }
 
 class AssetIconsPath {

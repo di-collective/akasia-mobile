@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../core/ui/localization/app_supported_locales.dart';
 import '../core/ui/theme/theme.dart';
+import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import 'di/depedency_injection.dart';
 import 'navigation/app_route.dart';
@@ -16,6 +17,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) => sl<YamlCubit>(),
+        ),
         BlocProvider(
           create: (context) => sl<BottomNavigationCubit>(),
         ),

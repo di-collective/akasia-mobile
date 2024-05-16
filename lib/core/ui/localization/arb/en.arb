@@ -83,5 +83,15 @@
   "startTypingToSearch": "Start typing to search",
   "membership": "Membership",
   "askCashierToScanThisBarcode": "Ask cashier to scan this barcode",
-  "brightness": "Brightness"
+  "brightness": "Brightness",
+  "informationDetails": "Information Details",
+  "accountSettings": "Account Settings",
+  "notificationSetting": "Notification Setting",
+  "faq": "FAQ",
+  "helpCenter": "Help Center",
+  "termsAndConditions": "Terms and Conditions",
+  "privacyPolicy": "Privacy Policy",
+  "ratings": "Ratings",
+  "logout": "Logout",
+  "appVersion": "App version"
 }
