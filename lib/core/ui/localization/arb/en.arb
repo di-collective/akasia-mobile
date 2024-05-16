@@ -78,5 +78,7 @@
   "nextSchedule": "Next Schedule",
   "successStory": "Success story",
   "treatment": "Treatment",
-  "dietPlan": "Diet plan"
+  "dietPlan": "Diet plan",
+  "phoneNumberCannotStartWithZero": "Phone number cannot start from 0",
+  "startTypingToSearch": "Start typing to search"
 }

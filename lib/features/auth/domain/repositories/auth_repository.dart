@@ -5,8 +5,11 @@ import '../../../../core/ui/extensions/auth_type_extension.dart';
 abstract class AuthRepository {
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? eKtp,
     String? name,
     String? email,
+    required String phoneCode,
+    required String phoneNumber,
     String? password,
   });
   Future<UserCredential?> signIn({

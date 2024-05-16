@@ -18,8 +18,11 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? eKtp,
     String? name,
     String? email,
+    required String phoneCode,
+    required String phoneNumber,
     String? password,
   }) async {
     try {
@@ -29,9 +32,12 @@ class SignUpCubit extends Cubit<SignUpState> {
 
       final result = await signUpUseCase.call(
         SignUpParams(
-          name: name,
           authType: authType,
+          name: name,
+          eKtp: eKtp,
           email: email,
+          phoneCode: phoneCode,
+          phoneNumber: phoneNumber,
           password: password,
         ),
       );

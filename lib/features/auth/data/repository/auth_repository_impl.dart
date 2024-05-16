@@ -21,16 +21,22 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? eKtp,
     String? name,
     String? email,
+    required String phoneCode,
+    required String phoneNumber,
     String? password,
   }) async {
     if (await networkInfo.isConnected) {
       try {
         return await authRemoteDataSource.signUp(
           authType: authType,
+          eKtp: eKtp,
           name: name,
           email: email,
+          phoneCode: phoneCode,
+          phoneNumber: phoneNumber,
           password: password,
         );
       } on FirebaseAuthException catch (error) {

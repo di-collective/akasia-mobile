@@ -15,7 +15,11 @@ class SignUpUseCase extends UseCase<void, SignUpParams> {
   Future<UserCredential?> call(SignUpParams params) async {
     return await authRepository.signUp(
       authType: params.authType,
+      eKtp: params.eKtp,
+      name: params.name,
       email: params.email,
+      phoneCode: params.phoneCode,
+      phoneNumber: params.phoneNumber,
       password: params.password,
     );
   }
@@ -23,14 +27,20 @@ class SignUpUseCase extends UseCase<void, SignUpParams> {
 
 class SignUpParams {
   final AuthType authType;
+  final String? eKtp;
   final String? name;
   final String? email;
+  final String phoneCode;
+  final String phoneNumber;
   final String? password;
 
   SignUpParams({
     required this.authType,
+    required this.eKtp,
     required this.name,
     required this.email,
+    required this.phoneCode,
+    required this.phoneNumber,
     required this.password,
   });
 }

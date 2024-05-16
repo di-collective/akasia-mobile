@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -6,6 +7,7 @@ import '../../../../../app/config/env_config.dart';
 import '../../../../../app/observers/logger.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/auth_type_extension.dart';
+import '../../model/token_model.dart';
 import '../local/auth_local_datasource.dart';
 
 abstract class AuthRemoteDataSource {
@@ -18,8 +20,11 @@ abstract class AuthRemoteDataSource {
   /// return: [UserCredential] if success, [null] if cancelled
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? eKtp,
     String? name,
     String? email,
+    required String phoneCode,
+    required String phoneNumber,
     String? password,
   });
 
@@ -34,6 +39,9 @@ abstract class AuthRemoteDataSource {
     required AuthType authType,
     String? email,
     String? password,
+  });
+  Future<TokenModel> getToken({
+    required String firebaseIdToken,
   });
   Future<void> resetPassword({
     required String email,
@@ -61,8 +69,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserCredential?> signUp({
     required AuthType authType,
+    String? eKtp,
     String? name,
     String? email,
+    required String phoneCode,
+    required String phoneNumber,
     String? password,
   }) async {
     UserCredential? userCredential;
@@ -145,7 +156,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           Logger.success('signUp updateDisplayName displayName: $displayName');
         }
 
-        // TODO: Submit user data to backend
+        // submit user data to backend
+        final idToken = await userCredential.user?.getIdToken();
+        if (idToken == null) {
+          throw FirebaseAuthException(code: 'invalid-id-token');
+        }
+        final resultToken = await getToken(
+          firebaseIdToken: idToken,
+        );
+        Logger.success('signUp resultToken: $resultToken');
+
+        final String? accessToken = resultToken.accessToken;
+        final resultSubmitProfile = await appHttpClient.post(
+          url: "${EnvConfig.baseAkasiaApiUrl}/profile",
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+            },
+          ),
+          data: {
+            'first_name': displayName,
+            'country_code': phoneCode,
+            'phone': phoneNumber,
+            'nik': eKtp,
+            'gender': null, // TODO: Unused
+            'dob': null, // TODO: Unused
+          },
+          //  error: Key: 'RequestCreateProfile.LastName' Error:Field validation for 'LastName' failed on the 'required' tag
+          //  Key: 'RequestCreateProfile.NIK' Error:Field validation for 'NIK' failed on the 'required' tag
+          //  Key: 'RequestCreateProfile.Gender' Error:Field validation for 'Gender' failed on the 'required' tag
+          //  Key: 'RequestCreateProfile.BirthDate' Error:Field validation for 'BirthDate' failed on the 'required' tag}
+        );
+        Logger.success('signUp resultSubmitProfile: $resultSubmitProfile');
       }
 
       return userCredential;
@@ -246,31 +288,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         if (idToken == null) {
           throw FirebaseAuthException(code: 'invalid-id-token');
         }
-        final result = await appHttpClient.post(
-          url: "${EnvConfig.baseAkasiaApiUrl}/credentials/firebase-auth",
-          queryParameters: {
-            'idToken': idToken,
-          },
+        await getToken(
+          firebaseIdToken: idToken,
         );
-        Logger.success('signIn getAccessToken result: $result');
-
-        final String? accessToken = result.data['access_token'];
-        final String? refreshToken = result.data['refresh_token'];
-        if (accessToken == null || refreshToken == null) {
-          throw FirebaseAuthException(code: 'invalid-access-token');
-        }
-
-        await Future.wait([
-          // save access token
-          authLocalDataSource.saveAccessToken(
-            accessToken: accessToken,
-          ),
-
-          // save refresh token
-          authLocalDataSource.saveRefreshToken(
-            refreshToken: refreshToken,
-          ),
-        ]);
       }
 
       return userCredential;
@@ -338,6 +358,50 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       rethrow;
     } catch (error) {
       Logger.error('signInWithApple error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TokenModel> getToken({
+    required String firebaseIdToken,
+  }) async {
+    try {
+      Logger.info('getToken params: firebaseIdToken $firebaseIdToken');
+
+      final result = await appHttpClient.post(
+        url: "${EnvConfig.baseAkasiaApiUrl}/credentials/firebase-auth",
+        queryParameters: {
+          'idToken': firebaseIdToken,
+        },
+      );
+      Logger.success('getToken result: $result');
+
+      // save token to local
+      final token = TokenModel.fromJson(
+        result.data,
+      );
+      final accessToken = token.accessToken;
+      final refreshToken = token.refreshToken;
+      if (accessToken == null || refreshToken == null) {
+        throw FirebaseAuthException(code: 'invalid-access-token');
+      }
+      await Future.wait([
+        // save access token
+        authLocalDataSource.saveAccessToken(
+          accessToken: accessToken,
+        ),
+
+        // save refresh token
+        authLocalDataSource.saveRefreshToken(
+          refreshToken: refreshToken,
+        ),
+      ]);
+
+      return token;
+    } catch (error) {
+      Logger.error('getToken error: $error');
 
       rethrow;
     }

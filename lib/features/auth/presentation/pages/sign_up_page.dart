@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/config/country_config.dart';
 import '../../../../app/di/depedency_injection.dart';
 import '../../../../app/navigation/app_route.dart';
 import '../../../../core/ui/extensions/auth_type_extension.dart';
@@ -48,6 +50,24 @@ class __BodyState extends State<_Body> {
   final _phoneTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _confirmPasswordTextController = TextEditingController();
+
+  late Country _selectedCountry;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    // init country
+    _initCountry();
+  }
+
+  void _initCountry() {
+    _selectedCountry = CountryConfig.indonesia;
+  }
 
   @override
   void dispose() {
@@ -150,20 +170,64 @@ class __BodyState extends State<_Body> {
                     Form(
                       key: _phoneFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: TextFormFieldWidget(
-                        controller: _phoneTextController,
-                        title: context.locale.phoneNumber,
-                        keyboardType: TextInputType.phone,
-                        isRequired: true,
-                        validator: (val) {
-                          return _phoneTextController.validatePhoneNumber(
-                            context: context,
-                          );
-                        },
-                        onChanged: (val) {
-                          // reload
-                          setState(() {});
-                        },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormFieldWidget(
+                              controller: _phoneTextController,
+                              title: context.locale.phoneNumber,
+                              keyboardType: TextInputType.phone,
+                              isRequired: true,
+                              validator: (val) {
+                                return _phoneTextController.validatePhoneNumber(
+                                  context: context,
+                                );
+                              },
+                              onChanged: (val) {
+                                // reload
+                                setState(() {});
+                              },
+                              prefixIcon: InkWell(
+                                onTap: () {
+                                  context.selectCountryCode(
+                                    onSelect: (country) {
+                                      setState(() {
+                                        _selectedCountry = country;
+                                      });
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                    left: 1,
+                                    right: 10,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: colorScheme.surface,
+                                    borderRadius: const BorderRadius.horizontal(
+                                      left: Radius.circular(8),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _selectedCountry.phoneCode,
+                                        style: textTheme.bodyLarge.copyWith(
+                                          color: colorScheme.onSurface,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -385,9 +449,16 @@ class __BodyState extends State<_Body> {
       // sign up
       final userCredential = await BlocProvider.of<SignUpCubit>(context).signUp(
         authType: authType,
-        email: _emailTextController.text,
-        password: _passwordTextController.text,
-        name: _nameTextController.text,
+        email: _emailTextController.text.isEmpty
+            ? null
+            : _emailTextController.text,
+        name:
+            _nameTextController.text.isEmpty ? null : _nameTextController.text,
+        phoneCode: _selectedCountry.phoneCode,
+        phoneNumber: _phoneTextController.text,
+        password: _passwordTextController.text.isEmpty
+            ? null
+            : _passwordTextController.text,
       );
 
       if (userCredential == null) {

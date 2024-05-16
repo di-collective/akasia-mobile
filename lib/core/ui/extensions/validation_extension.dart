@@ -100,6 +100,11 @@ extension TextEditingControllerExtension on TextEditingController {
       return context.locale.invalidPhoneNumber;
     }
 
+    // cannot start with 0
+    if (text.startsWith('0')) {
+      return context.locale.phoneNumberCannotStartWithZero;
+    }
+
     if (text.length < 8) {
       return context.locale.minimumLength(8);
     }
