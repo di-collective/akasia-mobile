@@ -1,6 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../../app/config/env_config.dart';
@@ -41,6 +41,7 @@ abstract class AuthRemoteDataSource {
     String? password,
   });
   Future<TokenModel> getToken({
+    required AuthType authType,
     required String firebaseIdToken,
   });
   Future<void> resetPassword({
@@ -58,12 +59,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final GoogleSignIn googleSignIn;
   final AppHttpClient appHttpClient;
   final AuthLocalDataSource authLocalDataSource;
+  final SharedPreferences sharedPreferences;
 
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
     required this.googleSignIn,
     required this.appHttpClient,
     required this.authLocalDataSource,
+    required this.sharedPreferences,
   });
 
   @override
@@ -80,11 +83,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     try {
       Logger.info(
-          'signUp params: authType $authType, email $email, password $password');
+          'signUp params: authType $authType, email $email, password $password, name $name, phoneCode $phoneCode, phoneNumber $phoneNumber, eKtp $eKtp');
 
       String? displayName;
       switch (authType) {
-        case AuthType.emailPassword:
+        case AuthType.email:
           if (email != null && password != null) {
             userCredential = await firebaseAuth.createUserWithEmailAndPassword(
               email: email,
@@ -162,32 +165,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           throw FirebaseAuthException(code: 'invalid-id-token');
         }
         final resultToken = await getToken(
+          authType: authType,
           firebaseIdToken: idToken,
+          email: email,
+          password: password,
+          repeatPassword: password,
         );
         Logger.success('signUp resultToken: $resultToken');
 
         final String? accessToken = resultToken.accessToken;
         final resultSubmitProfile = await appHttpClient.post(
           url: "${EnvConfig.baseAkasiaApiUrl}/profile",
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $accessToken',
-            },
-          ),
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
           data: {
-            'first_name': displayName,
+            'name': displayName,
             'country_code': phoneCode,
             'phone': phoneNumber,
             'nik': eKtp,
-            'gender': null, // TODO: Unused
-            'dob': null, // TODO: Unused
           },
-          //  error: Key: 'RequestCreateProfile.LastName' Error:Field validation for 'LastName' failed on the 'required' tag
-          //  Key: 'RequestCreateProfile.NIK' Error:Field validation for 'NIK' failed on the 'required' tag
-          //  Key: 'RequestCreateProfile.Gender' Error:Field validation for 'Gender' failed on the 'required' tag
-          //  Key: 'RequestCreateProfile.BirthDate' Error:Field validation for 'BirthDate' failed on the 'required' tag}
         );
         Logger.success('signUp resultSubmitProfile: $resultSubmitProfile');
+        // Example result: {"data":{"id":"01HY2SFHA0256BQXVBVMVRJ6NG","user_id":"01HXZV5WQJZ2H0YMSCKVZPN572","medical_id":"01HY2SFHA0256BQXVBVNTACJZA","name":"Hutomo Dev 3","country_code":"62","phone":"82343243434"},"message":"OK"}
       }
 
       return userCredential;
@@ -219,7 +219,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.info('signIn params: email $email, password $password');
 
       switch (authType) {
-        case AuthType.emailPassword:
+        case AuthType.email:
           if (email == null || password == null) {
             throw Exception('Email and password must not be null');
           }
@@ -289,6 +289,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           throw FirebaseAuthException(code: 'invalid-id-token');
         }
         await getToken(
+          authType: authType,
           firebaseIdToken: idToken,
         );
       }
@@ -365,15 +366,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<TokenModel> getToken({
+    required AuthType authType,
     required String firebaseIdToken,
+    String? email,
+    String? password,
+    String? repeatPassword,
   }) async {
     try {
-      Logger.info('getToken params: firebaseIdToken $firebaseIdToken');
+      Logger.info(
+          'getToken params: firebaseIdToken $firebaseIdToken, email $email, password $password, repeatPassword $repeatPassword');
 
       final result = await appHttpClient.post(
         url: "${EnvConfig.baseAkasiaApiUrl}/credentials/firebase-auth",
         queryParameters: {
           'idToken': firebaseIdToken,
+        },
+        data: {
+          'provider': authType.name,
+          'email': email,
+          'password': password,
+          'repeat_password': repeatPassword,
         },
       );
       Logger.success('getToken result: $result');
@@ -455,20 +467,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       Logger.info("signOut");
 
-      final accessToken = authLocalDataSource.getAccessToken();
-      if (accessToken != null) {
-        // logout from backend
-        final resultLogoutBackend = await appHttpClient.post(
-          url: "${EnvConfig.baseAkasiaApiUrl}/credentials/logout",
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $accessToken',
-            },
-          ),
-        );
-        Logger.success('signOut resultLogoutBackend: $resultLogoutBackend');
-      }
+      // TODO: uncomment this code if you need to logout from backend
+      // final accessToken = authLocalDataSource.getAccessToken();
+      // if (accessToken != null) {
+      //   // logout from backend
+      //   final resultLogoutBackend = await appHttpClient.post(
+      //     url: "${EnvConfig.baseAkasiaApiUrl}/logout",
+      //     headers: {
+      //       'Authorization': 'Bearer $accessToken',
+      //     },
+      //   );
+      //   Logger.success('signOut resultLogoutBackend: $resultLogoutBackend');
+      // }
 
+      // clear shared preferences
+      final resultSharedPref = await sharedPreferences.clear();
+      Logger.success('signOut resultSharedPref: $resultSharedPref');
+
+      // sign out from firebase auth
       await firebaseAuth.signOut();
 
       Logger.success("signOut");

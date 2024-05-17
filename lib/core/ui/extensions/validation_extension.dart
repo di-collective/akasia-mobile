@@ -105,8 +105,8 @@ extension TextEditingControllerExtension on TextEditingController {
       return context.locale.phoneNumberCannotStartWithZero;
     }
 
-    if (text.length < 8) {
-      return context.locale.minimumLength(8);
+    if (text.length < 9) {
+      return context.locale.minimumLength(9);
     }
 
     if (text.length > 13) {

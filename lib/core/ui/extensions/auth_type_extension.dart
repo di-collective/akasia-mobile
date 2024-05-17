@@ -4,7 +4,7 @@ import '../../../app/config/asset_path.dart';
 import 'build_context_extension.dart';
 
 enum AuthType {
-  emailPassword,
+  email,
   apple,
   google,
 }
@@ -12,7 +12,7 @@ enum AuthType {
 extension AuthTypeExtension on AuthType {
   String? get iconPath {
     switch (this) {
-      case AuthType.emailPassword:
+      case AuthType.email:
         return null;
       case AuthType.apple:
         return AssetIconsPath.icApple;
@@ -23,7 +23,7 @@ extension AuthTypeExtension on AuthType {
 
   String? signInLabel(BuildContext context) {
     switch (this) {
-      case AuthType.emailPassword:
+      case AuthType.email:
         return null;
       case AuthType.apple:
         return context.locale.signInWithApple;
@@ -34,7 +34,7 @@ extension AuthTypeExtension on AuthType {
 
   String? signUpLabel(BuildContext context) {
     switch (this) {
-      case AuthType.emailPassword:
+      case AuthType.email:
         return null;
       case AuthType.apple:
         return context.locale.signUpWithApple;

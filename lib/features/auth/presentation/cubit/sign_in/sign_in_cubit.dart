@@ -13,7 +13,7 @@ class SignInCubit extends Cubit<SignInState> {
   SignInCubit({
     required this.signInUseCase,
   }) : super(const SignInInitial(
-          authType: AuthType.emailPassword,
+          authType: AuthType.email,
         ));
 
   Future<UserCredential?> signIn({
@@ -35,7 +35,7 @@ class SignInCubit extends Cubit<SignInState> {
       );
 
       emit(SignInLoaded(
-        authType: AuthType.emailPassword,
+        authType: authType,
         userCredential: result,
       ));
 
@@ -43,7 +43,7 @@ class SignInCubit extends Cubit<SignInState> {
     } catch (error) {
       emit(SignInError(
         error: error,
-        authType: AuthType.emailPassword,
+        authType: authType,
       ));
 
       rethrow;

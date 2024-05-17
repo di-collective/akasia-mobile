@@ -17,7 +17,7 @@ class DioInterceptor extends Interceptor {
     Response response,
     ResponseInterceptorHandler handler,
   ) {
-    Logger.info(
+    Logger.success(
         'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}\n DATA => ${response.data}');
 
     return super.onResponse(response, handler);
@@ -28,14 +28,17 @@ class DioInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
-    Logger.info(
+    Logger.error(
         'ERROR[${err.response?.statusCode}] || TYPE[${err.type}] => PATH: ${err.requestOptions.path} => DATA: ${err.response?.data}');
 
     String? message;
 
     if (err.response?.data is Map) {
-      // get message error from response
+      // get message from message
       message = err.response?.data['message'];
+
+      // if message is null, get error
+      message ??= err.response?.data['error'];
     }
 
     switch (err.type) {

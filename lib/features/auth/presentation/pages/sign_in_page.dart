@@ -116,7 +116,7 @@ class __BodyState extends State<_Body> {
                         keyboardType: TextInputType.visiblePassword,
                         onEditingComplete: () {
                           _onSignIn(
-                            authType: AuthType.emailPassword,
+                            authType: AuthType.email,
                           );
                         },
                         validator: (val) {
@@ -155,10 +155,10 @@ class __BodyState extends State<_Body> {
                         isDisabled: _emailTextController.text.isEmpty ||
                             _formKey.currentState?.validate() == false,
                         isLoading: state is SignInLoading &&
-                            state.authType == AuthType.emailPassword,
+                            state.authType == AuthType.email,
                         onTap: () {
                           _onSignIn(
-                            authType: AuthType.emailPassword,
+                            authType: AuthType.email,
                           );
                         },
                       ),
@@ -266,7 +266,7 @@ class __BodyState extends State<_Body> {
         return;
       }
 
-      if (authType == AuthType.emailPassword) {
+      if (authType == AuthType.email) {
         if (_formKey.currentState?.validate() == false) {
           return;
         }

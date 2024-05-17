@@ -243,7 +243,7 @@ class __BodyState extends State<_Body> {
                             title: context.locale.email,
                             keyboardType: TextInputType.emailAddress,
                             validator: (val) {
-                              if (state.authType != AuthType.emailPassword) {
+                              if (state.authType != AuthType.email) {
                                 return null;
                               }
 
@@ -286,7 +286,7 @@ class __BodyState extends State<_Body> {
                             keyboardType: TextInputType.visiblePassword,
                             onEditingComplete: () {
                               _onSignUp(
-                                authType: AuthType.emailPassword,
+                                authType: AuthType.email,
                               );
                             },
                             validator: (val) {
@@ -315,14 +315,15 @@ class __BodyState extends State<_Body> {
                       text: context.locale.login,
                       width: context.width,
                       isDisabled: _phoneTextController.text.isEmpty ||
+                          _phoneFormKey.currentState?.validate() == false ||
                           _nameFormKey.currentState?.validate() == false ||
                           _emailPasswordFormKey.currentState?.validate() ==
                               false,
                       isLoading: state is SignUpLoading &&
-                          state.authType == AuthType.emailPassword,
+                          state.authType == AuthType.email,
                       onTap: () {
                         _onSignUp(
-                          authType: AuthType.emailPassword,
+                          authType: AuthType.email,
                         );
                       },
                     ),
@@ -426,7 +427,7 @@ class __BodyState extends State<_Body> {
         return;
       }
 
-      if (authType == AuthType.emailPassword) {
+      if (authType == AuthType.email) {
         // validate name form
         if (_nameFormKey.currentState?.validate() == false) {
           return;

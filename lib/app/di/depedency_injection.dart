@@ -124,6 +124,7 @@ Future<void> _auth() async {
       googleSignIn: sl(),
       appHttpClient: sl(),
       authLocalDataSource: sl(),
+      sharedPreferences: sl(),
     );
   });
 
