@@ -69,4 +69,10 @@ extension StringExtension on String {
   bool get isTelpUrl {
     return RegExp(r'^tel:[0-9]+$').hasMatch(this);
   }
+
+  bool get isKtp {
+    return RegExp(
+            r'^(1[1-9]|21|[37][1-6]|5[1-3]|6[1-5]|[89][12])\d{2}\d{2}([04][1-9]|[1256][0-9]|[37][01])(0[1-9]|1[0-2])\d{2}\d{4}$')
+        .hasMatch(this);
+  }
 }

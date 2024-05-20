@@ -72,17 +72,8 @@ extension TextEditingControllerExtension on TextEditingController {
   String? validateKtp({
     required BuildContext context,
   }) {
-    // validate only number
-    if (text.isContainsLetter || text.isContainsSpecialCharacter) {
+    if (!text.isKtp) {
       return context.locale.invalidEKtp;
-    }
-
-    if (text.length < 16) {
-      return context.locale.minimumLength(16);
-    }
-
-    if (text.length > 16) {
-      return context.locale.maximumLength(16);
     }
 
     return null;
