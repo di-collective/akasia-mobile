@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../app/config/env_config.dart';
 import '../../../../app/di/depedency_injection.dart';
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
@@ -65,7 +66,7 @@ class _MainPageState extends State<MainPage> {
               if (item == BottomNavigationItem.chatUs) {
                 // chat us navigation tapped
                 // open phone
-                _onOpenChatUse();
+                _onOpenChatUs();
               } else {
                 BlocProvider.of<BottomNavigationCubit>(context).onChanged(
                   item,
@@ -78,13 +79,20 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<void> _onOpenChatUse() async {
+  Future<void> _onOpenChatUs() async {
     try {
-      final telUrl =
-          '6281234567890'.toTelpUrl; // TODO: change to real phone number
-      await sl<OpenAppInfo>().openLink(
-        url: telUrl,
-      );
+      final phoneNumber = EnvConfig.chatUsNumber.toString();
+      try {
+        // open whatsapp
+        await sl<OpenAppInfo>().openLink(
+          url: phoneNumber.toWhatsappUrl,
+        );
+      } catch (error) {
+        // if whatsapp error, try open phone telphone
+        await sl<OpenAppInfo>().openLink(
+          url: phoneNumber.toTelpUrl,
+        );
+      }
     } catch (error) {
       context.showToast(
         type: ToastType.error,

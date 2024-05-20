@@ -49,7 +49,7 @@ extension StringExtension on String {
 
   Uri? get toUri {
     try {
-      if (isTelpUrl) {
+      if (isTelphoneUrl) {
         return Uri(
           scheme: 'tel',
           path: split(':')[1], // remove tel:
@@ -66,7 +66,11 @@ extension StringExtension on String {
     return 'tel:$this';
   }
 
-  bool get isTelpUrl {
+  String get toWhatsappUrl {
+    return 'https://wa.me/$this';
+  }
+
+  bool get isTelphoneUrl {
     return RegExp(r'^tel:[0-9]+$').hasMatch(this);
   }
 
