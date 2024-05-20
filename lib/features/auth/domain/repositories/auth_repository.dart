@@ -21,7 +21,7 @@ abstract class AuthRepository {
   Future<bool> saveAccessToken({
     required String accessToken,
   });
-  Future<void> resetPassword({
+  Future<void> forgotPassword({
     required String email,
   });
   Future<void> confirmPasswordReset({

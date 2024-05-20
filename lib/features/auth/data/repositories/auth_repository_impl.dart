@@ -109,12 +109,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> resetPassword({
+  Future<void> forgotPassword({
     required String email,
   }) async {
     if (await networkInfo.isConnected) {
       try {
-        await authRemoteDataSource.resetPassword(
+        await authRemoteDataSource.forgotPassword(
           email: email,
         );
       } on FirebaseAuthException catch (error) {

@@ -21,7 +21,7 @@ import '../../features/auth/domain/repositories/config_repository.dart';
 import '../../features/auth/domain/usecase/confirm_password_reset_usecase.dart';
 import '../../features/auth/domain/usecase/get_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/get_yaml_usecase.dart';
-import '../../features/auth/domain/usecase/reset_password_usecase.dart';
+import '../../features/auth/domain/usecase/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecase/save_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/sign_in_use_case.dart';
 import '../../features/auth/domain/usecase/sign_out_use_case.dart';
@@ -158,8 +158,8 @@ Future<void> _auth() async {
       authRepository: sl(),
     );
   });
-  sl.registerLazySingleton<ResetPasswordUseCase>(() {
-    return ResetPasswordUseCase(
+  sl.registerLazySingleton<ForgotPasswordUseCase>(() {
+    return ForgotPasswordUseCase(
       authRepository: sl(),
     );
   });
@@ -202,7 +202,7 @@ Future<void> _auth() async {
   });
   sl.registerFactory<ForgotPasswordCubit>(() {
     return ForgotPasswordCubit(
-      resetPasswordUseCase: sl(),
+      forgotPasswordUseCase: sl(),
     );
   });
   sl.registerFactory<CreateNewPasswordCubit>(() {

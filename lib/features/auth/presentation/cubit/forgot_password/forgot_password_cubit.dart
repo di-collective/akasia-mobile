@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/usecase/reset_password_usecase.dart';
+import '../../../domain/usecase/forgot_password_usecase.dart';
 
 part 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
-  final ResetPasswordUseCase resetPasswordUseCase;
+  final ForgotPasswordUseCase forgotPasswordUseCase;
 
   ForgotPasswordCubit({
-    required this.resetPasswordUseCase,
+    required this.forgotPasswordUseCase,
   }) : super(ForgotPasswordInitial());
 
   Future<void> resetPassword({
@@ -18,8 +18,8 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     try {
       emit(ForgotPasswordLoading());
 
-      await resetPasswordUseCase(
-        ResetPasswordParams(email: email),
+      await forgotPasswordUseCase(
+        ForgotPasswordParams(email: email),
       );
 
       emit(ForgotPasswordLoaded());

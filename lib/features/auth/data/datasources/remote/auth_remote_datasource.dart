@@ -44,7 +44,7 @@ abstract class AuthRemoteDataSource {
     required AuthType authType,
     required String firebaseIdToken,
   });
-  Future<void> resetPassword({
+  Future<void> forgotPassword({
     required String email,
   });
   Future<void> confirmPasswordReset({
@@ -420,20 +420,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> resetPassword({
+  Future<void> forgotPassword({
     required String email,
   }) async {
     try {
-      Logger.info('resetPassword params: email $email');
+      Logger.info('forgotPassword params: email $email');
 
-      // send password reset email
-      await firebaseAuth.sendPasswordResetEmail(
-        email: email,
+      final result = await appHttpClient.post(
+        url: "${EnvConfig.baseAkasiaApiUrl}/credentials/forgot-password",
+        data: {
+          'email': email,
+        },
       );
 
-      Logger.success('resetPassword success');
+      Logger.success('forgotPassword result: $result');
     } catch (error) {
-      Logger.error('resetPassword error: $error');
+      Logger.error('forgotPassword error: $error');
 
       rethrow;
     }

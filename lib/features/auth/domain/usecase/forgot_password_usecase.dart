@@ -1,25 +1,25 @@
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/auth_repository.dart';
 
-class ResetPasswordUseCase extends UseCase<void, ResetPasswordParams> {
+class ForgotPasswordUseCase extends UseCase<void, ForgotPasswordParams> {
   final AuthRepository authRepository;
 
-  ResetPasswordUseCase({
+  ForgotPasswordUseCase({
     required this.authRepository,
   });
 
   @override
-  Future<void> call(ResetPasswordParams params) async {
-    return await authRepository.resetPassword(
+  Future<void> call(ForgotPasswordParams params) async {
+    return await authRepository.forgotPassword(
       email: params.email,
     );
   }
 }
 
-class ResetPasswordParams {
+class ForgotPasswordParams {
   final String email;
 
-  ResetPasswordParams({
+  ForgotPasswordParams({
     required this.email,
   });
 }
