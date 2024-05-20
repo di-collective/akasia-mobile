@@ -98,5 +98,9 @@
   "loggingOut": "Logging Out",
   "logOutConfirmation": "Are you sure want to sign out from your Akasia365mc account",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "photo": "Photo",
+  "choosePhotoSource": "Choose photo source",
+  "takePhoto": "Take Photo",
+  "photoLibrary": "Photo Library"
 }

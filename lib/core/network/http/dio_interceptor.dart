@@ -33,7 +33,9 @@ class DioInterceptor extends Interceptor {
 
     String? message;
 
-    if (err.response?.data is Map) {
+    if (err.response?.data is String) {
+      message = err.response?.data;
+    } else if (err.response?.data is Map) {
       // get message from message
       message = err.response?.data['message'];
 

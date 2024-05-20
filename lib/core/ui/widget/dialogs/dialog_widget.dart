@@ -20,6 +20,10 @@ class DialogWidget extends StatelessWidget {
     final colorScheme = context.theme.appColorScheme;
 
     return Dialog(
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: context.paddingHorizontal,
+        vertical: 24,
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,

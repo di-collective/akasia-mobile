@@ -1,12 +1,17 @@
+import 'package:flutter/services.dart';
+
 extension ExceptionParsing on Exception {
-  String get message {
-    final String message = toString();
+  String get errorMessage {
+    String? message;
+    if (this is PlatformException) {
+      message = (this as PlatformException).message;
+    }
+
+    message ??= toString();
 
     if (message.contains('Exception: ')) {
       // remove 'Exception: '
       return message.replaceAll('Exception: ', '');
-    } else if (message.contains('insufficient') && message.contains('funds')) {
-      return 'Insufficient balance';
     }
 
     return message;

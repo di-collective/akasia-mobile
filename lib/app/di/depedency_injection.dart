@@ -3,14 +3,22 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/common/directory_info.dart';
+import '../../core/common/image_compress_info.dart';
+import '../../core/common/local_picker_info.dart';
 import '../../core/common/open_app_info.dart';
 import '../../core/network/http/app_http_client.dart';
 import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
 import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
+import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
+import '../../features/account/data/repositories/account_repository_impl.dart';
+import '../../features/account/domain/repositories/account_repository.dart';
+import '../../features/account/domain/usecases/change_profile_picture_usecase.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -19,9 +27,9 @@ import '../../features/auth/data/repositories/config_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/repositories/config_repository.dart';
 import '../../features/auth/domain/usecase/confirm_password_reset_usecase.dart';
+import '../../features/auth/domain/usecase/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecase/get_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/get_yaml_usecase.dart';
-import '../../features/auth/domain/usecase/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecase/save_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/sign_in_use_case.dart';
 import '../../features/auth/domain/usecase/sign_out_use_case.dart';
@@ -45,6 +53,8 @@ Future<void> init() async {
   await _auth();
 
   await _main();
+
+  await _account();
 }
 
 Future<void> _external() async {
@@ -72,6 +82,11 @@ Future<void> _external() async {
   // dio
   sl.registerLazySingleton<Dio>(() {
     return Dio()..interceptors.add(DioInterceptor());
+  });
+
+  // image picker
+  sl.registerLazySingleton<ImagePicker>(() {
+    return ImagePicker();
   });
 }
 
@@ -105,6 +120,25 @@ Future<void> _core() async {
   // full screen loading cubit
   sl.registerFactory<FullScreenLoadingCubit>(() {
     return FullScreenLoadingCubit();
+  });
+
+  // local picker info
+  sl.registerLazySingleton<LocalPickerInfo>(() {
+    return LocalPickerInfoImpl(
+      imagePicker: sl(),
+    );
+  });
+
+  // directory info
+  sl.registerLazySingleton<DirectoryInfo>(() {
+    return const DirectoryInfoImpl();
+  });
+
+  // image compress info
+  sl.registerLazySingleton<ImageCompressInfo>(() {
+    return ImageCompressInfoImpl(
+      directoryInfo: sl(),
+    );
   });
 }
 
@@ -216,5 +250,31 @@ Future<void> _main() async {
   // cubit
   sl.registerFactory<BottomNavigationCubit>(() {
     return BottomNavigationCubit();
+  });
+}
+
+Future<void> _account() async {
+  // data source
+  sl.registerLazySingleton<AccountRemoteDataSource>(() {
+    return AccountRemoteDataSourceImpl(
+      appHttpClient: sl(),
+      imageCompressInfo: sl(),
+    );
+  });
+
+  // repository
+  sl.registerLazySingleton<AccountRepository>(() {
+    return AccountRepositoryImpl(
+      networkInfo: sl(),
+      accountRemoteDataSource: sl(),
+      authLocalDataSource: sl(),
+    );
+  });
+
+  // use case
+  sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
+    return ChangeProfilePictureUseCase(
+      accountRepository: sl(),
+    );
   });
 }

@@ -11,7 +11,14 @@ extension CustomExceptionParsing on AppException {
     } else if (this is AppHttpException) {
       if (code != null) {
         if (code is Exception) {
-          return (code as Exception).message;
+          return (code as Exception).errorMessage;
+        } else if (code is AppUnexpectedException) {
+          final message = (code as AppUnexpectedException).message;
+          if (message != null && message.isNotEmpty) {
+            return message.toString();
+          }
+
+          return code.toString();
         } else {
           return code.toString();
         }

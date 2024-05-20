@@ -45,6 +45,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
 	<!-- Google Sign-in Section -->
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -59,9 +60,19 @@
 		</dict>
 	</array>
 	<!-- End of the Google Sign-in Section -->
+
+	<!-- App Query Schemes Section -->
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>tel</string>
 	</array>
+	<!-- End of the App Query Schemes Section -->
+
+	<!-- Permissions Section -->
+	<key>NSCameraUsageDescription</key>
+	<string>Camera permission is required for get photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library permission is required for get photo.</string>
+	<!-- End of the Permissions Section -->
 </dict>
 </plist>

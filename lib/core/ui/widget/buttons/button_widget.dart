@@ -104,12 +104,15 @@ class ButtonWidget extends StatelessWidget {
     if (text != null) {
       return Text(
         text!,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: style ??
             textTheme.bodyLarge.copyWith(
               color: buttonTextColor(
                 colorScheme: colorScheme,
               ),
               fontWeight: FontWeight.w600,
+              height: 1.3,
             ),
       );
     }
