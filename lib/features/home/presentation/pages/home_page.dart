@@ -6,6 +6,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import '../../../../app/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/dialogs/dialog_widget.dart';
 import '../widgets/home_dashboard_item_widget.dart';
 import '../widgets/home_menu_item_widget.dart';
 
@@ -268,43 +269,22 @@ class HomePage extends StatelessWidget {
     // set brightness to maximum
     await ScreenBrightness().setScreenBrightness(1);
 
-    final textTheme = context.theme.appTextTheme;
-    final colorScheme = context.theme.appColorScheme;
-
     // show dialog with barcode
     await showDialog(
       context: context,
       builder: (context) {
+        final colorScheme = context.theme.appColorScheme;
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Dialog(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.locale.membership,
-                      style: textTheme.titleMedium.copyWith(
-                        color: colorScheme.onSurfaceDim,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    BarcodeWidget(
-                      barcode: Barcode.code128(),
-                      data: 'ABC-abc-1234',
-                      height: 90,
-                      width: 300,
-                    ),
-                  ],
-                ),
+            DialogWidget(
+              title: context.locale.membership,
+              button: BarcodeWidget(
+                barcode: Barcode.code128(),
+                data: 'ABC-abc-1234',
+                height: 90,
+                width: 300,
               ),
             ),
             const SizedBox(

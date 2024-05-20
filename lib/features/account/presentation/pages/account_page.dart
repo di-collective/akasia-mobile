@@ -8,7 +8,7 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_parsing.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_parsing.dart';
-import '../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
@@ -161,70 +161,9 @@ class _AccountPageState extends State<AccountPage> {
       final isLogout = await showDialog<bool?>(
         context: context,
         builder: (context) {
-          final textTheme = context.theme.appTextTheme;
-          final colorScheme = context.theme.appColorScheme;
-
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 24,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.locale.loggingOut,
-                    style: textTheme.titleMedium.copyWith(
-                      color: colorScheme.onSurfaceDim,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    context.locale.logOutConfirmation,
-                    maxLines: 2,
-                    style: textTheme.labelLarge.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w500,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ButtonWidget(
-                          text: context.locale.yes,
-                          onTap: () {
-                            Navigator.pop(context, true);
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        child: ButtonWidget(
-                          text: context.locale.no,
-                          borderColor: Colors.transparent,
-                          textColor: colorScheme.onSurfaceBright,
-                          backgroundColor: Colors.transparent,
-                          onTap: () {
-                            Navigator.pop(context, false);
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+          return ConfirmationDialogWidget(
+            title: context.locale.loggingOut,
+            description: context.locale.logOutConfirmation,
           );
         },
       );
