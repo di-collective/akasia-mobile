@@ -1,6 +1,8 @@
-import 'package:akasia365mc/core/ui/extensions/build_context_extension.dart';
-import 'package:akasia365mc/core/ui/extensions/theme_data_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/theme_data_extension.dart';
 
 class ProfileDetailItemWidget extends StatelessWidget {
   final String label;
@@ -21,24 +23,33 @@ class ProfileDetailItemWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: textTheme.labelLarge.copyWith(
-              color: colorScheme.onSurface,
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Text(
+              label,
+              style: textTheme.labelLarge.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           const SizedBox(
             width: 8,
           ),
-          Text(
-            value ?? '-',
-            style: textTheme.labelLarge.copyWith(
-              color: colorScheme.onSurfaceDim,
-              fontWeight: FontWeight.w500,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: context.width * 0.5,
             ),
-            textAlign: TextAlign.end,
+            child: Text(
+              value ?? '-',
+              style: textTheme.labelLarge.copyWith(
+                color: colorScheme.onSurfaceDim,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.end,
+              maxLines: 2,
+            ),
           ),
         ],
       ),

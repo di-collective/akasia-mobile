@@ -181,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 40,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: _onEditInformation,
+                  onTap: _onEditAllergies,
                   child: Text(
                     context.locale.edit,
                     style: textTheme.labelLarge.copyWith(
@@ -208,6 +208,98 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 16,
             ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              width: context.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: colorScheme.white,
+              ),
+              child: Wrap(
+                runSpacing: 16,
+                spacing: 16,
+                children: List.generate(
+                  10,
+                  (index) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: colorScheme.surfaceBright,
+                    ),
+                    child: Text(
+                      'Obat A',
+                      style: textTheme.labelLarge.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.locale.emergencyContact,
+                  style: textTheme.titleMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurfaceDim,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: _onEmergencyContact,
+                  child: Text(
+                    context.locale.edit,
+                    style: textTheme.labelLarge.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: colorScheme.white,
+              ),
+              child: Column(
+                children: [
+                  ProfileDetailItemWidget(
+                    label: context.locale.relationship,
+                    value: 'Wife',
+                  ),
+                  Divider(
+                    height: 0,
+                    color: colorScheme.outlineBright,
+                    thickness: 0.5,
+                  ),
+                  ProfileDetailItemWidget(
+                    label: context.locale.fullName,
+                    value: 'Taylor Swift',
+                  ),
+                  Divider(
+                    height: 0,
+                    color: colorScheme.outlineBright,
+                    thickness: 0.5,
+                  ),
+                  ProfileDetailItemWidget(
+                    label: context.locale.phoneNumber,
+                    value: '+62 821 6767 8989',
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               height: context.paddingBottom,
             ),
@@ -219,5 +311,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _onEditInformation() {
     // TODO: go to edit information page
+  }
+
+  void _onEditAllergies() {
+    // TODO: go to edit allergies page
+  }
+
+  void _onEmergencyContact() {
+    // TODO: go to edit emergency contact page
   }
 }
