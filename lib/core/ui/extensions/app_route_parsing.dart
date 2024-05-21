@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/navigation/app_route.dart';
+import '../../../features/account/presentation/pages/profile_page.dart';
 import '../../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../../features/auth/presentation/pages/sign_in_page.dart';
@@ -27,6 +28,8 @@ extension AppRouteParsing on AppRoute {
         return 'sign-up';
       case AppRoute.main:
         return '/main';
+      case AppRoute.profile:
+        return 'profile';
     }
   }
 
@@ -52,6 +55,8 @@ extension AppRouteParsing on AppRoute {
         return MainPage(
           params: params,
         );
+      case AppRoute.profile:
+        return const ProfilePage();
     }
   }
 

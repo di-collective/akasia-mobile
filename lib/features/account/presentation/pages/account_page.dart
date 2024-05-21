@@ -257,7 +257,8 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _onInformationDetails() {
-    // TODO: Implement this method
+    // go to profile page
+    context.goNamed(AppRoute.profile.name);
   }
 
   void _onAccountSettings() {

@@ -5,12 +5,13 @@ import '../../core/ui/extensions/app_route_parsing.dart';
 
 enum AppRoute {
   splash,
-  main,
   signIn,
   signUp,
   forgotPassword,
   createNewPassword,
   successCreateNewPassword,
+  main,
+  profile,
 }
 
 class AppRouteInfo {
@@ -30,7 +31,11 @@ class AppRouteInfo {
           ),
         ],
       ),
-      AppRoute.main.route(),
+      AppRoute.main.route(
+        routes: [
+          AppRoute.profile.route(),
+        ],
+      ),
     ],
   );
 }

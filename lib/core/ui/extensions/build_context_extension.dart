@@ -20,7 +20,7 @@ extension BuildContextExtension on BuildContext {
 
   double get paddingTop => mediaQueryData.padding.top;
 
-  double get paddingBottom => mediaQueryData.padding.bottom;
+  double get paddingBottom => 20;
 
   double get phoneHeightWihtoutSafeArea {
     return height - paddingTop - paddingBottom;

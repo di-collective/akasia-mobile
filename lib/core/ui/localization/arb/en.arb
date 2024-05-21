@@ -102,5 +102,21 @@
   "photo": "Photo",
   "choosePhotoSource": "Choose photo source",
   "takePhoto": "Take Photo",
-  "photoLibrary": "Photo Library"
+  "photoLibrary": "Photo Library",
+  "information": "Information",
+  "edit": "Edit",
+  "membershipId": "Membership ID",
+  "eKtpNumber": "E-KTP Number",
+  "fullName": "Full Name",
+  "phoneNumber": "Phone Number",
+  "age": "Age",
+  "dob": "DOB",
+  "sex": "Sex",
+  "bloodType": "Blood type",
+  "weight": "Weight",
+  "height": "Height",
+  "activityLevel": "Activity Level",
+  "allergies": "Allergies",
+  "emergencyContact": "Emergency Contact",
+  "relationship": "Relationship"
 }
