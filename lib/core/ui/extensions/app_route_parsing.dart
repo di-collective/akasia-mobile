@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/navigation/app_route.dart';
+import '../../../features/account/presentation/pages/edit_information_page.dart';
 import '../../../features/account/presentation/pages/profile_page.dart';
 import '../../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../../features/auth/presentation/pages/forgot_password_page.dart';
@@ -15,7 +16,7 @@ extension AppRouteParsing on AppRoute {
   String get path {
     switch (this) {
       case AppRoute.splash:
-        return '/splash';
+        return '/';
       case AppRoute.signIn:
         return '/sign-in';
       case AppRoute.forgotPassword:
@@ -30,6 +31,8 @@ extension AppRouteParsing on AppRoute {
         return '/main';
       case AppRoute.profile:
         return 'profile';
+      case AppRoute.editInformation:
+        return 'edit-information';
     }
   }
 
@@ -57,6 +60,8 @@ extension AppRouteParsing on AppRoute {
         );
       case AppRoute.profile:
         return const ProfilePage();
+      case AppRoute.editInformation:
+        return const EditInformationPage();
     }
   }
 

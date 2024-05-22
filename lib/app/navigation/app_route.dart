@@ -12,6 +12,7 @@ enum AppRoute {
   successCreateNewPassword,
   main,
   profile,
+  editInformation,
 }
 
 class AppRouteInfo {
@@ -33,7 +34,11 @@ class AppRouteInfo {
       ),
       AppRoute.main.route(
         routes: [
-          AppRoute.profile.route(),
+          AppRoute.profile.route(
+            routes: [
+              AppRoute.editInformation.route(),
+            ],
+          ),
         ],
       ),
     ],

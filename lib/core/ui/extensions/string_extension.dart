@@ -1,3 +1,5 @@
+import '../../../app/observers/logger.dart';
+
 extension StringExtension on String {
   bool get isEmail {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
@@ -19,7 +21,13 @@ extension StringExtension on String {
     return RegExp(r'[a-z]').hasMatch(this);
   }
 
-  bool get isContainsSpecialCharacter {
+  bool isContainsSpecialCharacter({
+    bool? isWithOutComma,
+  }) {
+    if (isWithOutComma == true) {
+      return RegExp(r'[!@#$%^&*().?":{}|<>]').hasMatch(this);
+    }
+
     return RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(this);
   }
 
@@ -78,5 +86,19 @@ extension StringExtension on String {
     return RegExp(
             r'^(1[1-9]|21|[37][1-6]|5[1-3]|6[1-5]|[89][12])\d{2}\d{2}([04][1-9]|[1256][0-9]|[37][01])(0[1-9]|1[0-2])\d{2}\d{4}$')
         .hasMatch(this);
+  }
+
+  DateTime? get toDateTime {
+    try {
+      if (isEmpty) {
+        return null;
+      }
+
+      return DateTime.tryParse(this);
+    } catch (error) {
+      Logger.error('toDateTime error: $error');
+
+      return null;
+    }
   }
 }

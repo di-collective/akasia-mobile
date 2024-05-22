@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/navigation/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
@@ -20,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(context.locale.profile),
       ),
       backgroundColor: colorScheme.surfaceBright,
       body: SingleChildScrollView(
@@ -310,7 +312,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _onEditInformation() {
-    // TODO: go to edit information page
+    // go to edit information page
+    context.goNamed(AppRoute.editInformation.name);
   }
 
   void _onEditAllergies() {

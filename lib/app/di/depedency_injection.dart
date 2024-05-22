@@ -19,6 +19,7 @@ import '../../features/account/data/datasources/remote/account_remote_datasource
 import '../../features/account/data/repositories/account_repository_impl.dart';
 import '../../features/account/domain/repositories/account_repository.dart';
 import '../../features/account/domain/usecases/change_profile_picture_usecase.dart';
+import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -276,5 +277,10 @@ Future<void> _account() async {
     return ChangeProfilePictureUseCase(
       accountRepository: sl(),
     );
+  });
+
+  // cubit
+  sl.registerFactory<EditInformationCubit>(() {
+    return EditInformationCubit();
   });
 }

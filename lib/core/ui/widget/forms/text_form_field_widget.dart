@@ -14,7 +14,11 @@ class TextFormFieldWidget extends StatefulWidget {
   final TextAlign? textAlign;
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
+  final String? prefixText;
+  final Function()? onTapPrefixText;
   final Widget? suffixIcon;
+  final String? suffixText;
+  final Function()? onTapSuffixText;
   final bool? readOnly;
   final String? initialValue;
   final Color? backgroundColor;
@@ -26,7 +30,6 @@ class TextFormFieldWidget extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
   final Function()? onTap;
   final Function()? onEditingComplete;
-  final bool? isDisabled;
   final Function()? onClear;
   final bool? isRequired;
 
@@ -39,7 +42,11 @@ class TextFormFieldWidget extends StatefulWidget {
     this.textAlign,
     this.validator,
     this.prefixIcon,
+    this.prefixText,
+    this.onTapPrefixText,
     this.suffixIcon,
+    this.suffixText,
+    this.onTapSuffixText,
     this.readOnly,
     this.initialValue,
     this.backgroundColor,
@@ -51,7 +58,6 @@ class TextFormFieldWidget extends StatefulWidget {
     this.contentPadding,
     this.onTap,
     this.onEditingComplete,
-    this.isDisabled,
     this.onClear,
     this.isRequired,
   });
@@ -123,8 +129,14 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             filled: true,
             isDense: true,
             isCollapsed: true,
-            prefixIcon: widget.prefixIcon,
-            suffixIcon: _buildSuffixIcon(colorScheme),
+            prefixIcon: _buildPrefixIcon(
+              colorScheme: colorScheme,
+              textTheme: textTheme,
+            ),
+            suffixIcon: _buildSuffixIcon(
+              colorScheme: colorScheme,
+              textTheme: textTheme,
+            ),
             hintStyle: textTheme.bodyLarge.copyWith(
               color: colorScheme.onSurfaceBright,
             ),
@@ -137,20 +149,13 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             focusedBorder: _buildOutlineInputBorder(
               borderColor: colorScheme.primaryContainer,
             ),
-            contentPadding:
-                widget.hintText != null && widget.hintText!.isNotEmpty
-                    ? const EdgeInsets.fromLTRB(
-                        12,
-                        18.5,
-                        12,
-                        20,
-                      )
-                    : const EdgeInsets.fromLTRB(
-                        12,
-                        20,
-                        12,
-                        18.5,
-                      ),
+            contentPadding: widget.contentPadding ??
+                const EdgeInsets.fromLTRB(
+                  12,
+                  10,
+                  12,
+                  14,
+                ),
             errorBorder: _buildOutlineInputBorder(
               borderColor: colorScheme.error,
             ),
@@ -169,8 +174,8 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       return widget.backgroundColor;
     }
 
-    if (widget.isDisabled == true) {
-      return colorScheme.primaryTonal;
+    if (widget.readOnly == true) {
+      return colorScheme.surface;
     }
 
     return Colors.white;
@@ -184,19 +189,102 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       color: colorScheme.onSurface,
     );
 
-    if (widget.isDisabled == true) {
+    if (widget.readOnly == true) {
       defaultTextStyle = defaultTextStyle.copyWith(
         color: colorScheme.onSurfaceBright,
-        fontWeight: FontWeight.w600,
       );
     }
 
     return defaultTextStyle;
   }
 
-  Widget? _buildSuffixIcon(AppColorScheme colorScheme) {
+  Widget? _buildPrefixIcon({
+    required AppColorScheme colorScheme,
+    required AppTextTheme textTheme,
+  }) {
+    if (widget.prefixIcon != null) {
+      return widget.prefixIcon!;
+    }
+
+    if (widget.prefixText != null && widget.prefixText!.isNotEmpty) {
+      return InkWell(
+        onTap: widget.onTapPrefixText,
+        child: Container(
+          margin: const EdgeInsets.only(
+            left: 1,
+            right: 10,
+            top: 1,
+            bottom: 1,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.horizontal(
+              left: Radius.circular(8),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.prefixText!,
+                style: textTheme.bodyLarge.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return null;
+  }
+
+  Widget? _buildSuffixIcon({
+    required AppColorScheme colorScheme,
+    required AppTextTheme textTheme,
+  }) {
     if (widget.suffixIcon != null) {
       return widget.suffixIcon!;
+    }
+
+    if (widget.suffixText != null && widget.suffixText!.isNotEmpty) {
+      return InkWell(
+        onTap: widget.onTapSuffixText,
+        child: Container(
+          margin: const EdgeInsets.only(
+            left: 10,
+            right: 1,
+            top: 1,
+            bottom: 1,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.horizontal(
+              right: Radius.circular(8),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.suffixText!,
+                style: textTheme.bodyLarge.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     if (widget.keyboardType == TextInputType.visiblePassword) {
