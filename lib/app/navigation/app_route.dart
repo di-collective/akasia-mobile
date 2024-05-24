@@ -13,6 +13,7 @@ enum AppRoute {
   main,
   profile,
   editInformation,
+  editAllergies,
 }
 
 class AppRouteInfo {
@@ -37,6 +38,7 @@ class AppRouteInfo {
           AppRoute.profile.route(
             routes: [
               AppRoute.editInformation.route(),
+              AppRoute.editAllergies.route(),
             ],
           ),
         ],

@@ -5,7 +5,10 @@ import '../../../../app/navigation/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../data/datasources/remote/allergy_remote_datasource.dart';
+import '../../data/models/allergy_model.dart';
 import '../widgets/profile_detail_item_widget.dart';
+import 'edit_allergies_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -218,28 +221,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: colorScheme.white,
               ),
               child: Wrap(
-                runSpacing: 16,
+                runSpacing: 3,
                 spacing: 16,
-                children: List.generate(
-                  10,
-                  (index) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4,
-                      horizontal: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: colorScheme.surfaceBright,
-                    ),
-                    child: Text(
-                      'Obat A',
-                      style: textTheme.labelLarge.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
+                children: mockMyAllergies.map((allergy) {
+                  return Chip(
+                    label: Text(allergy.allergy ?? ''),
+                  );
+                }).toList(),
               ),
             ),
             const SizedBox(
@@ -317,10 +305,21 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _onEditAllergies() {
-    // TODO: go to edit allergies page
+    // go to edit allergies page
+    context.goNamed(
+      AppRoute.editAllergies.name,
+      extra: EditAllergiesPageParams(
+        allergies: mockMyAllergies,
+      ),
+    );
   }
 
   void _onEmergencyContact() {
     // TODO: go to edit emergency contact page
   }
 }
+
+final List<AllergyModel> mockMyAllergies = [
+  AllergyModel.fromJson(mockAllergies.first),
+  AllergyModel.fromJson(mockAllergies.last),
+];

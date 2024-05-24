@@ -20,8 +20,8 @@ class MainPageParams {
   });
 }
 
-class MainPage extends StatefulWidget {
-  final MainPageParams? params;
+class MainPage<T> extends StatefulWidget {
+  final T? params;
 
   const MainPage({
     super.key,

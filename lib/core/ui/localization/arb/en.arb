@@ -129,5 +129,9 @@
   "dateOfBirth": "Date of Birth",
   "choose": "Choose",
   "male": "Male",
-  "female": "Female"
+  "female": "Female",
+  "youHaveAnyAllergies": "You have any allergies",
+  "listOfAllergies": "List of Allergies",
+  "successEditAllergies": "Your allergies successfully updated.",
+  "successEditEmergencyContact": "Your emergency contact successfully updated"
 }

@@ -41,6 +41,24 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
+      chipTheme: ChipThemeData(
+        backgroundColor: colorScheme.surfaceBright,
+        brightness: Brightness.light,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            color: colorScheme.surfaceBright,
+          ),
+        ),
+        labelStyle: textTheme.labelLarge.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }

@@ -16,10 +16,16 @@ import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
 import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
+import '../../features/account/data/datasources/remote/allergy_remote_datasource.dart';
 import '../../features/account/data/repositories/account_repository_impl.dart';
+import '../../features/account/data/repositories/allergy_repository_impl.dart';
 import '../../features/account/domain/repositories/account_repository.dart';
+import '../../features/account/domain/repositories/allergy_repository.dart';
 import '../../features/account/domain/usecases/change_profile_picture_usecase.dart';
+import '../../features/account/domain/usecases/get_allergies_usecase.dart';
+import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
+import '../../features/account/presentation/cubit/get_allergies/get_allergies_cubit.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -262,6 +268,11 @@ Future<void> _account() async {
       imageCompressInfo: sl(),
     );
   });
+  sl.registerLazySingleton<AllergyRemoteDataSource>(() {
+    return AllergyRemoteDataSourceImpl(
+      appHttpClient: sl(),
+    );
+  });
 
   // repository
   sl.registerLazySingleton<AccountRepository>(() {
@@ -271,6 +282,13 @@ Future<void> _account() async {
       authLocalDataSource: sl(),
     );
   });
+  sl.registerLazySingleton<AllergyRepository>(() {
+    return AllergyRepositoryImpl(
+      networkInfo: sl(),
+      authLocalDataSource: sl(),
+      allergyRemoteDataSource: sl(),
+    );
+  });
 
   // use case
   sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
@@ -278,9 +296,22 @@ Future<void> _account() async {
       accountRepository: sl(),
     );
   });
+  sl.registerLazySingleton<GetAllergiesUseCase>(() {
+    return GetAllergiesUseCase(
+      allergyRepository: sl(),
+    );
+  });
 
   // cubit
   sl.registerFactory<EditInformationCubit>(() {
     return EditInformationCubit();
+  });
+  sl.registerFactory<GetAllergiesCubit>(() {
+    return GetAllergiesCubit(
+      getAllergiesUseCase: sl(),
+    );
+  });
+  sl.registerFactory<EditAllergiesCubit>(() {
+    return EditAllergiesCubit();
   });
 }

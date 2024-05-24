@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/navigation/app_route.dart';
+import '../../../features/account/presentation/pages/edit_allergies_page.dart';
 import '../../../features/account/presentation/pages/edit_information_page.dart';
 import '../../../features/account/presentation/pages/profile_page.dart';
 import '../../../features/auth/presentation/pages/create_new_password_page.dart';
@@ -33,11 +34,13 @@ extension AppRouteParsing on AppRoute {
         return 'profile';
       case AppRoute.editInformation:
         return 'edit-information';
+      case AppRoute.editAllergies:
+        return 'edit-allergies';
     }
   }
 
-  Widget widget({
-    Map? arguments,
+  Widget widget<T>({
+    T? arguments,
   }) {
     switch (this) {
       case AppRoute.splash:
@@ -53,15 +56,17 @@ extension AppRouteParsing on AppRoute {
       case AppRoute.signUp:
         return const SignUpPage();
       case AppRoute.main:
-        final params = arguments?['params'] as MainPageParams?;
-
         return MainPage(
-          params: params,
+          params: arguments,
         );
       case AppRoute.profile:
         return const ProfilePage();
       case AppRoute.editInformation:
         return const EditInformationPage();
+      case AppRoute.editAllergies:
+        return EditAllergiesPage(
+          params: arguments,
+        );
     }
   }
 
@@ -75,11 +80,9 @@ extension AppRouteParsing on AppRoute {
       builder: (context, state) {
         final extra = state.extra;
 
-        if (extra != null && extra is Map) {
-          return widget(arguments: extra);
-        }
-
-        return widget();
+        return widget(
+          arguments: extra,
+        );
       },
     );
   }
