@@ -19,6 +19,7 @@ class DropdownWidget<T> extends StatelessWidget {
   final List<Widget> selectedItemBuilder;
   final bool? isDisabled, isLoading, isRequired;
   final Color? backgroundColor;
+  final double? itemHeight;
 
   const DropdownWidget({
     super.key,
@@ -35,6 +36,7 @@ class DropdownWidget<T> extends StatelessWidget {
     this.isLoading,
     this.isRequired,
     this.backgroundColor,
+    this.itemHeight,
   });
 
   @override
@@ -87,8 +89,9 @@ class DropdownWidget<T> extends StatelessWidget {
               selectedItemBuilder: (context) {
                 return selectedItemBuilder;
               },
-              menuItemStyleData: const MenuItemStyleData(
+              menuItemStyleData: MenuItemStyleData(
                 padding: EdgeInsets.zero,
+                height: itemHeight ?? kMinInteractiveDimension,
               ),
               dropdownStyleData: DropdownStyleData(
                 padding: EdgeInsets.zero,

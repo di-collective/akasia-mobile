@@ -14,10 +14,14 @@ import '../../../../core/ui/extensions/toast_type_parsing.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/buttons/radio_widget.dart';
+import '../../../../core/ui/widget/dropdowns/dropdown_widget.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../../activity_level/data/datasources/local/activity_level_local_datasource.dart';
+import '../../../activity_level/data/models/activity_level_model.dart';
 import '../../../country/data/models/country_model.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 
@@ -54,7 +58,7 @@ class __BodyState extends State<_Body> {
   final _bloodTypeTextController = TextEditingController();
   final _weightTextController = TextEditingController();
   final _heightTextController = TextEditingController();
-  final _activityLevelTextController = TextEditingController();
+  ActivityLevelModel? _selectedActivityLevel;
 
   @override
   void initState() {
@@ -89,7 +93,6 @@ class __BodyState extends State<_Body> {
     _bloodTypeTextController.dispose();
     _weightTextController.dispose();
     _heightTextController.dispose();
-    _activityLevelTextController.dispose();
   }
 
   @override
@@ -302,29 +305,91 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            StringDropdownWidget(
-                              options: const [
-                                "Sangat Jarang",
-                                "Jarang",
-                                "Sedang",
-                                "Sering",
-                                "Sangat Sering",
-                              ], // TODO: get from API
+                            DropdownWidget<ActivityLevelModel>(
+                              itemHeight: 72,
+                              items: sl<ActivityLevelLocalDataSource>()
+                                  .getActivityLevels()
+                                  .map(
+                                (activityLevel) {
+                                  return DropdownMenuItem(
+                                    value: activityLevel,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                      ),
+                                      height: 72,
+                                      child: Row(
+                                        children: [
+                                          const NetworkImageWidget(
+                                            size: Size(40, 40),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          const SizedBox(
+                                            width: 12,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  activityLevel.activity ?? '',
+                                                  style: textTheme.labelLarge
+                                                      .copyWith(
+                                                    color: colorScheme
+                                                        .onSurfaceDim,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 4,
+                                                ),
+                                                Text(
+                                                  activityLevel.description ??
+                                                      '',
+                                                  style: textTheme.labelMedium
+                                                      .copyWith(
+                                                    color:
+                                                        colorScheme.onSurface,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ).toList(),
                               title: context.locale.activityLevel,
                               hintText: context.locale.choose,
-                              selectedValue:
-                                  _activityLevelTextController.text.isEmpty
-                                      ? null
-                                      : _activityLevelTextController.text,
+                              selectedValue: _selectedActivityLevel,
                               onChanged: (option) {
                                 if (option != null &&
-                                    option !=
-                                        _activityLevelTextController.text) {
+                                    option != _selectedActivityLevel) {
                                   setState(() {
-                                    _activityLevelTextController.text = option;
+                                    _selectedActivityLevel = option;
                                   });
                                 }
                               },
+                              selectedItemBuilder:
+                                  sl<ActivityLevelLocalDataSource>()
+                                      .getActivityLevels()
+                                      .map((e) {
+                                return Text(
+                                  _selectedActivityLevel?.activity ?? '',
+                                  style: textTheme.bodyLarge.copyWith(
+                                    color: colorScheme.onSurface,
+                                  ),
+                                );
+                              }).toList(),
                             ),
                             const SizedBox(
                               height: 20,

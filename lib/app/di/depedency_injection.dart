@@ -34,6 +34,7 @@ import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_
 import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
 import '../../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
+import '../../features/activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -77,6 +78,8 @@ Future<void> init() async {
   await _main();
 
   await _account();
+
+  await _activityLevel();
 }
 
 Future<void> _external() async {
@@ -393,5 +396,12 @@ Future<void> _account() async {
     return EditEmergencyContactCubit(
       editEmergencyContactUseCase: sl(),
     );
+  });
+}
+
+Future<void> _activityLevel() async {
+  // data source
+  sl.registerLazySingleton<ActivityLevelLocalDataSource>(() {
+    return ActivityLevelLocalDataSourceImpl();
   });
 }
