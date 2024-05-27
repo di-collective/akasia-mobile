@@ -280,7 +280,7 @@ class __BodyState extends State<_Body> {
                   ),
                   TextFormFieldWidget(
                     controller: _heightTextController,
-                    title: context.locale.weight,
+                    title: context.locale.height,
                     suffixText: "cm",
                     keyboardType: TextInputType.number,
                     validator: (val) {

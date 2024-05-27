@@ -5,26 +5,30 @@ import '../../../../../core/usecases/usecase.dart';
 import '../../../data/models/allergy_model.dart';
 import '../../../domain/usecases/get_allergies_usecase.dart';
 
-part 'get_allergies_state.dart';
+part 'allergies_state.dart';
 
-class GetAllergiesCubit extends Cubit<GetAllergiesState> {
+class AllergiesCubit extends Cubit<AllergiesState> {
   final GetAllergiesUseCase getAllergiesUseCase;
 
-  GetAllergiesCubit({
+  AllergiesCubit({
     required this.getAllergiesUseCase,
-  }) : super(GetAllergiesInitial());
+  }) : super(AllergiesInitial());
 
   Future<void> getAllergies() async {
     try {
-      emit(GetAllergiesLoading());
+      emit(AllergiesLoading());
 
       final allergies = await getAllergiesUseCase.call(NoParams());
 
-      emit(GetAllergiesLoaded(allergies: allergies));
+      emit(AllergiesLoaded(allergies: allergies));
     } catch (error) {
-      emit(GetAllergiesError(error: error));
+      emit(AllergiesError(error: error));
 
       rethrow;
     }
+  }
+
+  void updateAllergies(List<AllergyModel> allergies) {
+    emit(AllergiesLoaded(allergies: allergies));
   }
 }

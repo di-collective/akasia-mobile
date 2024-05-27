@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/account/presentation/cubit/allergies/allergies_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,6 +28,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<BottomNavigationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<AllergiesCubit>(),
         ),
       ],
       child: MaterialApp.router(

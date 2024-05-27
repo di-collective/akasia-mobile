@@ -4,12 +4,14 @@ class AllergyModel extends AllergyEntity {
   const AllergyModel({
     super.id,
     super.allergy,
+    super.description,
   });
 
   factory AllergyModel.fromJson(Map<String, dynamic> json) {
     return AllergyModel(
       id: json['id'],
       allergy: json['allergy'],
+      description: json['description'],
     );
   }
 
@@ -17,6 +19,7 @@ class AllergyModel extends AllergyEntity {
     return {
       'id': id,
       'allergy': allergy,
+      'description': description,
     };
   }
 }

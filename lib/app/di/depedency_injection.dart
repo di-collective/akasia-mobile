@@ -25,7 +25,7 @@ import '../../features/account/domain/usecases/change_profile_picture_usecase.da
 import '../../features/account/domain/usecases/get_allergies_usecase.dart';
 import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
-import '../../features/account/presentation/cubit/get_allergies/get_allergies_cubit.dart';
+import '../../features/account/presentation/cubit/allergies/allergies_cubit.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -306,8 +306,8 @@ Future<void> _account() async {
   sl.registerFactory<EditInformationCubit>(() {
     return EditInformationCubit();
   });
-  sl.registerFactory<GetAllergiesCubit>(() {
-    return GetAllergiesCubit(
+  sl.registerFactory<AllergiesCubit>(() {
+    return AllergiesCubit(
       getAllergiesUseCase: sl(),
     );
   });
