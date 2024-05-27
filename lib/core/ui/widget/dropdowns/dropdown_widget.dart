@@ -1,6 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../../app/config/asset_path.dart';
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
 import '../../theme/color_scheme.dart';
@@ -87,6 +89,18 @@ class DropdownWidget<T> extends StatelessWidget {
               },
               menuItemStyleData: const MenuItemStyleData(
                 padding: EdgeInsets.zero,
+              ),
+              dropdownStyleData: DropdownStyleData(
+                padding: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+              ),
+              iconStyleData: IconStyleData(
+                icon: SvgPicture.asset(
+                  AssetIconsPath.icArrowDown,
+                ),
               ),
               decoration: InputDecoration(
                 isDense: true,
