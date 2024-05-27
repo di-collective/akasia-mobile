@@ -1,4 +1,3 @@
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +18,7 @@ import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../country/data/models/country_model.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 
 class EditInformationPage extends StatelessWidget {
@@ -46,7 +46,7 @@ class __BodyState extends State<_Body> {
   final _membershipIdTextController = TextEditingController();
   final _eKtpTextController = TextEditingController();
   final _fullNameTextController = TextEditingController();
-  Country? _selectedCountry;
+  CountryModel? _selectedCountry;
   final _phoneTextController = TextEditingController();
   final _ageTextController = TextEditingController();
   final _dateOfBirthTextController = TextEditingController();
@@ -97,222 +97,245 @@ class __BodyState extends State<_Body> {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return BlocBuilder<EditInformationCubit, EditInformationState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(context.locale.information),
-          ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.paddingHorizontal,
+    return GestureDetector(
+      onTap: () => context.closeKeyboard,
+      child: BlocBuilder<EditInformationCubit, EditInformationState>(
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(context.locale.information),
             ),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+            body: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.paddingHorizontal,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    context.locale.personalInformation,
-                    style: textTheme.titleMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurfaceDim,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              context.locale.personalInformation,
+                              style: textTheme.titleMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurfaceDim,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                            TextFormFieldWidget(
+                              controller: _membershipIdTextController,
+                              title: context.locale.membershipId,
+                              keyboardType: TextInputType.number,
+                              readOnly: true,
+                              validator: (val) {
+                                return _membershipIdTextController
+                                    .validateOnlyNumber(
+                                  context: context,
+                                  isRequired: true,
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormFieldWidget(
+                              controller: _eKtpTextController,
+                              title: context.locale.eKtpNumber,
+                              keyboardType: TextInputType.number,
+                              readOnly:
+                                  true, // TODO: if user has eKtp, disable this field
+                              validator: (val) {
+                                return _eKtpTextController.validateKtp(
+                                  context: context,
+                                  isRequired:
+                                      true, // TODO: if user has eKtp, set to true
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormFieldWidget(
+                              controller: _fullNameTextController,
+                              title: context.locale.fullName,
+                              validator: (val) {
+                                return _fullNameTextController.validateName(
+                                  context: context,
+                                  isRequired: true,
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            PhoneNumberFormFieldWidget(
+                              textController: _phoneTextController,
+                              selectedCountry: _selectedCountry,
+                              isRequired: true,
+                              onSelectedCountry: (val) {
+                                if (val != _selectedCountry) {
+                                  setState(() {
+                                    _selectedCountry = val;
+                                  });
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormFieldWidget(
+                              controller: _ageTextController,
+                              title: context.locale.age,
+                              suffixText: "yo",
+                              keyboardType: TextInputType.number,
+                              validator: (val) {
+                                return _ageTextController.validateOnlyNumber(
+                                  context: context,
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            DateFormFieldWidget(
+                              controller: _dateOfBirthTextController,
+                              title: context.locale.dateOfBirth,
+                              hintText: context.locale.choose,
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                              initialDate:
+                                  _dateOfBirthTextController.text.toDateTime,
+                              onSelectedDate: (val) {
+                                if (val != null &&
+                                    val.toDateApi !=
+                                        _dateOfBirthTextController.text) {
+                                  setState(() {
+                                    _dateOfBirthTextController.text =
+                                        val.toDateApi;
+                                  });
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: context.width,
+                              child: Row(
+                                children: SexType.values.map((sexType) {
+                                  return RadioWidget(
+                                    title: sexType.title(context: context),
+                                    value: sexType,
+                                    groupValue: _selectedSex,
+                                    onChanged: (val) {
+                                      if (val != null && val != _selectedSex) {
+                                        setState(() {
+                                          _selectedSex = val;
+                                        });
+                                      }
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            StringDropdownWidget(
+                              title: context.locale.bloodType,
+                              hintText: context.locale.choose,
+                              options: BloodTypeConfig.allBloodTypes,
+                              selectedValue:
+                                  _bloodTypeTextController.text.isEmpty
+                                      ? null
+                                      : _bloodTypeTextController.text,
+                              onChanged: (option) {
+                                if (option != null &&
+                                    option != _bloodTypeTextController.text) {
+                                  setState(() {
+                                    _bloodTypeTextController.text = option;
+                                  });
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormFieldWidget(
+                              controller: _weightTextController,
+                              title: context.locale.weight,
+                              suffixText: "kg",
+                              keyboardType: TextInputType.number,
+                              validator: (val) {
+                                return _weightTextController.validateOnlyNumber(
+                                  context: context,
+                                  isAllowComma: true,
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormFieldWidget(
+                              controller: _heightTextController,
+                              title: context.locale.height,
+                              suffixText: "cm",
+                              keyboardType: TextInputType.number,
+                              validator: (val) {
+                                return _heightTextController.validateOnlyNumber(
+                                  context: context,
+                                  isAllowComma: true,
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            StringDropdownWidget(
+                              options: const [
+                                "Sangat Jarang",
+                                "Jarang",
+                                "Sedang",
+                                "Sering",
+                                "Sangat Sering",
+                              ], // TODO: get from API
+                              title: context.locale.activityLevel,
+                              hintText: context.locale.choose,
+                              selectedValue:
+                                  _activityLevelTextController.text.isEmpty
+                                      ? null
+                                      : _activityLevelTextController.text,
+                              onChanged: (option) {
+                                if (option != null &&
+                                    option !=
+                                        _activityLevelTextController.text) {
+                                  setState(() {
+                                    _activityLevelTextController.text = option;
+                                  });
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(
-                    height: 24,
-                  ),
-                  TextFormFieldWidget(
-                    controller: _membershipIdTextController,
-                    title: context.locale.membershipId,
-                    keyboardType: TextInputType.number,
-                    readOnly: true,
-                    validator: (val) {
-                      return _membershipIdTextController.validateOnlyNumber(
-                        context: context,
-                        isRequired: true,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormFieldWidget(
-                    controller: _eKtpTextController,
-                    title: context.locale.eKtpNumber,
-                    keyboardType: TextInputType.number,
-                    readOnly:
-                        true, // TODO: if user has eKtp, disable this field
-                    validator: (val) {
-                      return _eKtpTextController.validateKtp(
-                        context: context,
-                        isRequired: true, // TODO: if user has eKtp, set to true
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormFieldWidget(
-                    controller: _fullNameTextController,
-                    title: context.locale.fullName,
-                    validator: (val) {
-                      return _fullNameTextController.validateName(
-                        context: context,
-                        isRequired: true,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  PhoneNumberFormFieldWidget(
-                    textController: _phoneTextController,
-                    selectedCountry: _selectedCountry,
-                    isRequired: true,
-                    onSelectedCountry: (val) {
-                      if (val != _selectedCountry) {
-                        setState(() {
-                          _selectedCountry = val;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormFieldWidget(
-                    controller: _ageTextController,
-                    title: context.locale.age,
-                    suffixText: "yo",
-                    keyboardType: TextInputType.number,
-                    validator: (val) {
-                      return _ageTextController.validateOnlyNumber(
-                        context: context,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  DateFormFieldWidget(
-                    controller: _dateOfBirthTextController,
-                    title: context.locale.dateOfBirth,
-                    hintText: context.locale.choose,
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime.now(),
-                    initialDate: _dateOfBirthTextController.text.toDateTime,
-                    onSelectedDate: (val) {
-                      if (val != null &&
-                          val.toDateApi != _dateOfBirthTextController.text) {
-                        setState(() {
-                          _dateOfBirthTextController.text = val.toDateApi;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: context.width,
-                    child: Row(
-                      children: SexType.values.map((sexType) {
-                        return RadioWidget(
-                          title: sexType.title(context: context),
-                          value: sexType,
-                          groupValue: _selectedSex,
-                          onChanged: (val) {
-                            if (val != null && val != _selectedSex) {
-                              setState(() {
-                                _selectedSex = val;
-                              });
-                            }
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  StringDropdownWidget(
-                    title: context.locale.bloodType,
-                    hintText: context.locale.choose,
-                    options: BloodTypeConfig.bloodTypes,
-                    selectedValue: _bloodTypeTextController.text.isEmpty
-                        ? null
-                        : _bloodTypeTextController.text,
-                    onChanged: (option) {
-                      if (option != null &&
-                          option != _bloodTypeTextController.text) {
-                        setState(() {
-                          _bloodTypeTextController.text = option;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormFieldWidget(
-                    controller: _weightTextController,
-                    title: context.locale.weight,
-                    suffixText: "kg",
-                    keyboardType: TextInputType.number,
-                    validator: (val) {
-                      return _weightTextController.validateOnlyNumber(
-                        context: context,
-                        isAllowComma: true,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormFieldWidget(
-                    controller: _heightTextController,
-                    title: context.locale.height,
-                    suffixText: "cm",
-                    keyboardType: TextInputType.number,
-                    validator: (val) {
-                      return _heightTextController.validateOnlyNumber(
-                        context: context,
-                        isAllowComma: true,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  StringDropdownWidget(
-                    options: const [
-                      "Sangat Jarang",
-                      "Jarang",
-                      "Sedang",
-                      "Sering",
-                      "Sangat Sering",
-                    ], // TODO: get from API
-                    title: context.locale.activityLevel,
-                    hintText: context.locale.choose,
-                    selectedValue: _activityLevelTextController.text.isEmpty
-                        ? null
-                        : _activityLevelTextController.text,
-                    onChanged: (option) {
-                      if (option != null &&
-                          option != _activityLevelTextController.text) {
-                        setState(() {
-                          _activityLevelTextController.text = option;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   ButtonWidget(
                     text: context.locale.save,
@@ -326,9 +349,9 @@ class __BodyState extends State<_Body> {
                 ],
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

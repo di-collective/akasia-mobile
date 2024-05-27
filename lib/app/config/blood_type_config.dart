@@ -1,5 +1,5 @@
 class BloodTypeConfig {
-  static const List<String> bloodTypes = [
+  static const List<String> allBloodTypes = [
     'A+',
     'A-',
     'B+',

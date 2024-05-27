@@ -31,7 +31,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onTap;
   final Function()? onEditingComplete;
   final Function()? onClear;
-  final bool? isRequired;
+  final bool? isRequired, isLoading;
 
   const TextFormFieldWidget({
     super.key,
@@ -60,6 +60,7 @@ class TextFormFieldWidget extends StatefulWidget {
     this.onEditingComplete,
     this.onClear,
     this.isRequired,
+    this.isLoading,
   });
 
   @override
@@ -104,66 +105,89 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             height: 8,
           ),
         ],
-        TextFormField(
-          controller: widget.controller,
-          initialValue: widget.initialValue,
-          textAlign: widget.textAlign ?? TextAlign.start,
-          keyboardType: widget.keyboardType,
-          readOnly: widget.readOnly ?? false,
-          focusNode: widget.focusNode,
-          onChanged: _onChange,
-          maxLines: widget.maxLines,
-          inputFormatters: widget.inputFormatters,
-          onTap: widget.onTap,
-          onEditingComplete: widget.onEditingComplete,
-          obscureText: _obscureText,
-          style: textStyle(
-            textTheme: textTheme,
-            colorScheme: colorScheme,
-          ),
-          cursorColor: colorScheme.primary,
-          cursorHeight: 18,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            fillColor: fillColor(colorScheme),
-            filled: true,
-            isDense: true,
-            isCollapsed: true,
-            prefixIcon: _buildPrefixIcon(
-              colorScheme: colorScheme,
-              textTheme: textTheme,
-            ),
-            suffixIcon: _buildSuffixIcon(
-              colorScheme: colorScheme,
-              textTheme: textTheme,
-            ),
-            hintStyle: textTheme.bodyLarge.copyWith(
-              color: colorScheme.onSurfaceBright,
-            ),
-            border: _buildOutlineInputBorder(
-              borderColor: colorScheme.surfaceDim,
-            ),
-            enabledBorder: _buildOutlineInputBorder(
-              borderColor: colorScheme.surfaceDim,
-            ),
-            focusedBorder: _buildOutlineInputBorder(
-              borderColor: colorScheme.primaryContainer,
-            ),
-            contentPadding: widget.contentPadding ??
-                const EdgeInsets.fromLTRB(
-                  12,
-                  10,
-                  12,
-                  14,
+        Stack(
+          children: [
+            TextFormField(
+              controller: widget.controller,
+              initialValue: widget.initialValue,
+              textAlign: widget.textAlign ?? TextAlign.start,
+              keyboardType: widget.keyboardType,
+              readOnly: widget.readOnly ?? false,
+              focusNode: widget.focusNode,
+              onChanged: _onChange,
+              maxLines: widget.maxLines,
+              inputFormatters: widget.inputFormatters,
+              onTap: widget.onTap,
+              onEditingComplete: widget.onEditingComplete,
+              obscureText: _obscureText,
+              style: textStyle(
+                textTheme: textTheme,
+                colorScheme: colorScheme,
+              ),
+              cursorColor: colorScheme.primary,
+              cursorHeight: 18,
+              decoration: InputDecoration(
+                hintText: widget.hintText,
+                fillColor: fillColor(colorScheme),
+                filled: true,
+                isDense: true,
+                isCollapsed: true,
+                prefixIcon: _buildPrefixIcon(
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-            errorBorder: _buildOutlineInputBorder(
-              borderColor: colorScheme.error,
+                suffixIcon: _buildSuffixIcon(
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
+                ),
+                hintStyle: textTheme.bodyLarge.copyWith(
+                  color: colorScheme.onSurfaceBright,
+                ),
+                border: _buildOutlineInputBorder(
+                  borderColor: colorScheme.surfaceDim,
+                ),
+                enabledBorder: _buildOutlineInputBorder(
+                  borderColor: colorScheme.surfaceDim,
+                ),
+                focusedBorder: _buildOutlineInputBorder(
+                  borderColor: colorScheme.primaryContainer,
+                ),
+                contentPadding: widget.contentPadding ??
+                    const EdgeInsets.fromLTRB(
+                      12,
+                      10,
+                      12,
+                      14,
+                    ),
+                errorBorder: _buildOutlineInputBorder(
+                  borderColor: colorScheme.error,
+                ),
+                focusedErrorBorder: _buildOutlineInputBorder(
+                  borderColor: colorScheme.primaryContainer,
+                ),
+              ),
+              validator: widget.validator,
             ),
-            focusedErrorBorder: _buildOutlineInputBorder(
-              borderColor: colorScheme.primaryContainer,
-            ),
-          ),
-          validator: widget.validator,
+            if (widget.isLoading == true) ...[
+              Positioned.fill(
+                child: Container(
+                  color: Colors.white.withOpacity(0.7),
+                  child: Center(
+                    child: SizedBox(
+                      height: 11,
+                      width: 11,
+                      child: CircularProgressIndicator(
+                        color: textColor(
+                          colorScheme: colorScheme,
+                        ),
+                        strokeWidth: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ],
     );
@@ -185,17 +209,19 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
     required AppTextTheme textTheme,
     required AppColorScheme colorScheme,
   }) {
-    TextStyle defaultTextStyle = textTheme.bodyLarge.copyWith(
-      color: colorScheme.onSurface,
+    return textTheme.bodyLarge.copyWith(
+      color: textColor(colorScheme: colorScheme),
     );
+  }
 
+  Color textColor({
+    required AppColorScheme colorScheme,
+  }) {
     if (widget.readOnly == true) {
-      defaultTextStyle = defaultTextStyle.copyWith(
-        color: colorScheme.onSurfaceBright,
-      );
+      return colorScheme.onSurfaceBright;
     }
 
-    return defaultTextStyle;
+    return colorScheme.onSurface;
   }
 
   Widget? _buildPrefixIcon({

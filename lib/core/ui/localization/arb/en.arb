@@ -133,5 +133,7 @@
   "youHaveAnyAllergies": "You have any allergies",
   "listOfAllergies": "List of Allergies",
   "successEditAllergies": "Your allergies successfully updated.",
-  "successEditEmergencyContact": "Your emergency contact successfully updated"
+  "successEditEmergencyContact": "Your emergency contact successfully updated",
+    "somethingWentWrong": "Something went wrong",
+    "pleaseTryAgainLater": "Please try again later"
 }

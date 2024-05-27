@@ -85,167 +85,171 @@ class __BodyState extends State<_Body> {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.locale.allergies),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: context.paddingHorizontal,
+    return GestureDetector(
+      onTap: () => context.closeKeyboard,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(context.locale.allergies),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      "${context.locale.youHaveAnyAllergies}?",
-                      style: textTheme.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurfaceDim,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.paddingHorizontal,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 16,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    DropdownWidget<AllergyModel>(
-                      selectedValue: null,
-                      hintText: context.locale.choose,
-                      items: AllergyConfig.allAllergies.map((allergy) {
-                        final isSelected = newMyAllergies.any(
-                          (element) => element.id == allergy.id,
-                        );
+                      Text(
+                        "${context.locale.youHaveAnyAllergies}?",
+                        style: textTheme.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      DropdownWidget<AllergyModel>(
+                        selectedValue: null,
+                        hintText: context.locale.choose,
+                        items: AllergyConfig.allAllergies.map((allergy) {
+                          final isSelected = newMyAllergies.any(
+                            (element) => element.id == allergy.id,
+                          );
 
-                        return DropdownMenuItem(
-                          value: allergy,
-                          onTap: () {
-                            if (isSelected) {
+                          return DropdownMenuItem(
+                            value: allergy,
+                            onTap: () {
+                              if (isSelected) {
+                                // remove on new allergies
+                                setState(() {
+                                  newMyAllergies.remove(allergy);
+                                });
+                              } else {
+                                // add on new allergies
+                                setState(() {
+                                  newMyAllergies.add(allergy);
+                                });
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.paddingHorizontal,
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 16,
+                                    width: 16,
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(2),
+                                      color: isSelected
+                                          ? colorScheme.primary
+                                          : null,
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? colorScheme.primary
+                                            : colorScheme.surfaceDim,
+                                      ),
+                                    ),
+                                    child: (isSelected)
+                                        ? SvgPicture.asset(
+                                            AssetIconsPath.icCheck,
+                                          )
+                                        : null,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      (allergy.allergy ?? '').toCapitalize(),
+                                      style: textTheme.bodyMedium.copyWith(
+                                        color: isSelected
+                                            ? colorScheme.primary
+                                            : colorScheme.onSurfaceDim,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        selectedItemBuilder:
+                            AllergyConfig.allAllergies.map((allergy) {
+                          return Text(
+                            context.locale.choose,
+                            style: textTheme.bodyLarge.copyWith(
+                              color: colorScheme.onSurfaceBright,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (val) {},
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      Text(
+                        "${context.locale.listOfAllergies}?",
+                        style: textTheme.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                      Wrap(
+                        runSpacing: 3,
+                        spacing: 14,
+                        children: newMyAllergies.map((allergy) {
+                          return Chip(
+                            label: Text(
+                              (allergy.allergy ?? '').toCapitalize(),
+                            ),
+                            deleteIcon: SvgPicture.asset(
+                              AssetIconsPath.icClose,
+                              height: 8,
+                            ),
+                            onDeleted: () {
                               // remove on new allergies
                               setState(() {
                                 newMyAllergies.remove(allergy);
                               });
-                            } else {
-                              // add on new allergies
-                              setState(() {
-                                newMyAllergies.add(allergy);
-                              });
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: context.paddingHorizontal,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 16,
-                                  width: 16,
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(2),
-                                    color:
-                                        isSelected ? colorScheme.primary : null,
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? colorScheme.primary
-                                          : colorScheme.surfaceDim,
-                                    ),
-                                  ),
-                                  child: (isSelected)
-                                      ? SvgPicture.asset(
-                                          AssetIconsPath.icCheck,
-                                        )
-                                      : null,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    (allergy.allergy ?? '').toCapitalize(),
-                                    style: textTheme.bodyMedium.copyWith(
-                                      color: isSelected
-                                          ? colorScheme.primary
-                                          : colorScheme.onSurfaceDim,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      selectedItemBuilder:
-                          AllergyConfig.allAllergies.map((allergy) {
-                        return Text(
-                          context.locale.choose,
-                          style: textTheme.bodyLarge.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (val) {},
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    Text(
-                      "${context.locale.listOfAllergies}?",
-                      style: textTheme.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurfaceDim,
+                            },
+                          );
+                        }).toList(),
                       ),
-                    ),
-                    Wrap(
-                      runSpacing: 3,
-                      spacing: 14,
-                      children: newMyAllergies.map((allergy) {
-                        return Chip(
-                          label: Text(
-                            (allergy.allergy ?? '').toCapitalize(),
-                          ),
-                          deleteIcon: SvgPicture.asset(
-                            AssetIconsPath.icClose,
-                            height: 8,
-                          ),
-                          onDeleted: () {
-                            // remove on new allergies
-                            setState(() {
-                              newMyAllergies.remove(allergy);
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 24,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            BlocBuilder<EditAllergiesCubit, EditAllergiesState>(
-              builder: (context, state) {
-                return ButtonWidget(
-                  text: context.locale.save,
-                  width: context.width,
-                  isLoading: state is EditAllergiesLoading,
-                  isDisabled: listEquals(newMyAllergies,
-                      activeMyAllergies), // TODO: Bug when list has same but different sort
-                  onTap: _onSave,
-                );
-              },
-            ),
-            SizedBox(
-              height: context.paddingBottom,
-            ),
-          ],
+              BlocBuilder<EditAllergiesCubit, EditAllergiesState>(
+                builder: (context, state) {
+                  return ButtonWidget(
+                    text: context.locale.save,
+                    width: context.width,
+                    isLoading: state is EditAllergiesLoading,
+                    isDisabled: listEquals(newMyAllergies,
+                        activeMyAllergies), // TODO: Bug when list has same but different sort
+                    onTap: _onSave,
+                  );
+                },
+              ),
+              SizedBox(
+                height: context.paddingBottom,
+              ),
+            ],
+          ),
         ),
       ),
     );

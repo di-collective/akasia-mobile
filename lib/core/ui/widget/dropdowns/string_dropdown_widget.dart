@@ -19,6 +19,7 @@ class StringDropdownWidget extends DropdownWidget<String> {
     super.isDisabled,
     super.isLoading,
     super.backgroundColor,
+    super.isRequired,
   }) : super(
           onChanged: (value) {
             if (onChanged != null) {

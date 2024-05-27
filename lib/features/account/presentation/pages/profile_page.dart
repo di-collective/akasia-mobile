@@ -10,9 +10,12 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../data/models/allergy_model.dart';
+import '../../data/models/emergency_contact_model.dart';
 import '../cubit/allergies/allergies_cubit.dart';
+import '../cubit/emergency_contact/emergency_contact_cubit.dart';
 import '../widgets/profile_detail_item_widget.dart';
 import 'edit_allergies_page.dart';
+import 'edit_emergency_contact_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -35,10 +38,21 @@ class _ProfilePageState extends State<ProfilePage> {
       // if state is not loaded, get data
       _onGetAllergies();
     }
+
+    final emergencyContactState =
+        BlocProvider.of<EmergencyContactCubit>(context).state;
+    if (emergencyContactState is! EmergencyContactLoaded) {
+      // if state is not loaded, get data
+      _onGetEmergencyContact();
+    }
   }
 
   Future<void> _onGetAllergies() async {
     await BlocProvider.of<AllergiesCubit>(context).getAllergies();
+  }
+
+  Future<void> _onGetEmergencyContact() async {
+    await BlocProvider.of<EmergencyContactCubit>(context).getEmergencyContact();
   }
 
   @override
@@ -312,27 +326,37 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 40,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.locale.emergencyContact,
-                  style: textTheme.titleMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurfaceDim,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: _onEmergencyContact,
-                  child: Text(
-                    context.locale.edit,
-                    style: textTheme.labelLarge.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.primary,
+            BlocBuilder<EmergencyContactCubit, EmergencyContactState>(
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.locale.emergencyContact,
+                      style: textTheme.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurfaceDim,
+                      ),
                     ),
-                  ),
-                ),
-              ],
+                    if (state is EmergencyContactLoaded) ...[
+                      GestureDetector(
+                        onTap: () {
+                          _onEmergencyContact(
+                            emergencyContact: state.emergencyContact,
+                          );
+                        },
+                        child: Text(
+                          context.locale.edit,
+                          style: textTheme.labelLarge.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                );
+              },
             ),
             const SizedBox(
               height: 16,
@@ -342,31 +366,74 @@ class _ProfilePageState extends State<ProfilePage> {
                 borderRadius: BorderRadius.circular(20),
                 color: colorScheme.white,
               ),
-              child: Column(
-                children: [
-                  ProfileDetailItemWidget(
-                    label: context.locale.relationship,
-                    value: 'Wife',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.fullName,
-                    value: 'Taylor Swift',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.phoneNumber,
-                    value: '+62 821 6767 8989',
-                  ),
-                ],
+              child: BlocBuilder<EmergencyContactCubit, EmergencyContactState>(
+                builder: (context, state) {
+                  if (state is EmergencyContactLoaded) {
+                    return Column(
+                      children: [
+                        ProfileDetailItemWidget(
+                          label: context.locale.relationship,
+                          value: state.emergencyContact.relationship,
+                        ),
+                        Divider(
+                          height: 0,
+                          color: colorScheme.outlineBright,
+                          thickness: 0.5,
+                        ),
+                        ProfileDetailItemWidget(
+                          label: context.locale.fullName,
+                          value: state.emergencyContact.name,
+                        ),
+                        Divider(
+                          height: 0,
+                          color: colorScheme.outlineBright,
+                          thickness: 0.5,
+                        ),
+                        ProfileDetailItemWidget(
+                          label: context.locale.phoneNumber,
+                          value:
+                              '${state.emergencyContact.countryCode}${state.emergencyContact.phoneNumber}',
+                        ),
+                      ],
+                    );
+                  } else if (state is EmergencyContactError) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Center(
+                        child: Text(
+                          state.error.message(context),
+                          style: textTheme.bodyMedium.copyWith(
+                            color: colorScheme.error,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: List.generate(
+                        3,
+                        (index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              top: index == 0 ? 0 : 8,
+                            ),
+                            child: ShimmerLoading.circular(
+                              width: context.width,
+                              height: 32,
+                              shapeBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             SizedBox(
@@ -395,7 +462,15 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _onEmergencyContact() {
-    // TODO: go to edit emergency contact page
+  void _onEmergencyContact({
+    required EmergencyContactModel emergencyContact,
+  }) {
+    // go to edit emergency contact page
+    context.goNamed(
+      AppRoute.editEmergencyContact.name,
+      extra: EditEmergencyContactPageParams(
+        emergencyContact: emergencyContact,
+      ),
+    );
   }
 }

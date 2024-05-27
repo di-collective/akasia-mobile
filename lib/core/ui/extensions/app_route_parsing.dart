@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/navigation/app_route.dart';
 import '../../../features/account/presentation/pages/edit_allergies_page.dart';
+import '../../../features/account/presentation/pages/edit_emergency_contact_page.dart';
 import '../../../features/account/presentation/pages/edit_information_page.dart';
 import '../../../features/account/presentation/pages/profile_page.dart';
 import '../../../features/auth/presentation/pages/create_new_password_page.dart';
@@ -36,6 +37,8 @@ extension AppRouteParsing on AppRoute {
         return 'edit-information';
       case AppRoute.editAllergies:
         return 'edit-allergies';
+      case AppRoute.editEmergencyContact:
+        return 'edit-emergency-contact';
     }
   }
 
@@ -65,6 +68,10 @@ extension AppRouteParsing on AppRoute {
         return const EditInformationPage();
       case AppRoute.editAllergies:
         return EditAllergiesPage(
+          params: arguments,
+        );
+      case AppRoute.editEmergencyContact:
+        return EditEmergencyContactPage(
           params: arguments,
         );
     }

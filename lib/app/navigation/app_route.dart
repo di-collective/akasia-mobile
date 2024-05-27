@@ -14,6 +14,7 @@ enum AppRoute {
   profile,
   editInformation,
   editAllergies,
+  editEmergencyContact,
 }
 
 class AppRouteInfo {
@@ -39,6 +40,7 @@ class AppRouteInfo {
             routes: [
               AppRoute.editInformation.route(),
               AppRoute.editAllergies.route(),
+              AppRoute.editEmergencyContact.route(),
             ],
           ),
         ],
