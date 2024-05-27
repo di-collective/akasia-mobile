@@ -2,6 +2,7 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../app/config/blood_type_config.dart';
 import '../../../../app/config/country_config.dart';
 import '../../../../app/di/depedency_injection.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
@@ -240,14 +241,9 @@ class __BodyState extends State<_Body> {
                     height: 20,
                   ),
                   StringDropdownWidget(
-                    options: const [
-                      "A",
-                      "B",
-                      "AB",
-                      "O",
-                    ], // TODO: get from API
                     title: context.locale.bloodType,
                     hintText: context.locale.choose,
+                    options: BloodTypeConfig.bloodTypes,
                     selectedValue: _bloodTypeTextController.text.isEmpty
                         ? null
                         : _bloodTypeTextController.text,
