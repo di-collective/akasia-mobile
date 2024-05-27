@@ -46,9 +46,10 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 
-	<!-- Google Sign-in Section -->
+	
 	<key>CFBundleURLTypes</key>
 	<array>
+		<!-- Google Sign-in Section -->
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -58,8 +59,20 @@
 				<string>com.googleusercontent.apps.914531999231-figmknvmfl44tv052f24pv8njro04rjj</string>
 			</array>
 		</dict>
+		<!-- End of the Google Sign-in Section -->
+		
+		<!-- Universal Link Section -->
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>app</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.akasia365mc</string>
+		</dict>
+		<!-- End of the Universal Link Section -->
 	</array>
-	<!-- End of the Google Sign-in Section -->
+	
 
 	<!-- App Query Schemes Section -->
 	<key>LSApplicationQueriesSchemes</key>
