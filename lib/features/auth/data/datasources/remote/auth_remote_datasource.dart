@@ -51,6 +51,11 @@ abstract class AuthRemoteDataSource {
     required String code,
     required String newPassword,
   });
+  Future<void> updatePassword({
+    required String userId,
+    required String resetToken,
+    required String newPassword,
+  });
   Future<void> signOut();
 }
 
@@ -459,6 +464,32 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.success('confirmPasswordReset success');
     } catch (error) {
       Logger.error('confirmPasswordReset error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updatePassword({
+    required String userId,
+    required String resetToken,
+    required String newPassword,
+  }) async {
+    try {
+      Logger.info(
+          'updatePassword params: userId $userId, resetToken $resetToken, newPassword $newPassword');
+
+      final result = await appHttpClient.post(
+        url: "${EnvConfig.baseAkasiaApiUrl}/credentials/update-password",
+        data: {
+          'user_id': userId,
+          'reset_token': resetToken,
+          'password': newPassword,
+        },
+      );
+      Logger.success('updatePassword result: $result');
+    } catch (error) {
+      Logger.error('updatePassword error: $error');
 
       rethrow;
     }

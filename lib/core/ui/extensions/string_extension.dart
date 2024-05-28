@@ -113,4 +113,35 @@ extension StringExtension on String {
     final int secondLetter = codeUnitAt(1) - 0x41 + 0x1F1E6;
     return String.fromCharCode(firstLetter) + String.fromCharCode(secondLetter);
   }
+
+  /// Convert URL in string to map
+  ///
+  /// example:
+  /// - https://www.google.com/search?q=flutter
+  ///
+  /// result:
+  /// {
+  ///  'scheme': 'https',
+  ///  'host': 'www.google.com',
+  ///  'path': '/search',
+  ///  'query': {'q': 'flutter'}
+  /// }
+  Map<String, dynamic> get urlToMap {
+    try {
+      Logger.info('urlToMap: this $this');
+
+      final uri = Uri.parse(this);
+
+      final Map<String, dynamic> result = {
+        'scheme': uri.scheme,
+        'host': uri.host,
+        'path': uri.path,
+        'query': uri.queryParameters,
+      };
+
+      return result;
+    } catch (_) {
+      return {};
+    }
+  }
 }

@@ -20,7 +20,7 @@
   "newToAkasia": "New to Akasia356mc",
   "cannotBeEmpty": "Cannot be empty",
   "invalidEmail": "Invalid email",
-  "passwordsMustBeCharacters": "Passwords must be at least {length} characters",
+  "passwordsMustBeCharacters": "Your password must consist of {length} characters or more",
   "@passwordsMustBeCharacters": {
         "placeholders": {
             "length": {
@@ -68,7 +68,6 @@
   "emailSent": "Email sent. Check your email and open the link we sent to continue.",
   "createNewPassword": "Create New Password",
   "newPassword": "New Password",
-  "passwordMustContains": "Password must contain at least more 12 characters.",
   "resetPassword": "Reset Password",
   "inputNewPassword": "Input new password",
   "successResetPassword": "Password Successfully Reset",
@@ -134,6 +133,9 @@
   "listOfAllergies": "List of Allergies",
   "successEditAllergies": "Your allergies successfully updated.",
   "successEditEmergencyContact": "Your emergency contact successfully updated",
-    "somethingWentWrong": "Something went wrong",
-    "pleaseTryAgainLater": "Please try again later"
+  "somethingWentWrong": "Something went wrong",
+  "pleaseTryAgainLater": "Please try again later",
+  "weak": "Weak",
+  "medium": "Medium",
+  "strong": "Strong"
 }

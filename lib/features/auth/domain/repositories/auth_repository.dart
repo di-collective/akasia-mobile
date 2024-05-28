@@ -28,5 +28,10 @@ abstract class AuthRepository {
     required String code,
     required String newPassword,
   });
+  Future<void> updatePassword({
+    required String userId,
+    required String resetToken,
+    required String newPassword,
+  });
   Future<void> signOut();
 }

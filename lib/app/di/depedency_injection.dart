@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/common/deep_link_info.dart';
 import '../../core/common/directory_info.dart';
 import '../../core/common/image_compress_info.dart';
 import '../../core/common/local_picker_info.dart';
@@ -50,6 +52,7 @@ import '../../features/auth/domain/usecase/save_access_token_usecase.dart';
 import '../../features/auth/domain/usecase/sign_in_use_case.dart';
 import '../../features/auth/domain/usecase/sign_out_use_case.dart';
 import '../../features/auth/domain/usecase/sign_up_usecase.dart';
+import '../../features/auth/domain/usecase/update_password_usecase.dart';
 import '../../features/auth/presentation/cubit/create_new_password/create_new_password_cubit.dart';
 import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
@@ -61,6 +64,7 @@ import '../../features/country/domain/repositories/country_repository.dart';
 import '../../features/country/domain/usecases/get_countries_usecase.dart';
 import '../../features/country/presentation/cubit/countries/countries_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
+import '../navigation/app_route.dart';
 
 final sl = GetIt.instance;
 
@@ -113,11 +117,21 @@ Future<void> _external() async {
   sl.registerLazySingleton<ImagePicker>(() {
     return ImagePicker();
   });
+
+  // app links
+  sl.registerLazySingleton<AppLinks>(() {
+    return AppLinks();
+  });
 }
 
 Future<void> _app() async {}
 
 Future<void> _core() async {
+  // app route info
+  sl.registerLazySingleton<AppRouteInfo>(() {
+    return AppRouteInfoImpl();
+  });
+
   // toast info
   sl.registerLazySingleton<ToastInfo>(() {
     return ToastInfoImpl();
@@ -169,6 +183,14 @@ Future<void> _core() async {
   // bottom sheet info
   sl.registerLazySingleton<BottomSheetInfo>(() {
     return BottomSheetInfoImpl();
+  });
+
+  // deep link info
+  sl.registerLazySingleton<DeepLinkInfo>(() {
+    return DeepLinkInfoImpl(
+      appLinks: sl(),
+      appRouteInfo: sl(),
+    );
   });
 }
 
@@ -260,6 +282,11 @@ Future<void> _auth() async {
       authRepository: sl(),
     );
   });
+  sl.registerLazySingleton<UpdatePasswordUseCase>(() {
+    return UpdatePasswordUseCase(
+      authRepository: sl(),
+    );
+  });
   sl.registerLazySingleton<SignOutUseCase>(() {
     return SignOutUseCase(
       authRepository: sl(),
@@ -300,6 +327,7 @@ Future<void> _auth() async {
   sl.registerFactory<CreateNewPasswordCubit>(() {
     return CreateNewPasswordCubit(
       confirmPasswordResetUseCase: sl(),
+      updatePasswordUseCase: sl(),
     );
   });
 }

@@ -12,7 +12,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     required this.forgotPasswordUseCase,
   }) : super(ForgotPasswordInitial());
 
-  Future<void> resetPassword({
+  Future<void> forgotPassword({
     required String email,
   }) async {
     try {
@@ -27,6 +27,8 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
       emit(ForgotPasswordError(
         error: error,
       ));
+
+      rethrow;
     }
   }
 }

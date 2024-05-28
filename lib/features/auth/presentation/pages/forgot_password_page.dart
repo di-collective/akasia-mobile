@@ -137,14 +137,14 @@ class __BodyState extends State<_Body> {
       // close keyboard
       context.closeKeyboard;
 
-      // reset password
-      await BlocProvider.of<ForgotPasswordCubit>(context).resetPassword(
+      // forgot password
+      await BlocProvider.of<ForgotPasswordCubit>(context).forgotPassword(
         email: _emailTextController.text,
       );
 
       // show success message
       context.showToast(
-        type: ToastType.warning,
+        type: ToastType.success,
         message: context.locale.emailSent,
       );
     } catch (error) {

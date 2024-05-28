@@ -14,7 +14,7 @@ import '../../../features/auth/presentation/pages/splash_page.dart';
 import '../../../features/auth/presentation/pages/success_create_new_password_page.dart';
 import '../../../features/main/presentation/pages/main_page.dart';
 
-extension AppRouteParsing on AppRoute {
+extension AppRouteExtension on AppRoute {
   String get path {
     switch (this) {
       case AppRoute.splash:
@@ -53,7 +53,9 @@ extension AppRouteParsing on AppRoute {
       case AppRoute.forgotPassword:
         return const ForgotPasswordPage();
       case AppRoute.createNewPassword:
-        return const CreateNewPasswordPage();
+        return CreateNewPasswordPage(
+          params: arguments,
+        );
       case AppRoute.successCreateNewPassword:
         return const SuccessCreateNewPasswordPage();
       case AppRoute.signUp:
