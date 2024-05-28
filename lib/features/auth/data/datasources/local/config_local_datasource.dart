@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
 
-import '../../../../../app/observers/logger.dart';
+import '../../../../../core/utils/logger.dart';
 import '../../models/yaml_model.dart';
 
 abstract class ConfigLocalDataSource {

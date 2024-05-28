@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app/config/env_config.dart';
-import '../../../../app/di/depedency_injection.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../../../../core/common/open_app_info.dart';
+import '../../../../core/config/env_config.dart';
 import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/object_parsing.dart';
+import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
-import '../../../../core/ui/extensions/toast_type_parsing.dart';
+import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../widget/bottom_nav_bar.dart';
 

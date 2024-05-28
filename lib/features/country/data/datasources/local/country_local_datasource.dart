@@ -1,5 +1,5 @@
-import '../../../../../app/config/country_config.dart';
-import '../../../../../app/observers/logger.dart';
+import '../../../../../core/config/country_config.dart';
+import '../../../../../core/utils/logger.dart';
 import '../../models/country_model.dart';
 
 abstract class CountryLocalDataSource {

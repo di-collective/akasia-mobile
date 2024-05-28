@@ -1,4 +1,4 @@
-import '../../../app/observers/logger.dart';
+import '../../utils/logger.dart';
 
 extension StringExtension on String {
   bool get isEmail {

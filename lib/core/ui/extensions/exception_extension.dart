@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-extension ExceptionParsing on Exception {
+extension ExceptionExtension on Exception {
   String get errorMessage {
     String? message;
     if (this is PlatformException) {

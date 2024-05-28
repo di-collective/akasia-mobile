@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
-import '../../app/observers/logger.dart';
+import '../utils/logger.dart';
 
 abstract class LocalPickerInfo {
   Future<File?> selectImage({

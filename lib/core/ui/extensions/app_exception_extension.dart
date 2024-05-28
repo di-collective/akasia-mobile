@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../common/exception.dart';
 import 'build_context_extension.dart';
-import 'exception_parsing.dart';
+import 'exception_extension.dart';
 
-extension CustomExceptionParsing on AppException {
+extension CustomExceptionExtension on AppException {
   String errorMessage(BuildContext context) {
     if (this is AppNetworkException) {
       return context.locale.noInternetConnection;

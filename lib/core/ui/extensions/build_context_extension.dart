@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../app/di/depedency_injection.dart';
+import '../../utils/service_locator.dart';
 import '../widget/dialogs/bottom_sheet_info.dart';
 import '../widget/dialogs/toast_info.dart';
 import '../widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
-import 'toast_type_parsing.dart';
+import 'toast_type_extension.dart';
 
 extension BuildContextExtension on BuildContext {
   MediaQueryData get mediaQueryData => MediaQuery.of(this);

@@ -1,21 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/common/directory_info.dart';
-import '../../core/common/image_compress_info.dart';
-import '../../core/common/local_picker_info.dart';
-import '../../core/common/open_app_info.dart';
-import '../../core/network/http/app_http_client.dart';
-import '../../core/network/http/dio_interceptor.dart';
-import '../../core/network/network_info.dart';
-import '../../core/ui/widget/dialogs/bottom_sheet_info.dart';
-import '../../core/ui/widget/dialogs/toast_info.dart';
-import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
+import '../../core/utils/service_locator.dart';
 import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
 import '../../features/account/data/datasources/remote/allergy_remote_datasource.dart';
 import '../../features/account/data/datasources/remote/emergency_contact_remote_datasource.dart';
@@ -61,8 +51,16 @@ import '../../features/country/domain/repositories/country_repository.dart';
 import '../../features/country/domain/usecases/get_countries_usecase.dart';
 import '../../features/country/presentation/cubit/countries/countries_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
-
-final sl = GetIt.instance;
+import '../../core/common/directory_info.dart';
+import '../../core/common/image_compress_info.dart';
+import '../../core/common/local_picker_info.dart';
+import '../../core/common/open_app_info.dart';
+import '../../core/network/http/app_http_client.dart';
+import '../../core/network/http/dio_interceptor.dart';
+import '../../core/network/network_info.dart';
+import '../../core/ui/widget/dialogs/bottom_sheet_info.dart';
+import '../../core/ui/widget/dialogs/toast_info.dart';
+import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 
 Future<void> init() async {
   await _external();

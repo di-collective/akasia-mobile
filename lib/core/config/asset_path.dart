@@ -1,4 +1,4 @@
-import '../../core/ui/extensions/asset_name_extension.dart';
+import '../ui/extensions/asset_name_extension.dart';
 
 class AssetImagesPath {
   static String logoTextWhite = 'logo_text_white.svg'.imageAsset;

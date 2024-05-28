@@ -11,8 +11,8 @@ import '../features/account/presentation/cubit/allergies/allergies_cubit.dart';
 import '../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
 import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
-import 'di/depedency_injection.dart';
-import 'navigation/app_route.dart';
+import 'routes/app_route_info.dart';
+import '../core/utils/service_locator.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
