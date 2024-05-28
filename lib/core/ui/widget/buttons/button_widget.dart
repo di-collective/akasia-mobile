@@ -69,7 +69,7 @@ class ButtonWidget extends StatelessWidget {
             ),
           ),
           padding: MaterialStateProperty.all(
-            padding ?? const EdgeInsets.all(18),
+            padding ?? const EdgeInsets.all(13),
           ),
           elevation: MaterialStateProperty.all(elevation ?? 0),
           backgroundColor: MaterialStateProperty.all(
@@ -89,14 +89,19 @@ class ButtonWidget extends StatelessWidget {
     required AppColorScheme colorScheme,
   }) {
     if (isLoading == true) {
-      return SizedBox(
-        height: 11,
-        width: 11,
-        child: CircularProgressIndicator(
-          color: buttonTextColor(
-            colorScheme: colorScheme,
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 4,
+        ),
+        child: SizedBox(
+          height: 15,
+          width: 15,
+          child: CircularProgressIndicator(
+            color: buttonTextColor(
+              colorScheme: colorScheme,
+            ),
+            strokeWidth: 1.5,
           ),
-          strokeWidth: 1.5,
         ),
       );
     }
@@ -112,7 +117,6 @@ class ButtonWidget extends StatelessWidget {
                 colorScheme: colorScheme,
               ),
               fontWeight: FontWeight.w600,
-              height: 1.3,
             ),
       );
     }

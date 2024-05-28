@@ -1,6 +1,6 @@
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app/observers/logger.dart';
+import '../utils/logger.dart';
 import '../ui/extensions/string_extension.dart';
 
 abstract class OpenAppInfo {

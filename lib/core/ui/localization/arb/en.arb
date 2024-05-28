@@ -118,5 +118,22 @@
   "activityLevel": "Activity Level",
   "allergies": "Allergies",
   "emergencyContact": "Emergency Contact",
-  "relationship": "Relationship"
+  "relationship": "Relationship",
+  "profile": "Profile",
+  "information": "Information",
+  "personalInformation": "Personal Information",
+  "save": "Save",
+  "successEditInformation": "Your information successfully updated",
+  "onlyNumber": "Only number",
+  "invalidFormat": "Invalid format",
+  "dateOfBirth": "Date of Birth",
+  "choose": "Choose",
+  "male": "Male",
+  "female": "Female",
+  "youHaveAnyAllergies": "You have any allergies",
+  "listOfAllergies": "List of Allergies",
+  "successEditAllergies": "Your allergies successfully updated.",
+  "successEditEmergencyContact": "Your emergency contact successfully updated",
+    "somethingWentWrong": "Something went wrong",
+    "pleaseTryAgainLater": "Please try again later"
 }

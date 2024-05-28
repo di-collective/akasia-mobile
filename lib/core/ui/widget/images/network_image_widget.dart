@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../app/config/asset_path.dart';
+import '../../../config/asset_path.dart';
 
 class NetworkImageWidget extends StatelessWidget {
   final String? imageUrl;

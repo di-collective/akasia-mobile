@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../../app/observers/logger.dart';
+import '../../utils/logger.dart';
 
 class LoggingInterceptor extends Interceptor {
   @override

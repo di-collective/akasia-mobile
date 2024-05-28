@@ -1,21 +1,22 @@
 import 'dart:io';
 
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../app/config/country_config.dart';
-import '../../../../app/di/depedency_injection.dart';
-import '../../../../app/navigation/app_route.dart';
+import '../../../../core/utils/service_locator.dart';
+import '../../../../core/config/country_config.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/auth_type_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/object_parsing.dart';
+import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_parsing.dart';
+import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../country/data/models/country_model.dart';
 import '../cubit/sign_up/sign_up_cubit.dart';
 import '../widgets/social_auth_button_widget.dart';
 
@@ -51,7 +52,7 @@ class __BodyState extends State<_Body> {
   final _passwordTextController = TextEditingController();
   final _confirmPasswordTextController = TextEditingController();
 
-  late Country _selectedCountry;
+  late CountryModel _selectedCountry;
 
   @override
   void initState() {
@@ -170,64 +171,15 @@ class __BodyState extends State<_Body> {
                     Form(
                       key: _phoneFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormFieldWidget(
-                              controller: _phoneTextController,
-                              title: context.locale.phoneNumber,
-                              keyboardType: TextInputType.phone,
-                              isRequired: true,
-                              validator: (val) {
-                                return _phoneTextController.validatePhoneNumber(
-                                  context: context,
-                                );
-                              },
-                              onChanged: (val) {
-                                // reload
-                                setState(() {});
-                              },
-                              prefixIcon: InkWell(
-                                onTap: () {
-                                  context.selectCountryCode(
-                                    onSelect: (country) {
-                                      setState(() {
-                                        _selectedCountry = country;
-                                      });
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                    left: 1,
-                                    right: 10,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: colorScheme.surface,
-                                    borderRadius: const BorderRadius.horizontal(
-                                      left: Radius.circular(8),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        _selectedCountry.phoneCode,
-                                        style: textTheme.bodyLarge.copyWith(
-                                          color: colorScheme.onSurface,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: PhoneNumberFormFieldWidget(
+                        textController: _phoneTextController,
+                        isRequired: true,
+                        selectedCountry: _selectedCountry,
+                        onSelectedCountry: (country) {
+                          setState(() {
+                            _selectedCountry = country;
+                          });
+                        },
                       ),
                     ),
                     const SizedBox(

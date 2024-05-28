@@ -1,24 +1,30 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/common/directory_info.dart';
-import '../../core/common/image_compress_info.dart';
-import '../../core/common/local_picker_info.dart';
-import '../../core/common/open_app_info.dart';
-import '../../core/network/http/app_http_client.dart';
-import '../../core/network/http/dio_interceptor.dart';
-import '../../core/network/network_info.dart';
-import '../../core/ui/widget/dialogs/toast_info.dart';
-import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
+import '../../core/utils/service_locator.dart';
 import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
+import '../../features/account/data/datasources/remote/allergy_remote_datasource.dart';
+import '../../features/account/data/datasources/remote/emergency_contact_remote_datasource.dart';
 import '../../features/account/data/repositories/account_repository_impl.dart';
+import '../../features/account/data/repositories/allergy_repository_impl.dart';
+import '../../features/account/data/repositories/emergency_contact_repository.dart';
 import '../../features/account/domain/repositories/account_repository.dart';
+import '../../features/account/domain/repositories/allergy_repository.dart';
+import '../../features/account/domain/repositories/emergency_contact_repository.dart';
 import '../../features/account/domain/usecases/change_profile_picture_usecase.dart';
+import '../../features/account/domain/usecases/edit_emergency_contact_usecase.dart';
+import '../../features/account/domain/usecases/get_allergies_usecase.dart';
+import '../../features/account/domain/usecases/get_emergency_contact_usecase.dart';
+import '../../features/account/presentation/cubit/allergies/allergies_cubit.dart';
+import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
+import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
+import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
+import '../../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
+import '../../features/activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -39,9 +45,22 @@ import '../../features/auth/presentation/cubit/forgot_password/forgot_password_c
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 import '../../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
+import '../../features/country/data/datasources/local/country_local_datasource.dart';
+import '../../features/country/data/repositories/country_repository_impl.dart';
+import '../../features/country/domain/repositories/country_repository.dart';
+import '../../features/country/domain/usecases/get_countries_usecase.dart';
+import '../../features/country/presentation/cubit/countries/countries_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
-
-final sl = GetIt.instance;
+import '../../core/common/directory_info.dart';
+import '../../core/common/image_compress_info.dart';
+import '../../core/common/local_picker_info.dart';
+import '../../core/common/open_app_info.dart';
+import '../../core/network/http/app_http_client.dart';
+import '../../core/network/http/dio_interceptor.dart';
+import '../../core/network/network_info.dart';
+import '../../core/ui/widget/dialogs/bottom_sheet_info.dart';
+import '../../core/ui/widget/dialogs/toast_info.dart';
+import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 
 Future<void> init() async {
   await _external();
@@ -50,11 +69,15 @@ Future<void> init() async {
 
   await _core();
 
+  await _country();
+
   await _auth();
 
   await _main();
 
   await _account();
+
+  await _activityLevel();
 }
 
 Future<void> _external() async {
@@ -138,6 +161,39 @@ Future<void> _core() async {
   sl.registerLazySingleton<ImageCompressInfo>(() {
     return ImageCompressInfoImpl(
       directoryInfo: sl(),
+    );
+  });
+
+  // bottom sheet info
+  sl.registerLazySingleton<BottomSheetInfo>(() {
+    return BottomSheetInfoImpl();
+  });
+}
+
+Future<void> _country() async {
+  // data source
+  sl.registerLazySingleton<CountryLocalDataSource>(() {
+    return CountryLocalDataSourceImpl();
+  });
+
+  // repository
+  sl.registerLazySingleton<CountryRepository>(() {
+    return CountryRepositoryImpl(
+      countryLocalDataSource: sl(),
+    );
+  });
+
+  // use case
+  sl.registerLazySingleton<GetCountriesUseCase>(() {
+    return GetCountriesUseCase(
+      countryRepository: sl(),
+    );
+  });
+
+  // cubit
+  sl.registerFactory<CountriesCubit>(() {
+    return CountriesCubit(
+      getCountriesUseCase: sl(),
     );
   });
 }
@@ -261,6 +317,16 @@ Future<void> _account() async {
       imageCompressInfo: sl(),
     );
   });
+  sl.registerLazySingleton<AllergyRemoteDataSource>(() {
+    return AllergyRemoteDataSourceImpl(
+      appHttpClient: sl(),
+    );
+  });
+  sl.registerLazySingleton<EmergencyContactRemoteDataSource>(() {
+    return EmergencyContactRemoteDataSourceImpl(
+      appHttpClient: sl(),
+    );
+  });
 
   // repository
   sl.registerLazySingleton<AccountRepository>(() {
@@ -270,11 +336,70 @@ Future<void> _account() async {
       authLocalDataSource: sl(),
     );
   });
+  sl.registerLazySingleton<AllergyRepository>(() {
+    return AllergyRepositoryImpl(
+      networkInfo: sl(),
+      authLocalDataSource: sl(),
+      allergyRemoteDataSource: sl(),
+    );
+  });
+  sl.registerLazySingleton<EmergencyContactRepository>(() {
+    return EmergencyContactRepositoryImpl(
+      networkInfo: sl(),
+      authLocalDataSource: sl(),
+      emergencyContactRemoteDataSource: sl(),
+    );
+  });
 
   // use case
   sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
     return ChangeProfilePictureUseCase(
       accountRepository: sl(),
     );
+  });
+  sl.registerLazySingleton<GetAllergiesUseCase>(() {
+    return GetAllergiesUseCase(
+      allergyRepository: sl(),
+    );
+  });
+  sl.registerLazySingleton<EditEmergencyContactUseCase>(() {
+    return EditEmergencyContactUseCase(
+      emergencyContactRepository: sl(),
+    );
+  });
+  sl.registerLazySingleton<GetEmergencyContactUseCase>(() {
+    return GetEmergencyContactUseCase(
+      emergencyContactRepository: sl(),
+    );
+  });
+
+  // cubit
+  sl.registerFactory<EditInformationCubit>(() {
+    return EditInformationCubit();
+  });
+  sl.registerFactory<AllergiesCubit>(() {
+    return AllergiesCubit(
+      getAllergiesUseCase: sl(),
+    );
+  });
+  sl.registerFactory<EditAllergiesCubit>(() {
+    return EditAllergiesCubit();
+  });
+  sl.registerFactory<EmergencyContactCubit>(() {
+    return EmergencyContactCubit(
+      getEmergencyContactUseCase: sl(),
+    );
+  });
+  sl.registerFactory<EditEmergencyContactCubit>(() {
+    return EditEmergencyContactCubit(
+      editEmergencyContactUseCase: sl(),
+    );
+  });
+}
+
+Future<void> _activityLevel() async {
+  // data source
+  sl.registerLazySingleton<ActivityLevelLocalDataSource>(() {
+    return ActivityLevelLocalDataSourceImpl();
   });
 }

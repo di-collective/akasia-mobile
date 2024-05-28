@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
-import '../../../../../app/config/env_config.dart';
-import '../../../../../app/observers/logger.dart';
+import '../../../../../core/config/env_config.dart';
+import '../../../../../core/utils/logger.dart';
 import '../../../../../core/common/image_compress_info.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/file_exception.dart';

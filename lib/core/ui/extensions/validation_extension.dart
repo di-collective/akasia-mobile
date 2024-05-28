@@ -14,6 +14,34 @@ extension TextEditingControllerExtension on TextEditingController {
     return null;
   }
 
+  String? validateName({
+    required BuildContext context,
+    bool? isRequired,
+  }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    if (text.isContainsNumber ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: true,
+        )) {
+      return context.locale.invalidFormat;
+    }
+
+    if (text.length < 3) {
+      return context.locale.minimumLength(3);
+    }
+
+    if (text.length > 125) {
+      return context.locale.maximumLength(125);
+    }
+
+    return null;
+  }
+
   String? validateEmail({
     required BuildContext context,
   }) {
@@ -71,7 +99,14 @@ extension TextEditingControllerExtension on TextEditingController {
 
   String? validateKtp({
     required BuildContext context,
+    bool? isRequired,
   }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
     if (!text.isKtp) {
       return context.locale.invalidEKtp;
     }
@@ -81,13 +116,19 @@ extension TextEditingControllerExtension on TextEditingController {
 
   String? validatePhoneNumber({
     required BuildContext context,
+    bool? isRequired,
   }) {
-    if (text.isEmpty) {
-      return context.locale.cannotBeEmpty;
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
     }
 
     // validate only number
-    if (text.isContainsLetter || text.isContainsSpecialCharacter) {
+    if (text.isContainsLetter ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: true,
+        )) {
       return context.locale.invalidPhoneNumber;
     }
 
@@ -102,6 +143,28 @@ extension TextEditingControllerExtension on TextEditingController {
 
     if (text.length > 13) {
       return context.locale.maximumLength(13);
+    }
+
+    return null;
+  }
+
+  String? validateOnlyNumber({
+    required BuildContext context,
+    bool? isRequired,
+    bool? isAllowComma,
+  }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    // validate only number
+    if (text.isContainsLetter ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: isAllowComma,
+        )) {
+      return context.locale.onlyNumber;
     }
 
     return null;
