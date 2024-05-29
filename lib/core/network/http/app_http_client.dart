@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import '../../../app/observers/logger.dart';
+import '../../utils/logger.dart';
 import '../../common/exception.dart';
 
 class AppHttpClient {

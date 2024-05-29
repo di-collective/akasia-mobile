@@ -1,4 +1,4 @@
-import '../../../../../app/observers/logger.dart';
+import '../../../../../core/utils/logger.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../models/emergency_contact_model.dart';
 

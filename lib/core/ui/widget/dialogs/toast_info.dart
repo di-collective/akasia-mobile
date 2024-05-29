@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
-import '../../extensions/toast_type_parsing.dart';
+import '../../extensions/toast_type_extension.dart';
 
 abstract class ToastInfo {
   Future<bool?> show({

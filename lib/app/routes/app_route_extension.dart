@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/navigation/app_route.dart';
-import '../../../features/account/presentation/pages/edit_allergies_page.dart';
-import '../../../features/account/presentation/pages/edit_emergency_contact_page.dart';
-import '../../../features/account/presentation/pages/edit_information_page.dart';
-import '../../../features/account/presentation/pages/profile_page.dart';
-import '../../../features/auth/presentation/pages/create_new_password_page.dart';
-import '../../../features/auth/presentation/pages/forgot_password_page.dart';
-import '../../../features/auth/presentation/pages/sign_in_page.dart';
-import '../../../features/auth/presentation/pages/sign_up_page.dart';
-import '../../../features/auth/presentation/pages/splash_page.dart';
-import '../../../features/auth/presentation/pages/success_create_new_password_page.dart';
-import '../../../features/main/presentation/pages/main_page.dart';
+import '../../features/account/presentation/pages/edit_allergies_page.dart';
+import '../../features/account/presentation/pages/edit_emergency_contact_page.dart';
+import '../../features/account/presentation/pages/edit_information_page.dart';
+import '../../features/account/presentation/pages/profile_page.dart';
+import '../../features/auth/presentation/pages/create_new_password_page.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
+import '../../features/auth/presentation/pages/sign_in_page.dart';
+import '../../features/auth/presentation/pages/sign_up_page.dart';
+import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/pages/success_create_new_password_page.dart';
+import '../../features/main/presentation/pages/main_page.dart';
+import '../../core/routes/app_route.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {

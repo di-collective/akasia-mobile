@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../common/exception.dart';
-import 'app_exception_parsing.dart';
-import 'exception_parsing.dart';
+import 'app_exception_extension.dart';
+import 'exception_extension.dart';
 
-extension ObjectParsing on Object {
+extension ObjectExtension on Object {
   String message(BuildContext context) {
     if (this is Exception) {
       return (this as Exception).errorMessage;

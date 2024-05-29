@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-import '../../app/observers/logger.dart';
+import '../utils/logger.dart';
 
 abstract class DirectoryInfo {
   Future<Directory?> get externalStorageDirectory;

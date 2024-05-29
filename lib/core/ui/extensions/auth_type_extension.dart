@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/config/asset_path.dart';
+import '../../config/asset_path.dart';
 import 'build_context_extension.dart';
 
 enum AuthType {

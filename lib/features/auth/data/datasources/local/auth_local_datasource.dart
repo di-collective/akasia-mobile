@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../../app/config/preference_key.dart';
-import '../../../../../app/observers/logger.dart';
+import '../../../../../core/config/preference_key.dart';
+import '../../../../../core/utils/logger.dart';
 
 abstract class AuthLocalDataSource {
   String? getAccessToken();

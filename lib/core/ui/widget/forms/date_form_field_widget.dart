@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../../app/config/asset_path.dart';
+import '../../../config/asset_path.dart';
 import 'text_form_field_widget.dart';
 
 class DateFormFieldWidget extends StatelessWidget {

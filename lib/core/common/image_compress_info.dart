@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-import '../../app/observers/logger.dart';
+import '../utils/logger.dart';
 import '../ui/extensions/file_exception.dart';
 import 'directory_info.dart';
 

@@ -2,21 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/ui/extensions/app_route_parsing.dart';
-
-enum AppRoute {
-  splash,
-  signIn,
-  signUp,
-  forgotPassword,
-  createNewPassword,
-  successCreateNewPassword,
-  main,
-  profile,
-  editInformation,
-  editAllergies,
-  editEmergencyContact,
-}
+import '../../core/routes/app_route.dart';
+import 'app_route_extension.dart';
 
 abstract class AppRouteInfo {
   GlobalKey<NavigatorState> get navigatorKey;

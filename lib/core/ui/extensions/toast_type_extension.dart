@@ -9,7 +9,7 @@ enum ToastType {
   warning,
 }
 
-extension ToastTypeParsing on ToastType {
+extension ToastTypeExtension on ToastType {
   Color backgroundColor(BuildContext context) {
     final color = context.theme.appColorScheme;
 

@@ -3,8 +3,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../../../../../app/config/env_config.dart';
-import '../../../../../app/observers/logger.dart';
+import '../../../../../core/config/env_config.dart';
+import '../../../../../core/utils/logger.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/auth_type_extension.dart';
 import '../../models/token_model.dart';

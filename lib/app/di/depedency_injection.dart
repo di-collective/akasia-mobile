@@ -2,7 +2,6 @@ import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,7 +63,6 @@ import '../../features/country/domain/repositories/country_repository.dart';
 import '../../features/country/domain/usecases/get_countries_usecase.dart';
 import '../../features/country/presentation/cubit/countries/countries_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
-import '../navigation/app_route.dart';
 
 final sl = GetIt.instance;
 
