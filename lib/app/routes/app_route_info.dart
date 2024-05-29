@@ -1,13 +1,21 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/routes/app_route.dart';
 import 'app_route_extension.dart';
 
-class AppRouteInfo {
-  static GoRouter route = GoRouter(
+abstract class AppRouteInfo {
+  GlobalKey<NavigatorState> get navigatorKey;
+  GoRouter get route;
+}
+
+class AppRouteInfoImpl implements AppRouteInfo {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  late final GoRouter _router = GoRouter(
     initialLocation: AppRoute.splash.path,
     debugLogDiagnostics: kDebugMode,
+    navigatorKey: _navigatorKey,
     routes: [
       AppRoute.splash.route(),
       AppRoute.signIn.route(
@@ -34,4 +42,14 @@ class AppRouteInfo {
       ),
     ],
   );
+
+  @override
+  GlobalKey<NavigatorState> get navigatorKey {
+    return _navigatorKey;
+  }
+
+  @override
+  GoRouter get route {
+    return _router;
+  }
 }

@@ -159,6 +159,34 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> updatePassword({
+    required String userId,
+    required String resetToken,
+    required String newPassword,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await authRemoteDataSource.updatePassword(
+          userId: userId,
+          resetToken: resetToken,
+          newPassword: newPassword,
+        );
+      } on FirebaseAuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
   Future<void> signOut() async {
     if (await networkInfo.isConnected) {
       try {

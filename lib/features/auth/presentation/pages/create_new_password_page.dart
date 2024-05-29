@@ -2,40 +2,80 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
+import '../../../../core/ui/extensions/password_indicator_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../cubit/create_new_password/create_new_password_cubit.dart';
+import '../widgets/password_indicator_widget.dart';
 
-class CreateNewPasswordPage extends StatelessWidget {
-  const CreateNewPasswordPage({super.key});
+class CreateNewPasswordPageParams {
+  final String resetToken;
+  final String userId;
+
+  CreateNewPasswordPageParams({
+    required this.resetToken,
+    required this.userId,
+  });
+}
+
+class CreateNewPasswordPage<T> extends StatelessWidget {
+  final T? params;
+
+  const CreateNewPasswordPage({
+    super.key,
+    this.params,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<CreateNewPasswordCubit>(),
-      child: const _Body(),
+      child: _Body(
+        params: params,
+      ),
     );
   }
 }
 
-class _Body extends StatefulWidget {
-  const _Body();
+class _Body<T> extends StatefulWidget {
+  final T? params;
+
+  const _Body({
+    this.params,
+  });
 
   @override
   State<_Body> createState() => __BodyState();
 }
 
 class __BodyState extends State<_Body> {
+  CreateNewPasswordPageParams? params;
+
   final _formKey = GlobalKey<FormState>();
 
   final _passwordTextController = TextEditingController();
+
+  PasswordIndicator? _passwordIndicator;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    if (widget.params != null && widget.params is CreateNewPasswordPageParams) {
+      params = widget.params;
+    }
+  }
 
   @override
   void dispose() {
@@ -46,6 +86,10 @@ class __BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    if (params == null) {
+      return const SizedBox.shrink();
+    }
+
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
@@ -56,7 +100,7 @@ class __BodyState extends State<_Body> {
           child: Scaffold(
             appBar: AppBar(
               title: Text(
-                context.locale.forgotPassword,
+                context.locale.createNewPassword,
               ),
             ),
             body: SingleChildScrollView(
@@ -80,7 +124,7 @@ class __BodyState extends State<_Body> {
                     height: 8,
                   ),
                   Text(
-                    context.locale.passwordMustContains,
+                    context.locale.passwordsMustBeCharacters(12),
                     style: textTheme.labelMedium.copyWith(
                       color: colorScheme.onSurface,
                       height: 0,
@@ -104,9 +148,18 @@ class __BodyState extends State<_Body> {
                       },
                       onChanged: (val) {
                         // reload
-                        setState(() {});
+                        setState(() {
+                          _passwordIndicator =
+                              PasswordIndicatorExtension.parse(val);
+                        });
                       },
                     ),
+                  ),
+                  const SizedBox(
+                    height: 7,
+                  ),
+                  PasswordIndicatorWidget(
+                    indicator: _passwordIndicator,
                   ),
                   const SizedBox(
                     height: 20,
@@ -147,9 +200,9 @@ class __BodyState extends State<_Body> {
       context.closeKeyboard;
 
       // create new password
-      await BlocProvider.of<CreateNewPasswordCubit>(context)
-          .confirmPasswordReset(
-        code: "", // TODO: Get code from deep link email
+      await BlocProvider.of<CreateNewPasswordCubit>(context).updatePassword(
+        userId: params!.userId,
+        resetToken: params!.resetToken,
         newPassword: _passwordTextController.text,
       );
 

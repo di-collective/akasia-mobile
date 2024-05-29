@@ -40,9 +40,13 @@ class App extends StatelessWidget {
       child: MaterialApp.router(
         theme: AppTheme.light(),
         themeMode: ThemeMode.light,
-        routeInformationParser: AppRouteInfo.route.routeInformationParser,
-        routerDelegate: AppRouteInfo.route.routerDelegate,
-        routeInformationProvider: AppRouteInfo.route.routeInformationProvider,
+        // routeInformationParser: AppRouteInfo.route.routeInformationParser,
+        routeInformationParser: sl<AppRouteInfo>().route.routeInformationParser,
+        // routerDelegate: AppRouteInfo.route.routerDelegate,
+        routerDelegate: sl<AppRouteInfo>().route.routerDelegate,
+        // routeInformationProvider: AppRouteInfo.route.routeInformationProvider,
+        routeInformationProvider:
+            sl<AppRouteInfo>().route.routeInformationProvider,
         locale: Locale(
           AppSupportedLocales.en.languageCode,
         ),

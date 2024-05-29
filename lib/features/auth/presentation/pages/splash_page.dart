@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
+import '../../../../core/common/deep_link_info.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
@@ -44,6 +45,11 @@ class _SplashPageState extends State<SplashPage> {
 
       // check sign in status
       final bool isSignIn = result[1];
+
+      // init deep links
+      sl<DeepLinkInfo>().init(
+        isSignIn: isSignIn,
+      );
 
       if (isSignIn) {
         // go to main page
