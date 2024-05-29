@@ -58,9 +58,12 @@ extension TextEditingControllerExtension on TextEditingController {
 
   String? validatePassword({
     required BuildContext context,
+    bool? isRequired,
   }) {
-    if (text.isEmpty) {
-      return context.locale.cannotBeEmpty;
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
     }
 
     if (text.length < 12) {

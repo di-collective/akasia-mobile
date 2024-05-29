@@ -140,5 +140,10 @@
   "strong": "Strong",
   "changePassword": "Change password",
   "changePhoneNumber": "Change phone number",
-  "deactiveAccount": "Deactive account"
+  "deactiveAccount": "Deactive account",
+  "oldPassword": "Old password",
+  "newPassword": "New password",
+  "repeatPassword": "Repeat password",
+  "wrongPassword": "Wrong password",
+  "successChangePassword": "Your password successfully updated"
 }
