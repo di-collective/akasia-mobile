@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -12,6 +11,7 @@ import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../cubit/create_new_password/create_new_password_cubit.dart';
 import '../widgets/password_indicator_widget.dart';
 

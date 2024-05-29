@@ -1,10 +1,11 @@
 import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/navigation/app_route.dart';
-import '../../app/observers/logger.dart';
+import '../../app/routes/app_route_info.dart';
 import '../../features/auth/presentation/pages/create_new_password_page.dart';
+import '../routes/app_route.dart';
 import '../ui/extensions/string_extension.dart';
+import '../utils/logger.dart';
 
 abstract class DeepLinkInfo {
   void init({
