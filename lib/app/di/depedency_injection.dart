@@ -16,6 +16,7 @@ import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/bottom_sheet_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
+import '../../core/ui/widget/loadings/cubit/countdown/countdown_cubit.dart';
 import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import '../../core/utils/service_locator.dart';
 import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
@@ -162,6 +163,11 @@ Future<void> _core() async {
   // full screen loading cubit
   sl.registerFactory<FullScreenLoadingCubit>(() {
     return FullScreenLoadingCubit();
+  });
+
+  // countdown
+  sl.registerFactory<CountdownCubit>(() {
+    return CountdownCubit();
   });
 
   // local picker info

@@ -160,5 +160,9 @@
   "logOutOnAllDevices": "Log out on all devices",
   "deleteAllOfYourAccountInformation": "Delete all of your account information",
   "cancel": "Cancel",
-  "deactive": "Deactive"
+  "deactive": "Deactive",
+  "yourAccountHasBeenDeleted": "Your account has been deleted",
+  "thanksForUsingAkasia": "Thanks for using Akasia365mc",
+  "backIn": "Back in",
+  "second": "second"
 }
