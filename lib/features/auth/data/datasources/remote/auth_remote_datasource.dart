@@ -186,6 +186,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
           data: {
             'name': displayName,
+            // 'profile_image_url': userCredential
+            //     .user?.photoURL, // TODO: upload image url to server
             'country_code': phoneCode,
             'phone': phoneNumber,
             'nik': eKtp,
