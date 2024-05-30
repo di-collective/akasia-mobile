@@ -155,15 +155,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       if (userCredential != null) {
-        // update name on firebase auth
-        Logger.info('signUp displayName: $displayName');
-        if (displayName != null) {
-          await userCredential.user?.updateDisplayName(
-            displayName,
-          );
-          Logger.success('signUp updateDisplayName displayName: $displayName');
-        }
-
         // submit user data to backend
         final idToken = await userCredential.user?.getIdToken();
         if (idToken == null) {
