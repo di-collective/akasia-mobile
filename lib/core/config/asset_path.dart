@@ -21,6 +21,7 @@ class AssetIconsPath {
   static String icDietPlan = 'ic_diet_plan.svg'.iconAsset;
   static String icSun = 'ic_sun.svg'.iconAsset;
   static String icClose = 'ic_close.svg'.iconAsset;
+  static String icCloseCircle = 'ic_close_circle.svg'.iconAsset;
   static String icCamera = 'ic_camera.svg'.iconAsset;
   static String icCheck = 'ic_check.svg'.iconAsset;
 }

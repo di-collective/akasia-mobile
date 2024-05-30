@@ -14,4 +14,5 @@ enum AppRoute {
   changePassword,
   changePhoneNumber,
   deactiveAccount,
+  successDeactiveAccount,
 }

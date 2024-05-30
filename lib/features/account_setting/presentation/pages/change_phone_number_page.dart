@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/config/country_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
@@ -66,7 +67,9 @@ class __BodyState extends State<_Body> {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(context.locale.changePhoneNumber),
+              title: Text(
+                context.locale.changePhoneNumber.toCapitalizes(),
+              ),
             ),
             body: Padding(
               padding: EdgeInsets.symmetric(

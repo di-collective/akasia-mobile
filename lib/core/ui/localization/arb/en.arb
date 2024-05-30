@@ -149,5 +149,16 @@
   "oldPhoneNumber": "Old phone number",
   "newPhoneNumber": "New phone number",
   "successChangePhoneNumber": "The phone number has been successfully updated",
-  "phoneNumberCannotSame": "The number you entered is the same as your old number"
+  "phoneNumberCannotSame": "The number you entered is the same as your old number",
+  "whyDoYouWantToDeactiveYourAccount": "Why do you want to deactivate your account",
+  "notUseful": "I don’t need it anymore",
+  "tooExpensive": "It’s too expensive",
+  "switchingToAn": "I’m switching to someone else",
+  "other": "Other",
+  "example": "Example",
+  "deactiveYourAccountWillDoTheFollowing": "Deactivate your account will do the following",
+  "logOutOnAllDevices": "Log out on all devices",
+  "deleteAllOfYourAccountInformation": "Delete all of your account information",
+  "cancel": "Cancel",
+  "deactive": "Deactive"
 }

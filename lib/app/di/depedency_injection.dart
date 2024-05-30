@@ -38,6 +38,7 @@ import '../../features/account/presentation/cubit/edit_information/edit_informat
 import '../../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_password/change_password_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_phone_number/change_phone_number_cubit.dart';
+import '../../features/account_setting/presentation/cubit/deactive_account/deactive_account_cubit.dart';
 import '../../features/activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
@@ -443,5 +444,10 @@ Future<void> _accountSettings() async {
   });
   sl.registerFactory<ChangePhoneNumberCubit>(() {
     return ChangePhoneNumberCubit();
+  });
+  sl.registerFactory<DeactiveAccountCubit>(() {
+    return DeactiveAccountCubit(
+      signOutUseCase: sl(),
+    );
   });
 }

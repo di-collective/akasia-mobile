@@ -10,6 +10,7 @@ import '../../features/account_setting/presentation/pages/account_setting_page.d
 import '../../features/account_setting/presentation/pages/change_password_page.dart';
 import '../../features/account_setting/presentation/pages/change_phone_number_page.dart';
 import '../../features/account_setting/presentation/pages/deactive_account_page.dart';
+import '../../features/account_setting/presentation/pages/success_deactive_account_page.dart';
 import '../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
@@ -51,6 +52,8 @@ extension AppRouteExtension on AppRoute {
         return 'change-phone-number';
       case AppRoute.deactiveAccount:
         return 'deactive-account';
+      case AppRoute.successDeactiveAccount:
+        return '/success-deactive-account';
     }
   }
 
@@ -96,6 +99,8 @@ extension AppRouteExtension on AppRoute {
         return const ChangePhoneNumberPage();
       case AppRoute.deactiveAccount:
         return const DeactiveAccountPage();
+      case AppRoute.successDeactiveAccount:
+        return const SuccessDeactiveAccountPage();
     }
   }
 

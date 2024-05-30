@@ -5,11 +5,12 @@ import '../../extensions/theme_data_extension.dart';
 
 class DialogWidget extends StatelessWidget {
   final String? title, description;
-  final Widget? button;
+  final Widget? descriptionWidget, button;
 
   const DialogWidget({
     super.key,
     this.title,
+    this.descriptionWidget,
     this.description,
     this.button,
   });
@@ -44,7 +45,12 @@ class DialogWidget extends StatelessWidget {
                 ),
               ),
             ],
-            if (description != null && description!.isNotEmpty) ...[
+            if (descriptionWidget != null) ...[
+              const SizedBox(
+                height: 20,
+              ),
+              descriptionWidget!,
+            ] else if (description != null && description!.isNotEmpty) ...[
               const SizedBox(
                 height: 20,
               ),

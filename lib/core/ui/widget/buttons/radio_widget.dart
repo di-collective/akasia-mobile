@@ -8,6 +8,7 @@ class RadioWidget<T> extends StatelessWidget {
   final T? groupValue;
   final void Function(T?)? onChanged;
   final String? title;
+  final TextStyle? titleStyle;
 
   const RadioWidget({
     super.key,
@@ -15,6 +16,7 @@ class RadioWidget<T> extends StatelessWidget {
     this.groupValue,
     this.onChanged,
     this.title,
+    this.titleStyle,
   });
 
   @override
@@ -41,9 +43,10 @@ class RadioWidget<T> extends StatelessWidget {
         if (title != null && title!.isNotEmpty) ...[
           Text(
             title!,
-            style: textTheme.bodyLarge.copyWith(
-              color: colorScheme.onSurface,
-            ),
+            style: titleStyle ??
+                textTheme.bodyLarge.copyWith(
+                  color: colorScheme.onSurface,
+                ),
           ),
         ],
         const SizedBox(

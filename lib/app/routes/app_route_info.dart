@@ -47,6 +47,7 @@ class AppRouteInfoImpl implements AppRouteInfo {
           ),
         ],
       ),
+      AppRoute.successDeactiveAccount.route(),
     ],
   );
 
