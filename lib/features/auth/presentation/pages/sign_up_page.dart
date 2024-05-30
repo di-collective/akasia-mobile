@@ -172,7 +172,8 @@ class __BodyState extends State<_Body> {
                       key: _phoneFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: PhoneNumberFormFieldWidget(
-                        textController: _phoneTextController,
+                        controller: _phoneTextController,
+                        title: context.locale.phoneNumber,
                         isRequired: true,
                         selectedCountry: _selectedCountry,
                         onSelectedCountry: (country) {

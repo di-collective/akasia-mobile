@@ -120,6 +120,8 @@ extension TextEditingControllerExtension on TextEditingController {
   String? validatePhoneNumber({
     required BuildContext context,
     bool? isRequired,
+    bool? isCannotSameAs,
+    String? anotherPhoneNumber,
   }) {
     if (isRequired == true) {
       if (text.isEmpty) {
@@ -148,6 +150,12 @@ extension TextEditingControllerExtension on TextEditingController {
       return context.locale.maximumLength(13);
     }
 
+    if (isCannotSameAs == true) {
+      if (text == anotherPhoneNumber) {
+        return context.locale.phoneNumberCannotSame;
+      }
+    }
+
     return null;
   }
 
@@ -168,6 +176,17 @@ extension TextEditingControllerExtension on TextEditingController {
           isWithOutComma: isAllowComma,
         )) {
       return context.locale.onlyNumber;
+    }
+
+    return null;
+  }
+
+  String? cannotSameAs({
+    required BuildContext context,
+    required String anotherValue,
+  }) {
+    if (text == anotherValue) {
+      return context.locale.account;
     }
 
     return null;

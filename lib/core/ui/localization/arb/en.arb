@@ -145,5 +145,9 @@
   "newPassword": "New password",
   "repeatPassword": "Repeat password",
   "wrongPassword": "Wrong password",
-  "successChangePassword": "Your password successfully updated"
+  "successChangePassword": "Your password successfully updated",
+  "oldPhoneNumber": "Old phone number",
+  "newPhoneNumber": "New phone number",
+  "successChangePhoneNumber": "The phone number has been successfully updated",
+  "phoneNumberCannotSame": "The number you entered is the same as your old number"
 }

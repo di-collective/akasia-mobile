@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../../../../features/country/data/models/country_model.dart';
-import '../../extensions/build_context_extension.dart';
 import '../../extensions/validation_extension.dart';
 import 'text_form_field_widget.dart';
 
 class PhoneNumberFormFieldWidget extends StatefulWidget {
-  final TextEditingController textController;
+  final TextEditingController controller;
+  final String? title;
   final CountryModel? selectedCountry;
-  final Function(CountryModel) onSelectedCountry;
+  final Function(CountryModel)? onSelectedCountry;
   final bool? isRequired, isLoading;
   final Function(String)? onChanged;
+  final Function(String?)? validator;
 
   const PhoneNumberFormFieldWidget({
     super.key,
-    required this.textController,
+    required this.controller,
+    this.title,
     this.selectedCountry,
-    required this.onSelectedCountry,
+    this.onSelectedCountry,
     this.isRequired,
     this.isLoading,
     this.onChanged,
+    this.validator,
   });
 
   @override
@@ -32,14 +35,18 @@ class _PhoneNumberFormFieldWidgetState
   @override
   Widget build(BuildContext context) {
     return TextFormFieldWidget(
-      controller: widget.textController,
-      title: context.locale.phoneNumber,
+      controller: widget.controller,
+      title: widget.title,
       keyboardType: TextInputType.phone,
       isRequired: widget.isRequired,
       isLoading: widget.isLoading,
       onChanged: widget.onChanged,
       validator: (val) {
-        return widget.textController.validatePhoneNumber(
+        if (widget.validator != null) {
+          return widget.validator!(val);
+        }
+
+        return widget.controller.validatePhoneNumber(
           context: context,
           isRequired: widget.isRequired,
         );
