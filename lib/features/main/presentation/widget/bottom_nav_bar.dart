@@ -50,6 +50,10 @@ class AppBottomNavBar extends StatelessWidget {
                               item: item,
                               iconColor: colorScheme.onPrimary,
                               labelColor: colorScheme.onPrimary,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 10,
+                              ),
                               onTap: onTap,
                             ),
                           ),
