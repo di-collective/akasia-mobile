@@ -17,6 +17,7 @@ import '../../../../core/ui/widget/buttons/radio_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../cubit/deactive_account/deactive_account_cubit.dart';
 
 class DeactiveAccountPage extends StatelessWidget {
@@ -268,6 +269,9 @@ class __BodyState extends State<_Body> {
       await BlocProvider.of<DeactiveAccountCubit>(context).deactiveAccount(
         reason: _selectedReason!,
       );
+
+      // init all cubits
+      BlocProvider.of<ProfileCubit>(context).init();
 
       // go to success page
       context.goNamed(

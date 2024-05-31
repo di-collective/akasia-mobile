@@ -14,6 +14,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     required this.getProfileUseCase,
   }) : super(ProfileInitial());
 
+  void init() {
+    emit(ProfileInitial());
+  }
+
   Future<void> getProfile() async {
     try {
       // validate current state

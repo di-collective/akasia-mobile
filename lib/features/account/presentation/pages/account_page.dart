@@ -352,6 +352,9 @@ class _AccountPageState extends State<AccountPage> {
       // logout
       await sl<AuthRepository>().signOut();
 
+      // init all cubits
+      BlocProvider.of<ProfileCubit>(context).init();
+
       // go to splash page
       context.goNamed(AppRoute.splash.name);
     } catch (error) {
