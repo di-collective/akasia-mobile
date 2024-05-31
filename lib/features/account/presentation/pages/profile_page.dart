@@ -11,11 +11,14 @@ import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../data/models/allergy_model.dart';
 import '../../data/models/emergency_contact_model.dart';
+import '../../data/models/profile_model.dart';
 import '../cubit/allergies/allergies_cubit.dart';
 import '../cubit/emergency_contact/emergency_contact_cubit.dart';
+import '../cubit/profile/profile_cubit.dart';
 import '../widgets/profile_detail_item_widget.dart';
 import 'edit_allergies_page.dart';
 import 'edit_emergency_contact_page.dart';
+import 'edit_information_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -45,6 +48,12 @@ class _ProfilePageState extends State<ProfilePage> {
       // if state is not loaded, get data
       _onGetEmergencyContact();
     }
+
+    final profileState = BlocProvider.of<ProfileCubit>(context).state;
+    if (profileState is! ProfileLoaded) {
+      // if state is not loaded, get data
+      _onGetProfile();
+    }
   }
 
   Future<void> _onGetAllergies() async {
@@ -53,6 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _onGetEmergencyContact() async {
     await BlocProvider.of<EmergencyContactCubit>(context).getEmergencyContact();
+  }
+
+  Future<void> _onGetProfile() async {
+    await BlocProvider.of<ProfileCubit>(context).getProfile();
   }
 
   @override
@@ -93,27 +106,35 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.locale.information,
-                  style: textTheme.titleMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurfaceDim,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: _onEditInformation,
-                  child: Text(
-                    context.locale.edit,
-                    style: textTheme.labelLarge.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.primary,
+            BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.locale.information,
+                      style: textTheme.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurfaceDim,
+                      ),
                     ),
-                  ),
-                ),
-              ],
+                    if (state is ProfileLoaded) ...[
+                      GestureDetector(
+                        onTap: () {
+                          _onEditInformation(state.profile);
+                        },
+                        child: Text(
+                          context.locale.edit,
+                          style: textTheme.labelLarge.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                );
+              },
             ),
             const SizedBox(
               height: 16,
@@ -123,103 +144,122 @@ class _ProfilePageState extends State<ProfilePage> {
                 borderRadius: BorderRadius.circular(20),
                 color: colorScheme.white,
               ),
-              child: Column(
-                children: [
-                  ProfileDetailItemWidget(
-                    label: context.locale.membershipId,
-                    value: 'MP-12345678',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.eKtpNumber,
-                    value: '35743212809076543',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.fullName,
-                    value: 'John Doe',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.phoneNumber,
-                    value: 'Phone Number',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.age,
-                    value: '34 yo',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.dob,
-                    value: '11-01-1990',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.sex,
-                    value: 'Male',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.bloodType,
-                    value: 'B',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.weight,
-                    value: '52 kgs',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.height,
-                    value: '170 cm',
-                  ),
-                  Divider(
-                    height: 0,
-                    color: colorScheme.outlineBright,
-                    thickness: 0.5,
-                  ),
-                  ProfileDetailItemWidget(
-                    label: context.locale.activityLevel,
-                    value: 'Sedentary',
-                  ),
-                ],
+              child: BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, state) {
+                  String? nik;
+                  String? name;
+                  String? phoneNumber;
+                  if (state is ProfileLoaded) {
+                    final profile = state.profile;
+
+                    nik = profile.nik;
+                    name = profile.name;
+                    phoneNumber =
+                        "${profile.countryCode ?? ''}${profile.phone ?? ''}";
+                  }
+
+                  return Column(
+                    children: [
+                      ProfileDetailItemWidget(
+                        label: context.locale.membershipId,
+                        value: 'MP-12345678',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.eKtpNumber,
+                        value: nik,
+                        isLoading: state is ProfileLoading,
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.fullName,
+                        value: name,
+                        isLoading: state is ProfileLoading,
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.phoneNumber,
+                        value: phoneNumber,
+                        isLoading: state is ProfileLoading,
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.age,
+                        value: '34 yo',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.dob,
+                        value: '11-01-1990',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.sex,
+                        value: 'Male',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.bloodType,
+                        value: 'B',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.weight,
+                        value: '52 kgs',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.height,
+                        value: '170 cm',
+                      ),
+                      Divider(
+                        height: 0,
+                        color: colorScheme.outlineBright,
+                        thickness: 0.5,
+                      ),
+                      ProfileDetailItemWidget(
+                        label: context.locale.activityLevel,
+                        value: 'Sedentary',
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(
@@ -445,9 +485,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _onEditInformation() {
+  void _onEditInformation(ProfileModel profile) {
     // go to edit information page
-    context.goNamed(AppRoute.editInformation.name);
+    context.goNamed(
+      AppRoute.editInformation.name,
+      extra: EditInformationPageParams(
+        profile: profile,
+      ),
+    );
   }
 
   void _onEditAllergies({

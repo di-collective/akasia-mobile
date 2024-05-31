@@ -32,11 +32,13 @@ import '../../features/account/domain/usecases/change_profile_picture_usecase.da
 import '../../features/account/domain/usecases/edit_emergency_contact_usecase.dart';
 import '../../features/account/domain/usecases/get_allergies_usecase.dart';
 import '../../features/account/domain/usecases/get_emergency_contact_usecase.dart';
+import '../../features/account/domain/usecases/get_profile_usecase.dart';
 import '../../features/account/presentation/cubit/allergies/allergies_cubit.dart';
 import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
 import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
 import '../../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
+import '../../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_password/change_password_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_phone_number/change_phone_number_cubit.dart';
 import '../../features/account_setting/presentation/cubit/deactive_account/deactive_account_cubit.dart';
@@ -411,6 +413,11 @@ Future<void> _account() async {
       emergencyContactRepository: sl(),
     );
   });
+  sl.registerLazySingleton<GetProfileUseCase>(() {
+    return GetProfileUseCase(
+      accountRepository: sl(),
+    );
+  });
 
   // cubit
   sl.registerFactory<EditInformationCubit>(() {
@@ -432,6 +439,11 @@ Future<void> _account() async {
   sl.registerFactory<EditEmergencyContactCubit>(() {
     return EditEmergencyContactCubit(
       editEmergencyContactUseCase: sl(),
+    );
+  });
+  sl.registerFactory<ProfileCubit>(() {
+    return ProfileCubit(
+      getProfileUseCase: sl(),
     );
   });
 }
