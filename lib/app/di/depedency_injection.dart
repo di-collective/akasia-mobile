@@ -16,6 +16,7 @@ import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
 import '../../core/ui/widget/dialogs/bottom_sheet_info.dart';
 import '../../core/ui/widget/dialogs/toast_info.dart';
+import '../../core/ui/widget/loadings/cubit/countdown/countdown_cubit.dart';
 import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import '../../core/utils/service_locator.dart';
 import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
@@ -36,6 +37,9 @@ import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_
 import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
 import '../../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
+import '../../features/account_setting/presentation/cubit/change_password/change_password_cubit.dart';
+import '../../features/account_setting/presentation/cubit/change_phone_number/change_phone_number_cubit.dart';
+import '../../features/account_setting/presentation/cubit/deactive_account/deactive_account_cubit.dart';
 import '../../features/activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
@@ -82,6 +86,8 @@ Future<void> init() async {
   await _account();
 
   await _activityLevel();
+
+  await _accountSettings();
 }
 
 Future<void> _external() async {
@@ -157,6 +163,11 @@ Future<void> _core() async {
   // full screen loading cubit
   sl.registerFactory<FullScreenLoadingCubit>(() {
     return FullScreenLoadingCubit();
+  });
+
+  // countdown
+  sl.registerFactory<CountdownCubit>(() {
+    return CountdownCubit();
   });
 
   // local picker info
@@ -429,5 +440,20 @@ Future<void> _activityLevel() async {
   // data source
   sl.registerLazySingleton<ActivityLevelLocalDataSource>(() {
     return ActivityLevelLocalDataSourceImpl();
+  });
+}
+
+Future<void> _accountSettings() async {
+  // Cubit
+  sl.registerFactory<ChangePasswordCubit>(() {
+    return ChangePasswordCubit();
+  });
+  sl.registerFactory<ChangePhoneNumberCubit>(() {
+    return ChangePhoneNumberCubit();
+  });
+  sl.registerFactory<DeactiveAccountCubit>(() {
+    return DeactiveAccountCubit(
+      signOutUseCase: sl(),
+    );
   });
 }

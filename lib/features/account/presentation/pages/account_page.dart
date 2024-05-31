@@ -262,7 +262,8 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _onAccountSettings() {
-    // TODO: Implement this method
+    // go to account setting page
+    context.goNamed(AppRoute.accountSetting.name);
   }
 
   void _onFaq() {

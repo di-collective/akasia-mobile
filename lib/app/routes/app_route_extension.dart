@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/routes/app_route.dart';
 import '../../features/account/presentation/pages/edit_allergies_page.dart';
 import '../../features/account/presentation/pages/edit_emergency_contact_page.dart';
 import '../../features/account/presentation/pages/edit_information_page.dart';
 import '../../features/account/presentation/pages/profile_page.dart';
+import '../../features/account_setting/presentation/pages/account_setting_page.dart';
+import '../../features/account_setting/presentation/pages/change_password_page.dart';
+import '../../features/account_setting/presentation/pages/change_phone_number_page.dart';
+import '../../features/account_setting/presentation/pages/deactive_account_page.dart';
+import '../../features/account_setting/presentation/pages/success_deactive_account_page.dart';
 import '../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
@@ -12,7 +18,6 @@ import '../../features/auth/presentation/pages/sign_up_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/success_create_new_password_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
-import '../../core/routes/app_route.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -39,6 +44,16 @@ extension AppRouteExtension on AppRoute {
         return 'edit-allergies';
       case AppRoute.editEmergencyContact:
         return 'edit-emergency-contact';
+      case AppRoute.accountSetting:
+        return 'account-setting';
+      case AppRoute.changePassword:
+        return 'change-password';
+      case AppRoute.changePhoneNumber:
+        return 'change-phone-number';
+      case AppRoute.deactiveAccount:
+        return 'deactive-account';
+      case AppRoute.successDeactiveAccount:
+        return '/success-deactive-account';
     }
   }
 
@@ -76,6 +91,16 @@ extension AppRouteExtension on AppRoute {
         return EditEmergencyContactPage(
           params: arguments,
         );
+      case AppRoute.accountSetting:
+        return const AccountSettingPage();
+      case AppRoute.changePassword:
+        return const ChangePasswordPage();
+      case AppRoute.changePhoneNumber:
+        return const ChangePhoneNumberPage();
+      case AppRoute.deactiveAccount:
+        return const DeactiveAccountPage();
+      case AppRoute.successDeactiveAccount:
+        return const SuccessDeactiveAccountPage();
     }
   }
 

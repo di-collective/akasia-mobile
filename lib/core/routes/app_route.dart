@@ -10,4 +10,9 @@ enum AppRoute {
   editInformation,
   editAllergies,
   editEmergencyContact,
+  accountSetting,
+  changePassword,
+  changePhoneNumber,
+  deactiveAccount,
+  successDeactiveAccount,
 }

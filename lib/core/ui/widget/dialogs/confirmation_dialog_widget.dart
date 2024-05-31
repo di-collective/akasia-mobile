@@ -7,14 +7,18 @@ import 'dialog_widget.dart';
 
 class ConfirmationDialogWidget extends StatelessWidget {
   final String? title, description, cancelText, confirmText;
+  final Widget? descriptionWidget;
+  final Color? confirmBackrgoundColor;
   final Function()? onCancel, onConfirm;
 
   const ConfirmationDialogWidget({
     super.key,
     this.title,
     this.description,
+    this.descriptionWidget,
     this.cancelText,
     this.confirmText,
+    this.confirmBackrgoundColor,
     this.onCancel,
     this.onConfirm,
   });
@@ -26,6 +30,7 @@ class ConfirmationDialogWidget extends StatelessWidget {
     return DialogWidget(
       title: title,
       description: description,
+      descriptionWidget: descriptionWidget,
       button: Row(
         children: [
           Expanded(
@@ -51,6 +56,7 @@ class ConfirmationDialogWidget extends StatelessWidget {
           Expanded(
             child: ButtonWidget(
               text: confirmText ?? context.locale.yes,
+              backgroundColor: confirmBackrgoundColor,
               onTap: () {
                 if (onConfirm != null) {
                   onConfirm!();

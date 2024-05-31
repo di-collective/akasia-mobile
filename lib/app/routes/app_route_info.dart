@@ -38,8 +38,16 @@ class AppRouteInfoImpl implements AppRouteInfo {
               AppRoute.editEmergencyContact.route(),
             ],
           ),
+          AppRoute.accountSetting.route(
+            routes: [
+              AppRoute.changePassword.route(),
+              AppRoute.changePhoneNumber.route(),
+              AppRoute.deactiveAccount.route(),
+            ],
+          ),
         ],
       ),
+      AppRoute.successDeactiveAccount.route(),
     ],
   );
 

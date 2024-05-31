@@ -144,6 +144,7 @@ class __BodyState extends State<_Body> {
                       validator: (val) {
                         return _passwordTextController.validatePassword(
                           context: context,
+                          isRequired: true,
                         );
                       },
                       onChanged: (val) {

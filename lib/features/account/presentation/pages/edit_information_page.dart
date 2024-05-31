@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/config/blood_type_config.dart';
 import '../../../../core/config/country_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
@@ -20,6 +19,7 @@ import '../../../../core/ui/widget/forms/date_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../../activity_level/data/models/activity_level_model.dart';
 import '../../../country/data/models/country_model.dart';
@@ -183,7 +183,8 @@ class __BodyState extends State<_Body> {
                               height: 20,
                             ),
                             PhoneNumberFormFieldWidget(
-                              textController: _phoneTextController,
+                              controller: _phoneTextController,
+                              title: context.locale.phoneNumber,
                               selectedCountry: _selectedCountry,
                               isRequired: true,
                               onSelectedCountry: (val) {

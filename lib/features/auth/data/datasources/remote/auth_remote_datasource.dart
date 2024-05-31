@@ -155,15 +155,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       if (userCredential != null) {
-        // update name on firebase auth
-        Logger.info('signUp displayName: $displayName');
-        if (displayName != null) {
-          await userCredential.user?.updateDisplayName(
-            displayName,
-          );
-          Logger.success('signUp updateDisplayName displayName: $displayName');
-        }
-
         // submit user data to backend
         final idToken = await userCredential.user?.getIdToken();
         if (idToken == null) {
@@ -186,6 +177,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
           data: {
             'name': displayName,
+            // 'profile_image_url': userCredential
+            //     .user?.photoURL, // TODO: upload image url to server
             'country_code': phoneCode,
             'phone': phoneNumber,
             'nik': eKtp,

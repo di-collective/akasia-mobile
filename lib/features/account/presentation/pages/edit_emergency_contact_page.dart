@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/config/relationship_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -13,6 +12,7 @@ import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../../../country/data/models/country_model.dart';
 import '../../../country/presentation/cubit/countries/countries_cubit.dart';
 import '../../data/models/emergency_contact_model.dart';
@@ -203,7 +203,8 @@ class __BodyState extends State<_Body> {
                             BlocBuilder<CountriesCubit, CountriesState>(
                               builder: (context, state) {
                                 return PhoneNumberFormFieldWidget(
-                                  textController: _phoneNumberTextController,
+                                  controller: _phoneNumberTextController,
+                                  title: context.locale.phoneNumber,
                                   selectedCountry: _selectedCountry,
                                   isRequired: true,
                                   isLoading: state is CountriesLoading,
