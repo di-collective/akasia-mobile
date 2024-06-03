@@ -1,20 +1,23 @@
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:screen_brightness/screen_brightness.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/dialogs/dialog_widget.dart';
 import '../widgets/home_dashboard_item_widget.dart';
 import '../widgets/home_menu_item_widget.dart';
+import '../widgets/membership_barcode_widget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
@@ -174,53 +177,7 @@ class HomePage extends StatelessWidget {
                       const SizedBox(
                         height: 16,
                       ),
-                      GestureDetector(
-                        onTap: () => _onShowBrightnessBarcode(context),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 14,
-                          ),
-                          width: context.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: colorScheme.outlineBright,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            children: [
-                              BarcodeWidget(
-                                barcode: Barcode.code128(),
-                                data: 'ABC-abc-1234',
-                                height: 80,
-                                width: 250,
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    AssetIconsPath.icSun,
-                                    height: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    context.locale.brightness,
-                                    style: textTheme.labelMedium.copyWith(
-                                      color: colorScheme.primary,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      const MembershipBarcodeWidget(),
                     ],
                   ),
                 ),
@@ -258,56 +215,5 @@ class HomePage extends StatelessWidget {
 
   void _onDietPlan() {
     // TODO: Implement this method
-  }
-
-  Future<void> _onShowBrightnessBarcode(BuildContext context) async {
-    // get current brightness
-    final lastBrightness = await ScreenBrightness().system;
-
-    await ScreenBrightness().setAutoReset(true);
-
-    // set brightness to maximum
-    await ScreenBrightness().setScreenBrightness(1);
-
-    // show dialog with barcode
-    await showDialog(
-      context: context,
-      builder: (context) {
-        final colorScheme = context.theme.appColorScheme;
-
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DialogWidget(
-              title: context.locale.membership,
-              button: BarcodeWidget(
-                barcode: Barcode.code128(),
-                data: 'ABC-abc-1234',
-                height: 90,
-                width: 300,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              backgroundColor: Colors.white,
-              elevation: 0,
-              shape: const CircleBorder(),
-              child: Icon(
-                Icons.close,
-                color: colorScheme.primary,
-              ),
-            )
-          ],
-        );
-      },
-    );
-
-    // reset brightness to last value
-    await ScreenBrightness().setScreenBrightness(lastBrightness);
   }
 }
