@@ -17,6 +17,8 @@ import '../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../features/auth/presentation/pages/sign_up_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/success_create_new_password_page.dart';
+import '../../features/faq/presentation/pages/faq_details_page.dart';
+import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 
 extension AppRouteExtension on AppRoute {
@@ -54,6 +56,10 @@ extension AppRouteExtension on AppRoute {
         return 'deactive-account';
       case AppRoute.successDeactiveAccount:
         return '/success-deactive-account';
+      case AppRoute.faq:
+        return 'faq';
+      case AppRoute.faqDetails:
+        return 'faq-details';
     }
   }
 
@@ -103,6 +109,12 @@ extension AppRouteExtension on AppRoute {
         return const DeactiveAccountPage();
       case AppRoute.successDeactiveAccount:
         return const SuccessDeactiveAccountPage();
+      case AppRoute.faq:
+        return const FaqPage();
+      case AppRoute.faqDetails:
+        return FaqDetailsPage(
+          params: arguments,
+        );
     }
   }
 
