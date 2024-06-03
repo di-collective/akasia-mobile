@@ -125,7 +125,6 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
                 colorScheme: colorScheme,
               ),
               cursorColor: colorScheme.primary,
-              cursorHeight: 18,
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 fillColor: fillColor(colorScheme),

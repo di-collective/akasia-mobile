@@ -71,8 +71,8 @@ class __BodyState extends State<_Body> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
-                            SizedBox(
-                              height: context.paddingTop,
+                            const SizedBox(
+                              height: 16,
                             ),
                             TextFormFieldWidget(
                               controller: _oldPasswordTextController,

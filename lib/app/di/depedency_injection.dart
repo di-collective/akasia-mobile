@@ -11,6 +11,7 @@ import '../../core/common/directory_info.dart';
 import '../../core/common/image_compress_info.dart';
 import '../../core/common/local_picker_info.dart';
 import '../../core/common/open_app_info.dart';
+import '../../core/flavors/flavor_info.dart';
 import '../../core/network/http/app_http_client.dart';
 import '../../core/network/http/dio_interceptor.dart';
 import '../../core/network/network_info.dart';
@@ -133,9 +134,16 @@ Future<void> _external() async {
 Future<void> _app() async {}
 
 Future<void> _core() async {
+  // flavor info
+  sl.registerLazySingleton<FlavorInfo>(() {
+    return FlavorInfoImpl();
+  });
+
   // app route info
   sl.registerLazySingleton<AppRouteInfo>(() {
-    return AppRouteInfoImpl();
+    return AppRouteInfoImpl(
+      flavorInfo: sl(),
+    );
   });
 
   // toast info

@@ -72,8 +72,8 @@ class __BodyState extends State<_Body> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: context.paddingTop,
+                      const SizedBox(
+                        height: 16,
                       ),
                       Center(
                         child: SvgPicture.asset(
