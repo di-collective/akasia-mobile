@@ -97,6 +97,7 @@ class __BodyState extends State<_Body> {
                         // reload
                         setState(() {});
                       },
+                      onEditingComplete: _onSendLinkToEmail,
                     ),
                   ),
                   const SizedBox(

@@ -43,6 +43,10 @@ class CreateNewPasswordCubit extends Cubit<CreateNewPasswordState> {
     required String newPassword,
   }) async {
     try {
+      if (state is CreateNewPasswordLoading) {
+        return;
+      }
+
       emit(CreateNewPasswordLoading());
 
       await updatePasswordUseCase.call(

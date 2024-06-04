@@ -8,9 +8,7 @@ import '../ui/extensions/string_extension.dart';
 import '../utils/logger.dart';
 
 abstract class DeepLinkInfo {
-  void init({
-    bool? isSignIn,
-  });
+  void init();
 }
 
 class DeepLinkInfoImpl implements DeepLinkInfo {
@@ -23,16 +21,14 @@ class DeepLinkInfoImpl implements DeepLinkInfo {
   });
 
   @override
-  void init({
-    bool? isSignIn,
-  }) {
+  void init() {
     Logger.info('DeepLinkInfo init');
 
     appLinks.stringLinkStream.listen((data) {
-      Logger.success('onAppLink: data $data');
+      Logger.success('DeepLinkInfo: data $data');
 
       final dataMap = data.urlToMap;
-      Logger.success('onAppLink: dataMap $dataMap');
+      Logger.success('DeepLinkInfo: dataMap $dataMap');
 
       final path = dataMap['path'];
       if (path is String && path.isNotEmpty) {

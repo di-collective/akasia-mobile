@@ -154,6 +154,7 @@ class __BodyState extends State<_Body> {
                               PasswordIndicatorExtension.parse(val);
                         });
                       },
+                      onEditingComplete: _onResetPassword,
                     ),
                   ),
                   const SizedBox(
@@ -187,12 +188,7 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onResetPassword() async {
     try {
-      final createNewPasswordState =
-          BlocProvider.of<CreateNewPasswordCubit>(context).state;
-      if (createNewPasswordState is CreateNewPasswordLoading) {
-        return;
-      }
-
+      // validate
       if (_formKey.currentState?.validate() == false) {
         return;
       }

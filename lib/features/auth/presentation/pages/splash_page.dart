@@ -33,6 +33,9 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _init() async {
     try {
+      // init deep links
+      sl<DeepLinkInfo>().init();
+
       final result = await Future.wait([
         // minimum splash duration
         Future.delayed(const Duration(seconds: 3)),
@@ -46,11 +49,6 @@ class _SplashPageState extends State<SplashPage> {
 
       // check sign in status
       final bool isSignIn = result[1];
-
-      // init deep links
-      sl<DeepLinkInfo>().init(
-        isSignIn: isSignIn,
-      );
 
       if (isSignIn) {
         // go to main page
