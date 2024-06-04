@@ -23,22 +23,42 @@ import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../../activity_level/data/models/activity_level_model.dart';
 import '../../../country/data/models/country_model.dart';
+import '../../data/models/profile_model.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 
-class EditInformationPage extends StatelessWidget {
-  const EditInformationPage({super.key});
+class EditInformationPageParams {
+  final ProfileModel profile;
+
+  EditInformationPageParams({
+    required this.profile,
+  });
+}
+
+class EditInformationPage<T> extends StatelessWidget {
+  final T? params;
+
+  const EditInformationPage({
+    super.key,
+    this.params,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<EditInformationCubit>(),
-      child: const _Body(),
+      child: _Body(
+        params: params,
+      ),
     );
   }
 }
 
-class _Body extends StatefulWidget {
-  const _Body();
+class _Body<T> extends StatefulWidget {
+  final T? params;
+
+  const _Body({
+    this.params,
+  });
 
   @override
   State<_Body> createState() => __BodyState();
@@ -60,6 +80,8 @@ class __BodyState extends State<_Body> {
   final _heightTextController = TextEditingController();
   ActivityLevelModel? _selectedActivityLevel;
 
+  ProfileModel? _activeProfile;
+
   @override
   void initState() {
     super.initState();
@@ -68,16 +90,21 @@ class __BodyState extends State<_Body> {
   }
 
   void _init() {
-    // init controller
-    _membershipIdTextController.text = "111111"; // TODO: get from API
+    _selectedCountry = CountryConfig.indonesia; // TODO: Dynamic country
 
-    _eKtpTextController.text = "3506042602660001"; // TODO: get from API
+    final params = widget.params;
+    if (params is EditInformationPageParams) {
+      _activeProfile = params.profile;
 
-    _fullNameTextController.text = "John Doe"; // TODO: get from API
+      // init controller
+      _membershipIdTextController.text = "111111"; // TODO: get from API
 
-    _phoneTextController.text = "81234567890"; // TODO: get from API
+      _eKtpTextController.text = _activeProfile?.nik ?? '';
 
-    _selectedCountry = CountryConfig.indonesia; // TODO: get from API
+      _fullNameTextController.text = _activeProfile?.name ?? '';
+
+      _phoneTextController.text = _activeProfile?.phone ?? '';
+    }
   }
 
   @override

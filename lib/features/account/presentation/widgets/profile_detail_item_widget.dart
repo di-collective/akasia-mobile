@@ -3,15 +3,18 @@ import 'package:flutter/widgets.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 
 class ProfileDetailItemWidget extends StatelessWidget {
   final String label;
   final String? value;
+  final bool isLoading;
 
   const ProfileDetailItemWidget({
     super.key,
     required this.label,
     required this.value,
+    this.isLoading = false,
   });
 
   @override
@@ -37,20 +40,30 @@ class ProfileDetailItemWidget extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: context.width * 0.5,
-            ),
-            child: Text(
-              value ?? '-',
-              style: textTheme.labelLarge.copyWith(
-                color: colorScheme.onSurfaceDim,
-                fontWeight: FontWeight.w500,
+          if (isLoading) ...[
+            ShimmerLoading.circular(
+              width: context.width * 0.3,
+              height: 20,
+              shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              textAlign: TextAlign.end,
-              maxLines: 2,
             ),
-          ),
+          ] else ...[
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: context.width * 0.5,
+              ),
+              child: Text(
+                value ?? '-',
+                style: textTheme.labelLarge.copyWith(
+                  color: colorScheme.onSurfaceDim,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.end,
+                maxLines: 2,
+              ),
+            ),
+          ],
         ],
       ),
     );

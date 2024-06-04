@@ -3,13 +3,17 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
-import '../../../../../core/config/env_config.dart';
-import '../../../../../core/utils/logger.dart';
 import '../../../../../core/common/image_compress_info.dart';
+import '../../../../../core/config/env_config.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/file_exception.dart';
+import '../../../../../core/utils/logger.dart';
+import '../../models/profile_model.dart';
 
 abstract class AccountRemoteDataSource {
+  Future<ProfileModel> getProfile({
+    required String accessToken,
+  });
   Future<void> changeProfilePicture({
     required String accessToken,
     required File image,
@@ -24,6 +28,31 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
     required this.appHttpClient,
     required this.imageCompressInfo,
   });
+
+  @override
+  Future<ProfileModel> getProfile({
+    required String accessToken,
+  }) async {
+    try {
+      Logger.info('getProfile accessToken: $accessToken');
+
+      final result = await appHttpClient.get(
+        url: "${EnvConfig.baseAkasiaApiUrl}/profile",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      Logger.success('getProfile result: $result');
+
+      final data = result.data?['data'];
+
+      return ProfileModel.fromJson(data);
+    } catch (error) {
+      Logger.error('getProfile error: $error');
+
+      rethrow;
+    }
+  }
 
   @override
   Future<void> changeProfilePicture({

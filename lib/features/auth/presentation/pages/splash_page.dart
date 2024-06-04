@@ -3,15 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/service_locator.dart';
+import '../../../../core/common/deep_link_info.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
-import '../../../../core/common/deep_link_info.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/usecases/usecase.dart';
+import '../../../../core/utils/service_locator.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../domain/usecase/get_access_token_usecase.dart';
 import '../cubit/yaml/yaml_cubit.dart';
 
@@ -65,18 +66,24 @@ class _SplashPageState extends State<SplashPage> {
         type: ToastType.error,
         message: error.message(context),
       );
+
+      // go to sign in page
+      context.goNamed(AppRoute.signIn.name);
     }
   }
 
   Future<bool> _isSignIn() async {
     try {
+      // check access token
       final token = await sl<GetAccessTokenUseCase>().call(NoParams());
-
-      if (token != null) {
-        return true;
+      if (token == null) {
+        return false;
       }
 
-      return false;
+      // get profile
+      await BlocProvider.of<ProfileCubit>(context).getProfile();
+
+      return true;
     } catch (_) {
       rethrow;
     }

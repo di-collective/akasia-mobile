@@ -82,7 +82,9 @@ extension AppRouteExtension on AppRoute {
       case AppRoute.profile:
         return const ProfilePage();
       case AppRoute.editInformation:
-        return const EditInformationPage();
+        return EditInformationPage(
+          params: arguments,
+        );
       case AppRoute.editAllergies:
         return EditAllergiesPage(
           params: arguments,

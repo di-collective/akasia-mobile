@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/common/local_picker_info.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
@@ -17,9 +16,12 @@ import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../../domain/usecases/change_profile_picture_usecase.dart';
+import '../cubit/profile/profile_cubit.dart';
 import '../widgets/account_item_widget.dart';
 
 class AccountPage extends StatefulWidget {
@@ -31,6 +33,25 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    final profileState = BlocProvider.of<ProfileCubit>(context).state;
+    if (profileState is! ProfileLoaded) {
+      // if profile not loaded, get profile
+      _onGetProfile();
+    }
+  }
+
+  Future<void> _onGetProfile() async {
+    await BlocProvider.of<ProfileCubit>(context).getProfile();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
@@ -40,8 +61,8 @@ class _AccountPageState extends State<AccountPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: context.paddingTop,
+              const SizedBox(
+                height: 16,
               ),
               GestureDetector(
                 onTap: _onProfilePicture,
@@ -77,12 +98,34 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(
                 height: 12,
               ),
-              Text(
-                'John Doe',
-                style: textTheme.titleLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurfaceDim,
-                ),
+              BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, state) {
+                  if (state is ProfileLoaded) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.paddingHorizontal,
+                      ),
+                      child: Text(
+                        state.profile.name ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: textTheme.titleLarge.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ShimmerLoading.circular(
+                    width: 150,
+                    height: 31,
+                    shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  );
+                },
               ),
               const SizedBox(
                 height: 10,
@@ -308,6 +351,9 @@ class _AccountPageState extends State<AccountPage> {
 
       // logout
       await sl<AuthRepository>().signOut();
+
+      // init all cubits
+      BlocProvider.of<ProfileCubit>(context).init();
 
       // go to splash page
       context.goNamed(AppRoute.splash.name);
