@@ -22,8 +22,8 @@ class AccountSettingPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: context.paddingTop,
+            const SizedBox(
+              height: 16,
             ),
             SettingItemWidget(
               title: context.locale.changePassword,

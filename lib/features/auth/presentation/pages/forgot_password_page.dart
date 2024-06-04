@@ -63,8 +63,8 @@ class __BodyState extends State<_Body> {
               ),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: context.paddingTop,
+                  const SizedBox(
+                    height: 16,
                   ),
                   // TODO: Add a image
                   const SizedBox(

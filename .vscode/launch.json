@@ -5,24 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "akasia-mobile",
-            "program": "lib/app/main.dart",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "akasia-mobile (profile mode)",
-            "program": "lib/app/main.dart",
+            "name": "development",
+            "program": "lib/app/main_development.dart",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "args": ["--flavor", "development", "--target", "lib/app/main_development.dart" ]
         },
         {
-            "name": "akasia-mobile (release mode)",
-            "program": "lib/app/main.dart",
+            "name": "production",
+            "program": "lib/app/main_production.dart",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "args": ["--flavor", "production", "--target", "lib/app/main_production.dart" ]
         }
     ]
 }

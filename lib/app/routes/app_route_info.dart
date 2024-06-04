@@ -1,7 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/flavors/flavor_info.dart';
+import '../../core/flavors/flavor_type_extension.dart';
 import '../../core/routes/app_route.dart';
 import 'app_route_extension.dart';
 
@@ -11,10 +12,16 @@ abstract class AppRouteInfo {
 }
 
 class AppRouteInfoImpl implements AppRouteInfo {
+  final FlavorInfo flavorInfo;
+
+  AppRouteInfoImpl({
+    required this.flavorInfo,
+  });
+
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   late final GoRouter _router = GoRouter(
     initialLocation: AppRoute.splash.path,
-    debugLogDiagnostics: kDebugMode,
+    debugLogDiagnostics: flavorInfo.type != FlavorType.production,
     navigatorKey: _navigatorKey,
     routes: [
       AppRoute.splash.route(),

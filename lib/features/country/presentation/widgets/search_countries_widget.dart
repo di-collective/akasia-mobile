@@ -71,8 +71,8 @@ class __BodyState extends State<_Body> {
 
     return Column(
       children: [
-        SizedBox(
-          height: context.paddingTop,
+        const SizedBox(
+          height: 16,
         ),
         SearchFormFieldWidget(
           controller: _searchTextController,

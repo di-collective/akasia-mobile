@@ -74,8 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: context.paddingTop,
+            const SizedBox(
+              height: 16,
             ),
             const NetworkImageWidget(
               size: Size(120, 120),

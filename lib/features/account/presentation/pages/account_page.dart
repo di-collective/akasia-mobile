@@ -61,8 +61,8 @@ class _AccountPageState extends State<AccountPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: context.paddingTop,
+              const SizedBox(
+                height: 16,
               ),
               GestureDetector(
                 onTap: _onProfilePicture,
