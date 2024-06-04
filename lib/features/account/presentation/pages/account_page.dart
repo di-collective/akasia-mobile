@@ -310,7 +310,8 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _onFaq() {
-    // TODO: Implement this method
+    // go to afaq page
+    context.goNamed(AppRoute.faq.name);
   }
 
   void _onHelpCenter() {

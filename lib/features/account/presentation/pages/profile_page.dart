@@ -48,12 +48,6 @@ class _ProfilePageState extends State<ProfilePage> {
       // if state is not loaded, get data
       _onGetEmergencyContact();
     }
-
-    final profileState = BlocProvider.of<ProfileCubit>(context).state;
-    if (profileState is! ProfileLoaded) {
-      // if state is not loaded, get data
-      _onGetProfile();
-    }
   }
 
   Future<void> _onGetAllergies() async {
@@ -62,10 +56,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _onGetEmergencyContact() async {
     await BlocProvider.of<EmergencyContactCubit>(context).getEmergencyContact();
-  }
-
-  Future<void> _onGetProfile() async {
-    await BlocProvider.of<ProfileCubit>(context).getProfile();
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/config/env_config.dart';
 import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
@@ -9,6 +8,8 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
+import '../../../../core/utils/service_locator.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../widget/bottom_nav_bar.dart';
 
@@ -52,6 +53,16 @@ class _MainPageState extends State<MainPage> {
 
     // init bottom navigation
     BlocProvider.of<BottomNavigationCubit>(context).init();
+
+    final profileState = BlocProvider.of<ProfileCubit>(context).state;
+    if (profileState is! ProfileLoaded) {
+      // if state is not loaded, get data
+      _onGetProfile();
+    }
+  }
+
+  Future<void> _onGetProfile() async {
+    await BlocProvider.of<ProfileCubit>(context).getProfile();
   }
 
   @override

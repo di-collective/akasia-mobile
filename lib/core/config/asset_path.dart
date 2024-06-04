@@ -15,6 +15,7 @@ class AssetIconsPath {
   static String icCalendar = 'ic_calendar.svg'.iconAsset;
   static String icCalendarOutlined = 'ic_calendar_outlined.svg'.iconAsset;
   static String icArrowRight = 'ic_arrow_right.svg'.iconAsset;
+  static String icArrowRightCircle = 'ic_arrow_right_circle.svg'.iconAsset;
   static String icArrowDown = 'ic_arrow_down.svg'.iconAsset;
   static String icSuccessStory = 'ic_success_story.svg'.iconAsset;
   static String icTreatment = 'ic_treatment.svg'.iconAsset;

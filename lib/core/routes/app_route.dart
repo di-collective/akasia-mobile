@@ -15,4 +15,6 @@ enum AppRoute {
   changePhoneNumber,
   deactiveAccount,
   successDeactiveAccount,
+  faq,
+  faqDetails,
 }
