@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../widgets/home_dashboard_item_widget.dart';
@@ -194,7 +196,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onProfile() {
-    // TODO: Implement this method
+    // go to profile page
+    context.goNamed(
+      AppRoute.profile.name,
+    );
   }
 
   void _onMyRewardPoints() {

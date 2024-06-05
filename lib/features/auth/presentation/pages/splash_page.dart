@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +34,9 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _init() async {
     try {
+      // init deep links
+      sl<DeepLinkInfo>().init();
+
       final result = await Future.wait([
         // minimum splash duration
         Future.delayed(const Duration(seconds: 3)),
@@ -46,11 +50,6 @@ class _SplashPageState extends State<SplashPage> {
 
       // check sign in status
       final bool isSignIn = result[1];
-
-      // init deep links
-      sl<DeepLinkInfo>().init(
-        isSignIn: isSignIn,
-      );
 
       if (isSignIn) {
         // go to main page
@@ -91,23 +90,29 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    final color = context.theme.appColorScheme;
+    final colorScheme = context.theme.appColorScheme;
 
-    return Scaffold(
-      backgroundColor: color.primary,
-      body: SizedBox(
-        width: context.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              AssetImagesPath.logoTextWhite,
-              height: 35,
-            ),
-            SizedBox(
-              height: context.height * 0.3,
-            ),
-          ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: colorScheme.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: colorScheme.primary,
+        body: SizedBox(
+          width: context.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                AssetImagesPath.logoTextWhite,
+                height: 35,
+              ),
+              SizedBox(
+                height: context.height * 0.3,
+              ),
+            ],
+          ),
         ),
       ),
     );

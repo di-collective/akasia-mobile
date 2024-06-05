@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/auth_type_extension.dart';
@@ -14,8 +14,10 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
+import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../cubit/sign_in/sign_in_cubit.dart';
 import '../widgets/social_auth_button_widget.dart';
 
@@ -60,186 +62,189 @@ class __BodyState extends State<_Body> {
       builder: (context, state) {
         return GestureDetector(
           onTap: () => context.closeKeyboard,
-          child: Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.paddingHorizontal,
-                ),
-                child: Form(
-                  key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Center(
-                        child: SvgPicture.asset(
-                          AssetImagesPath.logoTextColored,
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: AppTheme.overlayStyleLight,
+            child: Scaffold(
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.paddingHorizontal,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Center(
+                          child: SvgPicture.asset(
+                            AssetImagesPath.logoTextColored,
+                            height: 20,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        Text(
+                          context.locale.login,
+                          style: textTheme.headlineSmall.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        TextFormFieldWidget(
+                          controller: _emailTextController,
+                          title: context.locale.email,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (val) {
+                            return _emailTextController.validateEmail(
+                              context: context,
+                            );
+                          },
+                          onChanged: (val) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
                           height: 20,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      Text(
-                        context.locale.login,
-                        style: textTheme.headlineSmall.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      TextFormFieldWidget(
-                        controller: _emailTextController,
-                        title: context.locale.email,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (val) {
-                          return _emailTextController.validateEmail(
-                            context: context,
-                          );
-                        },
-                        onChanged: (val) {
-                          // reload
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormFieldWidget(
-                        controller: _passwordTextController,
-                        title: context.locale.password,
-                        keyboardType: TextInputType.visiblePassword,
-                        onEditingComplete: () {
-                          _onSignIn(
-                            authType: AuthType.email,
-                          );
-                        },
-                        validator: (val) {
-                          return _passwordTextController.validatePassword(
-                            context: context,
-                            isRequired: true,
-                          );
-                        },
-                        onChanged: (val) {
-                          // reload
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: _onForgotPassword,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                          ),
-                          child: Text(
-                            context.locale.forgotPassword,
-                            style: textTheme.labelMedium.copyWith(
-                              color: colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ButtonWidget(
-                        text: context.locale.login,
-                        width: context.width,
-                        isDisabled: _emailTextController.text.isEmpty ||
-                            _formKey.currentState?.validate() == false,
-                        isLoading: state is SignInLoading &&
-                            state.authType == AuthType.email,
-                        onTap: () {
-                          _onSignIn(
-                            authType: AuthType.email,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                        child: Text(
-                          context.locale.or,
-                          style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      if (Platform.isIOS) ...[
-                        AuthTypeButtonWidget(
-                          label: AuthType.apple.signInLabel(context)!,
-                          iconPath: AuthType.apple.iconPath!,
-                          isLoading: state is SignInLoading &&
-                              state.authType == AuthType.apple,
-                          onTap: () {
+                        TextFormFieldWidget(
+                          controller: _passwordTextController,
+                          title: context.locale.password,
+                          keyboardType: TextInputType.visiblePassword,
+                          onEditingComplete: () {
                             _onSignIn(
-                              authType: AuthType.apple,
+                              authType: AuthType.email,
                             );
+                          },
+                          validator: (val) {
+                            return _passwordTextController.validatePassword(
+                              context: context,
+                              isRequired: true,
+                            );
+                          },
+                          onChanged: (val) {
+                            // reload
+                            setState(() {});
                           },
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                      ],
-                      AuthTypeButtonWidget(
-                        label: AuthType.google.signInLabel(context)!,
-                        iconPath: AuthType.google.iconPath!,
-                        isLoading: state is SignInLoading &&
-                            state.authType == AuthType.google,
-                        onTap: () {
-                          _onSignIn(
-                            authType: AuthType.google,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 14,
-                      ),
-                      GestureDetector(
-                        onTap: _onSignUp,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                          ),
-                          child: Center(
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "${context.locale.newToAkasia}? ",
-                                    style: textTheme.labelMedium.copyWith(
-                                      color: colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: context.locale.signUp,
-                                    style: textTheme.labelMedium.copyWith(
-                                      color: colorScheme.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                        GestureDetector(
+                          onTap: _onForgotPassword,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                            ),
+                            child: Text(
+                              context.locale.forgotPassword,
+                              style: textTheme.labelMedium.copyWith(
+                                color: colorScheme.primary,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: context.paddingBottom,
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ButtonWidget(
+                          text: context.locale.login,
+                          width: context.width,
+                          isDisabled: _emailTextController.text.isEmpty ||
+                              _formKey.currentState?.validate() == false,
+                          isLoading: state is SignInLoading &&
+                              state.authType == AuthType.email,
+                          onTap: () {
+                            _onSignIn(
+                              authType: AuthType.email,
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Center(
+                          child: Text(
+                            context.locale.or,
+                            style: textTheme.bodySmall.copyWith(
+                              color: colorScheme.onSurfaceBright,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        if (Platform.isIOS) ...[
+                          AuthTypeButtonWidget(
+                            label: AuthType.apple.signInLabel(context)!,
+                            iconPath: AuthType.apple.iconPath!,
+                            isLoading: state is SignInLoading &&
+                                state.authType == AuthType.apple,
+                            onTap: () {
+                              _onSignIn(
+                                authType: AuthType.apple,
+                              );
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                        AuthTypeButtonWidget(
+                          label: AuthType.google.signInLabel(context)!,
+                          iconPath: AuthType.google.iconPath!,
+                          isLoading: state is SignInLoading &&
+                              state.authType == AuthType.google,
+                          onTap: () {
+                            _onSignIn(
+                              authType: AuthType.google,
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        GestureDetector(
+                          onTap: _onSignUp,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                            ),
+                            child: Center(
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "${context.locale.newToAkasia}? ",
+                                      style: textTheme.labelMedium.copyWith(
+                                        color: colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: context.locale.signUp,
+                                      style: textTheme.labelMedium.copyWith(
+                                        color: colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: context.paddingBottom,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

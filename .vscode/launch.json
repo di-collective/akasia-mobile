@@ -6,14 +6,14 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/app/main_development.dart",
-            "args": ["--flavor", "development"]
+            "args": ["--flavor", "development", "--target", "lib/app/main_development.dart"]
         },
         {
             "name": "production",
             "request": "launch",
             "type": "dart",
             "program": "lib/app/main_production.dart",
-            "args": ["--flavor", "production"],
+            "args": ["--flavor", "production", "--target", "lib/app/main_production.dart"] 
         }
     ]
 }

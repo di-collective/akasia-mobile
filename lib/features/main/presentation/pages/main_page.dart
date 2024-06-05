@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/common/open_app_info.dart';
@@ -69,21 +70,26 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
       builder: (context, state) {
-        return Scaffold(
-          body: state.selectedItem.bodyWidget,
-          bottomNavigationBar: AppBottomNavBar(
-            selectedItem: state.selectedItem,
-            onTap: (item) {
-              if (item == BottomNavigationItem.chatUs) {
-                // chat us navigation tapped
-                // open phone
-                _onOpenChatUs();
-              } else {
-                BlocProvider.of<BottomNavigationCubit>(context).onChanged(
-                  item,
-                );
-              }
-            },
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            systemNavigationBarColor: Colors.transparent,
+          ),
+          child: Scaffold(
+            body: state.selectedItem.bodyWidget,
+            bottomNavigationBar: AppBottomNavBar(
+              selectedItem: state.selectedItem,
+              onTap: (item) {
+                if (item == BottomNavigationItem.chatUs) {
+                  // chat us navigation tapped
+                  // open phone
+                  _onOpenChatUs();
+                } else {
+                  BlocProvider.of<BottomNavigationCubit>(context).onChanged(
+                    item,
+                  );
+                }
+              },
+            ),
           ),
         );
       },
