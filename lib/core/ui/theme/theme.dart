@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/ui/theme/color_scheme.dart';
 import '../../../core/ui/theme/text_theme.dart';
 
-abstract final class AppTheme {
+class AppTheme {
   static ThemeData light() {
     const String fontFamily = 'Inter';
     final AppColorScheme colorScheme = AppColorScheme.light();
@@ -59,6 +60,16 @@ abstract final class AppTheme {
           fontWeight: FontWeight.w500,
         ),
       ),
+    );
+  }
+
+  static SystemUiOverlayStyle get overlayStyleLight {
+    return const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
     );
   }
 }
