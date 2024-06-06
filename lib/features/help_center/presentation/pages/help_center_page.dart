@@ -33,45 +33,32 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
             floating: true,
             expandedHeight: 180,
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFF37021),
-                      Color(0xFFF3762A),
-                      Color(0xFFF69459),
-                    ],
+              background: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.paddingHorizontal,
                   ),
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.paddingHorizontal,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 70,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 70,
+                      ),
+                      Text(
+                        "${context.locale.needHelp}?".toCapitalize(),
+                        style: textTheme.headlineSmall.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        Text(
-                          "${context.locale.needHelp}?".toCapitalize(),
-                          style: textTheme.headlineSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                      ),
+                      Text(
+                        "${context.locale.talkToUs}!".toCapitalize(),
+                        style: textTheme.headlineSmall.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        Text(
-                          "${context.locale.talkToUs}!".toCapitalize(),
-                          style: textTheme.headlineSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -203,7 +190,133 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                       ),
                     ],
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 32,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.paddingHorizontal,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: colorScheme.surface,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.locale.ourLocation,
+                        style: textTheme.titleMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      Text(
+                        "Mayapada Hospital Jakarta Selatan, Tower 2, 6th Floor",
+                        style: textTheme.labelLarge.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                        maxLines: 3,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "Jl. Lebak Bulus I Kav. 29, Cilandak Barat, Kec.Cilandak, Jakarta Selatan - DKI Jakarta 12430.",
+                        style: textTheme.labelMedium.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.onSurface,
+                        ),
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.paddingHorizontal,
+                    vertical: 16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.locale.operationHour,
+                        style: textTheme.titleMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      Text.rich(
+                        const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Mon-Fir · ",
+                            ),
+                            TextSpan(
+                              text: "08:00 - 17:00",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        maxLines: 3,
+                        style: textTheme.labelLarge.copyWith(
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text.rich(
+                        const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Sat \t\t\t\t\t\t\t\t· ",
+                            ),
+                            TextSpan(
+                              text: "08:00 - 16:00",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        maxLines: 3,
+                        style: textTheme.labelLarge.copyWith(
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        context.locale.sundayAndPublicHolidayClosed,
+                        style: textTheme.bodySmall.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: context.paddingBottom,
+                ),
               ],
             ),
           )

@@ -136,12 +136,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               child: BlocBuilder<ProfileCubit, ProfileState>(
                 builder: (context, state) {
+                  String? membershipId;
                   String? nik;
                   String? name;
                   String? phoneNumber;
                   if (state is ProfileLoaded) {
                     final profile = state.profile;
 
+                    membershipId = profile.medicalId;
                     nik = profile.nik;
                     name = profile.name;
                     phoneNumber =
@@ -152,7 +154,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       ProfileDetailItemWidget(
                         label: context.locale.membershipId,
-                        value: 'MP-12345678',
+                        value: membershipId,
+                        isLoading: state is ProfileLoading,
                       ),
                       Divider(
                         height: 0,
