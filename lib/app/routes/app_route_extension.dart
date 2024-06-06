@@ -20,6 +20,7 @@ import '../../features/auth/presentation/pages/success_create_new_password_page.
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/ratings/presentation/pages/ratings_page.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -60,6 +61,8 @@ extension AppRouteExtension on AppRoute {
         return 'faq';
       case AppRoute.faqDetails:
         return 'faq-details';
+      case AppRoute.ratings:
+        return 'ratings';
     }
   }
 
@@ -115,6 +118,8 @@ extension AppRouteExtension on AppRoute {
         return FaqDetailsPage(
           params: arguments,
         );
+      case AppRoute.ratings:
+        return const RatingsPage();
     }
   }
 

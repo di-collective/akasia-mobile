@@ -22,11 +22,11 @@
   "invalidEmail": "Invalid email",
   "passwordsMustBeCharacters": "Your password must consist of {length} characters or more",
   "@passwordsMustBeCharacters": {
-        "placeholders": {
-            "length": {
-                "type": "int"
-            }
-        }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "passwordMustContainLetter": "Password must contain at least one letter",
   "passwordMustContainNumber": "Password must contain at least one number",
@@ -38,7 +38,6 @@
   "eKtpNumber": "E-KTP Number",
   "fullName": "Full Name",
   "phoneNumber": "Phone Number",
-  "password": "Password",
   "repeatPassword": "Repeat Password",
   "register": "Register",
   "alreadyHaveAnAccount": "Already have an account",
@@ -46,19 +45,19 @@
   "registerWithApple": "Register with Apple",
   "minimumLength": "Minumum length is {length} characters",
   "@minimumLength": {
-        "placeholders": {
-            "length": {
-                "type": "int"
-            }
-        }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "maximumLength": "Maximum length is {length} characters",
   "@maximumLength": {
-        "placeholders": {
-            "length": {
-                "type": "int"
-            }
-        }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "invalidPhoneNumber": "Invalid phone number",
   "invalidEKtp": "Invalid E-KTP",
@@ -105,9 +104,6 @@
   "information": "Information",
   "edit": "Edit",
   "membershipId": "Membership ID",
-  "eKtpNumber": "E-KTP Number",
-  "fullName": "Full Name",
-  "phoneNumber": "Phone Number",
   "age": "Age",
   "dob": "DOB",
   "sex": "Sex",
@@ -119,7 +115,6 @@
   "emergencyContact": "Emergency Contact",
   "relationship": "Relationship",
   "profile": "Profile",
-  "information": "Information",
   "personalInformation": "Personal Information",
   "save": "Save",
   "successEditInformation": "Your information successfully updated",
@@ -142,8 +137,6 @@
   "changePhoneNumber": "Change phone number",
   "deactiveAccount": "Deactive account",
   "oldPassword": "Old password",
-  "newPassword": "New password",
-  "repeatPassword": "Repeat password",
   "wrongPassword": "Wrong password",
   "successChangePassword": "Your password successfully updated",
   "oldPhoneNumber": "Old phone number",
@@ -165,5 +158,8 @@
   "thanksForUsingAkasia": "Thanks for using Akasia365mc",
   "backIn": "Back in",
   "second": "second",
-  "frequentlyAskedQuestions": "Frequently Asked Questions "
+  "frequentlyAskedQuestions": "Frequently Asked Questions ",
+  "recentlyReviewed": "Recently Reviewed",
+  "myReview": "My Review",
+  "thereAreNoPost": "There are no post"
 }

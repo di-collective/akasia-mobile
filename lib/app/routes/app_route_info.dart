@@ -57,6 +57,7 @@ class AppRouteInfoImpl implements AppRouteInfo {
               AppRoute.faqDetails.route(),
             ],
           ),
+          AppRoute.ratings.route()
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

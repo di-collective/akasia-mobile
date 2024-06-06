@@ -71,6 +71,7 @@ import '../../features/country/domain/repositories/country_repository.dart';
 import '../../features/country/domain/usecases/get_countries_usecase.dart';
 import '../../features/country/presentation/cubit/countries/countries_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
+import '../../features/ratings/presentation/di/di.dart';
 import '../routes/app_route_info.dart';
 
 Future<void> init() async {
@@ -91,6 +92,8 @@ Future<void> init() async {
   await _activityLevel();
 
   await _accountSettings();
+
+  await futureRatingsInject();
 }
 
 Future<void> _external() async {
