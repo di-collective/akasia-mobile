@@ -62,6 +62,11 @@ extension StringExtension on String {
           scheme: 'tel',
           path: split(':')[1], // remove tel:
         );
+      } else if (isEmailUrl) {
+        return Uri(
+          scheme: 'mailto',
+          path: split('mailto:')[1], // remove mailto:
+        );
       }
 
       return Uri.tryParse(this);
@@ -76,6 +81,14 @@ extension StringExtension on String {
 
   String get toWhatsappUrl {
     return 'https://wa.me/$this';
+  }
+
+  String get toEmailUrl {
+    return 'mailto:$this';
+  }
+
+  bool get isEmailUrl {
+    return RegExp(r'^mailto:.+@.+\..+$').hasMatch(this);
   }
 
   bool get isTelphoneUrl {

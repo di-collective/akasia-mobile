@@ -45,7 +45,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
 	
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -73,11 +72,11 @@
 		<!-- End of the Universal Link Section -->
 	</array>
 	
-
 	<!-- App Query Schemes Section -->
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>tel</string>
+		<string>mailto</string>
 	</array>
 	<!-- End of the App Query Schemes Section -->
 

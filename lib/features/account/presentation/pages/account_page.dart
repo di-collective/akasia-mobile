@@ -320,7 +320,8 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _onHelpCenter() {
-    // TODO: Implement this method
+    // go to help center page
+    context.goNamed(AppRoute.helpCenter.name);
   }
 
   void _onTermsAndConditions() {

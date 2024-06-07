@@ -19,6 +19,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/success_create_new_password_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
+import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 
 extension AppRouteExtension on AppRoute {
@@ -60,6 +61,8 @@ extension AppRouteExtension on AppRoute {
         return 'faq';
       case AppRoute.faqDetails:
         return 'faq-details';
+      case AppRoute.helpCenter:
+        return 'help-center';
     }
   }
 
@@ -115,6 +118,8 @@ extension AppRouteExtension on AppRoute {
         return FaqDetailsPage(
           params: arguments,
         );
+      case AppRoute.helpCenter:
+        return const HelpCenterPage();
     }
   }
 

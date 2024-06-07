@@ -165,5 +165,25 @@
   "thanksForUsingAkasia": "Thanks for using Akasia365mc",
   "backIn": "Back in",
   "second": "second",
-  "frequentlyAskedQuestions": "Frequently Asked Questions "
+  "frequentlyAskedQuestions": "Frequently Asked Questions",
+  "needHelp": "Need help",
+  "talkToUs": "Talk to us",
+  "chatSupport": "Chat Support",
+  "chatDirectlyWithOurCsTeam": "Chat directly with our CS team",
+  "alternativelyCallUs": "Alternatively, call us on {phoneNumber} or email us on {email} for further assistance",
+  "@alternativelyCallUs": {
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            },
+            "email": {
+                "type": "String"
+            }
+        }
+  },
+  "callNow": "Call Now",
+  "emailNow": "Email Now",
+  "ourLocation": "Our Location",
+  "operationHour": "Operational Hour",
+  "sundayAndPublicHolidayClosed": "Sunday and Public Holiday Closed"
 }

@@ -17,4 +17,5 @@ enum AppRoute {
   successDeactiveAccount,
   faq,
   faqDetails,
+  helpCenter,
 }

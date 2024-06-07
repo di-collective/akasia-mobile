@@ -25,4 +25,6 @@ class AssetIconsPath {
   static String icCloseCircle = 'ic_close_circle.svg'.iconAsset;
   static String icCamera = 'ic_camera.svg'.iconAsset;
   static String icCheck = 'ic_check.svg'.iconAsset;
+  static String icChatUs = 'ic_chat_us.svg'.iconAsset;
+  static String icChatDouble = 'ic_chat_double.svg'.iconAsset;
 }
