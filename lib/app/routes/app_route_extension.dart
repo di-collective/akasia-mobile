@@ -21,6 +21,7 @@ import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/notification/presentation/pages/notifications_page.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -63,6 +64,8 @@ extension AppRouteExtension on AppRoute {
         return 'faq-details';
       case AppRoute.helpCenter:
         return 'help-center';
+      case AppRoute.notifications:
+        return 'notifications';
     }
   }
 
@@ -120,6 +123,8 @@ extension AppRouteExtension on AppRoute {
         );
       case AppRoute.helpCenter:
         return const HelpCenterPage();
+      case AppRoute.notifications:
+        return const NotificationsPage();
     }
   }
 

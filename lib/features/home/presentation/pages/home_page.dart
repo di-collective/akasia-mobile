@@ -192,7 +192,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onNotifications() {
-    // TODO: Implement this method
+    // go to notifications page
+    context.goNamed(
+      AppRoute.notifications.name,
+    );
   }
 
   void _onProfile() {
