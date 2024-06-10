@@ -86,7 +86,7 @@ class _QuestionAnswerWidgetState extends State<QuestionAnswerWidget> {
                     Expanded(
                       child: Text(
                         detail.value.title ?? '',
-                        maxLines: 3,
+                        maxLines: 10,
                         style: textTheme.labelLarge.copyWith(
                           fontWeight: FontWeight.w600,
                           color: isExpanded
@@ -113,7 +113,7 @@ class _QuestionAnswerWidgetState extends State<QuestionAnswerWidget> {
               ),
               child: Text(
                 detail.value.description ?? '',
-                maxLines: 20,
+                maxLines: 100,
                 style: textTheme.labelMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface,
