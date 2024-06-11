@@ -1,52 +1,85 @@
+import 'dart:ui';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../cubit/nav_bar/nav_bar_state.dart';
 
-class NavBarSection extends StatelessWidget {
+class NavBarSection extends StatefulWidget {
   final List<NavBarItem> items;
   final NavBarItem selectedItem;
-  final Function(NavBarItem) onUpdateSelectedItem;
+  final Function(int) onTap;
+  final Function(double)? onHeightMeasured;
 
   const NavBarSection({
     super.key,
     required this.items,
     required this.selectedItem,
-    required this.onUpdateSelectedItem,
+    required this.onTap,
+    this.onHeightMeasured,
   });
+
+  @override
+  State<StatefulWidget> createState() => _NavBarSectionState();
+}
+
+class _NavBarSectionState extends State<NavBarSection> {
+  final _mKey = GlobalKey();
+  double? _lastMeasuredHeight;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.theme.appColorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colors.outlineBright,
+    SchedulerBinding.instance.addPostFrameCallback(_onMeasureHeight);
+    return ClipRect(
+      key: _mKey,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 6,
+          sigmaY: 6,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: colors.outlineBright,
+              ),
+            ),
+          ),
+          child: Wrap(
+            spacing: 12,
+            children: widget.items.mapIndexed((index, item) {
+              return _NavBarChip(
+                item: item,
+                isSelected: widget.selectedItem == item,
+                onSelected: () => widget.onTap(index),
+              );
+            }).toList(),
           ),
         ),
       ),
-      child: Wrap(
-        spacing: 12,
-        children: items.map((item) {
-          return _NavBarChip(
-            item: item,
-            isSelected: selectedItem == item,
-            onSelected: onUpdateSelectedItem,
-          );
-        }).toList(),
-      ),
     );
+  }
+
+  void _onMeasureHeight(_) {
+    final context = _mKey.currentContext;
+    if (context == null) return;
+    final currentHeight = context.size?.height;
+    if (currentHeight == null || currentHeight == _lastMeasuredHeight) return;
+    _lastMeasuredHeight = currentHeight;
+    widget.onHeightMeasured?.call(currentHeight);
   }
 }
 
 class _NavBarChip extends StatelessWidget {
   final NavBarItem item;
   final bool isSelected;
-  final Function(NavBarItem) onSelected;
+  final Function() onSelected;
 
   const _NavBarChip({
     required this.item,
@@ -59,21 +92,27 @@ class _NavBarChip extends StatelessWidget {
     final colorScheme = context.theme.appColorScheme;
     final chipTheme = context.theme.chipTheme;
     final locale = context.locale;
+    final textTheme = context.theme.appTextTheme;
 
     return ChoiceChip(
-      label: Text(switch (item) {
-        NavBarItem.recentlyReviewed => locale.recentlyReviewed,
-        NavBarItem.myReview => locale.myReview
-      }),
+      label: Text(
+        switch (item) {
+          NavBarItem.recentlyReviewed => locale.recentlyReviewed,
+          NavBarItem.myReview => locale.myReview
+        }
+      ),
       showCheckmark: false,
       selected: isSelected,
-      onSelected: (s) => onSelected(item),
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      onSelected: (s) => onSelected(),
+      labelPadding: EdgeInsets.zero,
       labelStyle: chipTheme.labelStyle
           ?.copyWith(color: isSelected ? colorScheme.primary : colorScheme.onSurface),
       shape: chipTheme.shape?.copyWith(
-          side: BorderSide(
-              color: isSelected ? colorScheme.primary : colorScheme.surfaceDim, width: 1)),
+        side: BorderSide(
+          color: isSelected ? colorScheme.primary : colorScheme.surfaceDim,
+          width: 1,
+        ),
+      ),
     );
   }
 }

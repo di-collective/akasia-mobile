@@ -3,33 +3,28 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 
-class ReviewEmptyContent extends StatelessWidget {
+class ReviewEmptySection extends StatelessWidget {
   final String info;
 
-  const ReviewEmptyContent({
+  const ReviewEmptySection(
+    this.info, {
     super.key,
-    required this.info,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      alignment: Alignment.center,
+    return Center(
       child: Wrap(
         direction: Axis.vertical,
         spacing: 8,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          SizedBox(
+          Container(
             width: 120,
             height: 120,
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: colorScheme.surfaceDim),
-            ),
+            color: colorScheme.surfaceDim,
           ),
           Text(
             info,

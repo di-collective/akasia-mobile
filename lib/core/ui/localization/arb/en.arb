@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "appName": "Akasia365mc",
   "home": "Home",
   "myTreatment": "My Treatment",
   "info": "Info",
@@ -161,5 +162,13 @@
   "frequentlyAskedQuestions": "Frequently Asked Questions ",
   "recentlyReviewed": "Recently Reviewed",
   "myReview": "My Review",
-  "thereAreNoPost": "There are no post"
+  "thereAreNoPost": "There are no post",
+  "letsGoWriteAReview": "Let's go! Write a Review",
+  "shareYourExperienceEveryTimeYouHaveTreatmentAt_": "Share your experience every time you have treatment at ",
+  "effectiveness": "Effectiveness",
+  "valueForMoney": "ValueForMoney",
+  "recommended": "Recommended",
+  "usagePeriod": "Usage Period",
+  "theReviewSuccessfullyDeleted": "The review successfully deleted.",
+  "writeReview": "Write Review"
 }
