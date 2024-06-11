@@ -76,6 +76,11 @@ import '../../features/faq/domain/repositories/faq_repository.dart';
 import '../../features/faq/domain/usecases/get_faqs_usecase.dart';
 import '../../features/faq/presentation/cubit/faqs/faqs_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
+import '../../features/notification/data/datasources/notification_remote_datasource.dart';
+import '../../features/notification/data/repositories/notification_repository_impl.dart';
+import '../../features/notification/domain/repositories/notification_repository.dart';
+import '../../features/notification/domain/usecases/get_notifications_usecase.dart';
+import '../../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
 import '../routes/app_route_info.dart';
 
 Future<void> init() async {
@@ -98,6 +103,8 @@ Future<void> init() async {
   await _accountSettings();
 
   await _faq();
+
+  await _notification();
 }
 
 Future<void> _external() async {
@@ -509,6 +516,38 @@ Future<void> _faq() async {
   sl.registerFactory<FaqsCubit>(() {
     return FaqsCubit(
       getFaqsUseCase: sl(),
+    );
+  });
+}
+
+Future<void> _notification() async {
+  // data source
+  sl.registerLazySingleton<NotificationRemoteDataSource>(() {
+    return NotificationRemoteDataSourceImpl(
+      appHttpClient: sl(),
+    );
+  });
+
+  // repository
+  sl.registerLazySingleton<NotificationRepository>(() {
+    return NotificationRepositoryImpl(
+      networkInfo: sl(),
+      authLocalDataSource: sl(),
+      notificationRemoteDataSource: sl(),
+    );
+  });
+
+  // use case
+  sl.registerLazySingleton<GetNotificationsUseCase>(() {
+    return GetNotificationsUseCase(
+      notificationRepository: sl(),
+    );
+  });
+
+  // cubit
+  sl.registerFactory<NotificationsCubit>(() {
+    return NotificationsCubit(
+      getNotificationsUseCase: sl(),
     );
   });
 }

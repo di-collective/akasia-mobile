@@ -185,5 +185,15 @@
   "emailNow": "Email Now",
   "ourLocation": "Our Location",
   "operationHour": "Operational Hour",
-  "sundayAndPublicHolidayClosed": "Sunday and Public Holiday Closed"
+  "sundayAndPublicHolidayClosed": "Sunday and Public Holiday Closed",
+  "notifications": "Notifications",
+  "empty": "There are no {item} for you at this time",
+  "@empty": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "item": "Item"
 }

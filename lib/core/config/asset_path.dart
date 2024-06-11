@@ -10,6 +10,7 @@ class AssetIconsPath {
   static String icGoogle = 'ic_google.svg'.iconAsset;
   static String icApple = 'ic_apple.svg'.iconAsset;
   static String icNotification = 'ic_notification.svg'.iconAsset;
+  static String icNotificationItem = 'ic_notification_item.svg'.iconAsset;
   static String icProfile = 'ic_profile.svg'.iconAsset;
   static String icPoint = 'ic_point.svg'.iconAsset;
   static String icCalendar = 'ic_calendar.svg'.iconAsset;

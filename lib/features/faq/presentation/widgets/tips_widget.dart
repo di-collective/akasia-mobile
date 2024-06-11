@@ -48,7 +48,7 @@ class TipsWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     detail.title ?? '',
-                    maxLines: 3,
+                    maxLines: 10,
                     style: textTheme.bodyLarge.copyWith(
                       fontWeight: FontWeight.w700,
                       color: colorScheme.onSurfaceDim,
@@ -63,7 +63,7 @@ class TipsWidget extends StatelessWidget {
               ),
               Text(
                 detail.description ?? '',
-                maxLines: 20,
+                maxLines: 100,
                 style: textTheme.labelMedium.copyWith(
                   fontWeight: FontWeight.w500,
                   color: colorScheme.onSurface,
@@ -96,7 +96,7 @@ class TipsWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           detail.items![index] ?? '',
-                          maxLines: 3,
+                          maxLines: 100,
                           style: textTheme.bodySmall.copyWith(
                             color: colorScheme.onSurface,
                           ),
