@@ -70,6 +70,11 @@ import '../../features/country/data/repositories/country_repository_impl.dart';
 import '../../features/country/domain/repositories/country_repository.dart';
 import '../../features/country/domain/usecases/get_countries_usecase.dart';
 import '../../features/country/presentation/cubit/countries/countries_cubit.dart';
+import '../../features/faq/data/datasources/faq_local_datasource.dart';
+import '../../features/faq/data/repositories/faq_repository_impl.dart';
+import '../../features/faq/domain/repositories/faq_repository.dart';
+import '../../features/faq/domain/usecases/get_faqs_usecase.dart';
+import '../../features/faq/presentation/cubit/faqs/faqs_cubit.dart';
 import '../../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../routes/app_route_info.dart';
 
@@ -91,6 +96,8 @@ Future<void> init() async {
   await _activityLevel();
 
   await _accountSettings();
+
+  await _faq();
 }
 
 Future<void> _external() async {
@@ -474,6 +481,34 @@ Future<void> _accountSettings() async {
   sl.registerFactory<DeactiveAccountCubit>(() {
     return DeactiveAccountCubit(
       signOutUseCase: sl(),
+    );
+  });
+}
+
+Future<void> _faq() async {
+  // datasources
+  sl.registerLazySingleton<FaqLocalDataSource>(() {
+    return FaqLocalDataSourceImpl();
+  });
+
+  // repositories
+  sl.registerLazySingleton<FaqRepository>(() {
+    return FaqRepositoryImpl(
+      faqLocalDataSource: sl(),
+    );
+  });
+
+  // usecases
+  sl.registerLazySingleton<GetFaqsUseCase>(() {
+    return GetFaqsUseCase(
+      faqRepository: sl(),
+    );
+  });
+
+  // cubits
+  sl.registerFactory<FaqsCubit>(() {
+    return FaqsCubit(
+      getFaqsUseCase: sl(),
     );
   });
 }

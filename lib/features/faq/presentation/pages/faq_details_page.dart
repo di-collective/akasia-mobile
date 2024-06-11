@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
-import '../../data/models/faq_model.dart';
+import '../../domain/entities/faq_entity.dart';
 import '../widgets/faq_detail_widget.dart';
 
 class FaqDetailsPageParams {
-  final FaqModel faq;
+  final FaqEntity faq;
 
   const FaqDetailsPageParams({
     required this.faq,
@@ -27,7 +27,7 @@ class FaqDetailsPage<T> extends StatefulWidget {
 }
 
 class _FaqDetailsPageState extends State<FaqDetailsPage> {
-  FaqModel? _faq;
+  FaqEntity? _faq;
 
   @override
   void initState() {

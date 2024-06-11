@@ -27,4 +27,5 @@ class AssetIconsPath {
   static String icCheck = 'ic_check.svg'.iconAsset;
   static String icChatUs = 'ic_chat_us.svg'.iconAsset;
   static String icChatDouble = 'ic_chat_double.svg'.iconAsset;
+  static String icStar = 'ic_star.svg'.iconAsset;
 }

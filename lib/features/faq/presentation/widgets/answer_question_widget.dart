@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../data/models/faq_detail_model.dart';
-import '../../data/models/faq_model.dart';
+import '../../domain/entities/faq_detail_entity.dart';
+import '../../domain/entities/faq_entity.dart';
 
 class QuestionAnswerWidget extends StatefulWidget {
-  final FaqModel faq;
+  final FaqEntity faq;
 
   const QuestionAnswerWidget({
     super.key,
@@ -18,7 +18,7 @@ class QuestionAnswerWidget extends StatefulWidget {
 }
 
 class _QuestionAnswerWidgetState extends State<QuestionAnswerWidget> {
-  final List<ExpandedItem<FaqDetailModel>> _details = [];
+  final List<ExpandedItem<FaqDetailEntity>> _details = [];
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _QuestionAnswerWidgetState extends State<QuestionAnswerWidget> {
     if (widget.faq.faqDetails != null) {
       for (final faqDetail in widget.faq.faqDetails!) {
         _details.add(
-          ExpandedItem<FaqDetailModel>(
+          ExpandedItem<FaqDetailEntity>(
             value: faqDetail,
             isExpanded: false,
           ),
