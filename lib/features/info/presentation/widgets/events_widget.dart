@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import 'event_item_widget.dart';
@@ -54,11 +58,43 @@ class _EventsWidgetState extends State<EventsWidget> {
             },
           ),
         ),
+        const SizedBox(
+          height: 16,
+        ),
+        GestureDetector(
+          onTap: _onSeeAllEvents,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                context.locale.seeAll,
+                style: textTheme.bodyMedium.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              SvgPicture.asset(
+                AssetIconsPath.icArrowRight,
+                colorFilter: ColorFilter.mode(
+                  colorScheme.primary,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
 
   void _onEvent() {
+    // TODO: Implement this method
+  }
+
+  void _onSeeAllEvents() {
     // TODO: Implement this method
   }
 }

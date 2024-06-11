@@ -70,7 +70,7 @@ class _ArticleRecomendationsWidgetState
                   IconButton(
                     onPressed: _onLeftArticlePage,
                     icon: SvgPicture.asset(
-                      AssetIconsPath.icArrowLeft,
+                      AssetIconsPath.icChevronLeft,
                       height: 14,
                       colorFilter: ColorFilter.mode(
                         colorScheme.onSurfaceDim,
@@ -81,7 +81,7 @@ class _ArticleRecomendationsWidgetState
                   IconButton(
                     onPressed: _onRightArticlePage,
                     icon: SvgPicture.asset(
-                      AssetIconsPath.icArrowRight,
+                      AssetIconsPath.icChevronRight,
                       height: 14,
                       colorFilter: ColorFilter.mode(
                         colorScheme.onSurfaceDim,

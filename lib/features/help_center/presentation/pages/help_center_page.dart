@@ -125,7 +125,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                           width: 16,
                         ),
                         SvgPicture.asset(
-                          AssetIconsPath.icArrowRight,
+                          AssetIconsPath.icChevronRight,
                           height: 8,
                           colorFilter: ColorFilter.mode(
                             colorScheme.onSurfaceBright,

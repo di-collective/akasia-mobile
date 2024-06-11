@@ -42,7 +42,7 @@ class HelpCenterItemWidget extends StatelessWidget {
             height: 16,
           ),
           SvgPicture.asset(
-            AssetIconsPath.icArrowRight,
+            AssetIconsPath.icChevronRight,
             height: 10,
           )
         ],
