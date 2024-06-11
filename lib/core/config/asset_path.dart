@@ -15,6 +15,7 @@ class AssetIconsPath {
   static String icPoint = 'ic_point.svg'.iconAsset;
   static String icCalendar = 'ic_calendar.svg'.iconAsset;
   static String icCalendarOutlined = 'ic_calendar_outlined.svg'.iconAsset;
+  static String icArrowLeft = 'ic_arrow_left.svg'.iconAsset;
   static String icArrowRight = 'ic_arrow_right.svg'.iconAsset;
   static String icArrowRightCircle = 'ic_arrow_right_circle.svg'.iconAsset;
   static String icArrowDown = 'ic_arrow_down.svg'.iconAsset;
@@ -29,4 +30,5 @@ class AssetIconsPath {
   static String icChatUs = 'ic_chat_us.svg'.iconAsset;
   static String icChatDouble = 'ic_chat_double.svg'.iconAsset;
   static String icStar = 'ic_star.svg'.iconAsset;
+  static String icLocation = 'ic_location.svg'.iconAsset;
 }
