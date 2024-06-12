@@ -57,23 +57,21 @@ class _PageState extends State<_Page> {
             // hardcoded
             title: Text(context.locale.ratings),
           ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                _RatingsPageView(
-                  navBarHeight: _navBarHeight,
-                  pageController: _pageController,
-                  navBarItems: navBarItems,
-                  onUpdateSelectedItem: _onUpdateSelectedItem,
-                ),
-                NavBarSection(
-                  items: navBarItems,
-                  selectedItem: navBarState.selectedItem,
-                  onTap: _onMoveToPage,
-                  onHeightMeasured: _onSetNavBarHeight,
-                ),
-              ],
-            ),
+          body: Stack(
+            children: [
+              _RatingsPageView(
+                navBarHeight: _navBarHeight,
+                pageController: _pageController,
+                navBarItems: navBarItems,
+                onUpdateSelectedItem: _onUpdateSelectedItem,
+              ),
+              NavBarSection(
+                items: navBarItems,
+                selectedItem: navBarState.selectedItem,
+                onTap: _onMoveToPage,
+                onHeightMeasured: _onSetNavBarHeight,
+              ),
+            ],
           ),
         );
       },

@@ -46,13 +46,21 @@ class _ReviewListSectionState extends State<ReviewListSection>
     return ListView.builder(
       controller: _controller,
       itemCount: widget.items.length + 1,
-      padding: EdgeInsets.only(top: widget.topPadding ?? 0),
+      padding: EdgeInsets.only(
+        top: widget.topPadding ?? 0,
+        bottom: context.mediaQuery.padding.bottom,
+      ),
       shrinkWrap: true,
+      findChildIndexCallback: (key) {
+        return (key as ValueKey<int>).value;
+      },
       itemBuilder: (context, index) {
+        final key = ValueKey<int>(index);
         if (index < widget.items.length) {
           final itemWidget = widget.items[index];
           return itemWidget is ReviewItemCard
               ? Padding(
+                  key: key,
                   padding: index == widget.items.length - 1
                       ? const EdgeInsets.all(16)
                       : const EdgeInsets.only(
@@ -65,8 +73,12 @@ class _ReviewListSectionState extends State<ReviewListSection>
               : itemWidget;
         } else {
           return widget.isLastPage
-              ? const SizedBox(height: 0)
+              ? SizedBox(
+                  key: key,
+                  height: 0,
+                )
               : Padding(
+                  key: key,
                   padding: const EdgeInsets.all(16),
                   child: Center(
                     child: CircularProgressIndicator(

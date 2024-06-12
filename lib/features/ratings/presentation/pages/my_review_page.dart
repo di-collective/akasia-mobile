@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/snack_bar.dart';
+import '../../domain/entities/review_entity.dart';
 import '../cubit/my_review/my_review_cubit.dart';
 import '../cubit/my_review/my_review_state.dart';
 import '../widgets/review_empty_section.dart';
 import '../widgets/review_item_widget.dart';
 import '../widgets/review_list_section.dart';
+import 'give_rating_page.dart';
 
 class MyReviewPage extends StatefulWidget {
   final double? topPadding;
@@ -65,6 +69,7 @@ class _MyReviewPageState extends State<MyReviewPage> {
                 (review) => ReviewItemCard(
                   review,
                   onDelete: (id) => _onDeleteReview(id),
+                  onWriteReview: _onWriteReview,
                 ),
               ),
             ],
@@ -76,8 +81,7 @@ class _MyReviewPageState extends State<MyReviewPage> {
     );
   }
 
-  Future<void> _onFetchNewReviews() async =>
-      context.cubit<MyReviewCubit>().onGetMyReviews();
+  Future<void> _onFetchNewReviews() async => context.cubit<MyReviewCubit>().onGetMyReviews();
 
   Future<void> _onDeleteReview(String id) async {
     final shouldDelete = await showDialog<bool>(
@@ -100,5 +104,12 @@ class _MyReviewPageState extends State<MyReviewPage> {
         message: context.locale.theReviewSuccessfullyDeleted,
       );
     }
+  }
+
+  void _onWriteReview(ReviewEntity review) {
+    context.goNamed(
+      AppRoute.giveRating.name,
+      extra: GiveRatingPageArgs(review: review),
+    );
   }
 }

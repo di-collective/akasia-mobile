@@ -57,7 +57,7 @@ class _NavBarSectionState extends State<NavBarSection> {
               return _NavBarChip(
                 item: item,
                 isSelected: widget.selectedItem == item,
-                onSelected: () => widget.onTap(index),
+                onTap: () => widget.onTap(index),
               );
             }).toList(),
           ),
@@ -79,12 +79,12 @@ class _NavBarSectionState extends State<NavBarSection> {
 class _NavBarChip extends StatelessWidget {
   final NavBarItem item;
   final bool isSelected;
-  final Function() onSelected;
+  final Function() onTap;
 
   const _NavBarChip({
     required this.item,
     required this.isSelected,
-    required this.onSelected,
+    required this.onTap,
   });
 
   @override
@@ -92,21 +92,19 @@ class _NavBarChip extends StatelessWidget {
     final colorScheme = context.theme.appColorScheme;
     final chipTheme = context.theme.chipTheme;
     final locale = context.locale;
-    final textTheme = context.theme.appTextTheme;
 
-    return ChoiceChip(
+    return ActionChip(
       label: Text(
         switch (item) {
           NavBarItem.recentlyReviewed => locale.recentlyReviewed,
           NavBarItem.myReview => locale.myReview
         }
       ),
-      showCheckmark: false,
-      selected: isSelected,
-      onSelected: (s) => onSelected(),
+      onPressed: onTap,
       labelPadding: EdgeInsets.zero,
       labelStyle: chipTheme.labelStyle
           ?.copyWith(color: isSelected ? colorScheme.primary : colorScheme.onSurface),
+      backgroundColor: isSelected ? colorScheme.primaryTonal : null,
       shape: chipTheme.shape?.copyWith(
         side: BorderSide(
           color: isSelected ? colorScheme.primary : colorScheme.surfaceDim,

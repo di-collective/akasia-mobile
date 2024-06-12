@@ -21,6 +21,7 @@ import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
 
@@ -69,6 +70,8 @@ extension AppRouteExtension on AppRoute {
         return 'help-center';
       case AppRoute.notifications:
         return 'notifications';
+      case AppRoute.giveRating:
+        return 'give-ratings';
     }
   }
 
@@ -130,6 +133,10 @@ extension AppRouteExtension on AppRoute {
         return const HelpCenterPage();
       case AppRoute.notifications:
         return const NotificationsPage();
+      case AppRoute.giveRating:
+        return GiveRatingPage(
+          args: arguments,
+        );
     }
   }
 

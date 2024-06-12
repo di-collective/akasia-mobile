@@ -8,6 +8,7 @@ import '../../../../core/ui/widget/buttons/icon_button_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../domain/entities/review_entity.dart';
 import 'ratings_bar.dart';
+import 'review_product_card.dart';
 
 sealed class ReviewItemWidget extends StatelessWidget {
   const ReviewItemWidget({super.key});
@@ -92,12 +93,14 @@ class ReviewItemTitle extends ReviewItemWidget {
 class ReviewItemCard extends ReviewItemWidget {
   final ReviewEntity review;
   final Function(String id)? onDelete;
+  final Function(ReviewEntity review)? onWriteReview;
   static const _maxRatingScore = 5;
 
   const ReviewItemCard(
     this.review, {
     super.key,
     this.onDelete,
+    this.onWriteReview,
   });
 
   @override
@@ -126,7 +129,7 @@ class ReviewItemCard extends ReviewItemWidget {
             userValueForMoneyRating: review.userValueForMoneyRating,
             maxRatingScore: _maxRatingScore,
           ),
-          _ReviewItemCardProduct(
+          ReviewProductCard(
             name: review.treatmentName,
             description: review.treatmentDescription,
             averageRating: review.treatmentAverageRating,
@@ -170,7 +173,9 @@ class ReviewItemCard extends ReviewItemWidget {
                 bottom: 8,
               ),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  onWriteReview?.call(review);
+                },
                 child: Text(
                   context.locale.writeReview,
                   style: textTheme.bodyMedium.copyWith(
@@ -302,7 +307,6 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
           AnimatedSize(
             duration: const Duration(milliseconds: 300),
             curve: Curves.fastOutSlowIn,
-            clipBehavior: Clip.antiAlias,
             child: _isExpanded
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -346,7 +350,7 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
                       ],
                     ),
                   )
-                : const SizedBox(),
+                : const SizedBox(width: double.infinity),
           ),
         ],
       ],
@@ -408,97 +412,6 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ReviewItemCardProduct extends StatelessWidget {
-  final String name, description;
-  final double averageRating;
-  final int maxRatingScore, totalReviews;
-
-  const _ReviewItemCardProduct({
-    required this.name,
-    required this.description,
-    required this.averageRating,
-    required this.maxRatingScore,
-    required this.totalReviews,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.theme.appColorScheme;
-    final textTheme = context.theme.appTextTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 8,
-      ),
-      decoration: BoxDecoration(
-          color: colorScheme.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: colorScheme.outlinePrimary,
-          )),
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                color: colorScheme.surfaceDim,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: textTheme.labelMedium.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    description,
-                    style: textTheme.bodySmall.copyWith(
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        RatingsBar(
-                          initialRating: averageRating,
-                          maxRatingScore: maxRatingScore,
-                          itemSize: 12,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          averageRating.toString(),
-                          style: textTheme.bodySmall,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          '($totalReviews)',
-                          style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }

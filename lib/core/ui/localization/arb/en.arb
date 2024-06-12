@@ -207,5 +207,14 @@
   "attractivePromotionForYou": "Attractive Promotion for You",
   "articleRecomendations": "Recommended Articles",
   "topicRecommendations": "Topic Recommendations",
-  "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc"
+  "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc",
+  "giveRating": "Give Rating",
+  "howDoYouRateThisTreatment": "How do you rate this treatment?",
+  "yourRating": "Your Rating",
+  "itsNotForMe": "It's not for me",
+  "doesNotMeetExpectation": "Doesn't meet expectation",
+  "justOkay": "Just Okay",
+  "excellent": "Excellent!",
+  "magnificent": "Magnificent!",
+  "next": "Next"
 }

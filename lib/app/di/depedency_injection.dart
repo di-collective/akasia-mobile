@@ -81,7 +81,7 @@ import '../../features/notification/data/repositories/notification_repository_im
 import '../../features/notification/domain/repositories/notification_repository.dart';
 import '../../features/notification/domain/usecases/get_notifications_usecase.dart';
 import '../../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
-import '../../features/ratings/presentation/di/di.dart';
+import '../../features/ratings/di/di.dart';
 import '../routes/app_route_info.dart';
 
 Future<void> init() async {
@@ -103,7 +103,7 @@ Future<void> init() async {
 
   await _accountSettings();
 
-  await futureRatingsInject();
+  await FutureRatingsDependencies.inject();
 
   await _faq();
 

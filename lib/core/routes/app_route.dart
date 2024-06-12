@@ -20,4 +20,5 @@ enum AppRoute {
   ratings,
   helpCenter,
   notifications,
+  giveRating,
 }
