@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import 'event_item_widget.dart';
 
@@ -67,7 +68,7 @@ class _EventsWidgetState extends State<EventsWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                context.locale.seeAll,
+                context.locale.seeAll.toCapitalizes(),
                 style: textTheme.bodyMedium.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.w600,

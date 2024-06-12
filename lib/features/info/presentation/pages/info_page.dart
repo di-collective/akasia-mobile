@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/info/presentation/widgets/topic_recomendations_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
@@ -38,6 +39,10 @@ class _InfoPageState extends State<InfoPage> {
               height: 22,
             ),
             const ArticleRecomendationsWidget(),
+            const SizedBox(
+              height: 32,
+            ),
+            const TopicRecomendationsWidget(),
             const SizedBox(
               height: 32,
             ),

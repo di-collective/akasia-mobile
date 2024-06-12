@@ -30,7 +30,7 @@ class _ArticleRecomendationsWidgetState
   void _init() {
     _pageController = PageController(
       initialPage: _currentPage,
-      viewportFraction: 0.9,
+      viewportFraction: 0.7,
     );
   }
 
