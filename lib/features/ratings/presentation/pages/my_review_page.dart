@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/snack_bar.dart';
 import '../cubit/my_review/my_review_cubit.dart';
 import '../cubit/my_review/my_review_state.dart';
@@ -24,66 +25,80 @@ class MyReviewPage extends StatefulWidget {
 class _MyReviewPageState extends State<MyReviewPage> {
   @override
   void initState() {
-    _onInit();
     super.initState();
+    _onFetchNewReviews();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MyReviewCubit, MyReviewState>(
       builder: (context, state) {
-        switch (state) {
-          case MyReviewStateLoaded():
-            if (state.reviews.isEmpty) {
-              return Padding(
-                padding: EdgeInsets.only(top: widget.topPadding ?? 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ReviewItemBanner(),
-                    Expanded(
-                      child: ReviewEmptySection(
-                        context.locale.thereAreNoPost,
-                      ),
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return ReviewListSection(
-                topPadding: widget.topPadding,
-                items: <ReviewItemWidget>[
-                  const ReviewItemBanner(),
-                  ...state.reviews.map(
-                    (review) => ReviewItemCard(
-                      review,
-                      onDelete: (id) => _onDeleteReview(id),
-                    ),
+        final reviews = state.reviews;
+
+        if (reviews == null) {
+          //todo: loading state
+          return Container();
+        }
+
+        if (reviews.isEmpty) {
+          return Padding(
+            padding: EdgeInsets.only(top: widget.topPadding ?? 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ReviewItemBanner(),
+                Expanded(
+                  child: ReviewEmptySection(
+                    context.locale.thereAreNoPost,
                   ),
-                ],
-              );
-            }
-          default:
-            //todo: loading state
-            return Container();
+                )
+              ],
+            ),
+          );
+        } else {
+          return ReviewListSection(
+            topPadding: widget.topPadding,
+            onFetchNewReviews: _onFetchNewReviews,
+            items: <ReviewItemWidget>[
+              const ReviewItemBanner(),
+              ...reviews.map(
+                (review) => ReviewItemCard(
+                  review,
+                  onDelete: (id) => _onDeleteReview(id),
+                ),
+              ),
+            ],
+            nextPage: state.nextPage,
+            isLastPage: state.isLastPage,
+          );
         }
       },
     );
   }
 
-  void _onInit() {
-    final myReviewCubit = context.cubit<MyReviewCubit>();
-    if (myReviewCubit.state is MyReviewStateLoaded || myReviewCubit.state is MyReviewStateLoading) {
-      return;
-    }
-    myReviewCubit.onGetMyReviews();
-  }
+  Future<void> _onFetchNewReviews() async =>
+      context.cubit<MyReviewCubit>().onGetMyReviews();
 
-  void _onDeleteReview(String id) async {
-    await context.cubit<MyReviewCubit>().onDeleteReview(id);
-    AppSnackBar.success(
-      context,
-      message: context.locale.theReviewSuccessfullyDeleted,
+  Future<void> _onDeleteReview(String id) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return ConfirmationDialogWidget(
+          title: context.locale.deleteReview,
+          description: context.locale.areYouSureToDeleteThisReview,
+        );
+      },
     );
+
+    if (shouldDelete != true) return;
+
+    final isDeleted = await context.cubit<MyReviewCubit>().onDeleteReview(id);
+
+    if (isDeleted) {
+      AppSnackBar.success(
+        context,
+        message: context.locale.theReviewSuccessfullyDeleted,
+      );
+    }
   }
 }

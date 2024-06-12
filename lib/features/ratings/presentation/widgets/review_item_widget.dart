@@ -275,7 +275,6 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
                   initialRating: _userRating,
                   maxRatingScore: widget.maxRatingScore,
                   itemSize: 16,
-                  itemPadding: 4,
                 ),
                 if (_userRating != null) ...[
                   const SizedBox(width: 12),
@@ -475,10 +474,10 @@ class _ReviewItemCardProduct extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         RatingsBar(
-                            initialRating: averageRating,
-                            maxRatingScore: maxRatingScore,
-                            itemSize: 12,
-                            itemPadding: 2),
+                          initialRating: averageRating,
+                          maxRatingScore: maxRatingScore,
+                          itemSize: 12,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           averageRating.toString(),

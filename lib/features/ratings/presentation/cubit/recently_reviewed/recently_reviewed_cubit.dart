@@ -9,11 +9,23 @@ class RecentlyReviewedCubit extends Cubit<RecentlyReviewedState> {
   RecentlyReviewedCubit({
     required GetRecentReviewsUseCase getRecentReviewsUseCase,
   })  : _getRecentReviewsUseCase = getRecentReviewsUseCase,
-        super(RecentlyReviewedStateInitial());
+        super(const RecentlyReviewedState());
 
-  Future<void> getRecentReviews() async {
-    emit(RecentlyReviewedStateLoading());
-    final reviews = await _getRecentReviewsUseCase.call();
-    emit(RecentlyReviewedStateLoaded(reviews: reviews));
+  Future<void> onGetRecentReviews() async {
+    const size = 5;
+    final newReviews = await _getRecentReviewsUseCase.call(
+      page: state.nextPage,
+      size: size,
+    );
+    emit(
+      state.copy(
+        reviews: [
+          ...?state.reviews,
+          ...newReviews,
+        ],
+        nextPage: state.nextPage + 1,
+        isLastPage: newReviews.length < size,
+      ),
+    );
   }
 }

@@ -2,30 +2,33 @@ import 'package:equatable/equatable.dart';
 
 import '../../../domain/entities/review_entity.dart';
 
-sealed class MyReviewState extends Equatable {
-  const MyReviewState();
+final class MyReviewState extends Equatable {
+  final List<ReviewEntity>? reviews;
+  final int nextPage;
+  final bool isLastPage;
 
-  @override
-  List<Object?> get props => [];
-}
-
-final class MyReviewStateInitial extends MyReviewState {}
-
-final class MyReviewStateLoading extends MyReviewState {}
-
-final class MyReviewStateLoaded extends MyReviewState {
-  final List<ReviewEntity> reviews;
-
-  const MyReviewStateLoaded({
-    required this.reviews,
+  const MyReviewState({
+    this.reviews,
+    this.nextPage = 0,
+    this.isLastPage = false,
   });
 
-  @override
-  List<Object?> get props => [reviews];
-
-  MyReviewStateLoaded copy({
+  MyReviewState copy({
     List<ReviewEntity>? reviews,
+    int? nextPage,
+    bool? isLastPage,
   }) {
-    return MyReviewStateLoaded(reviews: reviews ?? this.reviews);
+    return MyReviewState(
+      reviews: reviews ?? this.reviews,
+      nextPage: nextPage ?? this.nextPage,
+      isLastPage: isLastPage ?? this.isLastPage,
+    );
   }
+
+  @override
+  List<Object?> get props => [
+        reviews,
+        nextPage,
+        isLastPage,
+      ];
 }

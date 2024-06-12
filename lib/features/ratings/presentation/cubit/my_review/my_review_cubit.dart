@@ -10,20 +10,41 @@ class MyReviewCubit extends Cubit<MyReviewState> {
   MyReviewCubit({
     required GetMyReviewsUseCase getMyReviewsUseCase,
   })  : _getMyReviewsUseCase = getMyReviewsUseCase,
-        super(MyReviewStateInitial());
+        super(const MyReviewState());
 
   Future<void> onGetMyReviews() async {
-    emit(MyReviewStateLoading());
-    final reviews = await _getMyReviewsUseCase.call();
-    emit(MyReviewStateLoaded(reviews: reviews));
+    const size = 5;
+    final newReviews = await _getMyReviewsUseCase.call(
+      page: state.nextPage,
+      size: size,
+    );
+    emit(
+      state.copy(
+        reviews: [
+          ...?state.reviews,
+          ...newReviews,
+        ],
+        nextPage: state.nextPage + 1,
+        isLastPage: newReviews.length < size,
+      ),
+    );
   }
 
-  Future<void> onDeleteReview(String id) async {
-    final currentState = (state as MyReviewStateLoaded);
-    emit(
-      currentState.copy(
-        reviews: currentState.reviews.whereNot((e) => e.id == id).toList(),
-      ),
+  Future<bool> onDeleteReview(String id) async {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        emit(
+          state.copy(
+            reviews: state.reviews
+                ?.whereNot(
+                  (e) => e.id == id,
+                )
+                .toList(),
+          ),
+        );
+        return true;
+      },
     );
   }
 }

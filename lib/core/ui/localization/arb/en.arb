@@ -170,5 +170,7 @@
   "recommended": "Recommended",
   "usagePeriod": "Usage Period",
   "theReviewSuccessfullyDeleted": "The review successfully deleted.",
-  "writeReview": "Write Review"
+  "writeReview": "Write Review",
+  "deleteReview": "Delete Review",
+  "areYouSureToDeleteThisReview": "Are you sure to delete this review?"
 }

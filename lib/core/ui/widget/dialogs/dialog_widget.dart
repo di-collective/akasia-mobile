@@ -52,7 +52,7 @@ class DialogWidget extends StatelessWidget {
               descriptionWidget!,
             ] else if (description != null && description!.isNotEmpty) ...[
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               Text(
                 description!,

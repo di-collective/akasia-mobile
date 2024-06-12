@@ -6,16 +6,15 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 
 class RatingsBar extends StatelessWidget {
   final double? initialRating;
-  final int maxRatingScore;
-  final double itemSize, itemPadding;
+  final int? maxRatingScore;
+  final double? itemSize;
   final Function(double rating)? onValueChange;
 
   const RatingsBar({
     super.key,
     this.initialRating,
-    this.maxRatingScore = 5,
-    this.itemSize = 16,
-    this.itemPadding = 4,
+    this.maxRatingScore,
+    this.itemSize,
     this.onValueChange,
   });
 
@@ -26,8 +25,8 @@ class RatingsBar extends StatelessWidget {
       initialRating: initialRating ?? 0.0,
       allowHalfRating: true,
       glow: false,
-      itemCount: maxRatingScore,
-      itemSize: itemSize,
+      itemCount: maxRatingScore ?? 5,
+      itemSize: itemSize ?? 16,
       unratedColor: colorScheme.outline,
       itemBuilder: (context, _) => Icon(
         Icons.star_rounded,

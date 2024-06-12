@@ -24,42 +24,40 @@ class _RecentlyReviewedPageState extends State<RecentlyReviewedPage> {
   @override
   void initState() {
     super.initState();
-    _onInit();
+    _onFetchNewReviews();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RecentlyReviewedCubit, RecentlyReviewedState>(
       builder: (context, state) {
-        switch (state) {
-          case RecentlyReviewedStateLoaded():
-            if (state.reviews.isEmpty) {
-              return ReviewEmptySection(context.locale.thereAreNoPost);
-            } else {
-              return ReviewListSection(
-                topPadding: widget.topPadding,
-                items: <ReviewItemWidget>[
-                  ReviewItemTitle(title: context.locale.recentlyReviewed),
-                  ...state.reviews.map(
-                    (review) => ReviewItemCard(review),
-                  ),
-                ],
-              );
-            }
-          default:
-            //todo: loading state
-            return Container();
+        final reviews = state.reviews;
+
+        if (reviews == null) {
+          //todo: loading state
+          return Container();
+        }
+
+        if (reviews.isEmpty) {
+          return ReviewEmptySection(context.locale.thereAreNoPost);
+        } else {
+          return ReviewListSection(
+            topPadding: widget.topPadding,
+            onFetchNewReviews: _onFetchNewReviews,
+            items: <ReviewItemWidget>[
+              ReviewItemTitle(title: context.locale.recentlyReviewed),
+              ...reviews.map(
+                (review) => ReviewItemCard(review),
+              ),
+            ],
+            nextPage: state.nextPage,
+            isLastPage: state.isLastPage,
+          );
         }
       },
     );
   }
 
-  void _onInit() {
-    final recentlyReviewedCubit = BlocProvider.of<RecentlyReviewedCubit>(context);
-    final state = recentlyReviewedCubit.state;
-    if (state is RecentlyReviewedStateLoaded || state is RecentlyReviewedStateLoading) {
-      return;
-    }
-    recentlyReviewedCubit.getRecentReviews();
-  }
+  Future<void> _onFetchNewReviews() async =>
+      context.cubit<RecentlyReviewedCubit>().onGetRecentReviews();
 }

@@ -8,5 +8,10 @@ final class GetRecentReviewsUseCase {
     required this.ratingsRepository,
   });
 
-  Future<List<ReviewEntity>> call() => ratingsRepository.getRecentReviews();
+  Future<List<ReviewEntity>> call({
+    required int page,
+    required int size,
+  }) {
+    return ratingsRepository.getRecentReviews(page: page, size: size);
+  }
 }
