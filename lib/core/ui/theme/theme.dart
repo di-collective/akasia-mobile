@@ -61,6 +61,14 @@ class AppTheme {
         ),
         selectedColor: colorScheme.primaryTonal
       ),
+      dividerTheme: DividerThemeData(
+        color: colorScheme.outlineBright,
+        space: 0,
+        thickness: 0.5,
+      ),
+      colorScheme: const ColorScheme.light().copyWith(
+        primary: colorScheme.primary,
+      ),
     );
   }
 

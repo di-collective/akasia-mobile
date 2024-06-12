@@ -1,17 +1,21 @@
-import 'package:equatable/equatable.dart';
+import '../../domain/entities/faq_detail_entity.dart';
 
-class FaqDetailModel extends Equatable {
-  final String? title;
-  final String? description;
-
+class FaqDetailModel extends FaqDetailEntity {
   const FaqDetailModel({
-    this.title,
-    this.description,
+    super.title,
+    super.description,
+    super.items,
   });
 
-  @override
-  List<Object?> get props => [
-        title,
-        description,
-      ];
+  factory FaqDetailModel.fromJson(Map<String, dynamic> json) {
+    return FaqDetailModel(
+      title: json['title'],
+      description: json['description'],
+      items: (json['items'] is List)
+          ? List<String?>.from(
+              json['items'],
+            )
+          : null,
+    );
+  }
 }

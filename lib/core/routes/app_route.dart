@@ -18,4 +18,6 @@ enum AppRoute {
   faq,
   faqDetails,
   ratings,
+  helpCenter,
+  notifications,
 }

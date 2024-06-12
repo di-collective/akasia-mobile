@@ -172,5 +172,40 @@
   "theReviewSuccessfullyDeleted": "The review successfully deleted.",
   "writeReview": "Write Review",
   "deleteReview": "Delete Review",
-  "areYouSureToDeleteThisReview": "Are you sure to delete this review?"
+  "areYouSureToDeleteThisReview": "Are you sure to delete this review?",
+  "needHelp": "Need help",
+  "talkToUs": "Talk to us",
+  "chatSupport": "Chat Support",
+  "chatDirectlyWithOurCsTeam": "Chat directly with our CS team",
+  "alternativelyCallUs": "Alternatively, call us on {phoneNumber} or email us on {email} for further assistance",
+  "@alternativelyCallUs": {
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            },
+            "email": {
+                "type": "String"
+            }
+        }
+  },
+  "callNow": "Call Now",
+  "emailNow": "Email Now",
+  "ourLocation": "Our Location",
+  "operationHour": "Operational Hour",
+  "sundayAndPublicHolidayClosed": "Sunday and Public Holiday Closed",
+  "notifications": "Notifications",
+  "empty": "There are no {item} for you at this time",
+  "@empty": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "item": "Item",
+  "seeAll": "See all",
+  "attractivePromotionForYou": "Attractive Promotion for You",
+  "articleRecomendations": "Recommended Articles",
+  "topicRecommendations": "Topic Recommendations",
+  "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc"
 }
