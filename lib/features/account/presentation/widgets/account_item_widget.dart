@@ -49,7 +49,7 @@ class AccountItemWidget extends StatelessWidget {
               ),
             ),
             SvgPicture.asset(
-              AssetIconsPath.icArrowRight,
+              AssetIconsPath.icChevronRight,
               height: 10,
               colorFilter: ColorFilter.mode(
                 colorScheme.onSurfaceBright,

@@ -69,7 +69,7 @@ class HomeDashboardItemWidget extends StatelessWidget {
               ),
             ),
             SvgPicture.asset(
-              AssetIconsPath.icArrowRight,
+              AssetIconsPath.icChevronRight,
               height: 12,
             ),
           ],

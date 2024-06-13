@@ -102,7 +102,7 @@ class DropdownWidget<T> extends StatelessWidget {
               ),
               iconStyleData: IconStyleData(
                 icon: SvgPicture.asset(
-                  AssetIconsPath.icArrowDown,
+                  AssetIconsPath.icChevronDown,
                 ),
               ),
               decoration: InputDecoration(

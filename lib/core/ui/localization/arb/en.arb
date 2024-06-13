@@ -195,5 +195,10 @@
             }
         }
   },
-  "item": "Item"
+  "item": "Item",
+  "seeAll": "See all",
+  "attractivePromotionForYou": "Attractive Promotion for You",
+  "articleRecomendations": "Recommended Articles",
+  "topicRecommendations": "Topic Recommendations",
+  "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc"
 }
