@@ -210,11 +210,20 @@
   "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc",
   "giveRating": "Give Rating",
   "howDoYouRateThisTreatment": "How do you rate this treatment?",
-  "yourRating": "Your Rating",
+  "yourRating": "Your rating",
   "itsNotForMe": "It's not for me",
   "doesNotMeetExpectation": "Doesn't meet expectation",
   "justOkay": "Just Okay",
   "excellent": "Excellent!",
   "magnificent": "Magnificent!",
-  "next": "Next"
+  "next": "Next",
+  "submit": "Submit",
+  "delete": "Delete",
+  "writeAReview": "Write a review",
+  "howLongHaveYouHadThisTreatment": "How long have you had this treatment?",
+  "willYouRecommendThisTreatment": "Will you recommend this treatment?",
+  "willYouRepurchaseThisTreatment": "Will you repurchase this treatment?",
+  "tellUsAboutYourExperienceAfterThisTreatment": "Tell us about your experience after this treatment",
+  "attention": "Attention",
+  "letsGiveItAFinalCheck": "Let's give it a final check. Once it's live, editing won't be possible."
 }

@@ -24,6 +24,7 @@ import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
+import '../../features/ratings/presentation/pages/write_review_page.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -72,6 +73,8 @@ extension AppRouteExtension on AppRoute {
         return 'notifications';
       case AppRoute.giveRating:
         return 'give-ratings';
+      case AppRoute.writeReview:
+        return 'write-review';
     }
   }
 
@@ -135,6 +138,10 @@ extension AppRouteExtension on AppRoute {
         return const NotificationsPage();
       case AppRoute.giveRating:
         return GiveRatingPage(
+          args: arguments,
+        );
+      case AppRoute.writeReview:
+        return WriteReviewPage(
           args: arguments,
         );
     }

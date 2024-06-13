@@ -84,12 +84,15 @@ class _MyReviewPageState extends State<MyReviewPage> {
   Future<void> _onFetchNewReviews() async => context.cubit<MyReviewCubit>().onGetMyReviews();
 
   Future<void> _onDeleteReview(String id) async {
+    final locale = context.locale;
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) {
         return ConfirmationDialogWidget(
-          title: context.locale.deleteReview,
-          description: context.locale.areYouSureToDeleteThisReview,
+          title: locale.deleteReview,
+          description: locale.areYouSureToDeleteThisReview,
+          confirmText: locale.delete,
+          cancelText: locale.cancel,
         );
       },
     );

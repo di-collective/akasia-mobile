@@ -70,6 +70,7 @@ class ReviewProductCard extends StatelessWidget {
                           initialRating: averageRating,
                           maxRatingScore: maxRatingScore,
                           itemSize: 12,
+                          itemSpacing: 2,
                         ),
                         const SizedBox(width: 4),
                         Text(

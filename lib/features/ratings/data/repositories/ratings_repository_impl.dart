@@ -58,9 +58,9 @@ class _FakeRatingsData {
                 id: id.toString(),
                 userName: randomUserName ? 'User Name ${id + 1}' : 'My User Name',
                 userEffectivenessRating:
-                    id == 0 && emptyReview ? null : _doubleInRange(random, 2.5, 5),
+                    id == 0 && emptyReview ? null : _doubleInRange(random, 2, 5).toInt(),
                 userValueForMoneyRating:
-                    id == 0 && emptyReview ? null : _doubleInRange(random, 2.5, 5),
+                    id == 0 && emptyReview ? null : _doubleInRange(random, 2, 5).toInt(),
                 userReview: id == 0 && emptyReview ? null : _lorem(index),
                 treatmentName: 'Treatment',
                 treatmentDescription: 'Description of Treatment',

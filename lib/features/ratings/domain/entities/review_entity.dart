@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 class ReviewEntity extends Equatable {
   final String id;
   final String userName;
-  final double? userEffectivenessRating;
-  final double? userValueForMoneyRating;
+  final int? userEffectivenessRating;
+  final int? userValueForMoneyRating;
   final String? userReview;
   final String treatmentName;
   final String treatmentDescription;

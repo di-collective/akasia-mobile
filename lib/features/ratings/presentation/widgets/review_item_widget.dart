@@ -240,7 +240,7 @@ class _ReviewItemCardHeader extends StatelessWidget {
 }
 
 class _ReviewItemCardRatingScore extends StatefulWidget {
-  final double? userEffectivenessRating, userValueForMoneyRating;
+  final int? userEffectivenessRating, userValueForMoneyRating;
   final int maxRatingScore;
 
   const _ReviewItemCardRatingScore({
@@ -280,6 +280,7 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
                   initialRating: _userRating,
                   maxRatingScore: widget.maxRatingScore,
                   itemSize: 16,
+                  itemSpacing: 4,
                 ),
                 if (_userRating != null) ...[
                   const SizedBox(width: 12),
@@ -291,7 +292,7 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
                   RotatedBox(
                     quarterTurns: _isExpanded ? 0 : 2,
                     child: SvgPicture.asset(
-                      AssetIconsPath.icArrowUp,
+                      AssetIconsPath.icChevronUp,
                       theme: SvgTheme(
                         currentColor: colorScheme.primary,
                         fontSize: 16,
@@ -367,7 +368,7 @@ class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> 
   }
 
   Widget _ratingScoreDetail({
-    required double? score,
+    required int? score,
     required int maxScore,
     required String name,
   }) {

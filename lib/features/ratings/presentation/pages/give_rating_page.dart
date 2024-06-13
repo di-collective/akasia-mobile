@@ -1,12 +1,15 @@
-import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../domain/entities/review_entity.dart';
 import '../widgets/ratings_bar.dart';
 import '../widgets/review_product_card.dart';
+import '../widgets/total_rating_section.dart';
+import 'write_review_page.dart';
 
 class GiveRatingPageArgs {
   final ReviewEntity review;
@@ -28,8 +31,8 @@ class GiveRatingPage<T> extends StatefulWidget {
 
 class _PageState extends State<GiveRatingPage> {
   ReviewEntity? _review;
-  double effectivenessRating = 0;
-  double valueForMoneyRating = 0;
+  int effectivenessRating = 0;
+  int valueForMoneyRating = 0;
 
   @override
   void initState() {
@@ -101,25 +104,37 @@ class _PageState extends State<GiveRatingPage> {
     );
   }
 
-  void _onUpdateEffectivenessRating(double value) {
+  void _onUpdateEffectivenessRating(int value) {
     setState(() {
       effectivenessRating = value;
     });
   }
 
-  void _onUpdateValueForMoneyRating(double value) {
+  void _onUpdateValueForMoneyRating(int value) {
     setState(() {
       valueForMoneyRating = value;
     });
   }
 
-  void _onNextPage() {}
+  void _onNextPage() {
+    final reviewId = _review?.id;
+    if (reviewId != null) {
+      context.goNamed(
+        AppRoute.writeReview.name,
+        extra: WriteReviewPageArgs(
+          reviewId: reviewId,
+          effectivenessRating: effectivenessRating,
+          valueForMoneyRating: valueForMoneyRating,
+        ),
+      );
+    }
+  }
 }
 
 class _GiveRatingBar extends StatelessWidget {
   final String label;
-  final double initialRating;
-  final Function(double rating) onRatingChange;
+  final int initialRating;
+  final Function(int rating) onRatingChange;
 
   const _GiveRatingBar({
     required this.label,
@@ -132,9 +147,7 @@ class _GiveRatingBar extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colors = context.theme.appColorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 24,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 24),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -151,11 +164,14 @@ class _GiveRatingBar extends StatelessWidget {
             style: textTheme.labelLarge,
           ),
           RatingsBar(
-            initialRating: initialRating,
+            initialRating: initialRating.toDouble(),
             minRating: 1,
             itemSize: 32,
+            itemSpacing: 8,
             allowHalfRating: false,
-            onValueChange: onRatingChange,
+            onValueChange: (value) {
+              onRatingChange(value.toInt());
+            },
           )
         ],
       ),
@@ -164,7 +180,7 @@ class _GiveRatingBar extends StatelessWidget {
 }
 
 class _GiveRatingBottomSection extends StatelessWidget {
-  final double effectivenessRating, valueForMoneyRating;
+  final int effectivenessRating, valueForMoneyRating;
   final Function() onNext;
 
   const _GiveRatingBottomSection({
@@ -176,7 +192,6 @@ class _GiveRatingBottomSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.theme.appColorScheme;
-    final textTheme = context.theme.appTextTheme;
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       curve: Curves.fastOutSlowIn,
@@ -196,48 +211,8 @@ class _GiveRatingBottomSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Wrap(
-                        spacing: 4,
-                        direction: Axis.vertical,
-                        children: [
-                          Text(
-                            context.locale.yourRating,
-                            style: textTheme.labelMedium.copyWith(
-                              color: colors.onSurface,
-                            ),
-                          ),
-                          Text(
-                            _ratingLabel(context),
-                            style: textTheme.bodyLarge.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: colors.primaryContainer,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        direction: Axis.horizontal,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 4,
-                        children: [
-                          Icon(
-                            Icons.star_rounded,
-                            size: 30,
-                            color: colors.primary,
-                          ),
-                          Text(
-                            _totalRating.toString(),
-                            style: textTheme.titleLarge.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
+                  TotalRatingSection(
+                    totalRating: _totalRating,
                   ),
                   const SizedBox(height: 16),
                   ButtonWidget(
@@ -251,24 +226,5 @@ class _GiveRatingBottomSection extends StatelessWidget {
     );
   }
 
-  double get _totalRating => (effectivenessRating + valueForMoneyRating) / 2;
-
-  String _ratingLabel(BuildContext context) {
-    if (_totalRating.inRange(DoubleRange(1, 1.9))) {
-      return context.locale.itsNotForMe;
-    }
-    if (_totalRating.inRange(DoubleRange(2, 2.9))) {
-      return context.locale.doesNotMeetExpectation;
-    }
-    if (_totalRating.inRange(DoubleRange(3, 3.9))) {
-      return context.locale.justOkay;
-    }
-    if (_totalRating.inRange(DoubleRange(4, 4.9))) {
-      return context.locale.excellent;
-    }
-    if (_totalRating == 5) {
-      return context.locale.magnificent;
-    }
-    return "";
-  }
+  double get _totalRating => (effectivenessRating.toDouble() + valueForMoneyRating.toDouble()) / 2;
 }

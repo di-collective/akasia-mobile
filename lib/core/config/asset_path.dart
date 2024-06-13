@@ -20,7 +20,7 @@ class AssetIconsPath {
   static String icChevronDown = 'ic_chevron_down.svg'.iconAsset;
   static String icArrowRight = 'ic_arrow_right.svg'.iconAsset;
   static String icArrowRightCircle = 'ic_arrow_right_circle.svg'.iconAsset;
-  static String icArrowUp = 'ic_arrow_up.svg'.iconAsset;
+  static String icChevronUp = 'ic_chevron_up.svg'.iconAsset;
   static String icSuccessStory = 'ic_success_story.svg'.iconAsset;
   static String icTreatment = 'ic_treatment.svg'.iconAsset;
   static String icDietPlan = 'ic_diet_plan.svg'.iconAsset;
@@ -34,4 +34,8 @@ class AssetIconsPath {
   static String icChatDouble = 'ic_chat_double.svg'.iconAsset;
   static String icStar = 'ic_star.svg'.iconAsset;
   static String icLocation = 'ic_location.svg'.iconAsset;
+  static String icSmiley = 'ic_smiley.svg'.iconAsset;
+  static String icSmileySad = 'ic_smiley_sad.svg'.iconAsset;
+  static String icSmileyFlat = 'ic_smiley_flat.svg'.iconAsset;
+  static String icRatingStar = 'ic_rating_star.svg'.iconAsset;
 }

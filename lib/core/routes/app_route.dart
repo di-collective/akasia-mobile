@@ -21,4 +21,5 @@ enum AppRoute {
   helpCenter,
   notifications,
   giveRating,
+  writeReview,
 }

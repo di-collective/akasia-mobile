@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/chips/choice_chip_widget.dart';
 import '../cubit/nav_bar/nav_bar_state.dart';
 
 class NavBarSection extends StatefulWidget {
@@ -89,28 +90,17 @@ class _NavBarChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.theme.appColorScheme;
-    final chipTheme = context.theme.chipTheme;
     final locale = context.locale;
 
-    return ActionChip(
-      label: Text(
-        switch (item) {
-          NavBarItem.recentlyReviewed => locale.recentlyReviewed,
-          NavBarItem.myReview => locale.myReview
-        }
-      ),
-      onPressed: onTap,
-      labelPadding: EdgeInsets.zero,
-      labelStyle: chipTheme.labelStyle
-          ?.copyWith(color: isSelected ? colorScheme.primary : colorScheme.onSurface),
-      backgroundColor: isSelected ? colorScheme.primaryTonal : null,
-      shape: chipTheme.shape?.copyWith(
-        side: BorderSide(
-          color: isSelected ? colorScheme.primary : colorScheme.surfaceDim,
-          width: 1,
-        ),
-      ),
+    return ChoiceChipWidget(
+      label: switch (item) {
+        NavBarItem.recentlyReviewed => locale.recentlyReviewed,
+        NavBarItem.myReview => locale.myReview
+      },
+      onTap: onTap,
+      isSelected: isSelected,
     );
   }
 }
+
+
