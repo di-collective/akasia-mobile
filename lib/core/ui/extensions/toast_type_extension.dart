@@ -7,6 +7,7 @@ enum ToastType {
   error,
   success,
   warning,
+  info,
 }
 
 extension ToastTypeExtension on ToastType {
@@ -19,18 +20,24 @@ extension ToastTypeExtension on ToastType {
       case ToastType.success:
         return color.successContainer;
       case ToastType.warning:
+        return color.warningContainer;
+      case ToastType.info:
         return color.onPrimaryContainer;
     }
   }
 
-  Color get textColor {
+  Color textColor(BuildContext context) {
+    final color = context.theme.appColorScheme;
+
     switch (this) {
       case ToastType.error:
-        return Colors.white;
+        return color.onError;
       case ToastType.success:
-        return Colors.white;
+        return color.onSuccess;
       case ToastType.warning:
-        return Colors.white;
+        return color.onWarning;
+      case ToastType.info:
+          return color.surfaceBright;
     }
   }
 }
