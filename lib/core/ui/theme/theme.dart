@@ -59,6 +59,7 @@ class AppTheme {
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w500,
         ),
+        selectedColor: colorScheme.primaryTonal
       ),
       dividerTheme: DividerThemeData(
         color: colorScheme.outlineBright,

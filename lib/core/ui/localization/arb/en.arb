@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "appName": "Akasia365mc",
   "home": "Home",
   "myTreatment": "My Treatment",
   "info": "Info",
@@ -22,11 +23,11 @@
   "invalidEmail": "Invalid email",
   "passwordsMustBeCharacters": "Your password must consist of {length} characters or more",
   "@passwordsMustBeCharacters": {
-        "placeholders": {
-            "length": {
-                "type": "int"
-            }
-        }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "passwordMustContainLetter": "Password must contain at least one letter",
   "passwordMustContainNumber": "Password must contain at least one number",
@@ -38,7 +39,6 @@
   "eKtpNumber": "E-KTP Number",
   "fullName": "Full Name",
   "phoneNumber": "Phone Number",
-  "password": "Password",
   "repeatPassword": "Repeat Password",
   "register": "Register",
   "alreadyHaveAnAccount": "Already have an account",
@@ -46,19 +46,19 @@
   "registerWithApple": "Register with Apple",
   "minimumLength": "Minumum length is {length} characters",
   "@minimumLength": {
-        "placeholders": {
-            "length": {
-                "type": "int"
-            }
-        }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "maximumLength": "Maximum length is {length} characters",
   "@maximumLength": {
-        "placeholders": {
-            "length": {
-                "type": "int"
-            }
-        }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "invalidPhoneNumber": "Invalid phone number",
   "invalidEKtp": "Invalid E-KTP",
@@ -105,9 +105,6 @@
   "information": "Information",
   "edit": "Edit",
   "membershipId": "Membership ID",
-  "eKtpNumber": "E-KTP Number",
-  "fullName": "Full Name",
-  "phoneNumber": "Phone Number",
   "age": "Age",
   "dob": "DOB",
   "sex": "Sex",
@@ -119,7 +116,6 @@
   "emergencyContact": "Emergency Contact",
   "relationship": "Relationship",
   "profile": "Profile",
-  "information": "Information",
   "personalInformation": "Personal Information",
   "save": "Save",
   "successEditInformation": "Your information successfully updated",
@@ -142,8 +138,6 @@
   "changePhoneNumber": "Change phone number",
   "deactiveAccount": "Deactive account",
   "oldPassword": "Old password",
-  "newPassword": "New password",
-  "repeatPassword": "Repeat password",
   "wrongPassword": "Wrong password",
   "successChangePassword": "Your password successfully updated",
   "oldPhoneNumber": "Old phone number",
@@ -165,7 +159,20 @@
   "thanksForUsingAkasia": "Thanks for using Akasia365mc",
   "backIn": "Back in",
   "second": "second",
-  "frequentlyAskedQuestions": "Frequently Asked Questions",
+  "frequentlyAskedQuestions": "Frequently Asked Questions ",
+  "recentlyReviewed": "Recently Reviewed",
+  "myReview": "My Review",
+  "thereAreNoPost": "There are no post",
+  "letsGoWriteAReview": "Let's go! Write a Review",
+  "shareYourExperienceEveryTimeYouHaveTreatmentAt_": "Share your experience every time you have treatment at ",
+  "effectiveness": "Effectiveness",
+  "valueForMoney": "ValueForMoney",
+  "recommended": "Recommended",
+  "usagePeriod": "Usage Period",
+  "theReviewSuccessfullyDeleted": "The review successfully deleted.",
+  "writeReview": "Write Review",
+  "deleteReview": "Delete Review",
+  "areYouSureToDeleteThisReview": "Are you sure to delete this review?",
   "needHelp": "Need help",
   "talkToUs": "Talk to us",
   "chatSupport": "Chat Support",
@@ -200,5 +207,23 @@
   "attractivePromotionForYou": "Attractive Promotion for You",
   "articleRecomendations": "Recommended Articles",
   "topicRecommendations": "Topic Recommendations",
-  "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc"
+  "findVariousEventsAtAkasia365mc": "Find various events at Akasia365mc",
+  "giveRating": "Give Rating",
+  "howDoYouRateThisTreatment": "How do you rate this treatment?",
+  "yourRating": "Your rating",
+  "itsNotForMe": "It's not for me",
+  "doesNotMeetExpectation": "Doesn't meet expectation",
+  "justOkay": "Just Okay",
+  "excellent": "Excellent!",
+  "magnificent": "Magnificent!",
+  "next": "Next",
+  "submit": "Submit",
+  "delete": "Delete",
+  "writeAReview": "Write a review",
+  "howLongHaveYouHadThisTreatment": "How long have you had this treatment?",
+  "willYouRecommendThisTreatment": "Will you recommend this treatment?",
+  "willYouRepurchaseThisTreatment": "Will you repurchase this treatment?",
+  "tellUsAboutYourExperienceAfterThisTreatment": "Tell us about your experience after this treatment",
+  "attention": "Attention",
+  "letsGiveItAFinalCheck": "Let's give it a final check. Once it's live, editing won't be possible."
 }
