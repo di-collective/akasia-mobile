@@ -1,21 +1,35 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/entities/profile_entity.dart';
+import '../../../domain/usecases/update_profile_usecase.dart';
 
 part 'edit_information_state.dart';
 
 class EditInformationCubit extends Cubit<EditInformationState> {
-  EditInformationCubit() : super(EditInformationInitial());
+  final UpdateProfileUseCase updateProfileUseCase;
 
-  Future<void> saveEditInformation() async {
+  EditInformationCubit({
+    required this.updateProfileUseCase,
+  }) : super(EditInformationInitial());
+
+  Future<void> saveEditInformation({
+    required ProfileEntity profile,
+  }) async {
     emit(EditInformationLoading());
 
     try {
-      // TODO: Save edit information to the server
-      await Future.delayed(const Duration(seconds: 5));
+      await updateProfileUseCase.call(
+        UpdateProfileParams(
+          profile: profile,
+        ),
+      );
 
       emit(EditInformationLoaded());
     } catch (error) {
       emit(EditInformationError(error: error));
+
+      rethrow;
     }
   }
 }

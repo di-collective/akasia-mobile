@@ -1,4 +1,4 @@
-import '../../../../../core/config/allery_config.dart';
+import '../local/allergy_config.dart';
 import '../../../../../core/utils/logger.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../models/allergy_model.dart';

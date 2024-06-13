@@ -1,43 +1,15 @@
-import 'package:equatable/equatable.dart';
+import '../../domain/entities/profile_entity.dart';
 
-class ProfileModel extends Equatable {
-  final String? userId;
-  final String? role;
-  final String? medicalId;
-  final String? name;
-  final String? countryCode;
-  final String? phone;
-  final String? nik;
-
+class ProfileModel extends ProfileEntity {
   const ProfileModel({
-    this.userId,
-    this.role,
-    this.medicalId,
-    this.name,
-    this.countryCode,
-    this.phone,
-    this.nik,
+    super.userId,
+    super.role,
+    super.medicalId,
+    super.name,
+    super.countryCode,
+    super.phone,
+    super.nik,
   });
-
-  ProfileModel copyWith({
-    String? userId,
-    String? role,
-    String? medicalId,
-    String? name,
-    String? countryCode,
-    String? phone,
-    String? nik,
-  }) {
-    return ProfileModel(
-      userId: userId ?? this.userId,
-      role: role ?? this.role,
-      medicalId: medicalId ?? this.medicalId,
-      name: name ?? this.name,
-      countryCode: countryCode ?? this.countryCode,
-      phone: phone ?? this.phone,
-      nik: nik ?? this.nik,
-    );
-  }
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
@@ -62,15 +34,4 @@ class ProfileModel extends Equatable {
       'nik': nik,
     };
   }
-
-  @override
-  List<Object?> get props => [
-        userId,
-        role,
-        medicalId,
-        name,
-        countryCode,
-        phone,
-        nik,
-      ];
 }

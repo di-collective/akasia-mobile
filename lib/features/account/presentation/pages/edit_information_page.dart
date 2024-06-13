@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,14 +21,14 @@ import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../activity_level/data/datasources/local/activity_level_local_datasource.dart';
+import '../../../activity_level/data/datasources/local/activity_level_config.dart';
 import '../../../activity_level/data/models/activity_level_model.dart';
 import '../../../country/data/models/country_model.dart';
-import '../../data/models/profile_model.dart';
+import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 
 class EditInformationPageParams {
-  final ProfileModel profile;
+  final ProfileEntity profile;
 
   EditInformationPageParams({
     required this.profile,
@@ -80,7 +81,7 @@ class __BodyState extends State<_Body> {
   final _heightTextController = TextEditingController();
   ActivityLevelModel? _selectedActivityLevel;
 
-  ProfileModel? _activeProfile;
+  ProfileEntity? _activeProfile;
 
   @override
   void initState() {
@@ -97,13 +98,22 @@ class __BodyState extends State<_Body> {
       _activeProfile = params.profile;
 
       // init controller
-      _membershipIdTextController.text = "111111"; // TODO: get from API
-
+      _membershipIdTextController.text = _activeProfile?.medicalId ?? '';
       _eKtpTextController.text = _activeProfile?.nik ?? '';
-
       _fullNameTextController.text = _activeProfile?.name ?? '';
-
       _phoneTextController.text = _activeProfile?.phone ?? '';
+      _ageTextController.text = _activeProfile?.age ?? '';
+      _dateOfBirthTextController.text = _activeProfile?.dob ?? '';
+      _selectedSex = SexTypeExtension.fromString(_activeProfile?.sex);
+      _bloodTypeTextController.text = _activeProfile?.bloodType ?? '';
+      _weightTextController.text = _activeProfile?.weight?.toString() ?? '';
+      _heightTextController.text = _activeProfile?.height?.toString() ?? '';
+      _selectedActivityLevel =
+          ActivityLevelLocalConfig.allActivityLevels.firstWhereOrNull(
+        (element) => (element.activity ?? '').isSame(
+          otherValue: _activeProfile?.activityLevel,
+        ),
+      );
     }
   }
 
@@ -168,12 +178,15 @@ class __BodyState extends State<_Body> {
                               title: context.locale.membershipId,
                               keyboardType: TextInputType.number,
                               readOnly: true,
+                              isRequired: true,
                               validator: (val) {
-                                return _membershipIdTextController
-                                    .validateOnlyNumber(
+                                return _membershipIdTextController.cannotEmpty(
                                   context: context,
-                                  isRequired: true,
                                 );
+                              },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
                               },
                             ),
                             const SizedBox(
@@ -183,14 +196,23 @@ class __BodyState extends State<_Body> {
                               controller: _eKtpTextController,
                               title: context.locale.eKtpNumber,
                               keyboardType: TextInputType.number,
-                              readOnly:
-                                  true, // TODO: if user has eKtp, disable this field
+                              readOnly: _activeProfile?.nik !=
+                                  null, // if user has eKtp, set to true
                               validator: (val) {
+                                if (_eKtpTextController.text.isEmpty &&
+                                    _activeProfile?.nik == null) {
+                                  return null;
+                                }
+
                                 return _eKtpTextController.validateKtp(
                                   context: context,
-                                  isRequired:
-                                      true, // TODO: if user has eKtp, set to true
+                                  isRequired: _activeProfile?.nik !=
+                                      null, // if user has eKtp, set to true
                                 );
+                              },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
                               },
                             ),
                             const SizedBox(
@@ -199,11 +221,16 @@ class __BodyState extends State<_Body> {
                             TextFormFieldWidget(
                               controller: _fullNameTextController,
                               title: context.locale.fullName,
+                              isRequired: true,
                               validator: (val) {
                                 return _fullNameTextController.validateName(
                                   context: context,
                                   isRequired: true,
                                 );
+                              },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
                               },
                             ),
                             const SizedBox(
@@ -221,6 +248,10 @@ class __BodyState extends State<_Body> {
                                   });
                                 }
                               },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
+                              },
                             ),
                             const SizedBox(
                               height: 20,
@@ -234,6 +265,10 @@ class __BodyState extends State<_Body> {
                                 return _ageTextController.validateOnlyNumber(
                                   context: context,
                                 );
+                              },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
                               },
                             ),
                             const SizedBox(
@@ -261,24 +296,21 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            SizedBox(
-                              width: context.width,
-                              child: Row(
-                                children: SexType.values.map((sexType) {
-                                  return RadioWidget(
-                                    title: sexType.title(context: context),
-                                    value: sexType,
-                                    groupValue: _selectedSex,
-                                    onChanged: (val) {
-                                      if (val != null && val != _selectedSex) {
-                                        setState(() {
-                                          _selectedSex = val;
-                                        });
-                                      }
-                                    },
-                                  );
-                                }).toList(),
-                              ),
+                            Row(
+                              children: SexType.values.map((sexType) {
+                                return RadioWidget(
+                                  title: sexType.title(context: context),
+                                  value: sexType,
+                                  groupValue: _selectedSex,
+                                  onChanged: (val) {
+                                    if (val != null && val != _selectedSex) {
+                                      setState(() {
+                                        _selectedSex = val;
+                                      });
+                                    }
+                                  },
+                                );
+                              }).toList(),
                             ),
                             const SizedBox(
                               height: 20,
@@ -314,6 +346,10 @@ class __BodyState extends State<_Body> {
                                   isAllowComma: true,
                                 );
                               },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
+                              },
                             ),
                             const SizedBox(
                               height: 20,
@@ -329,14 +365,17 @@ class __BodyState extends State<_Body> {
                                   isAllowComma: true,
                                 );
                               },
+                              onChanged: (_) {
+                                // reload
+                                setState(() {});
+                              },
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             DropdownWidget<ActivityLevelModel>(
                               itemHeight: 72,
-                              items: sl<ActivityLevelLocalDataSource>()
-                                  .getActivityLevels()
+                              items: ActivityLevelLocalConfig.allActivityLevels
                                   .map(
                                 (activityLevel) {
                                   return DropdownMenuItem(
@@ -399,6 +438,7 @@ class __BodyState extends State<_Body> {
                               title: context.locale.activityLevel,
                               hintText: context.locale.choose,
                               selectedValue: _selectedActivityLevel,
+                              borderRadiusMenu: BorderRadius.circular(20),
                               onChanged: (option) {
                                 if (option != null &&
                                     option != _selectedActivityLevel) {
@@ -407,10 +447,9 @@ class __BodyState extends State<_Body> {
                                   });
                                 }
                               },
-                              selectedItemBuilder:
-                                  sl<ActivityLevelLocalDataSource>()
-                                      .getActivityLevels()
-                                      .map((e) {
+                              selectedItemBuilder: ActivityLevelLocalConfig
+                                  .allActivityLevels
+                                  .map((e) {
                                 return Text(
                                   _selectedActivityLevel?.activity ?? '',
                                   style: textTheme.bodyLarge.copyWith(
@@ -434,6 +473,7 @@ class __BodyState extends State<_Body> {
                     text: context.locale.save,
                     width: context.width,
                     isLoading: state is EditInformationLoading,
+                    isDisabled: _isDisabled,
                     onTap: _onSave,
                   ),
                   SizedBox(
@@ -448,6 +488,67 @@ class __BodyState extends State<_Body> {
     );
   }
 
+  bool get _isDisabled {
+    // TODO: Add mor validation form key
+
+    if (!(_activeProfile?.nik ?? '')
+        .isSame(otherValue: _eKtpTextController.text)) {
+      return false;
+    }
+
+    if (!(_activeProfile?.name ?? '')
+        .isSame(otherValue: _fullNameTextController.text)) {
+      return false;
+    }
+
+    if (!(_activeProfile?.countryCode ?? '')
+        .isSame(otherValue: _selectedCountry?.phoneCode ?? '')) {
+      return false;
+    }
+
+    if (!(_activeProfile?.phone ?? '')
+        .isSame(otherValue: _phoneTextController.text)) {
+      return false;
+    }
+
+    if (!(_activeProfile?.age ?? '')
+        .isSame(otherValue: _ageTextController.text)) {
+      return false;
+    }
+
+    if (!(_activeProfile?.dob ?? '')
+        .isSame(otherValue: _dateOfBirthTextController.text)) {
+      return false;
+    }
+
+    if (!(_selectedSex?.name ?? '')
+        .isSame(otherValue: _activeProfile?.sex ?? '')) {
+      return false;
+    }
+
+    if (!(_activeProfile?.bloodType ?? '')
+        .isSame(otherValue: _bloodTypeTextController.text)) {
+      return false;
+    }
+
+    if (!(_activeProfile?.weight?.toString() ?? '')
+        .isSame(otherValue: _weightTextController.text)) {
+      return false;
+    }
+
+    if (!(_activeProfile?.height?.toString() ?? '')
+        .isSame(otherValue: _heightTextController.text)) {
+      return false;
+    }
+
+    if (!(_selectedActivityLevel?.activity ?? '')
+        .isSame(otherValue: _activeProfile?.activityLevel ?? '')) {
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> _onSave() async {
     try {
       // validate form
@@ -455,9 +556,101 @@ class __BodyState extends State<_Body> {
         return;
       }
 
+      ProfileEntity profile = ProfileEntity(
+        userId: _activeProfile?.userId,
+      );
+
+      // nik
+      if (!(_activeProfile?.nik ?? '')
+          .isSame(otherValue: _eKtpTextController.text)) {
+        profile = profile.copyWith(
+          nik: _eKtpTextController.text,
+        );
+      }
+
+      // name
+      if (!(_activeProfile?.name ?? '')
+          .isSame(otherValue: _fullNameTextController.text)) {
+        profile = profile.copyWith(
+          name: _fullNameTextController.text,
+        );
+      }
+
+      // country code
+      if (!(_activeProfile?.countryCode ?? '')
+          .isSame(otherValue: _selectedCountry?.phoneCode ?? '')) {
+        profile = profile.copyWith(
+          countryCode: _selectedCountry?.phoneCode ?? '',
+        );
+      }
+
+      // phone number
+      if (!(_activeProfile?.phone ?? '')
+          .isSame(otherValue: _phoneTextController.text)) {
+        profile = profile.copyWith(
+          phone: _phoneTextController.text,
+        );
+      }
+
+      // age
+      if (!(_activeProfile?.age ?? '')
+          .isSame(otherValue: _ageTextController.text)) {
+        profile = profile.copyWith(
+          age: _ageTextController.text,
+        );
+      }
+
+      // date of birth
+      if (!(_activeProfile?.dob ?? '')
+          .isSame(otherValue: _dateOfBirthTextController.text)) {
+        profile = profile.copyWith(
+          dob: _dateOfBirthTextController.text,
+        );
+      }
+
+      // sex
+      if (!(_selectedSex?.name ?? '').isSame(otherValue: _activeProfile?.sex)) {
+        profile = profile.copyWith(
+          sex: _selectedSex?.name.toCapitalize(),
+        );
+      }
+
+      // blood type
+      if (!(_activeProfile?.bloodType ?? '')
+          .isSame(otherValue: _bloodTypeTextController.text)) {
+        profile = profile.copyWith(
+          bloodType: _bloodTypeTextController.text,
+        );
+      }
+
+      // weight
+      if (!(_activeProfile?.weight?.toString() ?? '')
+          .isSame(otherValue: _weightTextController.text)) {
+        profile = profile.copyWith(
+          weight: double.tryParse(_weightTextController.text),
+        );
+      }
+
+      // height
+      if (!(_activeProfile?.height.toString() ?? '')
+          .isSame(otherValue: _heightTextController.text)) {
+        profile = profile.copyWith(
+          height: double.tryParse(_heightTextController.text),
+        );
+      }
+
+      // activity level
+      if (!(_activeProfile?.activityLevel ?? '')
+          .isSame(otherValue: _selectedActivityLevel?.activity ?? '')) {
+        profile = profile.copyWith(
+          activityLevel: _selectedActivityLevel?.activity ?? '',
+        );
+      }
+
       // save to API
-      await BlocProvider.of<EditInformationCubit>(context)
-          .saveEditInformation();
+      await BlocProvider.of<EditInformationCubit>(context).saveEditInformation(
+        profile: profile,
+      );
 
       // show toast
       context.showToast(
@@ -465,7 +658,25 @@ class __BodyState extends State<_Body> {
         message: context.locale.successEditInformation,
       );
 
-      // TODO: refresh get profile information
+      // refresh get profile information
+      // BlocProvider.of<ProfileCubit>(context).getProfile();
+
+      // update active profile
+      setState(() {
+        _activeProfile = _activeProfile?.copyWith(
+          nik: profile.nik,
+          name: profile.name,
+          countryCode: profile.countryCode,
+          phone: profile.phone,
+          age: profile.age,
+          dob: profile.dob,
+          sex: profile.sex,
+          bloodType: profile.bloodType,
+          weight: profile.weight,
+          height: profile.height,
+          activityLevel: profile.activityLevel,
+        );
+      });
     } catch (error) {
       context.showToast(
         type: ToastType.error,

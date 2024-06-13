@@ -56,6 +56,9 @@ class NotificationItemWidget extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        width: 8,
+                      ),
                       ConstrainedBox(
                         constraints: BoxConstraints(
                           maxWidth: context.width * 0.22,

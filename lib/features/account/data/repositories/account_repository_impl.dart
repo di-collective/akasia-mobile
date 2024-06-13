@@ -3,9 +3,9 @@ import 'dart:io';
 import '../../../../core/common/exception.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../auth/data/datasources/local/auth_local_datasource.dart';
+import '../../domain/entities/profile_entity.dart';
 import '../../domain/repositories/account_repository.dart';
 import '../datasources/remote/account_remote_datasource.dart';
-import '../models/profile_model.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   final NetworkInfo networkInfo;
@@ -19,7 +19,7 @@ class AccountRepositoryImpl implements AccountRepository {
   });
 
   @override
-  Future<ProfileModel> getProfile() async {
+  Future<ProfileEntity> getProfile() async {
     if (await networkInfo.isConnected) {
       try {
         final accessToken = authLocalDataSource.getAccessToken();
@@ -63,6 +63,38 @@ class AccountRepositoryImpl implements AccountRepository {
         await accountRemoteDataSource.changeProfilePicture(
           accessToken: accessToken,
           image: image,
+        );
+      } on AuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
+  Future<void> updateProfile({
+    required ProfileEntity profile,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final accessToken = authLocalDataSource.getAccessToken();
+        if (accessToken == null) {
+          throw const AuthException(
+            code: 'access-token-not-found',
+          );
+        }
+
+        await accountRemoteDataSource.updateProfile(
+          accessToken: accessToken,
+          profile: profile,
         );
       } on AuthException catch (error) {
         throw AuthException(

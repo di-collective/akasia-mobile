@@ -157,4 +157,10 @@ extension StringExtension on String {
       return {};
     }
   }
+
+  bool isSame({
+    required String? otherValue,
+  }) {
+    return toLowerCase() == otherValue?.toLowerCase();
+  }
 }

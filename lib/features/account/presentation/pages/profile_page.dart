@@ -9,10 +9,8 @@ import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
-import '../../data/models/allergy_model.dart';
 import '../../data/models/emergency_contact_model.dart';
-import '../../data/models/profile_model.dart';
-import '../cubit/allergies/allergies_cubit.dart';
+import '../../domain/entities/profile_entity.dart';
 import '../cubit/emergency_contact/emergency_contact_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
 import '../widgets/profile_detail_item_widget.dart';
@@ -36,22 +34,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _init() async {
-    final allergiesState = BlocProvider.of<AllergiesCubit>(context).state;
-    if (allergiesState is! AllergiesLoaded) {
-      // if state is not loaded, get data
-      _onGetAllergies();
-    }
-
     final emergencyContactState =
         BlocProvider.of<EmergencyContactCubit>(context).state;
     if (emergencyContactState is! EmergencyContactLoaded) {
       // if state is not loaded, get data
       _onGetEmergencyContact();
     }
-  }
-
-  Future<void> _onGetAllergies() async {
-    await BlocProvider.of<AllergiesCubit>(context).getAllergies();
   }
 
   Future<void> _onGetEmergencyContact() async {
@@ -140,6 +128,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   String? nik;
                   String? name;
                   String? phoneNumber;
+                  String? age;
+                  String? dob;
+                  String? sex;
+                  String? bloodType;
+                  String? weight;
+                  String? height;
+                  String? activityLevel;
                   if (state is ProfileLoaded) {
                     final profile = state.profile;
 
@@ -148,6 +143,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     name = profile.name;
                     phoneNumber =
                         "${profile.countryCode ?? ''}${profile.phone ?? ''}";
+                    if (profile.age != null) {
+                      age = '${profile.age} yo';
+                    }
+                    dob = profile.dob;
+                    sex = profile.sex;
+                    bloodType = profile.bloodType;
+                    if (profile.weight != null) {
+                      weight = '${profile.weight} kgs';
+                    }
+                    if (profile.height != null) {
+                      height = '${profile.height} cm';
+                    }
+                    activityLevel = profile.activityLevel;
                   }
 
                   return Column(
@@ -194,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.age,
-                        value: '34 yo',
+                        value: age,
                       ),
                       Divider(
                         height: 0,
@@ -203,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.dob,
-                        value: '11-01-1990',
+                        value: dob,
                       ),
                       Divider(
                         height: 0,
@@ -212,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.sex,
-                        value: 'Male',
+                        value: sex,
                       ),
                       Divider(
                         height: 0,
@@ -221,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.bloodType,
-                        value: 'B',
+                        value: bloodType,
                       ),
                       Divider(
                         height: 0,
@@ -230,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.weight,
-                        value: '52 kgs',
+                        value: weight,
                       ),
                       Divider(
                         height: 0,
@@ -239,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.height,
-                        value: '170 cm',
+                        value: height,
                       ),
                       Divider(
                         height: 0,
@@ -248,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.activityLevel,
-                        value: 'Sedentary',
+                        value: activityLevel,
                       ),
                     ],
                   );
@@ -258,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 40,
             ),
-            BlocBuilder<AllergiesCubit, AllergiesState>(
+            BlocBuilder<ProfileCubit, ProfileState>(
               builder: (context, state) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,11 +278,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: colorScheme.onSurfaceDim,
                       ),
                     ),
-                    if (state is AllergiesLoaded) ...[
+                    if (state is ProfileLoaded) ...[
                       GestureDetector(
                         onTap: () {
                           _onEditAllergies(
-                            allergies: state.allergies,
+                            profile: state.profile,
                           );
                         },
                         child: Text(
@@ -302,10 +310,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     borderRadius: BorderRadius.circular(20),
                     color: colorScheme.white,
                   ),
-                  child: BlocBuilder<AllergiesCubit, AllergiesState>(
+                  child: BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
-                      if (state is AllergiesLoaded) {
-                        final allergies = state.allergies;
+                      if (state is ProfileLoaded) {
+                        List<String> allergies = [];
+                        final profile = state.profile;
+                        if (profile.allergies != null) {
+                          allergies = profile.allergies!.split(',');
+                        }
+
+                        if (allergies.isEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              context.locale.empty(context.locale.allergies),
+                              maxLines: 5,
+                              textAlign: TextAlign.center,
+                              style: textTheme.bodyMedium.copyWith(
+                                color: colorScheme.onSurfaceDim,
+                              ),
+                            ),
+                          );
+                        }
 
                         return Wrap(
                           runSpacing: 3,
@@ -313,12 +339,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: allergies.map((allergy) {
                             return Chip(
                               label: Text(
-                                (allergy.allergy ?? '').toCapitalize(),
+                                allergy.toCapitalizes(),
                               ),
                             );
                           }).toList(),
                         );
-                      } else if (state is AllergiesError) {
+                      } else if (state is ProfileError) {
                         return Center(
                           child: Text(
                             state.error.message(context),
@@ -478,7 +504,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _onEditInformation(ProfileModel profile) {
+  void _onEditInformation(ProfileEntity profile) {
     // go to edit information page
     context.goNamed(
       AppRoute.editInformation.name,
@@ -489,13 +515,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _onEditAllergies({
-    required List<AllergyModel> allergies,
+    required ProfileEntity profile,
   }) {
     // go to edit allergies page
     context.goNamed(
       AppRoute.editAllergies.name,
       extra: EditAllergiesPageParams(
-        allergies: allergies,
+        profile: profile,
       ),
     );
   }

@@ -164,6 +164,7 @@ class __BodyState extends State<_Body> {
                                   _relationshipTextController.text.isEmpty
                                       ? null
                                       : _relationshipTextController.text,
+                              borderRadiusMenu: BorderRadius.circular(8),
                               onChanged: (option) {
                                 if (option != null &&
                                     option !=

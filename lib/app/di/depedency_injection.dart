@@ -34,7 +34,7 @@ import '../../features/account/domain/usecases/edit_emergency_contact_usecase.da
 import '../../features/account/domain/usecases/get_allergies_usecase.dart';
 import '../../features/account/domain/usecases/get_emergency_contact_usecase.dart';
 import '../../features/account/domain/usecases/get_profile_usecase.dart';
-import '../../features/account/presentation/cubit/allergies/allergies_cubit.dart';
+import '../../features/account/domain/usecases/update_profile_usecase.dart';
 import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
 import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
@@ -43,7 +43,6 @@ import '../../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_password/change_password_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_phone_number/change_phone_number_cubit.dart';
 import '../../features/account_setting/presentation/cubit/deactive_account/deactive_account_cubit.dart';
-import '../../features/activity_level/data/datasources/local/activity_level_local_datasource.dart';
 import '../../features/auth/data/datasources/local/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/local/config_local_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
@@ -440,18 +439,22 @@ Future<void> _account() async {
       accountRepository: sl(),
     );
   });
+  sl.registerLazySingleton<UpdateProfileUseCase>(() {
+    return UpdateProfileUseCase(
+      accountRepository: sl(),
+    );
+  });
 
   // cubit
   sl.registerFactory<EditInformationCubit>(() {
-    return EditInformationCubit();
-  });
-  sl.registerFactory<AllergiesCubit>(() {
-    return AllergiesCubit(
-      getAllergiesUseCase: sl(),
+    return EditInformationCubit(
+      updateProfileUseCase: sl(),
     );
   });
   sl.registerFactory<EditAllergiesCubit>(() {
-    return EditAllergiesCubit();
+    return EditAllergiesCubit(
+      updateProfileUseCase: sl(),
+    );
   });
   sl.registerFactory<EmergencyContactCubit>(() {
     return EmergencyContactCubit(
@@ -470,12 +473,7 @@ Future<void> _account() async {
   });
 }
 
-Future<void> _activityLevel() async {
-  // data source
-  sl.registerLazySingleton<ActivityLevelLocalDataSource>(() {
-    return ActivityLevelLocalDataSourceImpl();
-  });
-}
+Future<void> _activityLevel() async {}
 
 Future<void> _accountSettings() async {
   // Cubit

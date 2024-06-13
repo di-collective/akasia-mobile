@@ -1,12 +1,7 @@
 import '../../models/activity_level_model.dart';
 
-abstract class ActivityLevelLocalDataSource {
-  List<ActivityLevelModel> getActivityLevels();
-}
-
-class ActivityLevelLocalDataSourceImpl implements ActivityLevelLocalDataSource {
-  @override
-  List<ActivityLevelModel> getActivityLevels() {
+class ActivityLevelLocalConfig {
+  static List<ActivityLevelModel> get allActivityLevels {
     return [
       const ActivityLevelModel(
         id: '1',

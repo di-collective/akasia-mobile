@@ -30,6 +30,7 @@ extension DateTimeExtension on DateTime {
   }
 
   String get toDateApi {
-    return DateFormat('yyyy-MM-dd').format(this);
+    // expected date format on string 2006-01-02T15:04:05Z
+    return DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(this);
   }
 }

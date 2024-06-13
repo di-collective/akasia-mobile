@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:akasia365mc/features/account/domain/entities/profile_entity.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -17,6 +18,10 @@ abstract class AccountRemoteDataSource {
   Future<void> changeProfilePicture({
     required String accessToken,
     required File image,
+  });
+  Future<void> updateProfile({
+    required String accessToken,
+    required ProfileEntity profile,
   });
 }
 
@@ -95,6 +100,42 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       Logger.success('changeProfilePicture result: $result');
     } catch (error) {
       Logger.error('changeProfilePicture error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateProfile({
+    required String accessToken,
+    required ProfileEntity profile,
+  }) async {
+    try {
+      Logger.info('updateProfile accessToken: $accessToken, profile: $profile');
+
+      final result = await appHttpClient.patch(
+        url: "${EnvConfig.baseAkasiaApiUrl}/profile/${profile.userId}",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        data: {
+          'age': profile.age,
+          'dob': profile.dob,
+          'sex': profile.sex,
+          'blood_type': profile.bloodType,
+          'weight': profile.weight,
+          'height': profile.height,
+          'activity_level': profile.activityLevel,
+          'allergies': profile.allergies,
+          'ec_relation': profile.ecRelation,
+          'ec_name': profile.name,
+          'ec_country_code': profile.countryCode,
+          'ec_phone': profile.phone,
+        },
+      );
+      Logger.success('updateProfile result: $result');
+    } catch (error) {
+      Logger.error('updateProfile error: $error');
 
       rethrow;
     }

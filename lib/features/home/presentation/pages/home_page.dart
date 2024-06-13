@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                             HomeDashboardItemWidget(
                               iconSvgPath: AssetIconsPath.icPoint,
                               title: context.locale.myRewardPoints,
-                              description: "2.900pts",
+                              description: "0 pts",
                               onTap: _onMyRewardPoints,
                             ),
                             const Spacer(),

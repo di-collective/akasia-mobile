@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'build_context_extension.dart';
+import 'string_extension.dart';
 
 enum SexType {
   male,
@@ -17,5 +19,15 @@ extension SexTypeExtension on SexType {
       case SexType.male:
         return context?.locale.female ?? "Female";
     }
+  }
+
+  static SexType? fromString(String? value) {
+    if (value == null) {
+      return null;
+    }
+
+    return SexType.values.firstWhereOrNull(
+      (element) => element.name.isSame(otherValue: value),
+    );
   }
 }

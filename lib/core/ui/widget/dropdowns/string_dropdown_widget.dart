@@ -20,6 +20,7 @@ class StringDropdownWidget extends DropdownWidget<String> {
     super.isLoading,
     super.backgroundColor,
     super.isRequired,
+    super.borderRadiusMenu,
   }) : super(
           onChanged: (value) {
             if (onChanged != null) {

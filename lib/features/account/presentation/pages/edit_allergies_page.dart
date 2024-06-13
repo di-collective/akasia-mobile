@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../../core/utils/service_locator.dart';
-import '../../../../core/config/allery_config.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -13,15 +11,18 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dropdowns/dropdown_widget.dart';
-import '../../data/models/allergy_model.dart';
-import '../cubit/allergies/allergies_cubit.dart';
+import '../../../../core/utils/service_locator.dart';
+import '../../data/datasources/local/allergy_config.dart';
+import '../../domain/entities/allergy_entity.dart';
+import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_allergies/edit_allergies_cubit.dart';
+import '../cubit/profile/profile_cubit.dart';
 
 class EditAllergiesPageParams {
-  final List<AllergyModel>? allergies;
+  final ProfileEntity? profile;
 
   EditAllergiesPageParams({
-    required this.allergies,
+    required this.profile,
   });
 }
 
@@ -60,8 +61,8 @@ class _Body<T> extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
-  List<AllergyModel> activeMyAllergies = [];
-  List<AllergyModel> newMyAllergies = [];
+  List<String> activeMyAllergies = [];
+  List<String> newMyAllergies = [];
 
   @override
   void initState() {
@@ -71,12 +72,18 @@ class __BodyState extends State<_Body> {
   }
 
   void _init() {
-    // set my allergies
-    final paramsAllergies =
-        (widget.params as EditAllergiesPageParams).allergies;
-    if (paramsAllergies != null) {
-      activeMyAllergies = List.from(paramsAllergies);
-      newMyAllergies = List.from(paramsAllergies);
+    // init default allergies
+    final params = widget.params;
+    if (params is EditAllergiesPageParams) {
+      final paramsAllergies = params.profile?.allergies;
+      if (paramsAllergies != null) {
+        final allergies = paramsAllergies.split(',').map((allergy) {
+          return allergy;
+        }).toList();
+
+        activeMyAllergies = List.from(allergies);
+        newMyAllergies = List.from(allergies);
+      }
     }
   }
 
@@ -116,26 +123,34 @@ class __BodyState extends State<_Body> {
                       const SizedBox(
                         height: 24,
                       ),
-                      DropdownWidget<AllergyModel>(
+                      DropdownWidget<AllergyEntity>(
                         selectedValue: null,
                         hintText: context.locale.choose,
                         items: AllergyConfig.allAllergies.map((allergy) {
+                          final allergyName = allergy.allergy;
+
                           final isSelected = newMyAllergies.any(
-                            (element) => element.id == allergy.id,
+                            (element) => element.isSame(
+                              otherValue: allergyName,
+                            ),
                           );
 
                           return DropdownMenuItem(
                             value: allergy,
                             onTap: () {
+                              if (allergyName == null) {
+                                return;
+                              }
+
                               if (isSelected) {
                                 // remove on new allergies
                                 setState(() {
-                                  newMyAllergies.remove(allergy);
+                                  newMyAllergies.remove(allergyName);
                                 });
                               } else {
                                 // add on new allergies
                                 setState(() {
-                                  newMyAllergies.add(allergy);
+                                  newMyAllergies.add(allergyName);
                                 });
                               }
                             },
@@ -195,37 +210,39 @@ class __BodyState extends State<_Body> {
                         }).toList(),
                         onChanged: (val) {},
                       ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      Text(
-                        "${context.locale.listOfAllergies}?",
-                        style: textTheme.titleMedium.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurfaceDim,
+                      if (newMyAllergies.isNotEmpty) ...[
+                        const SizedBox(
+                          height: 24,
                         ),
-                      ),
-                      Wrap(
-                        runSpacing: 3,
-                        spacing: 14,
-                        children: newMyAllergies.map((allergy) {
-                          return Chip(
-                            label: Text(
-                              (allergy.allergy ?? '').toCapitalize(),
-                            ),
-                            deleteIcon: SvgPicture.asset(
-                              AssetIconsPath.icClose,
-                              height: 8,
-                            ),
-                            onDeleted: () {
-                              // remove on new allergies
-                              setState(() {
-                                newMyAllergies.remove(allergy);
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
+                        Text(
+                          "${context.locale.listOfAllergies}?",
+                          style: textTheme.titleMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurfaceDim,
+                          ),
+                        ),
+                        Wrap(
+                          runSpacing: 3,
+                          spacing: 14,
+                          children: newMyAllergies.map((allergy) {
+                            return Chip(
+                              label: Text(
+                                allergy.toCapitalizes(),
+                              ),
+                              deleteIcon: SvgPicture.asset(
+                                AssetIconsPath.icClose,
+                                height: 8,
+                              ),
+                              onDeleted: () {
+                                // remove on new allergies
+                                setState(() {
+                                  newMyAllergies.remove(allergy);
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
                       const SizedBox(
                         height: 24,
                       ),
@@ -257,9 +274,22 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onSave() async {
     try {
+      ProfileEntity? profile;
+      if (widget.params is EditAllergiesPageParams) {
+        profile = (widget.params as EditAllergiesPageParams).profile;
+      }
+      if (profile == null) {
+        return;
+      }
+
+      // copy profile
+      profile = profile.copyWith(
+        allergies: newMyAllergies.join(','),
+      );
+
       // edit allergies
       await BlocProvider.of<EditAllergiesCubit>(context).editAllergies(
-        allergies: newMyAllergies,
+        profile: profile,
       );
 
       // sho success message
@@ -274,8 +304,8 @@ class __BodyState extends State<_Body> {
       });
 
       // update allergies
-      BlocProvider.of<AllergiesCubit>(context).updateAllergies(
-        newMyAllergies,
+      BlocProvider.of<ProfileCubit>(context).emitProfileData(
+        profile,
       );
     } catch (error) {
       context.showToast(

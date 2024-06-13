@@ -81,4 +81,20 @@ extension BuildContextExtension on BuildContext {
   void get hideFullScreenLoading {
     BlocProvider.of<FullScreenLoadingCubit>(this).hide();
   }
+
+  ScreenHeightType get screenHeightType {
+    if (height < 600) {
+      return ScreenHeightType.small;
+    } else if (height < 800) {
+      return ScreenHeightType.medium;
+    } else {
+      return ScreenHeightType.large;
+    }
+  }
+}
+
+enum ScreenHeightType {
+  small,
+  medium,
+  large,
 }

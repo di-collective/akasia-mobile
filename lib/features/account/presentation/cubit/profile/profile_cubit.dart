@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/usecases/usecase.dart';
-import '../../../data/models/profile_model.dart';
+import '../../../domain/entities/profile_entity.dart';
 import '../../../domain/usecases/get_profile_usecase.dart';
 
 part 'profile_state.dart';
@@ -33,5 +33,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       rethrow;
     }
+  }
+
+  void emitProfileData(ProfileEntity profile) {
+    emit(ProfileLoaded(profile: profile));
   }
 }
