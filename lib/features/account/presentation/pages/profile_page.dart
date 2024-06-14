@@ -211,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       ProfileDetailItemWidget(
                         label: context.locale.dob,
-                        value: dob,
+                        value: dob?.formatDate(),
                       ),
                       Divider(
                         height: 0,

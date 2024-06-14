@@ -103,8 +103,10 @@ extension TextEditingControllerExtension on TextEditingController {
       }
     }
 
-    if (!text.isKtp) {
-      return context.locale.invalidEKtp;
+    if (text.isNotEmpty) {
+      if (!text.isKtp) {
+        return context.locale.invalidEKtp;
+      }
     }
 
     return null;

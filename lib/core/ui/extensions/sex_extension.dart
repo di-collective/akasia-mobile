@@ -14,9 +14,9 @@ extension SexTypeExtension on SexType {
     required BuildContext? context,
   }) {
     switch (this) {
-      case SexType.female:
-        return context?.locale.male ?? "Male";
       case SexType.male:
+        return context?.locale.male ?? "Male";
+      case SexType.female:
         return context?.locale.female ?? "Female";
     }
   }

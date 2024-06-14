@@ -26,6 +26,7 @@ import '../../../activity_level/data/models/activity_level_model.dart';
 import '../../../country/data/models/country_model.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
+import '../cubit/profile/profile_cubit.dart';
 
 class EditInformationPageParams {
   final ProfileEntity profile;
@@ -222,6 +223,7 @@ class __BodyState extends State<_Body> {
                               controller: _fullNameTextController,
                               title: context.locale.fullName,
                               isRequired: true,
+                              readOnly: true,
                               validator: (val) {
                                 return _fullNameTextController.validateName(
                                   context: context,
@@ -339,7 +341,10 @@ class __BodyState extends State<_Body> {
                               controller: _weightTextController,
                               title: context.locale.weight,
                               suffixText: "kg",
-                              keyboardType: TextInputType.number,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
                               validator: (val) {
                                 return _weightTextController.validateOnlyNumber(
                                   context: context,
@@ -358,7 +363,10 @@ class __BodyState extends State<_Body> {
                               controller: _heightTextController,
                               title: context.locale.height,
                               suffixText: "cm",
-                              keyboardType: TextInputType.number,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
                               validator: (val) {
                                 return _heightTextController.validateOnlyNumber(
                                   context: context,
@@ -489,15 +497,18 @@ class __BodyState extends State<_Body> {
   }
 
   bool get _isDisabled {
-    // TODO: Add mor validation form key
-
-    if (!(_activeProfile?.nik ?? '')
-        .isSame(otherValue: _eKtpTextController.text)) {
-      return false;
+    // validate form
+    if (_formKey.currentState?.validate() != true) {
+      return true;
     }
 
-    if (!(_activeProfile?.name ?? '')
-        .isSame(otherValue: _fullNameTextController.text)) {
+    // validate by active profile
+    return _validateByActiveProfile;
+  }
+
+  bool get _validateByActiveProfile {
+    if (!(_activeProfile?.nik ?? '')
+        .isSame(otherValue: _eKtpTextController.text)) {
       return false;
     }
 
@@ -556,6 +567,9 @@ class __BodyState extends State<_Body> {
         return;
       }
 
+      // close keyboard
+      context.closeKeyboard;
+
       ProfileEntity profile = ProfileEntity(
         userId: _activeProfile?.userId,
       );
@@ -565,14 +579,6 @@ class __BodyState extends State<_Body> {
           .isSame(otherValue: _eKtpTextController.text)) {
         profile = profile.copyWith(
           nik: _eKtpTextController.text,
-        );
-      }
-
-      // name
-      if (!(_activeProfile?.name ?? '')
-          .isSame(otherValue: _fullNameTextController.text)) {
-        profile = profile.copyWith(
-          name: _fullNameTextController.text,
         );
       }
 
@@ -627,7 +633,7 @@ class __BodyState extends State<_Body> {
       if (!(_activeProfile?.weight?.toString() ?? '')
           .isSame(otherValue: _weightTextController.text)) {
         profile = profile.copyWith(
-          weight: double.tryParse(_weightTextController.text),
+          weight: _weightTextController.text.parseToDouble,
         );
       }
 
@@ -635,7 +641,7 @@ class __BodyState extends State<_Body> {
       if (!(_activeProfile?.height.toString() ?? '')
           .isSame(otherValue: _heightTextController.text)) {
         profile = profile.copyWith(
-          height: double.tryParse(_heightTextController.text),
+          height: _heightTextController.text.parseToDouble,
         );
       }
 
@@ -658,9 +664,6 @@ class __BodyState extends State<_Body> {
         message: context.locale.successEditInformation,
       );
 
-      // refresh get profile information
-      // BlocProvider.of<ProfileCubit>(context).getProfile();
-
       // update active profile
       setState(() {
         _activeProfile = _activeProfile?.copyWith(
@@ -677,6 +680,13 @@ class __BodyState extends State<_Body> {
           activityLevel: profile.activityLevel,
         );
       });
+
+      // update profile state
+      if (_activeProfile != null) {
+        BlocProvider.of<ProfileCubit>(context).emitProfileData(
+          _activeProfile!,
+        );
+      }
     } catch (error) {
       context.showToast(
         type: ToastType.error,

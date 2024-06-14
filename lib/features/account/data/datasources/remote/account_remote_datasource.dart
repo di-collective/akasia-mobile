@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:akasia365mc/features/account/domain/entities/profile_entity.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -9,6 +8,7 @@ import '../../../../../core/config/env_config.dart';
 import '../../../../../core/network/http/app_http_client.dart';
 import '../../../../../core/ui/extensions/file_exception.dart';
 import '../../../../../core/utils/logger.dart';
+import '../../../domain/entities/profile_entity.dart';
 import '../../models/profile_model.dart';
 
 abstract class AccountRemoteDataSource {
@@ -127,8 +127,8 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
           'height': profile.height,
           'activity_level': profile.activityLevel,
           'allergies': profile.allergies,
+          'ec_name': profile.ecName,
           'ec_relation': profile.ecRelation,
-          'ec_name': profile.name,
           'ec_country_code': profile.countryCode,
           'ec_phone': profile.phone,
         },

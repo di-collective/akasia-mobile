@@ -16,7 +16,10 @@ class ProfileEntity extends Equatable {
   final double? height;
   final String? activityLevel;
   final String? allergies;
+  final String? ecName;
   final String? ecRelation;
+  final String? ecCountryCode;
+  final String? ecPhone;
 
   const ProfileEntity({
     this.userId,
@@ -34,7 +37,10 @@ class ProfileEntity extends Equatable {
     this.height,
     this.activityLevel,
     this.allergies,
+    this.ecName,
     this.ecRelation,
+    this.ecCountryCode,
+    this.ecPhone,
   });
 
   ProfileEntity copyWith({
@@ -53,7 +59,10 @@ class ProfileEntity extends Equatable {
     double? height,
     String? activityLevel,
     String? allergies,
+    String? ecName,
     String? ecRelation,
+    String? ecCountryCode,
+    String? ecPhone,
   }) {
     return ProfileEntity(
       userId: userId ?? this.userId,
@@ -71,7 +80,10 @@ class ProfileEntity extends Equatable {
       height: height ?? this.height,
       activityLevel: activityLevel ?? this.activityLevel,
       allergies: allergies ?? this.allergies,
+      ecName: ecName ?? this.ecName,
       ecRelation: ecRelation ?? this.ecRelation,
+      ecCountryCode: ecCountryCode ?? this.ecCountryCode,
+      ecPhone: ecPhone ?? this.ecPhone,
     );
   }
 
@@ -92,6 +104,9 @@ class ProfileEntity extends Equatable {
         height,
         activityLevel,
         allergies,
+        ecName,
         ecRelation,
+        ecCountryCode,
+        ecPhone,
       ];
 }
