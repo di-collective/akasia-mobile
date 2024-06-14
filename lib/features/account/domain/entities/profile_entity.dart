@@ -44,6 +44,7 @@ class ProfileEntity extends Equatable {
   });
 
   ProfileEntity copyWith({
+    bool? isForceAllergies,
     String? userId,
     String? role,
     String? medicalId,
@@ -79,7 +80,8 @@ class ProfileEntity extends Equatable {
       weight: weight ?? this.weight,
       height: height ?? this.height,
       activityLevel: activityLevel ?? this.activityLevel,
-      allergies: allergies ?? this.allergies,
+      allergies:
+          (isForceAllergies == true) ? allergies : allergies ?? this.allergies,
       ecName: ecName ?? this.ecName,
       ecRelation: ecRelation ?? this.ecRelation,
       ecCountryCode: ecCountryCode ?? this.ecCountryCode,

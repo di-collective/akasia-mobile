@@ -274,22 +274,26 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onSave() async {
     try {
-      ProfileEntity? profile;
+      ProfileEntity? newProfile;
       if (widget.params is EditAllergiesPageParams) {
-        profile = (widget.params as EditAllergiesPageParams).profile;
+        newProfile = (widget.params as EditAllergiesPageParams).profile;
       }
-      if (profile == null) {
+      if (newProfile == null) {
         return;
       }
 
-      // copy profile
-      profile = profile.copyWith(
-        allergies: newMyAllergies.join(','),
+      // set allergies
+      newProfile = newProfile.copyWith(
+        isForceAllergies: true,
+        allergies: (newMyAllergies.isEmpty) ? null : newMyAllergies.join(','),
       );
 
       // edit allergies
       await BlocProvider.of<EditAllergiesCubit>(context).editAllergies(
-        profile: profile,
+        profile: ProfileEntity(
+          userId: newProfile.userId,
+          allergies: newProfile.allergies,
+        ),
       );
 
       // sho success message
@@ -303,9 +307,9 @@ class __BodyState extends State<_Body> {
         activeMyAllergies = List.from(newMyAllergies);
       });
 
-      // update allergies
+      // update allergies state
       BlocProvider.of<ProfileCubit>(context).emitProfileData(
-        profile,
+        newProfile,
       );
     } catch (error) {
       context.showToast(
