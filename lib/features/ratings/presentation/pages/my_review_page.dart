@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
-import '../../../../core/ui/widget/dialogs/snack_bar.dart';
 import '../../domain/entities/review_entity.dart';
 import '../cubit/my_review/my_review_cubit.dart';
 import '../cubit/my_review/my_review_state.dart';
@@ -102,8 +102,8 @@ class _MyReviewPageState extends State<MyReviewPage> {
     final isDeleted = await context.cubit<MyReviewCubit>().onDeleteReview(id);
 
     if (isDeleted) {
-      AppSnackBar.success(
-        context,
+      context.showToast(
+        type: ToastType.success,
         message: context.locale.theReviewSuccessfullyDeleted,
       );
     }
