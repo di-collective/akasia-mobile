@@ -8,7 +8,6 @@ import '../core/ui/theme/theme.dart';
 import '../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import '../core/ui/widget/loadings/full_screen_loading_widget.dart';
 import '../core/utils/service_locator.dart';
-import '../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
 import '../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
@@ -36,9 +35,6 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<BottomNavigationCubit>(),
-        ),
-        BlocProvider(
-          create: (context) => sl<EmergencyContactCubit>(),
         ),
       ],
       child: MaterialApp.router(

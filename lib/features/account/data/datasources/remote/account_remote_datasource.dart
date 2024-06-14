@@ -129,8 +129,8 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
           'allergies': profile.allergies,
           'ec_name': profile.ecName,
           'ec_relation': profile.ecRelation,
-          'ec_country_code': profile.countryCode,
-          'ec_phone': profile.phone,
+          'ec_country_code': profile.ecCountryCode,
+          'ec_phone': profile.ecPhone,
         },
       );
       Logger.success('updateProfile result: $result');

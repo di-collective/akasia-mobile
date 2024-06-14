@@ -1,24 +1,39 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/usecases/edit_emergency_contact_usecase.dart';
+import '../../../domain/entities/profile_entity.dart';
+import '../../../domain/usecases/update_profile_usecase.dart';
 
 part 'edit_emergency_contact_state.dart';
 
 class EditEmergencyContactCubit extends Cubit<EditEmergencyContactState> {
-  final EditEmergencyContactUseCase editEmergencyContactUseCase;
+  final UpdateProfileUseCase updateProfileUseCase;
 
   EditEmergencyContactCubit({
-    required this.editEmergencyContactUseCase,
+    required this.updateProfileUseCase,
   }) : super(EditEmergencyContactInitial());
 
   Future<void> editEmergencyContact({
-    required EditEmergencyContactUseCaseParams params,
+    required String? userId,
+    required String? ecRelation,
+    required String? ecName,
+    required String? ecCountryCode,
+    required String? ecPhone,
   }) async {
     try {
       emit(EditEmergencyContactLoading());
 
-      await editEmergencyContactUseCase(params);
+      await updateProfileUseCase(
+        UpdateProfileParams(
+          profile: ProfileEntity(
+            userId: userId,
+            ecRelation: ecRelation,
+            ecName: ecName,
+            ecCountryCode: ecCountryCode,
+            ecPhone: ecPhone,
+          ),
+        ),
+      );
 
       emit(EditEmergencyContactLoaded());
     } catch (error) {

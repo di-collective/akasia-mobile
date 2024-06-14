@@ -14,14 +14,18 @@ class EditAllergiesCubit extends Cubit<EditAllergiesState> {
   }) : super(EditAllergiesInitial());
 
   Future<void> editAllergies({
-    required ProfileEntity profile,
+    required String? userId,
+    required String? allergies,
   }) async {
     try {
       emit(EditAllergiesLoading());
 
       await updateProfileUseCase.call(
         UpdateProfileParams(
-          profile: profile,
+          profile: ProfileEntity(
+            userId: userId,
+            allergies: allergies,
+          ),
         ),
       );
 

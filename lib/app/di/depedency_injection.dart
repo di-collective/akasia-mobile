@@ -22,23 +22,17 @@ import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_load
 import '../../core/utils/service_locator.dart';
 import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
 import '../../features/account/data/datasources/remote/allergy_remote_datasource.dart';
-import '../../features/account/data/datasources/remote/emergency_contact_remote_datasource.dart';
 import '../../features/account/data/repositories/account_repository_impl.dart';
 import '../../features/account/data/repositories/allergy_repository_impl.dart';
-import '../../features/account/data/repositories/emergency_contact_repository.dart';
 import '../../features/account/domain/repositories/account_repository.dart';
 import '../../features/account/domain/repositories/allergy_repository.dart';
-import '../../features/account/domain/repositories/emergency_contact_repository.dart';
 import '../../features/account/domain/usecases/change_profile_picture_usecase.dart';
-import '../../features/account/domain/usecases/edit_emergency_contact_usecase.dart';
 import '../../features/account/domain/usecases/get_allergies_usecase.dart';
-import '../../features/account/domain/usecases/get_emergency_contact_usecase.dart';
 import '../../features/account/domain/usecases/get_profile_usecase.dart';
 import '../../features/account/domain/usecases/update_profile_usecase.dart';
 import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
 import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
-import '../../features/account/presentation/cubit/emergency_contact/emergency_contact_cubit.dart';
 import '../../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_password/change_password_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_phone_number/change_phone_number_cubit.dart';
@@ -384,11 +378,6 @@ Future<void> _account() async {
       appHttpClient: sl(),
     );
   });
-  sl.registerLazySingleton<EmergencyContactRemoteDataSource>(() {
-    return EmergencyContactRemoteDataSourceImpl(
-      appHttpClient: sl(),
-    );
-  });
 
   // repository
   sl.registerLazySingleton<AccountRepository>(() {
@@ -405,13 +394,6 @@ Future<void> _account() async {
       allergyRemoteDataSource: sl(),
     );
   });
-  sl.registerLazySingleton<EmergencyContactRepository>(() {
-    return EmergencyContactRepositoryImpl(
-      networkInfo: sl(),
-      authLocalDataSource: sl(),
-      emergencyContactRemoteDataSource: sl(),
-    );
-  });
 
   // use case
   sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
@@ -422,16 +404,6 @@ Future<void> _account() async {
   sl.registerLazySingleton<GetAllergiesUseCase>(() {
     return GetAllergiesUseCase(
       allergyRepository: sl(),
-    );
-  });
-  sl.registerLazySingleton<EditEmergencyContactUseCase>(() {
-    return EditEmergencyContactUseCase(
-      emergencyContactRepository: sl(),
-    );
-  });
-  sl.registerLazySingleton<GetEmergencyContactUseCase>(() {
-    return GetEmergencyContactUseCase(
-      emergencyContactRepository: sl(),
     );
   });
   sl.registerLazySingleton<GetProfileUseCase>(() {
@@ -456,14 +428,9 @@ Future<void> _account() async {
       updateProfileUseCase: sl(),
     );
   });
-  sl.registerFactory<EmergencyContactCubit>(() {
-    return EmergencyContactCubit(
-      getEmergencyContactUseCase: sl(),
-    );
-  });
   sl.registerFactory<EditEmergencyContactCubit>(() {
     return EditEmergencyContactCubit(
-      editEmergencyContactUseCase: sl(),
+      updateProfileUseCase: sl(),
     );
   });
   sl.registerFactory<ProfileCubit>(() {

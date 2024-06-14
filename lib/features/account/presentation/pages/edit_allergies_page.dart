@@ -290,10 +290,8 @@ class __BodyState extends State<_Body> {
 
       // edit allergies
       await BlocProvider.of<EditAllergiesCubit>(context).editAllergies(
-        profile: ProfileEntity(
-          userId: newProfile.userId,
-          allergies: newProfile.allergies,
-        ),
+        userId: newProfile.userId,
+        allergies: newProfile.allergies,
       );
 
       // sho success message
