@@ -20,20 +20,7 @@ import '../../core/ui/widget/dialogs/toast_info.dart';
 import '../../core/ui/widget/loadings/cubit/countdown/countdown_cubit.dart';
 import '../../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
 import '../../core/utils/service_locator.dart';
-import '../../features/account/data/datasources/remote/account_remote_datasource.dart';
-import '../../features/account/data/datasources/remote/allergy_remote_datasource.dart';
-import '../../features/account/data/repositories/account_repository_impl.dart';
-import '../../features/account/data/repositories/allergy_repository_impl.dart';
-import '../../features/account/domain/repositories/account_repository.dart';
-import '../../features/account/domain/repositories/allergy_repository.dart';
-import '../../features/account/domain/usecases/change_profile_picture_usecase.dart';
-import '../../features/account/domain/usecases/get_allergies_usecase.dart';
-import '../../features/account/domain/usecases/get_profile_usecase.dart';
-import '../../features/account/domain/usecases/update_profile_usecase.dart';
-import '../../features/account/presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
-import '../../features/account/presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
-import '../../features/account/presentation/cubit/edit_information/edit_information_cubit.dart';
-import '../../features/account/presentation/cubit/profile/profile_cubit.dart';
+import '../../features/account/di/depedency_injection.dart';
 import '../../features/account_setting/presentation/cubit/change_password/change_password_cubit.dart';
 import '../../features/account_setting/presentation/cubit/change_phone_number/change_phone_number_cubit.dart';
 import '../../features/account_setting/presentation/cubit/deactive_account/deactive_account_cubit.dart';
@@ -90,7 +77,7 @@ Future<void> init() async {
 
   await _main();
 
-  await _account();
+  await FutureAccountDependencies.inject();
 
   await _activityLevel();
 
@@ -365,81 +352,6 @@ Future<void> _main() async {
   // cubit
   sl.registerFactory<BottomNavigationCubit>(() {
     return BottomNavigationCubit();
-  });
-}
-
-Future<void> _account() async {
-  // data source
-  sl.registerLazySingleton<AccountRemoteDataSource>(() {
-    return AccountRemoteDataSourceImpl(
-      appHttpClient: sl(),
-      imageCompressInfo: sl(),
-    );
-  });
-  sl.registerLazySingleton<AllergyRemoteDataSource>(() {
-    return AllergyRemoteDataSourceImpl(
-      appHttpClient: sl(),
-    );
-  });
-
-  // repository
-  sl.registerLazySingleton<AccountRepository>(() {
-    return AccountRepositoryImpl(
-      networkInfo: sl(),
-      accountRemoteDataSource: sl(),
-      authLocalDataSource: sl(),
-    );
-  });
-  sl.registerLazySingleton<AllergyRepository>(() {
-    return AllergyRepositoryImpl(
-      networkInfo: sl(),
-      authLocalDataSource: sl(),
-      allergyRemoteDataSource: sl(),
-    );
-  });
-
-  // use case
-  sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
-    return ChangeProfilePictureUseCase(
-      accountRepository: sl(),
-    );
-  });
-  sl.registerLazySingleton<GetAllergiesUseCase>(() {
-    return GetAllergiesUseCase(
-      allergyRepository: sl(),
-    );
-  });
-  sl.registerLazySingleton<GetProfileUseCase>(() {
-    return GetProfileUseCase(
-      accountRepository: sl(),
-    );
-  });
-  sl.registerLazySingleton<UpdateProfileUseCase>(() {
-    return UpdateProfileUseCase(
-      accountRepository: sl(),
-    );
-  });
-
-  // cubit
-  sl.registerFactory<EditInformationCubit>(() {
-    return EditInformationCubit(
-      updateProfileUseCase: sl(),
-    );
-  });
-  sl.registerFactory<EditAllergiesCubit>(() {
-    return EditAllergiesCubit(
-      updateProfileUseCase: sl(),
-    );
-  });
-  sl.registerFactory<EditEmergencyContactCubit>(() {
-    return EditEmergencyContactCubit(
-      updateProfileUseCase: sl(),
-    );
-  });
-  sl.registerFactory<ProfileCubit>(() {
-    return ProfileCubit(
-      getProfileUseCase: sl(),
-    );
   });
 }
 
