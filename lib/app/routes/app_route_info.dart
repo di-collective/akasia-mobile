@@ -57,6 +57,15 @@ class AppRouteInfoImpl implements AppRouteInfo {
               AppRoute.faqDetails.route(),
             ],
           ),
+          AppRoute.ratings.route(
+            routes: [
+              AppRoute.giveRating.route(
+                routes: [
+                  AppRoute.writeReview.route(),
+                ]
+              ),
+            ],
+          ),
           AppRoute.helpCenter.route(),
           AppRoute.notifications.route(),
         ],

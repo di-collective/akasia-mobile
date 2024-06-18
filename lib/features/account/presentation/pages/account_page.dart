@@ -333,7 +333,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _onRatings() {
-    // TODO: Implement this method
+    context.goNamed(AppRoute.ratings.name);
   }
 
   Future<void> _onLogout() async {

@@ -21,7 +21,10 @@ import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/ratings/presentation/pages/give_rating_page.dart';
+import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
+import '../../features/ratings/presentation/pages/write_review_page.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -62,10 +65,16 @@ extension AppRouteExtension on AppRoute {
         return 'faq';
       case AppRoute.faqDetails:
         return 'faq-details';
+      case AppRoute.ratings:
+        return 'ratings';
       case AppRoute.helpCenter:
         return 'help-center';
       case AppRoute.notifications:
         return 'notifications';
+      case AppRoute.giveRating:
+        return 'give-ratings';
+      case AppRoute.writeReview:
+        return 'write-review';
     }
   }
 
@@ -121,10 +130,20 @@ extension AppRouteExtension on AppRoute {
         return FaqDetailsPage(
           params: arguments,
         );
+      case AppRoute.ratings:
+        return const RatingsPage();
       case AppRoute.helpCenter:
         return const HelpCenterPage();
       case AppRoute.notifications:
         return const NotificationsPage();
+      case AppRoute.giveRating:
+        return GiveRatingPage(
+          args: arguments,
+        );
+      case AppRoute.writeReview:
+        return WriteReviewPage(
+          args: arguments,
+        );
     }
   }
 

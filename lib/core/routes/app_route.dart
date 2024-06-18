@@ -17,6 +17,9 @@ enum AppRoute {
   successDeactiveAccount,
   faq,
   faqDetails,
+  ratings,
   helpCenter,
   notifications,
+  giveRating,
+  writeReview,
 }
