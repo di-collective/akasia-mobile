@@ -291,6 +291,9 @@ class __BodyState extends State<_Body> {
         return;
       }
 
+      // close keyboard
+      context.closeKeyboard;
+
       // relation
       String? newEcRelation;
       if (!(_activeEcRelation ?? '')
@@ -339,13 +342,17 @@ class __BodyState extends State<_Body> {
       // update active emergency contact
       setState(() {
         _activeEcRelation = newProfile?.ecRelation;
-        _activeEcName = newProfile?.ecName;
-        _activeEcPhone = newProfile?.ecPhone;
+        _activeEcName = _nameTextController.text;
+        _activeEcPhone = _phoneTextController.text;
       });
 
-      // update allergies state
+      // update emergency contact state
       BlocProvider.of<ProfileCubit>(context).emitProfileData(
-        newProfile,
+        newProfile.copyWith(
+          ecRelation: _activeEcRelation,
+          ecName: _activeEcName,
+          ecPhone: _activeEcPhone,
+        ),
       );
     } catch (error) {
       context.showToast(
