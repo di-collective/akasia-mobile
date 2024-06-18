@@ -1,10 +1,13 @@
 import 'dart:io';
 
-import '../../data/models/profile_model.dart';
+import '../entities/profile_entity.dart';
 
 abstract class AccountRepository {
-  Future<ProfileModel> getProfile();
+  Future<ProfileEntity> getProfile();
   Future<void> changeProfilePicture({
     required File image,
+  });
+  Future<void> updateProfile({
+    required ProfileEntity profile,
   });
 }

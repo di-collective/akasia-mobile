@@ -14,7 +14,7 @@ class DropdownWidget<T> extends StatelessWidget {
   final Function(T? value) onChanged;
   final String? Function(dynamic value)? validate;
   final T? selectedValue;
-  final BorderRadius? borderRadius;
+  final BorderRadius? borderRadius, borderRadiusMenu;
   final EdgeInsetsGeometry? contentPadding;
   final List<Widget> selectedItemBuilder;
   final bool? isDisabled, isLoading, isRequired;
@@ -30,6 +30,7 @@ class DropdownWidget<T> extends StatelessWidget {
     required this.selectedValue,
     this.validate,
     this.borderRadius,
+    this.borderRadiusMenu,
     this.contentPadding,
     required this.selectedItemBuilder,
     this.isDisabled,
@@ -96,7 +97,7 @@ class DropdownWidget<T> extends StatelessWidget {
               dropdownStyleData: DropdownStyleData(
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: borderRadiusMenu ?? BorderRadius.circular(8),
                   color: Colors.white,
                 ),
               ),

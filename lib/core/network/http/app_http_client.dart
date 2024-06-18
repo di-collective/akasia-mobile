@@ -21,27 +21,20 @@ class AppHttpClient {
     CancelToken? cancelToken,
   }) async {
     try {
-      Logger.info("---- URL ----");
-      Logger.info(url);
+      Logger.info("---- URL ----\n$url");
 
-      Logger.info("---- DATA ----");
-      Logger.info(data.toString());
+      Logger.info("---- DATA ----\n$data");
 
-      Logger.info("---- QUERY PARAMETERS ----");
-      Logger.info(queryParameters.toString());
+      Logger.info("---- QUERY PARAMETERS ----\n$queryParameters");
 
-      Logger.info("---- FORMDATA ----");
-      Logger.info(formData?.fields.toString());
+      Logger.info("---- FORMDATA ----\n${formData?.fields}");
 
-      Logger.info("---- HEADERS ----");
       // add default headers
       headers ??= {};
       headers['Content-Type'] = 'application/json';
-      // headers['Accept'] = 'application/json';
-      Logger.info(headers.toString());
+      Logger.info("---- HEADERS ----\n$headers");
 
-      Logger.info("---- CANCELTOKEN ----");
-      Logger.info(cancelToken.toString());
+      Logger.info("---- CANCELTOKEN ----\n$cancelToken");
 
       final response = await dio.get(
         url,
@@ -81,27 +74,20 @@ class AppHttpClient {
     CancelToken? cancelToken,
   }) async {
     try {
-      Logger.info("---- URL ----");
-      Logger.info(url);
+      Logger.info("---- URL ----\n$url");
 
-      Logger.info("---- DATA ----");
-      Logger.info(data.toString());
+      Logger.info("---- DATA ----\n$data");
 
-      Logger.info("---- QUERY PARAMETERS ----");
-      Logger.info(queryParameters.toString());
+      Logger.info("---- QUERY PARAMETERS ----\n$queryParameters");
 
-      Logger.info("---- FORMDATA ----");
-      Logger.info(formData?.fields.toString());
+      Logger.info("---- FORMDATA ----\n${formData?.fields}");
 
-      Logger.info("---- HEADERS ----");
       // add default headers
       headers ??= {};
       headers['Content-Type'] = 'application/json';
-      // headers['Accept'] = 'application/json';
-      Logger.info(headers.toString());
+      Logger.info("---- HEADERS ----\n$headers");
 
-      Logger.info("---- CANCELTOKEN ----");
-      Logger.info(cancelToken.toString());
+      Logger.info("---- CANCELTOKEN ----\n$cancelToken");
 
       final response = await dio.post(
         url,
@@ -135,17 +121,35 @@ class AppHttpClient {
 
   Future<Response> patch({
     required String url,
-    data,
+    Map<String, dynamic>? data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
+    FormData? formData,
+    Map<String, dynamic>? headers,
     CancelToken? cancelToken,
   }) async {
     try {
+      Logger.info("---- URL ----\n$url");
+
+      Logger.info("---- DATA ----\n$data");
+
+      Logger.info("---- QUERY PARAMETERS ----\n$queryParameters");
+
+      Logger.info("---- FORMDATA ----\n${formData?.fields}");
+
+      // add default headers
+      headers ??= {};
+      headers['Content-Type'] = 'application/json';
+      Logger.info("---- HEADERS ----\n$headers");
+
+      Logger.info("---- CANCELTOKEN ----\n$cancelToken");
+
       final response = await dio.patch(
         url,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(
+          headers: headers,
+        ),
         cancelToken: cancelToken,
       );
 

@@ -24,13 +24,6 @@ extension TextEditingControllerExtension on TextEditingController {
       }
     }
 
-    if (text.isContainsNumber ||
-        text.isContainsSpecialCharacter(
-          isWithOutComma: true,
-        )) {
-      return context.locale.invalidFormat;
-    }
-
     if (text.length < 3) {
       return context.locale.minimumLength(3);
     }
@@ -110,8 +103,10 @@ extension TextEditingControllerExtension on TextEditingController {
       }
     }
 
-    if (!text.isKtp) {
-      return context.locale.invalidEKtp;
+    if (text.isNotEmpty) {
+      if (!text.isKtp) {
+        return context.locale.invalidEKtp;
+      }
     }
 
     return null;

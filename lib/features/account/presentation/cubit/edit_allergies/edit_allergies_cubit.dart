@@ -1,20 +1,33 @@
-import 'package:akasia365mc/features/account/data/models/allergy_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/entities/profile_entity.dart';
+import '../../../domain/usecases/update_profile_usecase.dart';
 
 part 'edit_allergies_state.dart';
 
 class EditAllergiesCubit extends Cubit<EditAllergiesState> {
-  EditAllergiesCubit() : super(EditAllergiesInitial());
+  final UpdateProfileUseCase updateProfileUseCase;
+
+  EditAllergiesCubit({
+    required this.updateProfileUseCase,
+  }) : super(EditAllergiesInitial());
 
   Future<void> editAllergies({
-    required List<AllergyModel> allergies,
+    required String? userId,
+    required String? allergies,
   }) async {
     try {
       emit(EditAllergiesLoading());
 
-      // TODO: implement editAllergies
-      await Future.delayed(const Duration(seconds: 1));
+      await updateProfileUseCase.call(
+        UpdateProfileParams(
+          profile: ProfileEntity(
+            userId: userId,
+            allergies: allergies,
+          ),
+        ),
+      );
 
       emit(EditAllergiesLoaded());
     } catch (error) {

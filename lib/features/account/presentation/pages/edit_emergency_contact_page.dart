@@ -2,9 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/config/country_config.dart';
 import '../../../../core/config/relationship_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
@@ -15,14 +17,15 @@ import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/data/models/country_model.dart';
 import '../../../country/presentation/cubit/countries/countries_cubit.dart';
-import '../../data/models/emergency_contact_model.dart';
+import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
+import '../cubit/profile/profile_cubit.dart';
 
 class EditEmergencyContactPageParams {
-  final EmergencyContactModel? emergencyContact;
+  final ProfileEntity? profile;
 
   const EditEmergencyContactPageParams({
-    required this.emergencyContact,
+    required this.profile,
   });
 }
 
@@ -68,10 +71,12 @@ class __BodyState extends State<_Body> {
 
   final _relationshipTextController = TextEditingController();
   final _nameTextController = TextEditingController();
-  final _phoneNumberTextController = TextEditingController();
-
+  final _phoneTextController = TextEditingController();
   CountryModel? _selectedCountry;
-  EmergencyContactModel? _activeEmergencyContact;
+
+  String? _activeEcRelation;
+  String? _activeEcName;
+  String? _activeEcPhone;
 
   @override
   void initState() {
@@ -84,33 +89,26 @@ class __BodyState extends State<_Body> {
     final params = widget.params;
     if (params is EditEmergencyContactPageParams) {
       // Set the initial values
-      _activeEmergencyContact = params.emergencyContact;
+      _activeEcRelation = params.profile?.ecRelation;
+      _activeEcName = params.profile?.ecName;
+      _selectedCountry = CountryConfig.indonesia; // TODO: Dynamic country
+      _activeEcPhone = params.profile?.ecPhone;
 
-      _relationshipTextController.text =
-          _activeEmergencyContact?.relationship ?? '';
-      _nameTextController.text = _activeEmergencyContact?.name ?? '';
-      _phoneNumberTextController.text =
-          _activeEmergencyContact?.phoneNumber ?? '';
-
-      // init country
-      _initCountry();
-    }
-  }
-
-  Future<void> _initCountry() async {
-    final countries =
-        await BlocProvider.of<CountriesCubit>(context).getCountries();
-    if (countries.isNotEmpty) {
-      final result = countries.firstWhereOrNull((country) {
-        return country.phoneCode == _activeEmergencyContact?.countryCode;
-      });
-
-      // Set country
-      if (result != null) {
-        setState(() {
-          _selectedCountry = result;
-        });
+      if (_activeEcRelation != null) {
+        final relation = RelationshipConfig.allRelationships.firstWhereOrNull(
+          (element) {
+            return element.isSame(
+              otherValue: _activeEcRelation,
+            );
+          },
+        );
+        if (relation != null) {
+          _relationshipTextController.text = relation;
+        }
       }
+
+      _nameTextController.text = _activeEcName ?? '';
+      _phoneTextController.text = _activeEcPhone ?? '';
     }
   }
 
@@ -164,6 +162,7 @@ class __BodyState extends State<_Body> {
                                   _relationshipTextController.text.isEmpty
                                       ? null
                                       : _relationshipTextController.text,
+                              borderRadiusMenu: BorderRadius.circular(8),
                               onChanged: (option) {
                                 if (option != null &&
                                     option !=
@@ -203,7 +202,7 @@ class __BodyState extends State<_Body> {
                             BlocBuilder<CountriesCubit, CountriesState>(
                               builder: (context, state) {
                                 return PhoneNumberFormFieldWidget(
-                                  controller: _phoneNumberTextController,
+                                  controller: _phoneTextController,
                                   title: context.locale.phoneNumber,
                                   selectedCountry: _selectedCountry,
                                   isRequired: true,
@@ -237,12 +236,7 @@ class __BodyState extends State<_Body> {
                     text: context.locale.save,
                     width: context.width,
                     isLoading: state is EditEmergencyContactLoading,
-                    isDisabled: _relationshipTextController.text ==
-                            _activeEmergencyContact?.relationship &&
-                        _nameTextController.text ==
-                            _activeEmergencyContact?.name &&
-                        _phoneNumberTextController.text ==
-                            _activeEmergencyContact?.phoneNumber,
+                    isDisabled: _isDisabled,
                     onTap: _onSave,
                   ),
                   SizedBox(
@@ -257,12 +251,109 @@ class __BodyState extends State<_Body> {
     );
   }
 
+  bool get _isDisabled {
+    // validate form
+    if (_formKey.currentState?.validate() != true) {
+      return true;
+    }
+
+    // validate by active emergency contact
+    return _validateByActiveEmergencyContact;
+  }
+
+  bool get _validateByActiveEmergencyContact {
+    // relation
+    if (!(_activeEcRelation ?? '')
+        .isSame(otherValue: _relationshipTextController.text)) {
+      return false;
+    }
+
+    // name
+    if (!(_activeEcName ?? '').isSame(otherValue: _nameTextController.text)) {
+      return false;
+    }
+
+    // phone
+    if (!(_activeEcPhone ?? '').isSame(otherValue: _phoneTextController.text)) {
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> _onSave() async {
     try {
-      // validate
-      if (_formKey.currentState?.validate() != true) {
+      ProfileEntity? newProfile;
+      if (widget.params is EditEmergencyContactPageParams) {
+        newProfile = (widget.params as EditEmergencyContactPageParams).profile;
+      }
+      if (newProfile == null) {
         return;
       }
+
+      // close keyboard
+      context.closeKeyboard;
+
+      // relation
+      String? newEcRelation;
+      if (!(_activeEcRelation ?? '')
+          .isSame(otherValue: _relationshipTextController.text)) {
+        newEcRelation = _relationshipTextController.text;
+        newProfile = newProfile.copyWith(
+          ecRelation: newEcRelation,
+        );
+      }
+
+      // name
+      String? newEcName;
+      if (!(_activeEcName ?? '').isSame(otherValue: _nameTextController.text)) {
+        newEcName = _nameTextController.text;
+        newProfile = newProfile.copyWith(
+          ecName: newEcName,
+        );
+      }
+
+      // phone
+      String? newEcPhone;
+      if (!(_activeEcPhone ?? '')
+          .isSame(otherValue: _phoneTextController.text)) {
+        newEcPhone = _phoneTextController.text;
+        newProfile = newProfile.copyWith(
+          ecPhone: newEcPhone,
+        );
+      }
+
+      // edit emergency contact
+      await BlocProvider.of<EditEmergencyContactCubit>(context)
+          .editEmergencyContact(
+        userId: newProfile.userId,
+        ecRelation: newEcRelation,
+        ecName: newEcName,
+        ecCountryCode: null, // TODO: Dynamic country
+        ecPhone: newEcPhone,
+      );
+
+      // sho success message
+      context.showToast(
+        type: ToastType.success,
+        message: context.locale.successEditEmergencyContact,
+      );
+
+      // update active emergency contact
+      setState(() {
+        _activeEcRelation = newProfile?.ecRelation;
+        _activeEcName = _nameTextController.text;
+        _activeEcPhone = _phoneTextController.text;
+      });
+
+      // update emergency contact state
+      BlocProvider.of<ProfileCubit>(context).emitProfileData(
+        newProfile.copyWith(
+          ecRelation: _activeEcRelation,
+          ecName: _activeEcName,
+          ecPhone: _activeEcPhone,
+        ),
+      );
     } catch (error) {
       context.showToast(
         message: error.message(context),

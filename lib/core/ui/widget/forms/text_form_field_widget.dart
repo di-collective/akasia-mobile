@@ -151,13 +151,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
                 focusedBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
                 ),
-                contentPadding: widget.contentPadding ??
-                    const EdgeInsets.fromLTRB(
-                      12,
-                      10,
-                      12,
-                      14,
-                    ),
+                contentPadding: _buildContentPadding,
                 errorBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.error,
                 ),
@@ -223,6 +217,31 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
     return colorScheme.onSurface;
   }
 
+  EdgeInsetsGeometry get _buildContentPadding {
+    if (widget.contentPadding != null) {
+      return widget.contentPadding!;
+    }
+
+    final screenHeightType = context.screenHeightType;
+    switch (screenHeightType) {
+      case ScreenHeightType.small:
+      case ScreenHeightType.medium:
+        return const EdgeInsets.fromLTRB(
+          12,
+          10,
+          12,
+          14,
+        );
+      case ScreenHeightType.large:
+        return const EdgeInsets.fromLTRB(
+          12,
+          14,
+          12,
+          14,
+        );
+    }
+  }
+
   Widget? _buildPrefixIcon({
     required AppColorScheme colorScheme,
     required AppTextTheme textTheme,
@@ -247,7 +266,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius: const BorderRadius.horizontal(
-              left: Radius.circular(8),
+              left: Radius.circular(7),
             ),
           ),
           child: Column(
@@ -293,7 +312,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius: const BorderRadius.horizontal(
-              right: Radius.circular(8),
+              right: Radius.circular(7),
             ),
           ),
           child: Column(

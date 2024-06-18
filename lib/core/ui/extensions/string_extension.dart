@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../../utils/logger.dart';
 
 extension StringExtension on String {
@@ -25,7 +27,7 @@ extension StringExtension on String {
     bool? isWithOutComma,
   }) {
     if (isWithOutComma == true) {
-      return RegExp(r'[!@#$%^&*().?":{}|<>]').hasMatch(this);
+      return RegExp(r'[!@#$%^&*()?":{}|<>]').hasMatch(this);
     }
 
     return RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(this);
@@ -155,6 +157,46 @@ extension StringExtension on String {
       return result;
     } catch (_) {
       return {};
+    }
+  }
+
+  bool isSame({
+    required String? otherValue,
+  }) {
+    return toLowerCase() == otherValue?.toLowerCase();
+  }
+
+  double? get parseToDouble {
+    try {
+      // change , to . for parse double
+      final String value = replaceAll(',', '.');
+
+      return double.tryParse(value);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Format date string to specific format
+  ///
+  /// Default format is 'MM-dd-yyyy'
+  ///
+  /// Example:
+  ///
+  /// '2024-06-03T00:00:00Z'.formatDate() => '06-03-2024'
+  String? formatDate({
+    String? format,
+  }) {
+    try {
+      final DateTime? date = toDateTime;
+
+      if (date == null) {
+        return null;
+      }
+
+      return DateFormat(format ?? 'MM-dd-yyyy').format(date);
+    } catch (_) {
+      return null;
     }
   }
 }

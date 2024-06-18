@@ -1,4 +1,4 @@
-import '../../features/account/data/models/allergy_model.dart';
+import '../../models/allergy_model.dart';
 
 class AllergyConfig {
   static const List<AllergyModel> allAllergies = [

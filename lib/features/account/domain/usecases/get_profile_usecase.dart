@@ -1,8 +1,8 @@
 import '../../../../core/usecases/usecase.dart';
-import '../../data/models/profile_model.dart';
+import '../entities/profile_entity.dart';
 import '../repositories/account_repository.dart';
 
-class GetProfileUseCase extends UseCase<ProfileModel, NoParams> {
+class GetProfileUseCase extends UseCase<ProfileEntity, NoParams> {
   final AccountRepository accountRepository;
 
   GetProfileUseCase({
@@ -10,7 +10,7 @@ class GetProfileUseCase extends UseCase<ProfileModel, NoParams> {
   });
 
   @override
-  Future<ProfileModel> call(NoParams params) async {
-    return accountRepository.getProfile();
+  Future<ProfileEntity> call(NoParams params) async {
+    return await accountRepository.getProfile();
   }
 }
