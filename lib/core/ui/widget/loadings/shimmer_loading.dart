@@ -15,7 +15,7 @@ class ShimmerLoading extends StatelessWidget {
     this.shapeBorder = const CircleBorder(),
   });
 
-  final double width, height;
+  final double? width, height;
   final ShapeBorder shapeBorder;
 
   @override

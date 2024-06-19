@@ -39,7 +39,8 @@ class ReviewItemBanner extends ReviewItemWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    locale.shareYourExperienceEveryTimeYouHaveTreatmentAt_ + locale.appName,
+                    locale.shareYourExperienceEveryTimeYouHaveTreatmentAt_ +
+                        locale.appName,
                     style: textTheme.labelMedium.copyWith(
                       color: colorScheme.onSurface,
                     ),
@@ -215,7 +216,7 @@ class _ReviewItemCardHeader extends StatelessWidget {
             40,
             40,
           ),
-          shape: BoxShape.circle,
+          shapeBorder: const CircleBorder(),
           fit: BoxFit.cover,
         ),
         const SizedBox(width: 12),
@@ -250,10 +251,12 @@ class _ReviewItemCardRatingScore extends StatefulWidget {
   });
 
   @override
-  State<_ReviewItemCardRatingScore> createState() => _ReviewItemCardRatingScoreState();
+  State<_ReviewItemCardRatingScore> createState() =>
+      _ReviewItemCardRatingScoreState();
 }
 
-class _ReviewItemCardRatingScoreState extends State<_ReviewItemCardRatingScore> {
+class _ReviewItemCardRatingScoreState
+    extends State<_ReviewItemCardRatingScore> {
   bool _isExpanded = false;
 
   @override

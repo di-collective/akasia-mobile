@@ -41,10 +41,21 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 16,
             ),
-            const NetworkImageWidget(
-              size: Size(120, 120),
-              shape: BoxShape.circle,
-              fit: BoxFit.cover,
+            BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+                String? photoUrl;
+                if (state is ProfileLoaded) {
+                  photoUrl = state.profile.photoUrl;
+                }
+
+                return NetworkImageWidget(
+                  size: const Size(120, 120),
+                  shapeBorder: const CircleBorder(),
+                  fit: BoxFit.cover,
+                  imageUrl: photoUrl,
+                  isLoading: state is ProfileLoading,
+                );
+              },
             ),
             const SizedBox(
               height: 10,

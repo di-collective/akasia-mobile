@@ -48,8 +48,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<void> changeProfilePicture({
+  Future<String?> changeProfilePicture({
     required File image,
+    required String? userId,
   }) async {
     if (await networkInfo.isConnected) {
       try {
@@ -60,9 +61,10 @@ class AccountRepositoryImpl implements AccountRepository {
           );
         }
 
-        await accountRemoteDataSource.changeProfilePicture(
+        return await accountRemoteDataSource.changeProfilePicture(
           accessToken: accessToken,
           image: image,
+          userId: userId,
         );
       } on AuthException catch (error) {
         throw AuthException(

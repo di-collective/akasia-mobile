@@ -4,7 +4,7 @@ import '../../../../core/usecases/usecase.dart';
 import '../repositories/account_repository.dart';
 
 class ChangeProfilePictureUseCase
-    extends UseCase<void, ChangeProfilePictureParams> {
+    extends UseCase<String?, ChangeProfilePictureParams> {
   final AccountRepository accountRepository;
 
   ChangeProfilePictureUseCase({
@@ -12,17 +12,20 @@ class ChangeProfilePictureUseCase
   });
 
   @override
-  Future<void> call(ChangeProfilePictureParams params) async {
+  Future<String?> call(ChangeProfilePictureParams params) async {
     return await accountRepository.changeProfilePicture(
       image: params.image,
+      userId: params.userId,
     );
   }
 }
 
 class ChangeProfilePictureParams {
   final File image;
+  final String? userId;
 
   ChangeProfilePictureParams({
     required this.image,
+    required this.userId,
   });
 }

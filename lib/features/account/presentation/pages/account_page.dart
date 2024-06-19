@@ -68,36 +68,51 @@ class _AccountPageState extends State<AccountPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                GestureDetector(
-                  onTap: _onProfilePicture,
-                  child: Stack(
-                    children: [
-                      const NetworkImageWidget(
-                        size: Size(120, 120),
-                        shape: BoxShape.circle,
-                        fit: BoxFit.cover,
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    String? photoUrl;
+                    if (state is ProfileLoaded) {
+                      photoUrl = state.profile.photoUrl;
+                    }
+
+                    return GestureDetector(
+                      onTap: () => _onProfilePicture(
+                        state: state,
                       ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(7),
-                          decoration: BoxDecoration(
-                            color: colorScheme.primary,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: colorScheme.white,
-                              width: 2,
+                      child: Stack(
+                        children: [
+                          NetworkImageWidget(
+                            size: const Size(120, 120),
+                            shapeBorder: const CircleBorder(),
+                            fit: BoxFit.cover,
+                            imageUrl: photoUrl,
+                            isLoading: state is ProfileLoading,
+                          ),
+                          if (state is ProfileLoaded) ...[
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(7),
+                                decoration: BoxDecoration(
+                                  color: colorScheme.primary,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: colorScheme.white,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: SvgPicture.asset(
+                                  AssetIconsPath.icCamera,
+                                  height: 18,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: SvgPicture.asset(
-                            AssetIconsPath.icCamera,
-                            height: 18,
-                          ),
-                        ),
+                          ],
+                        ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 12,
@@ -208,7 +223,13 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Future<void> _onProfilePicture() async {
+  Future<void> _onProfilePicture({
+    required ProfileState state,
+  }) async {
+    if (state is! ProfileLoaded) {
+      return;
+    }
+
     // show dialog change profile picture
     await showDialog(
       context: context,
@@ -279,15 +300,32 @@ class _AccountPageState extends State<AccountPage> {
         return false;
       }
 
+      final profileState = BlocProvider.of<ProfileCubit>(context).state;
+      if (profileState is! ProfileLoaded) {
+        throw Exception("Profile not loaded");
+      }
+      final userId = profileState.profile.userId;
+
       // show full screen loading
       context.showFullScreenLoading();
 
       // post image to server
-      await sl<ChangeProfilePictureUseCase>().call(
+      final photUrl = await sl<ChangeProfilePictureUseCase>().call(
         ChangeProfilePictureParams(
           image: image,
+          userId: userId,
         ),
       );
+
+      if (photUrl != null) {
+        // update profile photo url on profile state
+        final profile = profileState.profile.copyWith(
+          photoUrl: photUrl,
+        );
+        BlocProvider.of<ProfileCubit>(context).emitProfileData(
+          profile,
+        );
+      }
 
       return true;
     } catch (error) {

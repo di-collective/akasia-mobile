@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart';
 
 import '../../../../../core/common/image_compress_info.dart';
 import '../../../../../core/config/env_config.dart';
@@ -15,9 +14,10 @@ abstract class AccountRemoteDataSource {
   Future<ProfileModel> getProfile({
     required String accessToken,
   });
-  Future<void> changeProfilePicture({
+  Future<String?> changeProfilePicture({
     required String accessToken,
     required File image,
+    required String? userId,
   });
   Future<void> updateProfile({
     required String accessToken,
@@ -60,9 +60,10 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
   }
 
   @override
-  Future<void> changeProfilePicture({
+  Future<String?> changeProfilePicture({
     required String accessToken,
     required File image,
+    required String? userId,
   }) async {
     try {
       Logger.info(
@@ -81,23 +82,24 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       compressedImage ??= image;
 
       // post image
-      final result = await appHttpClient.post(
-        url: "${EnvConfig.baseAkasiaApiUrl}/profile-picture",
+      final imageMultipartFile = await MultipartFile.fromFile(
+        compressedImage.path,
+        filename: compressedImage.fileName,
+      );
+      final result = await appHttpClient.patch(
+        url: "${EnvConfig.baseAkasiaApiUrl}/profile/$userId/photo",
         headers: {
           'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'multipart/form-data',
         },
         formData: FormData.fromMap({
-          "image": await MultipartFile.fromFile(
-            compressedImage.path,
-            filename: compressedImage.fileName,
-            contentType: MediaType(
-              'image',
-              compressedImage.extension,
-            ),
-          ),
+          'file': imageMultipartFile,
         }),
       );
       Logger.success('changeProfilePicture result: $result');
+
+      final photoUrl = result.data?['data'];
+      return photoUrl;
     } catch (error) {
       Logger.error('changeProfilePicture error: $error');
 

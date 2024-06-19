@@ -2,13 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/asset_path.dart';
+import '../loadings/shimmer_loading.dart';
 
 class NetworkImageWidget extends StatelessWidget {
   final String? imageUrl;
   final Size? size;
   final BoxFit? fit;
   final BorderRadius? borderRadius;
-  final BoxShape? shape;
+  final ShapeBorder? shapeBorder;
+  final bool? isLoading;
 
   const NetworkImageWidget({
     super.key,
@@ -16,17 +18,26 @@ class NetworkImageWidget extends StatelessWidget {
     this.size,
     this.fit,
     this.borderRadius,
-    this.shape,
+    this.shapeBorder,
+    this.isLoading,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading == true) {
+      return ShimmerLoading.circular(
+        width: size?.width,
+        height: size?.height,
+        shapeBorder: shape,
+      );
+    }
+
     if (imageUrl == null) {
       return PlaceholderImageWidget(
         size: size,
         fit: fit,
         borderRadius: borderRadius,
-        shape: shape,
+        shapeBorder: shape,
       );
     }
 
@@ -39,9 +50,8 @@ class NetworkImageWidget extends StatelessWidget {
         return Container(
           width: size?.width,
           height: size?.height,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            shape: shape ?? BoxShape.rectangle,
+          decoration: ShapeDecoration(
+            shape: shape,
             image: DecorationImage(
               image: imageProvider,
               fit: fit,
@@ -54,7 +64,7 @@ class NetworkImageWidget extends StatelessWidget {
           size: size,
           fit: fit,
           borderRadius: borderRadius,
-          shape: shape,
+          shapeBorder: shape,
         );
       },
       errorWidget: (context, url, error) {
@@ -62,10 +72,24 @@ class NetworkImageWidget extends StatelessWidget {
           size: size,
           fit: fit,
           borderRadius: borderRadius,
-          shape: shape,
+          shapeBorder: shape,
         );
       },
     );
+  }
+
+  ShapeBorder get shape {
+    if (shapeBorder != null) {
+      return shapeBorder!;
+    }
+
+    if (borderRadius != null) {
+      return RoundedRectangleBorder(
+        borderRadius: borderRadius!,
+      );
+    }
+
+    return const RoundedRectangleBorder();
   }
 }
 
@@ -73,14 +97,14 @@ class PlaceholderImageWidget extends StatelessWidget {
   final Size? size;
   final BoxFit? fit;
   final BorderRadius? borderRadius;
-  final BoxShape? shape;
+  final ShapeBorder shapeBorder;
 
   const PlaceholderImageWidget({
     super.key,
     this.size,
     this.fit,
     this.borderRadius,
-    this.shape,
+    required this.shapeBorder,
   });
 
   @override
@@ -88,9 +112,8 @@ class PlaceholderImageWidget extends StatelessWidget {
     return Container(
       width: size?.width,
       height: size?.height,
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        shape: shape ?? BoxShape.rectangle,
+      decoration: ShapeDecoration(
+        shape: shapeBorder,
         image: DecorationImage(
           image: AssetImage(
             AssetImagesPath.placeholder,
