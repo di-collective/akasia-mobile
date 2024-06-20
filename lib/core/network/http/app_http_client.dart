@@ -31,14 +31,17 @@ class AppHttpClient {
 
       // add default headers
       headers ??= {};
-      headers['Content-Type'] = 'application/json';
+      if (headers['Content-Type'] == null) {
+        // add default content type
+        headers['Content-Type'] = 'application/json';
+      }
       Logger.info("---- HEADERS ----\n$headers");
 
       Logger.info("---- CANCELTOKEN ----\n$cancelToken");
 
       final response = await dio.get(
         url,
-        data: data,
+        data: data ?? formData,
         queryParameters: queryParameters,
         options: Options(
           headers: headers,
@@ -84,14 +87,17 @@ class AppHttpClient {
 
       // add default headers
       headers ??= {};
-      headers['Content-Type'] = 'application/json';
+      if (headers['Content-Type'] == null) {
+        // add default content type
+        headers['Content-Type'] = 'application/json';
+      }
       Logger.info("---- HEADERS ----\n$headers");
 
       Logger.info("---- CANCELTOKEN ----\n$cancelToken");
 
       final response = await dio.post(
         url,
-        data: data,
+        data: data ?? formData,
         queryParameters: queryParameters,
         options: Options(
           headers: headers,
@@ -138,14 +144,18 @@ class AppHttpClient {
 
       // add default headers
       headers ??= {};
-      headers['Content-Type'] = 'application/json';
+      if (headers['Content-Type'] == null) {
+        // add default content type
+        headers['Content-Type'] = 'application/json';
+      }
+
       Logger.info("---- HEADERS ----\n$headers");
 
       Logger.info("---- CANCELTOKEN ----\n$cancelToken");
 
       final response = await dio.patch(
         url,
-        data: data,
+        data: data ?? formData,
         queryParameters: queryParameters,
         options: Options(
           headers: headers,

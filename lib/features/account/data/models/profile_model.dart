@@ -4,6 +4,7 @@ import '../../domain/entities/profile_entity.dart';
 class ProfileModel extends ProfileEntity {
   const ProfileModel({
     super.userId,
+    super.photoUrl,
     super.role,
     super.medicalId,
     super.name,
@@ -27,12 +28,13 @@ class ProfileModel extends ProfileEntity {
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
       userId: json['user_id'],
+      photoUrl: json['photo_url'],
       role: json['role'],
       medicalId: json['medical_id'],
       name: json['name'],
       countryCode: json['country_code'],
       phone: json['phone'],
-      // nik: json['nik'], // TODO: Uncomment this, because default nik is not valid format
+      nik: json['nik'],
       age: json['age'],
       dob: json['dob'],
       sex: json['sex'],

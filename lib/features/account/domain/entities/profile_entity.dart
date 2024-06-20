@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class ProfileEntity extends Equatable {
   final String? userId;
+  final String? photoUrl;
   final String? role;
   final String? medicalId;
   final String? name;
@@ -23,6 +24,7 @@ class ProfileEntity extends Equatable {
 
   const ProfileEntity({
     this.userId,
+    this.photoUrl,
     this.role,
     this.medicalId,
     this.name,
@@ -46,6 +48,7 @@ class ProfileEntity extends Equatable {
   ProfileEntity copyWith({
     bool? isForceAllergies,
     String? userId,
+    String? photoUrl,
     String? role,
     String? medicalId,
     String? name,
@@ -67,6 +70,7 @@ class ProfileEntity extends Equatable {
   }) {
     return ProfileEntity(
       userId: userId ?? this.userId,
+      photoUrl: photoUrl ?? this.photoUrl,
       role: role ?? this.role,
       medicalId: medicalId ?? this.medicalId,
       name: name ?? this.name,
@@ -92,6 +96,7 @@ class ProfileEntity extends Equatable {
   @override
   List<Object?> get props => [
         userId,
+        photoUrl,
         role,
         medicalId,
         name,
