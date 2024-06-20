@@ -34,7 +34,7 @@ class ProfileModel extends ProfileEntity {
       name: json['name'],
       countryCode: json['country_code'],
       phone: json['phone'],
-      // nik: json['nik'], // TODO: Uncomment this, because default nik is not valid format
+      nik: json['nik'],
       age: json['age'],
       dob: json['dob'],
       sex: json['sex'],
