@@ -14,11 +14,24 @@ import '../presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubi
 import '../presentation/cubit/edit_information/edit_information_cubit.dart';
 import '../presentation/cubit/profile/profile_cubit.dart';
 
-final class FutureAccountDependencies {
-  FutureAccountDependencies._();
+final class AccountDI {
+  AccountDI._();
 
-  static Future<void> inject() async {
+  static void inject() {
     // data source
+    _injectDataSources();
+
+    // repository
+    _injectRepositories();
+
+    // use case
+    _injectUseCases();
+
+    // cubit
+    _injectCubits();
+  }
+
+  static Future<void> _injectDataSources() async {
     sl.registerLazySingleton<AccountRemoteDataSource>(() {
       return AccountRemoteDataSourceImpl(
         appHttpClient: sl(),
@@ -30,8 +43,9 @@ final class FutureAccountDependencies {
         appHttpClient: sl(),
       );
     });
+  }
 
-    // repository
+  static void _injectRepositories() {
     sl.registerLazySingleton<AccountRepository>(() {
       return AccountRepositoryImpl(
         networkInfo: sl(),
@@ -46,8 +60,9 @@ final class FutureAccountDependencies {
         allergyRemoteDataSource: sl(),
       );
     });
+  }
 
-    // use case
+  static void _injectUseCases() {
     sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
       return ChangeProfilePictureUseCase(
         accountRepository: sl(),
@@ -68,8 +83,9 @@ final class FutureAccountDependencies {
         accountRepository: sl(),
       );
     });
+  }
 
-    // cubit
+  static void _injectCubits() {
     sl.registerFactory<EditInformationCubit>(() {
       return EditInformationCubit(
         updateProfileUseCase: sl(),
