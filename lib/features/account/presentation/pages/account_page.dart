@@ -62,165 +62,182 @@ class _AccountPageState extends State<AccountPage> {
       value: AppTheme.overlayStyleLight,
       child: Scaffold(
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 16,
-                ),
-                BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    String? photoUrl;
-                    if (state is ProfileLoaded) {
-                      photoUrl = state.profile.photoUrl;
-                    }
+          child: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      String? photoUrl;
+                      if (state is ProfileLoaded) {
+                        photoUrl = state.profile.photoUrl;
+                      }
 
-                    return GestureDetector(
-                      onTap: () => _onProfilePicture(
-                        state: state,
-                      ),
-                      child: Stack(
-                        children: [
-                          NetworkImageWidget(
-                            size: const Size(120, 120),
-                            shapeBorder: const CircleBorder(),
-                            fit: BoxFit.cover,
-                            imageUrl: photoUrl,
-                            isLoading: state is ProfileLoading,
-                          ),
-                          if (state is ProfileLoaded) ...[
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(7),
-                                decoration: BoxDecoration(
-                                  color: colorScheme.primary,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: colorScheme.white,
-                                    width: 2,
+                      return GestureDetector(
+                        onTap: () => _onProfilePicture(
+                          state: state,
+                        ),
+                        child: Stack(
+                          children: [
+                            NetworkImageWidget(
+                              size: const Size(120, 120),
+                              shapeBorder: const CircleBorder(),
+                              fit: BoxFit.cover,
+                              imageUrl: photoUrl,
+                              isLoading: state is ProfileLoading,
+                            ),
+                            if (state is ProfileLoaded) ...[
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                    color: colorScheme.primary,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: colorScheme.white,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    AssetIconsPath.icCamera,
+                                    height: 18,
                                   ),
                                 ),
-                                child: SvgPicture.asset(
-                                  AssetIconsPath.icCamera,
-                                  height: 18,
-                                ),
                               ),
-                            ),
+                            ],
                           ],
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    if (state is ProfileLoaded) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.paddingHorizontal,
-                        ),
-                        child: Text(
-                          state.profile.name ?? '',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: textTheme.titleLarge.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurfaceDim,
-                          ),
                         ),
                       );
-                    }
-
-                    return ShimmerLoading.circular(
-                      width: 150,
-                      height: 31,
-                      shapeBorder: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: 24,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                    borderRadius: BorderRadius.circular(99),
+                    },
                   ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                AccountItemWidget(
-                  title: context.locale.informationDetails,
-                  onTap: _onInformationDetails,
-                ),
-                AccountItemWidget(
-                  title: context.locale.accountSettings,
-                  onTap: _onAccountSettings,
-                ),
-                AccountItemWidget(
-                  title: context.locale.faq,
-                  onTap: _onFaq,
-                ),
-                AccountItemWidget(
-                  title: context.locale.helpCenter,
-                  onTap: _onHelpCenter,
-                ),
-                AccountItemWidget(
-                  title: context.locale.termsAndConditions,
-                  onTap: _onTermsAndConditions,
-                ),
-                AccountItemWidget(
-                  title: context.locale.privacyPolicy,
-                  onTap: _onPrivacyPolicy,
-                ),
-                AccountItemWidget(
-                  title: context.locale.ratings,
-                  onTap: _onRatings,
-                ),
-                AccountItemWidget(
-                  title: context.locale.logout,
-                  titleColor: colorScheme.error,
-                  onTap: _onLogout,
-                ),
-                const SizedBox(
-                  height: 32,
-                ),
-                BlocBuilder<YamlCubit, YamlState>(
-                  builder: (context, state) {
-                    String? version;
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      if (state is ProfileLoaded) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.paddingHorizontal,
+                          ),
+                          child: Text(
+                            state.profile.name ?? '',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: textTheme.titleLarge.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurfaceDim,
+                            ),
+                          ),
+                        );
+                      }
 
-                    if (state is YamlLoaded) {
-                      version = state.yaml.version;
-                    }
+                      return ShimmerLoading.circular(
+                        width: 150,
+                        height: 31,
+                        shapeBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: 24,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.informationDetails,
+                    onTap: _onInformationDetails,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.accountSettings,
+                    onTap: _onAccountSettings,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.faq,
+                    onTap: _onFaq,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.helpCenter,
+                    onTap: _onHelpCenter,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.termsAndConditions,
+                    onTap: _onTermsAndConditions,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.privacyPolicy,
+                    onTap: _onPrivacyPolicy,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.ratings,
+                    onTap: _onRatings,
+                  ),
+                  AccountItemWidget(
+                    title: context.locale.logout,
+                    titleColor: colorScheme.error,
+                    onTap: _onLogout,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  BlocBuilder<YamlCubit, YamlState>(
+                    builder: (context, state) {
+                      String? version;
 
-                    return Text(
-                      '${context.locale.appVersion} ${version ?? ''}',
-                      style: textTheme.bodySmall.copyWith(
-                        color: colorScheme.onSurface,
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(
-                  height: 32,
-                ),
-              ],
+                      if (state is YamlLoaded) {
+                        version = state.yaml.version;
+                      }
+
+                      return Text(
+                        '${context.locale.appVersion} ${version ?? ''}',
+                        style: textTheme.bodySmall.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _onRefresh() async {
+    try {
+      await Future.wait([
+        BlocProvider.of<ProfileCubit>(context).refreshGetProfile(),
+      ]);
+    } catch (error) {
+      sl<ToastInfo>().show(
+        type: ToastType.error,
+        message: error.message(context),
+        context: context,
+      );
+    }
   }
 
   Future<void> _onProfilePicture({
