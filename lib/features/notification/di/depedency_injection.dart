@@ -6,6 +6,8 @@ import '../domain/usecases/get_notifications_usecase.dart';
 import '../presentation/cubit/notifications/notifications_cubit.dart';
 
 class NotificationDI {
+  NotificationDI._();
+
   static void inject() {
     // data source
     _injectDataSources();

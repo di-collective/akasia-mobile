@@ -6,6 +6,8 @@ import '../domain/usecases/get_faqs_usecase.dart';
 import '../presentation/cubit/faqs/faqs_cubit.dart';
 
 class FaqDI {
+  FaqDI._();
+
   static void inject() {
     // datasources
     _injectDataSources();

@@ -6,6 +6,8 @@ import '../domain/usecases/get_countries_usecase.dart';
 import '../presentation/cubit/countries/countries_cubit.dart';
 
 class CountryDI {
+  CountryDI._();
+
   static void inject() {
     // data source
     _injectDataSources();

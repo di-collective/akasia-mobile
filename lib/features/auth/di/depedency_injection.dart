@@ -22,6 +22,8 @@ import '../presentation/cubit/sign_up/sign_up_cubit.dart';
 import '../presentation/cubit/yaml/yaml_cubit.dart';
 
 class AuthDI {
+  AuthDI._();
+
   static void inject() {
     // data source
     _injectDataSources();

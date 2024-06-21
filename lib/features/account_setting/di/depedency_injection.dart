@@ -4,6 +4,8 @@ import '../presentation/cubit/change_phone_number/change_phone_number_cubit.dart
 import '../presentation/cubit/deactive_account/deactive_account_cubit.dart';
 
 class AccountSettingDI {
+  AccountSettingDI._();
+
   static void inject() {
     // Cubit
     _injectCubits();
