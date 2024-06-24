@@ -21,8 +21,8 @@ class WriteReviewPageArgs {
   });
 }
 
-class WriteReviewPage<T> extends StatefulWidget {
-  final T? args;
+class WriteReviewPage extends StatefulWidget {
+  final WriteReviewPageArgs? args;
 
   const WriteReviewPage({
     super.key,
@@ -34,10 +34,13 @@ class WriteReviewPage<T> extends StatefulWidget {
 }
 
 class _PageState extends State<WriteReviewPage> {
+  // ignore: unused_field
   String? _reviewId;
   String _writtenReview = "";
   int? _effectivenessRating, _valueForMoneyRating;
-  String? _selectedTreatmentPeriod, _selectedRecommends, _selectedWillRepurchase;
+  String? _selectedTreatmentPeriod,
+      _selectedRecommends,
+      _selectedWillRepurchase;
   static const _treatmentPeriodChoices = [
     'Less Than 1 Week',
     '1 Week - 1 Month',
@@ -62,7 +65,7 @@ class _PageState extends State<WriteReviewPage> {
   void initState() {
     super.initState();
     final args = widget.args;
-    if (args is WriteReviewPageArgs) {
+    if (args != null) {
       setState(() {
         _reviewId = args.reviewId;
         _effectivenessRating = args.effectivenessRating;
@@ -96,7 +99,8 @@ class _PageState extends State<WriteReviewPage> {
                     children: [
                       Container(
                         color: colors.surfaceContainerBright,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 24),
                         child: TotalRatingSection(
                           totalRating: _totalRating,
                         ),
@@ -108,7 +112,8 @@ class _PageState extends State<WriteReviewPage> {
                           child: TextField(
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: locale.tellUsAboutYourExperienceAfterThisTreatment,
+                              hintText: locale
+                                  .tellUsAboutYourExperienceAfterThisTreatment,
                               hintStyle: textTheme.labelMedium.copyWith(
                                 color: colors.onSurfaceBright,
                               ),
@@ -235,7 +240,9 @@ class _PageState extends State<WriteReviewPage> {
   }
 
   double get _totalRating {
-    return ((_effectivenessRating ?? 0).toDouble() + (_valueForMoneyRating ?? 0).toDouble()) / 2;
+    return ((_effectivenessRating ?? 0).toDouble() +
+            (_valueForMoneyRating ?? 0).toDouble()) /
+        2;
   }
 
   bool get _isFormReady {

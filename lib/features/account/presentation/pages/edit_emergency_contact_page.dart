@@ -29,8 +29,8 @@ class EditEmergencyContactPageParams {
   });
 }
 
-class EditEmergencyContactPage<T> extends StatelessWidget {
-  final T? params;
+class EditEmergencyContactPage extends StatelessWidget {
+  final EditEmergencyContactPageParams? params;
 
   const EditEmergencyContactPage({
     super.key,
@@ -55,8 +55,8 @@ class EditEmergencyContactPage<T> extends StatelessWidget {
   }
 }
 
-class _Body<T> extends StatefulWidget {
-  final T? params;
+class _Body extends StatefulWidget {
+  final EditEmergencyContactPageParams? params;
 
   const _Body({
     this.params,
@@ -87,7 +87,7 @@ class __BodyState extends State<_Body> {
 
   Future<void> _init() async {
     final params = widget.params;
-    if (params is EditEmergencyContactPageParams) {
+    if (params != null) {
       // Set the initial values
       _activeEcRelation = params.profile?.ecRelation;
       _activeEcName = params.profile?.ecName;

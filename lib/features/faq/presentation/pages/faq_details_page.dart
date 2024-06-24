@@ -14,8 +14,8 @@ class FaqDetailsPageParams {
   });
 }
 
-class FaqDetailsPage<T> extends StatefulWidget {
-  final T? params;
+class FaqDetailsPage extends StatefulWidget {
+  final FaqDetailsPageParams? params;
 
   const FaqDetailsPage({
     super.key,
@@ -37,10 +37,8 @@ class _FaqDetailsPageState extends State<FaqDetailsPage> {
   }
 
   void _init() {
-    if (widget.params is FaqDetailsPageParams) {
-      final params = widget.params as FaqDetailsPageParams;
-
-      _faq = params.faq;
+    if (widget.params?.faq != null) {
+      _faq = widget.params!.faq;
     }
   }
 

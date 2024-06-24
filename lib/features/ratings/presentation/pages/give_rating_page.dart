@@ -17,12 +17,12 @@ class GiveRatingPageArgs {
   const GiveRatingPageArgs({required this.review});
 }
 
-class GiveRatingPage<T> extends StatefulWidget {
-  final T? args;
+class GiveRatingPage extends StatefulWidget {
+  final GiveRatingPageArgs? params;
 
   const GiveRatingPage({
     super.key,
-    this.args,
+    this.params,
   });
 
   @override
@@ -38,8 +38,7 @@ class _PageState extends State<GiveRatingPage> {
   void initState() {
     super.initState();
     setState(() {
-      _review =
-          widget.args is GiveRatingPageArgs ? (widget.args as GiveRatingPageArgs).review : null;
+      _review = widget.params?.review;
     });
   }
 
@@ -76,7 +75,8 @@ class _PageState extends State<GiveRatingPage> {
                     children: [
                       Text(
                         context.locale.howDoYouRateThisTreatment,
-                        style: textTheme.titleMedium.copyWith(fontWeight: FontWeight.w700),
+                        style: textTheme.titleMedium
+                            .copyWith(fontWeight: FontWeight.w700),
                       ),
                       _GiveRatingBar(
                         label: context.locale.effectiveness,
@@ -226,5 +226,6 @@ class _GiveRatingBottomSection extends StatelessWidget {
     );
   }
 
-  double get _totalRating => (effectivenessRating.toDouble() + valueForMoneyRating.toDouble()) / 2;
+  double get _totalRating =>
+      (effectivenessRating.toDouble() + valueForMoneyRating.toDouble()) / 2;
 }

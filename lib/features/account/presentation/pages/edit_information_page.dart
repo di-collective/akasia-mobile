@@ -36,8 +36,8 @@ class EditInformationPageParams {
   });
 }
 
-class EditInformationPage<T> extends StatelessWidget {
-  final T? params;
+class EditInformationPage extends StatelessWidget {
+  final EditInformationPageParams? params;
 
   const EditInformationPage({
     super.key,
@@ -55,8 +55,8 @@ class EditInformationPage<T> extends StatelessWidget {
   }
 }
 
-class _Body<T> extends StatefulWidget {
-  final T? params;
+class _Body extends StatefulWidget {
+  final EditInformationPageParams? params;
 
   const _Body({
     this.params,
@@ -96,7 +96,7 @@ class __BodyState extends State<_Body> {
     _selectedCountry = CountryConfig.indonesia; // TODO: Dynamic country
 
     final params = widget.params;
-    if (params is EditInformationPageParams) {
+    if (params != null) {
       _activeProfile = params.profile;
 
       // init controller
