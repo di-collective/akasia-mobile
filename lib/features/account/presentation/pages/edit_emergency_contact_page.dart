@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/config/country_config.dart';
-import '../../../../core/config/relationship_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
@@ -17,6 +16,7 @@ import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/domain/entities/country_entity.dart';
 import '../../../country/presentation/cubit/countries/countries_cubit.dart';
+import '../../data/datasources/local/relationship_config.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';

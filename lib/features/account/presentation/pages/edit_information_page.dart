@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/config/blood_type_config.dart';
 import '../../../../core/config/country_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
@@ -24,6 +23,7 @@ import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/data/datasources/local/activity_level_config.dart';
 import '../../../activity_level/domain/entities/activity_level_entity.dart';
 import '../../../country/domain/entities/country_entity.dart';
+import '../../data/datasources/local/blood_type_config.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
