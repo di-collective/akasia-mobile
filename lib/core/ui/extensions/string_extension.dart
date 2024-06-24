@@ -27,10 +27,10 @@ extension StringExtension on String {
     bool? isWithOutComma,
   }) {
     if (isWithOutComma == true) {
-      return RegExp(r'[!@#$%^&*()?":{}|<>]').hasMatch(this);
+      return RegExp(r'[!@#$%^&*()?":{}+|<>/\\=\-]').hasMatch(this);
     }
 
-    return RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(this);
+    return RegExp(r'[!@#$%^&*(),.?":{}+|<>/\\=\-]').hasMatch(this);
   }
 
   String toCapitalize() {

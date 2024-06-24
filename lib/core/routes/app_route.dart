@@ -22,4 +22,5 @@ enum AppRoute {
   notifications,
   giveRating,
   writeReview,
+  fillPersonalInformation,
 }

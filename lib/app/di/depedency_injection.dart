@@ -16,6 +16,7 @@ import '../../features/country/di/depedency_injection.dart';
 import '../../features/faq/di/depdency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/notification/di/depedency_injection.dart';
+import '../../features/personal_information/di/depedency_injection.dart';
 import '../../features/ratings/di/depedency_injection.dart';
 
 Future<void> init() async {
@@ -38,6 +39,8 @@ Future<void> init() async {
   FaqDI.inject();
 
   NotificationDI.inject();
+
+  PersonalInformationDI.inject();
 }
 
 Future<void> _injectPackages() async {

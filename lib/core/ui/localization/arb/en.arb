@@ -225,5 +225,45 @@
   "willYouRepurchaseThisTreatment": "Will you repurchase this treatment?",
   "tellUsAboutYourExperienceAfterThisTreatment": "Tell us about your experience after this treatment",
   "attention": "Attention",
-  "letsGiveItAFinalCheck": "Let's give it a final check. Once it's live, editing won't be possible."
+  "letsGiveItAFinalCheck": "Let's give it a final check. Once it's live, editing won't be possible.",
+  "takeAGuessIfYouAreNotSure": "Take a guess if you are not sure. You can update it later",
+  "your": "Your {item}",
+  "@your": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "weightGoal": "Weight goal",
+  "select": "Select {item}",
+  "@select": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "date": "Date",
+  "gender": "Gender",
+  "wePredictThatYouWillBe": "We predict that you’ll be",
+  "by": "By",
+  "yourPlanIsReady": "Your Plan is Ready",
+  "yourBudgetCalories": "Your budget is {calories} calories",
+  "@yourBudgetCalories": {
+        "placeholders": {
+            "calories": {
+                "type": "String"
+            }
+        }
+  },
+  "ifYourConsistenlyEatAnAverage": "If you consistently eat an average of {calories} calories, you’ll lose weight at the rate you selected",
+  "@ifYourConsistenlyEatAnAverage": {
+        "placeholders": {
+            "calories": {
+                "type": "String"
+            }
+        }
+  },
+  "continues": "Continue"
 }

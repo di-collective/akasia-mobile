@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/config/country_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/double_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/sex_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
@@ -12,13 +13,14 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/buttons/radio_widget.dart';
-import '../../../../core/ui/widget/dropdowns/dropdown_widget.dart';
+import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
-import '../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
+import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/data/datasources/local/activity_level_config.dart';
 import '../../../activity_level/domain/entities/activity_level_entity.dart';
@@ -310,21 +312,16 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Row(
-                              children: SexType.values.map((sexType) {
-                                return RadioWidget(
-                                  title: sexType.title(context: context),
-                                  value: sexType,
-                                  groupValue: _selectedSex,
-                                  onChanged: (val) {
-                                    if (val != null && val != _selectedSex) {
-                                      setState(() {
-                                        _selectedSex = val;
-                                      });
-                                    }
-                                  },
-                                );
-                              }).toList(),
+                            GenderRadioWidget(
+                              groupValue: _selectedSex,
+                              title: context.locale.gender,
+                              onChanged: (val) {
+                                if (val != null && val != _selectedSex) {
+                                  setState(() {
+                                    _selectedSex = val;
+                                  });
+                                }
+                              },
                             ),
                             const SizedBox(
                               height: 20,
@@ -349,20 +346,10 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            WeightTextFormWidget(
+                              context: context,
                               controller: _weightTextController,
                               title: context.locale.weight,
-                              suffixText: "kg",
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
-                              validator: (val) {
-                                return _weightTextController.validateOnlyNumber(
-                                  context: context,
-                                  isAllowComma: true,
-                                );
-                              },
                               onChanged: (_) {
                                 // reload
                                 setState(() {});
@@ -371,20 +358,10 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            HeightTextFormWidget(
+                              context: context,
                               controller: _heightTextController,
                               title: context.locale.height,
-                              suffixText: "cm",
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
-                              validator: (val) {
-                                return _heightTextController.validateOnlyNumber(
-                                  context: context,
-                                  isAllowComma: true,
-                                );
-                              },
                               onChanged: (_) {
                                 // reload
                                 setState(() {});
@@ -393,72 +370,11 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            DropdownWidget<ActivityLevelEntity>(
-                              itemHeight: 72,
-                              items: ActivityLevelLocalConfig.allActivityLevels
-                                  .map(
-                                (activityLevel) {
-                                  return DropdownMenuItem(
-                                    value: activityLevel,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                      ),
-                                      height: 72,
-                                      child: Row(
-                                        children: [
-                                          const NetworkImageWidget(
-                                            size: Size(40, 40),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  activityLevel.activity ?? '',
-                                                  style: textTheme.labelLarge
-                                                      .copyWith(
-                                                    color: colorScheme
-                                                        .onSurfaceDim,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 4,
-                                                ),
-                                                Text(
-                                                  activityLevel.description ??
-                                                      '',
-                                                  style: textTheme.labelMedium
-                                                      .copyWith(
-                                                    color:
-                                                        colorScheme.onSurface,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ).toList(),
+                            ActivityLevelDropdownWidget(
+                              context: context,
                               title: context.locale.activityLevel,
                               hintText: context.locale.choose,
                               selectedValue: _selectedActivityLevel,
-                              borderRadiusMenu: BorderRadius.circular(20),
                               onChanged: (option) {
                                 if (option != null &&
                                     option != _selectedActivityLevel) {
@@ -467,16 +383,6 @@ class __BodyState extends State<_Body> {
                                   });
                                 }
                               },
-                              selectedItemBuilder: ActivityLevelLocalConfig
-                                  .allActivityLevels
-                                  .map((e) {
-                                return Text(
-                                  _selectedActivityLevel?.activity ?? '',
-                                  style: textTheme.bodyLarge.copyWith(
-                                    color: colorScheme.onSurface,
-                                  ),
-                                );
-                              }).toList(),
                             ),
                             const SizedBox(
                               height: 20,
@@ -554,13 +460,15 @@ class __BodyState extends State<_Body> {
       return false;
     }
 
-    if (!(_activeProfile?.weight?.toString() ?? '')
-        .isSame(otherValue: _weightTextController.text)) {
+    if (!(_activeProfile?.weight
+            ?.isSame(otherValue: _weightTextController.text.parseToDouble) ??
+        true)) {
       return false;
     }
 
-    if (!(_activeProfile?.height?.toString() ?? '')
-        .isSame(otherValue: _heightTextController.text)) {
+    if (!(_activeProfile?.height
+            ?.isSame(otherValue: _heightTextController.text.parseToDouble) ??
+        true)) {
       return false;
     }
 
@@ -642,16 +550,18 @@ class __BodyState extends State<_Body> {
       }
 
       // weight
-      if (!(_activeProfile?.weight?.toString() ?? '')
-          .isSame(otherValue: _weightTextController.text)) {
+      if (!(_activeProfile?.weight
+              ?.isSame(otherValue: _weightTextController.text.parseToDouble) ??
+          true)) {
         profile = profile.copyWith(
           weight: _weightTextController.text.parseToDouble,
         );
       }
 
       // height
-      if (!(_activeProfile?.height.toString() ?? '')
-          .isSame(otherValue: _heightTextController.text)) {
+      if (!(_activeProfile?.height
+              ?.isSame(otherValue: _heightTextController.text.parseToDouble) ??
+          true)) {
         profile = profile.copyWith(
           height: _heightTextController.text.parseToDouble,
         );
