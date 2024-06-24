@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/forms/search_form_field_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
-import '../../data/models/country_model.dart';
+import '../../../../core/utils/service_locator.dart';
+import '../../domain/entities/country_entity.dart';
 import '../cubit/countries/countries_cubit.dart';
 
 class SearchCountriesWidget extends StatelessWidget {
-  final CountryModel? selectedCountry;
+  final CountryEntity? selectedCountry;
 
   const SearchCountriesWidget({
     super.key,
@@ -30,7 +30,7 @@ class SearchCountriesWidget extends StatelessWidget {
 }
 
 class _Body extends StatefulWidget {
-  final CountryModel? selectedCountry;
+  final CountryEntity? selectedCountry;
 
   const _Body({
     this.selectedCountry,

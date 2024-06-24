@@ -1,7 +1,7 @@
-import '../../data/models/country_model.dart';
+import '../entities/country_entity.dart';
 
 abstract class CountryRepository {
-  Future<List<CountryModel>> getCountries({
+  Future<List<CountryEntity>> getCountries({
     String? phoneCode,
     String? name,
   });

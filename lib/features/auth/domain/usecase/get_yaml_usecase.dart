@@ -1,8 +1,8 @@
 import '../../../../core/usecases/usecase.dart';
-import '../../data/models/yaml_model.dart';
+import '../entities/yaml_entity.dart';
 import '../repositories/config_repository.dart';
 
-class GetYamlUseCase extends UseCase<YamlModel, NoParams> {
+class GetYamlUseCase extends UseCase<YamlEntity, NoParams> {
   final ConfigRepository configRepository;
 
   GetYamlUseCase({
@@ -10,7 +10,7 @@ class GetYamlUseCase extends UseCase<YamlModel, NoParams> {
   });
 
   @override
-  Future<YamlModel> call(NoParams params) async {
+  Future<YamlEntity> call(NoParams params) async {
     return await configRepository.getYaml();
   }
 }

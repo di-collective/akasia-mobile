@@ -1,6 +1,6 @@
+import '../../domain/entities/yaml_entity.dart';
 import '../../domain/repositories/config_repository.dart';
 import '../datasources/local/config_local_datasource.dart';
-import '../models/yaml_model.dart';
 
 class ConfigRepositoryImpl implements ConfigRepository {
   final ConfigLocalDataSource configLocalDataSource;
@@ -10,7 +10,7 @@ class ConfigRepositoryImpl implements ConfigRepository {
   });
 
   @override
-  Future<YamlModel> getYaml() async {
+  Future<YamlEntity> getYaml() async {
     try {
       final result = await configLocalDataSource.getYaml();
 

@@ -1,6 +1,6 @@
+import '../../domain/entities/country_entity.dart';
 import '../../domain/repositories/country_repository.dart';
 import '../datasources/local/country_local_datasource.dart';
-import '../models/country_model.dart';
 
 class CountryRepositoryImpl implements CountryRepository {
   final CountryLocalDataSource countryLocalDataSource;
@@ -10,7 +10,7 @@ class CountryRepositoryImpl implements CountryRepository {
   });
 
   @override
-  Future<List<CountryModel>> getCountries({
+  Future<List<CountryEntity>> getCountries({
     String? phoneCode,
     String? name,
   }) async {

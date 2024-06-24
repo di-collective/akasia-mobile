@@ -22,8 +22,8 @@ import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/data/datasources/local/activity_level_config.dart';
-import '../../../activity_level/data/models/activity_level_model.dart';
-import '../../../country/data/models/country_model.dart';
+import '../../../activity_level/domain/entities/activity_level_entity.dart';
+import '../../../country/domain/entities/country_entity.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
@@ -72,7 +72,7 @@ class __BodyState extends State<_Body> {
   final _membershipIdTextController = TextEditingController();
   final _eKtpTextController = TextEditingController();
   final _fullNameTextController = TextEditingController();
-  CountryModel? _selectedCountry;
+  CountryEntity? _selectedCountry;
   final _phoneTextController = TextEditingController();
   final _ageTextController = TextEditingController();
   final _dateOfBirthTextController = TextEditingController();
@@ -80,7 +80,7 @@ class __BodyState extends State<_Body> {
   final _bloodTypeTextController = TextEditingController();
   final _weightTextController = TextEditingController();
   final _heightTextController = TextEditingController();
-  ActivityLevelModel? _selectedActivityLevel;
+  ActivityLevelEntity? _selectedActivityLevel;
 
   ProfileEntity? _activeProfile;
 
@@ -381,7 +381,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            DropdownWidget<ActivityLevelModel>(
+                            DropdownWidget<ActivityLevelEntity>(
                               itemHeight: 72,
                               items: ActivityLevelLocalConfig.allActivityLevels
                                   .map(

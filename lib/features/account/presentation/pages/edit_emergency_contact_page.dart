@@ -15,7 +15,7 @@ import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../country/data/models/country_model.dart';
+import '../../../country/domain/entities/country_entity.dart';
 import '../../../country/presentation/cubit/countries/countries_cubit.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
@@ -72,7 +72,7 @@ class __BodyState extends State<_Body> {
   final _relationshipTextController = TextEditingController();
   final _nameTextController = TextEditingController();
   final _phoneTextController = TextEditingController();
-  CountryModel? _selectedCountry;
+  CountryEntity? _selectedCountry;
 
   String? _activeEcRelation;
   String? _activeEcName;

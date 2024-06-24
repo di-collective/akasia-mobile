@@ -1,12 +1,8 @@
 import '../../../core/utils/service_locator.dart';
 import '../data/datasources/remote/account_remote_datasource.dart';
-import '../data/datasources/remote/allergy_remote_datasource.dart';
 import '../data/repositories/account_repository_impl.dart';
-import '../data/repositories/allergy_repository_impl.dart';
 import '../domain/repositories/account_repository.dart';
-import '../domain/repositories/allergy_repository.dart';
 import '../domain/usecases/change_profile_picture_usecase.dart';
-import '../domain/usecases/get_allergies_usecase.dart';
 import '../domain/usecases/get_profile_usecase.dart';
 import '../domain/usecases/update_profile_usecase.dart';
 import '../presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
@@ -38,11 +34,6 @@ final class AccountDI {
         imageCompressInfo: sl(),
       );
     });
-    sl.registerLazySingleton<AllergyRemoteDataSource>(() {
-      return AllergyRemoteDataSourceImpl(
-        appHttpClient: sl(),
-      );
-    });
   }
 
   static void _injectRepositories() {
@@ -53,24 +44,12 @@ final class AccountDI {
         authLocalDataSource: sl(),
       );
     });
-    sl.registerLazySingleton<AllergyRepository>(() {
-      return AllergyRepositoryImpl(
-        networkInfo: sl(),
-        authLocalDataSource: sl(),
-        allergyRemoteDataSource: sl(),
-      );
-    });
   }
 
   static void _injectUseCases() {
     sl.registerLazySingleton<ChangeProfilePictureUseCase>(() {
       return ChangeProfilePictureUseCase(
         accountRepository: sl(),
-      );
-    });
-    sl.registerLazySingleton<GetAllergiesUseCase>(() {
-      return GetAllergiesUseCase(
-        allergyRepository: sl(),
       );
     });
     sl.registerLazySingleton<GetProfileUseCase>(() {
