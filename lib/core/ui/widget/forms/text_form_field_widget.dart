@@ -21,7 +21,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onTapSuffixText;
   final bool? readOnly;
   final String? initialValue;
-  final Color? backgroundColor;
+  final Color? backgroundColor, textColor;
   final FocusNode? focusNode;
   final Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
@@ -50,6 +50,7 @@ class TextFormFieldWidget extends StatefulWidget {
     this.readOnly,
     this.initialValue,
     this.backgroundColor,
+    this.textColor,
     this.focusNode,
     this.onChanged,
     this.inputFormatters,
@@ -210,6 +211,10 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   Color textColor({
     required AppColorScheme colorScheme,
   }) {
+    if (widget.textColor != null) {
+      return widget.textColor!;
+    }
+
     if (widget.readOnly == true) {
       return colorScheme.onSurfaceBright;
     }

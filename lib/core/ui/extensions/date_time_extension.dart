@@ -1,36 +1,18 @@
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
-  String formatToLocal({
-    bool? isHideDayName,
-    bool? isShortMonth,
-    String? locale,
-  }) {
-    initializeDateFormatting();
-
-    final String dayName = DateFormat('EEEE', locale).format(this);
-    late String monthName;
-    if (isShortMonth == true) {
-      monthName = DateFormat.MMM('id').format(this);
-    } else {
-      monthName = DateFormat.MMMM('id').format(this);
-    }
-
-    final String day = DateFormat.d().format(this);
-    final String year = DateFormat.y().format(this);
-
-    if (isHideDayName == true) {
-      return '$day $monthName $year';
-    } else if (isShortMonth == true) {
-      return '$day $monthName $year';
-    } else {
-      return '$dayName, $day $monthName $year';
-    }
-  }
-
   String get toDateApi {
     // expected date format on string 2006-01-02T15:04:05Z
     return DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(this);
+  }
+
+  String? formatDate({
+    String? format,
+  }) {
+    try {
+      return DateFormat(format ?? 'MM-dd-yyyy').format(this);
+    } catch (e) {
+      return null;
+    }
   }
 }

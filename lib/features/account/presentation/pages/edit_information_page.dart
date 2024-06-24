@@ -76,6 +76,7 @@ class __BodyState extends State<_Body> {
   final _phoneTextController = TextEditingController();
   final _ageTextController = TextEditingController();
   final _dateOfBirthTextController = TextEditingController();
+  DateTime? _selectedDateOfBirth;
   SexType? _selectedSex;
   final _bloodTypeTextController = TextEditingController();
   final _weightTextController = TextEditingController();
@@ -104,7 +105,11 @@ class __BodyState extends State<_Body> {
       _fullNameTextController.text = _activeProfile?.name ?? '';
       _phoneTextController.text = _activeProfile?.phone ?? '';
       _ageTextController.text = _activeProfile?.age ?? '';
-      _dateOfBirthTextController.text = _activeProfile?.dob ?? '';
+      if (_activeProfile?.dob != null) {
+        _selectedDateOfBirth = _activeProfile?.dob?.toDateTime();
+        _dateOfBirthTextController.text =
+            _selectedDateOfBirth?.formatDate() ?? '';
+      }
       _selectedSex = SexTypeExtension.fromString(_activeProfile?.sex);
       _bloodTypeTextController.text = _activeProfile?.bloodType ?? '';
       _weightTextController.text = _activeProfile?.weight?.toString() ?? '';
@@ -282,17 +287,24 @@ class __BodyState extends State<_Body> {
                               hintText: context.locale.choose,
                               firstDate: DateTime(1900),
                               lastDate: DateTime.now(),
-                              initialDate:
-                                  _dateOfBirthTextController.text.toDateTime,
+                              initialDate: _selectedDateOfBirth,
                               onSelectedDate: (val) {
-                                if (val != null &&
-                                    val.toDateApi !=
-                                        _dateOfBirthTextController.text) {
-                                  setState(() {
-                                    _dateOfBirthTextController.text =
-                                        val.toDateApi;
-                                  });
+                                if (val == null) {
+                                  return;
                                 }
+                                if (val == _selectedDateOfBirth) {
+                                  return;
+                                }
+
+                                final newDate = val.formatDate();
+                                if (newDate == null) {
+                                  return;
+                                }
+
+                                setState(() {
+                                  _dateOfBirthTextController.text = newDate;
+                                  _selectedDateOfBirth = val;
+                                });
                               },
                             ),
                             const SizedBox(
@@ -527,7 +539,7 @@ class __BodyState extends State<_Body> {
       return false;
     }
 
-    if (!(_activeProfile?.dob ?? '')
+    if (!(_activeProfile?.dob?.formatDate() ?? '')
         .isSame(otherValue: _dateOfBirthTextController.text)) {
       return false;
     }
@@ -607,10 +619,10 @@ class __BodyState extends State<_Body> {
       }
 
       // date of birth
-      if (!(_activeProfile?.dob ?? '')
+      if (!(_activeProfile?.dob?.formatDate() ?? '')
           .isSame(otherValue: _dateOfBirthTextController.text)) {
         profile = profile.copyWith(
-          dob: _dateOfBirthTextController.text,
+          dob: _selectedDateOfBirth?.toDateApi,
         );
       }
 
