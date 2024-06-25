@@ -1,9 +1,9 @@
 import '../../../../core/usecases/usecase.dart';
-import '../../data/models/country_model.dart';
+import '../entities/country_entity.dart';
 import '../repositories/country_repository.dart';
 
 class GetCountriesUseCase
-    extends UseCase<List<CountryModel>, GetCountriesUseCaseParams> {
+    extends UseCase<List<CountryEntity>, GetCountriesUseCaseParams> {
   final CountryRepository countryRepository;
 
   GetCountriesUseCase({
@@ -11,7 +11,7 @@ class GetCountriesUseCase
   });
 
   @override
-  Future<List<CountryModel>> call(GetCountriesUseCaseParams params) async {
+  Future<List<CountryEntity>> call(GetCountriesUseCaseParams params) async {
     return await countryRepository.getCountries(
       phoneCode: params.phoneCode,
       name: params.name,

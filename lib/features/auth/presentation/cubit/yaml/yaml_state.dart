@@ -12,7 +12,7 @@ final class YamlInitial extends YamlState {}
 final class YamlLoading extends YamlState {}
 
 final class YamlLoaded extends YamlState {
-  final YamlModel yaml;
+  final YamlEntity yaml;
 
   const YamlLoaded({
     required this.yaml,

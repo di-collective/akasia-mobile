@@ -16,7 +16,7 @@ import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../country/data/models/country_model.dart';
+import '../../../country/domain/entities/country_entity.dart';
 import '../cubit/sign_up/sign_up_cubit.dart';
 import '../widgets/social_auth_button_widget.dart';
 
@@ -52,7 +52,7 @@ class __BodyState extends State<_Body> {
   final _passwordTextController = TextEditingController();
   final _confirmPasswordTextController = TextEditingController();
 
-  late CountryModel _selectedCountry;
+  late CountryEntity _selectedCountry;
 
   @override
   void initState() {

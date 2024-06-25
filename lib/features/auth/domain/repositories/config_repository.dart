@@ -1,5 +1,5 @@
-import '../../data/models/yaml_model.dart';
+import '../entities/yaml_entity.dart';
 
 abstract class ConfigRepository {
-  Future<YamlModel> getYaml();
+  Future<YamlEntity> getYaml();
 }

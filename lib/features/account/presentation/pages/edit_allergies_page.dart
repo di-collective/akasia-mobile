@@ -26,8 +26,8 @@ class EditAllergiesPageParams {
   });
 }
 
-class EditAllergiesPage<T> extends StatelessWidget {
-  final T? params;
+class EditAllergiesPage extends StatelessWidget {
+  final EditAllergiesPageParams? params;
 
   const EditAllergiesPage({
     super.key,
@@ -49,8 +49,8 @@ class EditAllergiesPage<T> extends StatelessWidget {
   }
 }
 
-class _Body<T> extends StatefulWidget {
-  final T? params;
+class _Body extends StatefulWidget {
+  final EditAllergiesPageParams? params;
 
   const _Body({
     this.params,
@@ -74,7 +74,7 @@ class __BodyState extends State<_Body> {
   void _init() {
     // init default allergies
     final params = widget.params;
-    if (params is EditAllergiesPageParams) {
+    if (params != null) {
       final paramsAllergies = params.profile?.allergies;
       if (paramsAllergies != null) {
         final allergies = paramsAllergies.split(',').map((allergy) {

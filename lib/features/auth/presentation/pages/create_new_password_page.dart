@@ -25,8 +25,8 @@ class CreateNewPasswordPageParams {
   });
 }
 
-class CreateNewPasswordPage<T> extends StatelessWidget {
-  final T? params;
+class CreateNewPasswordPage extends StatelessWidget {
+  final CreateNewPasswordPageParams? params;
 
   const CreateNewPasswordPage({
     super.key,
@@ -44,8 +44,8 @@ class CreateNewPasswordPage<T> extends StatelessWidget {
   }
 }
 
-class _Body<T> extends StatefulWidget {
-  final T? params;
+class _Body extends StatefulWidget {
+  final CreateNewPasswordPageParams? params;
 
   const _Body({
     this.params,
@@ -72,7 +72,7 @@ class __BodyState extends State<_Body> {
   }
 
   void _init() {
-    if (widget.params != null && widget.params is CreateNewPasswordPageParams) {
+    if (widget.params != null) {
       params = widget.params;
     }
   }

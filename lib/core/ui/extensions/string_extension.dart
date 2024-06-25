@@ -103,13 +103,15 @@ extension StringExtension on String {
         .hasMatch(this);
   }
 
-  DateTime? get toDateTime {
+  DateTime? toDateTime({
+    String? format,
+  }) {
     try {
       if (isEmpty) {
         return null;
       }
 
-      return DateTime.tryParse(this);
+      return DateFormat(format ?? 'yyyy-MM-ddTHH:mm:ssZ').parse(this);
     } catch (error) {
       Logger.error('toDateTime error: $error');
 
@@ -188,7 +190,7 @@ extension StringExtension on String {
     String? format,
   }) {
     try {
-      final DateTime? date = toDateTime;
+      final DateTime? date = toDateTime(format: format);
 
       if (date == null) {
         return null;

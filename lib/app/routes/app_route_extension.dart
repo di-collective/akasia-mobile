@@ -21,9 +21,9 @@ import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
-import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/ratings/presentation/pages/write_review_page.dart';
 
 extension AppRouteExtension on AppRoute {
@@ -89,30 +89,55 @@ extension AppRouteExtension on AppRoute {
       case AppRoute.forgotPassword:
         return const ForgotPasswordPage();
       case AppRoute.createNewPassword:
+        CreateNewPasswordPageParams? params;
+        if (arguments is CreateNewPasswordPageParams) {
+          params = arguments;
+        }
+
         return CreateNewPasswordPage(
-          params: arguments,
+          params: params,
         );
       case AppRoute.successCreateNewPassword:
         return const SuccessCreateNewPasswordPage();
       case AppRoute.signUp:
         return const SignUpPage();
       case AppRoute.main:
+        MainPageParams? params;
+        if (arguments is MainPageParams) {
+          params = arguments;
+        }
+
         return MainPage(
-          params: arguments,
+          params: params,
         );
       case AppRoute.profile:
         return const ProfilePage();
       case AppRoute.editInformation:
+        EditInformationPageParams? params;
+        if (arguments is EditInformationPageParams) {
+          params = arguments;
+        }
+
         return EditInformationPage(
-          params: arguments,
+          params: params,
         );
       case AppRoute.editAllergies:
+        EditAllergiesPageParams? params;
+        if (arguments is EditAllergiesPageParams) {
+          params = arguments;
+        }
+
         return EditAllergiesPage(
-          params: arguments,
+          params: params,
         );
       case AppRoute.editEmergencyContact:
+        EditEmergencyContactPageParams? params;
+        if (arguments is EditEmergencyContactPageParams) {
+          params = arguments;
+        }
+
         return EditEmergencyContactPage(
-          params: arguments,
+          params: params,
         );
       case AppRoute.accountSetting:
         return const AccountSettingPage();
@@ -127,8 +152,13 @@ extension AppRouteExtension on AppRoute {
       case AppRoute.faq:
         return const FaqPage();
       case AppRoute.faqDetails:
+        FaqDetailsPageParams? params;
+        if (arguments is FaqDetailsPageParams) {
+          params = arguments;
+        }
+
         return FaqDetailsPage(
-          params: arguments,
+          params: params,
         );
       case AppRoute.ratings:
         return const RatingsPage();
@@ -137,12 +167,22 @@ extension AppRouteExtension on AppRoute {
       case AppRoute.notifications:
         return const NotificationsPage();
       case AppRoute.giveRating:
+        GiveRatingPageArgs? params;
+        if (arguments is GiveRatingPageArgs) {
+          params = arguments;
+        }
+
         return GiveRatingPage(
-          args: arguments,
+          params: params,
         );
       case AppRoute.writeReview:
+        WriteReviewPageArgs? params;
+        if (arguments is WriteReviewPageArgs) {
+          params = arguments;
+        }
+
         return WriteReviewPage(
-          args: arguments,
+          args: params,
         );
     }
   }

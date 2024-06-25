@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/usecases/usecase.dart';
-import '../../../data/models/yaml_model.dart';
+import '../../../domain/entities/yaml_entity.dart';
 import '../../../domain/usecase/get_yaml_usecase.dart';
 
 part 'yaml_state.dart';
@@ -14,7 +14,7 @@ class YamlCubit extends Cubit<YamlState> {
     required this.getYamlUseCase,
   }) : super(YamlInitial());
 
-  Future<YamlModel> getYaml() async {
+  Future<YamlEntity> getYaml() async {
     emit(YamlLoading());
 
     try {

@@ -12,7 +12,7 @@ final class CountriesInitial extends CountriesState {}
 final class CountriesLoading extends CountriesState {}
 
 final class CountriesLoaded extends CountriesState {
-  final List<CountryModel> countries;
+  final List<CountryEntity> countries;
 
   const CountriesLoaded({
     required this.countries,

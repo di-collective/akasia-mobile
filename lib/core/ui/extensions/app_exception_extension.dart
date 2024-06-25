@@ -4,7 +4,7 @@ import '../../common/exception.dart';
 import 'build_context_extension.dart';
 import 'exception_extension.dart';
 
-extension CustomExceptionExtension on AppException {
+extension AppExceptionExtension on AppException {
   String errorMessage(BuildContext context) {
     if (this is AppNetworkException) {
       return context.locale.noInternetConnection;

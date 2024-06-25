@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/config/blood_type_config.dart';
 import '../../../../core/config/country_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
@@ -22,8 +21,9 @@ import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/data/datasources/local/activity_level_config.dart';
-import '../../../activity_level/data/models/activity_level_model.dart';
-import '../../../country/data/models/country_model.dart';
+import '../../../activity_level/domain/entities/activity_level_entity.dart';
+import '../../../country/domain/entities/country_entity.dart';
+import '../../data/datasources/local/blood_type_config.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_information/edit_information_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
@@ -36,8 +36,8 @@ class EditInformationPageParams {
   });
 }
 
-class EditInformationPage<T> extends StatelessWidget {
-  final T? params;
+class EditInformationPage extends StatelessWidget {
+  final EditInformationPageParams? params;
 
   const EditInformationPage({
     super.key,
@@ -55,8 +55,8 @@ class EditInformationPage<T> extends StatelessWidget {
   }
 }
 
-class _Body<T> extends StatefulWidget {
-  final T? params;
+class _Body extends StatefulWidget {
+  final EditInformationPageParams? params;
 
   const _Body({
     this.params,
@@ -72,15 +72,16 @@ class __BodyState extends State<_Body> {
   final _membershipIdTextController = TextEditingController();
   final _eKtpTextController = TextEditingController();
   final _fullNameTextController = TextEditingController();
-  CountryModel? _selectedCountry;
+  CountryEntity? _selectedCountry;
   final _phoneTextController = TextEditingController();
   final _ageTextController = TextEditingController();
   final _dateOfBirthTextController = TextEditingController();
+  DateTime? _selectedDateOfBirth;
   SexType? _selectedSex;
   final _bloodTypeTextController = TextEditingController();
   final _weightTextController = TextEditingController();
   final _heightTextController = TextEditingController();
-  ActivityLevelModel? _selectedActivityLevel;
+  ActivityLevelEntity? _selectedActivityLevel;
 
   ProfileEntity? _activeProfile;
 
@@ -95,7 +96,7 @@ class __BodyState extends State<_Body> {
     _selectedCountry = CountryConfig.indonesia; // TODO: Dynamic country
 
     final params = widget.params;
-    if (params is EditInformationPageParams) {
+    if (params != null) {
       _activeProfile = params.profile;
 
       // init controller
@@ -104,7 +105,11 @@ class __BodyState extends State<_Body> {
       _fullNameTextController.text = _activeProfile?.name ?? '';
       _phoneTextController.text = _activeProfile?.phone ?? '';
       _ageTextController.text = _activeProfile?.age ?? '';
-      _dateOfBirthTextController.text = _activeProfile?.dob ?? '';
+      if (_activeProfile?.dob != null) {
+        _selectedDateOfBirth = _activeProfile?.dob?.toDateTime();
+        _dateOfBirthTextController.text =
+            _selectedDateOfBirth?.formatDate() ?? '';
+      }
       _selectedSex = SexTypeExtension.fromString(_activeProfile?.sex);
       _bloodTypeTextController.text = _activeProfile?.bloodType ?? '';
       _weightTextController.text = _activeProfile?.weight?.toString() ?? '';
@@ -282,17 +287,24 @@ class __BodyState extends State<_Body> {
                               hintText: context.locale.choose,
                               firstDate: DateTime(1900),
                               lastDate: DateTime.now(),
-                              initialDate:
-                                  _dateOfBirthTextController.text.toDateTime,
+                              initialDate: _selectedDateOfBirth,
                               onSelectedDate: (val) {
-                                if (val != null &&
-                                    val.toDateApi !=
-                                        _dateOfBirthTextController.text) {
-                                  setState(() {
-                                    _dateOfBirthTextController.text =
-                                        val.toDateApi;
-                                  });
+                                if (val == null) {
+                                  return;
                                 }
+                                if (val == _selectedDateOfBirth) {
+                                  return;
+                                }
+
+                                final newDate = val.formatDate();
+                                if (newDate == null) {
+                                  return;
+                                }
+
+                                setState(() {
+                                  _dateOfBirthTextController.text = newDate;
+                                  _selectedDateOfBirth = val;
+                                });
                               },
                             ),
                             const SizedBox(
@@ -381,7 +393,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            DropdownWidget<ActivityLevelModel>(
+                            DropdownWidget<ActivityLevelEntity>(
                               itemHeight: 72,
                               items: ActivityLevelLocalConfig.allActivityLevels
                                   .map(
@@ -527,7 +539,7 @@ class __BodyState extends State<_Body> {
       return false;
     }
 
-    if (!(_activeProfile?.dob ?? '')
+    if (!(_activeProfile?.dob?.formatDate() ?? '')
         .isSame(otherValue: _dateOfBirthTextController.text)) {
       return false;
     }
@@ -607,10 +619,10 @@ class __BodyState extends State<_Body> {
       }
 
       // date of birth
-      if (!(_activeProfile?.dob ?? '')
+      if (!(_activeProfile?.dob?.formatDate() ?? '')
           .isSame(otherValue: _dateOfBirthTextController.text)) {
         profile = profile.copyWith(
-          dob: _dateOfBirthTextController.text,
+          dob: _selectedDateOfBirth?.toDateApi,
         );
       }
 

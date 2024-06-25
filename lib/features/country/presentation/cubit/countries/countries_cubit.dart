@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/country_model.dart';
+import '../../../domain/entities/country_entity.dart';
 import '../../../domain/usecases/get_countries_usecase.dart';
 
 part 'countries_state.dart';
@@ -13,7 +13,7 @@ class CountriesCubit extends Cubit<CountriesState> {
     required this.getCountriesUseCase,
   }) : super(CountriesInitial());
 
-  Future<List<CountryModel>> getCountries({
+  Future<List<CountryEntity>> getCountries({
     String? phoneCode,
     String? name,
   }) async {

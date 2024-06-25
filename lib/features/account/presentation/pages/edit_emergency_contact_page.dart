@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/config/country_config.dart';
-import '../../../../core/config/relationship_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
@@ -15,8 +14,9 @@ import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../country/data/models/country_model.dart';
+import '../../../country/domain/entities/country_entity.dart';
 import '../../../country/presentation/cubit/countries/countries_cubit.dart';
+import '../../data/datasources/local/relationship_config.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
@@ -29,8 +29,8 @@ class EditEmergencyContactPageParams {
   });
 }
 
-class EditEmergencyContactPage<T> extends StatelessWidget {
-  final T? params;
+class EditEmergencyContactPage extends StatelessWidget {
+  final EditEmergencyContactPageParams? params;
 
   const EditEmergencyContactPage({
     super.key,
@@ -55,8 +55,8 @@ class EditEmergencyContactPage<T> extends StatelessWidget {
   }
 }
 
-class _Body<T> extends StatefulWidget {
-  final T? params;
+class _Body extends StatefulWidget {
+  final EditEmergencyContactPageParams? params;
 
   const _Body({
     this.params,
@@ -72,7 +72,7 @@ class __BodyState extends State<_Body> {
   final _relationshipTextController = TextEditingController();
   final _nameTextController = TextEditingController();
   final _phoneTextController = TextEditingController();
-  CountryModel? _selectedCountry;
+  CountryEntity? _selectedCountry;
 
   String? _activeEcRelation;
   String? _activeEcName;
@@ -87,7 +87,7 @@ class __BodyState extends State<_Body> {
 
   Future<void> _init() async {
     final params = widget.params;
-    if (params is EditEmergencyContactPageParams) {
+    if (params != null) {
       // Set the initial values
       _activeEcRelation = params.profile?.ecRelation;
       _activeEcName = params.profile?.ecName;

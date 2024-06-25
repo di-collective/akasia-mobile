@@ -38,4 +38,14 @@ class ProfileCubit extends Cubit<ProfileState> {
   void emitProfileData(ProfileEntity profile) {
     emit(ProfileLoaded(profile: profile));
   }
+
+  Future<void> refreshGetProfile() async {
+    try {
+      final profile = await getProfileUseCase.call(NoParams());
+
+      emit(ProfileLoaded(profile: profile));
+    } catch (_) {
+      rethrow;
+    }
+  }
 }

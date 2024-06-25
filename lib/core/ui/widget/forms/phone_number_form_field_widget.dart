@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../../features/country/data/models/country_model.dart';
+import '../../../../features/country/domain/entities/country_entity.dart';
 import '../../extensions/validation_extension.dart';
 import 'text_form_field_widget.dart';
 
 class PhoneNumberFormFieldWidget extends StatefulWidget {
   final TextEditingController controller;
   final String? title;
-  final CountryModel? selectedCountry;
-  final Function(CountryModel)? onSelectedCountry;
+  final CountryEntity? selectedCountry;
+  final Function(CountryEntity)? onSelectedCountry;
   final bool? isRequired, isLoading;
   final Function(String)? onChanged;
   final Function(String?)? validator;

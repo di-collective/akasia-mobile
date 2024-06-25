@@ -10,7 +10,7 @@ import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../country/data/models/country_model.dart';
+import '../../../country/domain/entities/country_entity.dart';
 import '../cubit/change_phone_number/change_phone_number_cubit.dart';
 
 class ChangePhoneNumberPage extends StatelessWidget {
@@ -38,7 +38,7 @@ class __BodyState extends State<_Body> {
   final _oldPhoneNumberTextController = TextEditingController();
   final _newPhoneNumberTextController = TextEditingController();
 
-  CountryModel? _selectedCountry;
+  CountryEntity? _selectedCountry;
 
   @override
   void initState() {
