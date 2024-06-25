@@ -1,11 +1,10 @@
-import '../../../../core/routes/app_route.dart';
-import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
-import '../../../main/presentation/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/routes/app_route.dart';
+import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -24,6 +23,7 @@ import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/domain/entities/activity_level_entity.dart';
+import '../../../main/presentation/pages/main_page.dart';
 import '../cubit/fill_personal_information/fill_personal_information_cubit.dart';
 
 class FillPersonalInformationPage extends StatelessWidget {
@@ -158,6 +158,7 @@ class __BodyState extends State<_Body> {
                                       vertical: 24,
                                     ),
                                     decoration: BoxDecoration(
+                                      color: Colors.white,
                                       border: Border.all(
                                         color: colorScheme.primary,
                                         width: 2,
@@ -315,8 +316,27 @@ class __BodyState extends State<_Body> {
                                   const SizedBox(
                                     height: 8,
                                   ),
-                                  Text(
-                                    "47kg by April 9",
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              "${_weightGoalTextController.text}kg",
+                                          style: TextStyle(
+                                            color: colorScheme.primary,
+                                          ),
+                                        ),
+                                        const TextSpan(text: " by "),
+                                        TextSpan(
+                                          text: "April 9",
+                                          style: TextStyle(
+                                            color: colorScheme.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    maxLines: 2,
+                                    textAlign: TextAlign.center,
                                     style: textTheme.headlineLarge.copyWith(
                                       color: colorScheme.onSurfaceDim,
                                       fontWeight: FontWeight.w700,
@@ -346,12 +366,13 @@ class __BodyState extends State<_Body> {
                                           text: context.locale
                                               .yourBudgetCalories("1.478"),
                                         ),
-                                        const TextSpan(text: " "),
+                                        const TextSpan(text: ". "),
                                         TextSpan(
                                           text: context.locale
                                               .ifYourConsistenlyEatAnAverage(
                                                   "1.478"),
                                         ),
+                                        const TextSpan(text: "."),
                                       ],
                                     ),
                                     maxLines: 5,
@@ -425,6 +446,10 @@ class __BodyState extends State<_Body> {
         return;
       }
 
+      // close keyboard
+      context.closeKeyboard;
+
+      // fill personal information
       await BlocProvider.of<FillPersonalInformationCubit>(context)
           .fillPersonalInformation();
 
