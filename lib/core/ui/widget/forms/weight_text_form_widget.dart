@@ -21,9 +21,8 @@ class WeightTextFormWidget extends TextFormFieldWidget {
           ),
           suffixText: "kg",
           validator: (val) {
-            return controller?.validateOnlyNumber(
+            return controller?.validateWeight(
               context: context,
-              isAllowComma: true,
               isRequired: isRequired,
             );
           },

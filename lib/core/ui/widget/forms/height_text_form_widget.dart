@@ -21,9 +21,8 @@ class HeightTextFormWidget extends TextFormFieldWidget {
           ),
           suffixText: "cm",
           validator: (val) {
-            return controller?.validateOnlyNumber(
+            return controller?.validateHeight(
               context: context,
-              isAllowComma: true,
               isRequired: isRequired,
             );
           },

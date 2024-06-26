@@ -60,6 +60,14 @@
       }
     }
   },
+  "maximum": "Maximum is {length}",
+  "@maximum": {
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
   "invalidPhoneNumber": "Invalid phone number",
   "invalidEKtp": "Invalid E-KTP",
   "enterYourEmail": "Enter your email and we’ll send you a link to reset your password",

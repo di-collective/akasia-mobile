@@ -176,6 +176,64 @@ extension TextEditingControllerExtension on TextEditingController {
     return null;
   }
 
+  String? validateWeight({
+    required BuildContext context,
+    bool? isRequired,
+  }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    // validate only number
+    if (text.isContainsLetter ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: true,
+        )) {
+      return context.locale.onlyNumber;
+    }
+
+    // validate maximum amount
+    final amount = text.parseToDouble;
+    if (amount != null) {
+      if (amount > 999) {
+        return context.locale.maximum(999);
+      }
+    }
+
+    return null;
+  }
+
+  String? validateHeight({
+    required BuildContext context,
+    bool? isRequired,
+  }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    // validate only number
+    if (text.isContainsLetter ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: true,
+        )) {
+      return context.locale.onlyNumber;
+    }
+
+    // validate maximum amount
+    final amount = text.parseToDouble;
+    if (amount != null) {
+      if (amount > 999) {
+        return context.locale.maximum(999);
+      }
+    }
+
+    return null;
+  }
+
   String? cannotSameAs({
     required BuildContext context,
     required String anotherValue,
