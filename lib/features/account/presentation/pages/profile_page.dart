@@ -1,3 +1,4 @@
+import 'package:akasia365mc/core/ui/widget/dividers/title_divider_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -60,14 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              width: 24,
-              height: 4,
-              decoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: BorderRadius.circular(99),
-              ),
-            ),
+            const TitleDividerWidget(),
             const SizedBox(
               height: 30,
             ),

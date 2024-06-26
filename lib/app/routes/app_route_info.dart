@@ -59,15 +59,14 @@ class AppRouteInfoImpl implements AppRouteInfo {
           ),
           AppRoute.ratings.route(
             routes: [
-              AppRoute.giveRating.route(
-                routes: [
-                  AppRoute.writeReview.route(),
-                ]
-              ),
+              AppRoute.giveRating.route(routes: [
+                AppRoute.writeReview.route(),
+              ]),
             ],
           ),
           AppRoute.helpCenter.route(),
           AppRoute.notifications.route(),
+          AppRoute.fillPersonalInformation.route(),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

@@ -6,9 +6,8 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
-import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/domain/entities/country_entity.dart';
 import '../cubit/change_phone_number/change_phone_number_cubit.dart';
@@ -87,7 +86,8 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 16,
                             ),
-                            PhoneNumberFormFieldWidget(
+                            PhoneNumberTextFormWidget(
+                              context: context,
                               controller: _oldPhoneNumberTextController,
                               title: context.locale.oldPhoneNumber,
                               isRequired: true,
@@ -100,24 +100,18 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            PhoneNumberFormFieldWidget(
+                            PhoneNumberTextFormWidget(
+                              context: context,
                               controller: _newPhoneNumberTextController,
                               title: context.locale.newPhoneNumber,
                               isRequired: true,
+                              isCannotSameAs: true,
                               selectedCountry: _selectedCountry,
+                              anotherPhoneNumber:
+                                  _oldPhoneNumberTextController.text,
                               onChanged: (_) {
                                 // reload
                                 setState(() {});
-                              },
-                              validator: (val) {
-                                return _newPhoneNumberTextController
-                                    .validatePhoneNumber(
-                                  context: context,
-                                  isRequired: true,
-                                  isCannotSameAs: true,
-                                  anotherPhoneNumber:
-                                      _oldPhoneNumberTextController.text,
-                                );
                               },
                             ),
                             SizedBox(

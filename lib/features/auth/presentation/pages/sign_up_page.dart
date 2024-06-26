@@ -13,7 +13,8 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
+import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/domain/entities/country_entity.dart';
@@ -124,20 +125,11 @@ class __BodyState extends State<_Body> {
                     Form(
                       key: _eKtpFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: TextFormFieldWidget(
+                      child: KtpTextFormWidget(
+                        context: context,
                         controller: _eKtpTextController,
                         title: context.locale.eKtpNumber,
-                        keyboardType: TextInputType.number,
-                        validator: (val) {
-                          if (_eKtpTextController.text.isEmpty) {
-                            return null;
-                          }
-
-                          return _eKtpTextController.validateKtp(
-                            context: context,
-                          );
-                        },
-                        onChanged: (val) {
+                        onChanged: (_) {
                           // reload
                           setState(() {});
                         },
@@ -171,15 +163,15 @@ class __BodyState extends State<_Body> {
                     Form(
                       key: _phoneFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: PhoneNumberFormFieldWidget(
+                      child: PhoneNumberTextFormWidget(
+                        context: context,
                         controller: _phoneTextController,
                         title: context.locale.phoneNumber,
                         isRequired: true,
                         selectedCountry: _selectedCountry,
-                        onSelectedCountry: (country) {
-                          setState(() {
-                            _selectedCountry = country;
-                          });
+                        onChanged: (val) {
+                          // reload
+                          setState(() {});
                         },
                       ),
                     ),
@@ -216,9 +208,13 @@ class __BodyState extends State<_Body> {
                             controller: _passwordTextController,
                             title: context.locale.password,
                             keyboardType: TextInputType.visiblePassword,
+                            description:
+                                context.locale.passwordsMustBeCharacters(12),
                             validator: (val) {
                               return _passwordTextController.validatePassword(
                                 context: context,
+                                isRequired:
+                                    _emailTextController.text.isNotEmpty,
                               );
                             },
                             onChanged: (val) {
@@ -239,7 +235,7 @@ class __BodyState extends State<_Body> {
                               );
                             },
                             validator: (val) {
-                              if (_confirmPasswordTextController.text.isEmpty) {
+                              if (_passwordTextController.text.isEmpty) {
                                 return null;
                               }
 
@@ -261,11 +257,17 @@ class __BodyState extends State<_Body> {
                       height: 20,
                     ),
                     ButtonWidget(
-                      text: context.locale.login,
+                      text: context.locale.register,
                       width: context.width,
                       isDisabled: _phoneTextController.text.isEmpty ||
                           _phoneFormKey.currentState?.validate() == false ||
+                          _eKtpFormKey.currentState?.validate() == false ||
+                          _nameTextController.text.isEmpty ||
                           _nameFormKey.currentState?.validate() == false ||
+                          _emailTextController.text.isEmpty ||
+                          _emailPasswordFormKey.currentState?.validate() ==
+                              false ||
+                          _passwordTextController.text.isEmpty ||
                           _emailPasswordFormKey.currentState?.validate() ==
                               false,
                       isLoading: state is SignUpLoading &&

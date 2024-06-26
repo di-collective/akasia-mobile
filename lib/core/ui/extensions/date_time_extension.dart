@@ -15,4 +15,8 @@ extension DateTimeExtension on DateTime {
       return null;
     }
   }
+
+  DateTime addDays(int days) {
+    return add(Duration(days: days));
+  }
 }

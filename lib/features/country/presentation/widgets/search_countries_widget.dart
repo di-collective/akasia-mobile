@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/forms/search_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/search_text_form_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../domain/entities/country_entity.dart';
@@ -74,7 +74,7 @@ class __BodyState extends State<_Body> {
         const SizedBox(
           height: 16,
         ),
-        SearchFormFieldWidget(
+        SearchTextFormWidget(
           controller: _searchTextController,
           hintText: context.locale.startTypingToSearch,
           onChanged: (val) {

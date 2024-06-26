@@ -17,6 +17,7 @@ import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
+import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -151,14 +152,7 @@ class _AccountPageState extends State<AccountPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    width: 24,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                  ),
+                  const TitleDividerWidget(),
                   const SizedBox(
                     height: 24,
                   ),

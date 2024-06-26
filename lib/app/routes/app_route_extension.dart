@@ -22,6 +22,7 @@ import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
+import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/ratings/presentation/pages/write_review_page.dart';
@@ -75,6 +76,8 @@ extension AppRouteExtension on AppRoute {
         return 'give-ratings';
       case AppRoute.writeReview:
         return 'write-review';
+      case AppRoute.fillPersonalInformation:
+        return 'fill-personal-information';
     }
   }
 
@@ -184,6 +187,8 @@ extension AppRouteExtension on AppRoute {
         return WriteReviewPage(
           args: params,
         );
+      case AppRoute.fillPersonalInformation:
+        return const FillPersonalInformationPage();
     }
   }
 

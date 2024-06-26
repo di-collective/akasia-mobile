@@ -32,6 +32,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onEditingComplete;
   final Function()? onClear;
   final bool? isRequired, isLoading;
+  final String? description;
 
   const TextFormFieldWidget({
     super.key,
@@ -62,6 +63,7 @@ class TextFormFieldWidget extends StatefulWidget {
     this.onClear,
     this.isRequired,
     this.isLoading,
+    this.description,
   });
 
   @override
@@ -183,6 +185,18 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             ],
           ],
         ),
+        if (widget.description != null && widget.description!.isNotEmpty) ...[
+          const SizedBox(
+            height: 3,
+          ),
+          Text(
+            "${widget.description!}.",
+            style: textTheme.bodySmall.copyWith(
+              color: colorScheme.onSurfaceBright,
+            ),
+            maxLines: 4,
+          ),
+        ],
       ],
     );
   }

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../dialogs/debouncer_info.dart';
 import 'text_form_field_widget.dart';
 
-class SearchFormFieldWidget extends StatelessWidget {
+class SearchTextFormWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? title, hintText;
   final Function()? onClear;
   final Function(String? query)? onChanged;
   final bool? isDisableDebouncer;
 
-  const SearchFormFieldWidget({
+  const SearchTextFormWidget({
     super.key,
     this.controller,
     this.title,

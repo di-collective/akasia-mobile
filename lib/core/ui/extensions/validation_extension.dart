@@ -37,9 +37,16 @@ extension TextEditingControllerExtension on TextEditingController {
 
   String? validateEmail({
     required BuildContext context,
+    bool? isRequired,
   }) {
-    if (text.isEmpty) {
-      return context.locale.cannotBeEmpty;
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    if (isRequired != true && text.isEmpty) {
+      return null;
     }
 
     if (!text.isEmail) {
@@ -57,6 +64,10 @@ extension TextEditingControllerExtension on TextEditingController {
       if (text.isEmpty) {
         return context.locale.cannotBeEmpty;
       }
+    }
+
+    if (isRequired != true && text.isEmpty) {
+      return null;
     }
 
     if (text.length < 12) {
@@ -171,6 +182,64 @@ extension TextEditingControllerExtension on TextEditingController {
           isWithOutComma: isAllowComma,
         )) {
       return context.locale.onlyNumber;
+    }
+
+    return null;
+  }
+
+  String? validateWeight({
+    required BuildContext context,
+    bool? isRequired,
+  }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    // validate only number
+    if (text.isContainsLetter ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: true,
+        )) {
+      return context.locale.onlyNumber;
+    }
+
+    // validate maximum amount
+    final amount = text.parseToDouble;
+    if (amount != null) {
+      if (amount > 999) {
+        return context.locale.maximum(999);
+      }
+    }
+
+    return null;
+  }
+
+  String? validateHeight({
+    required BuildContext context,
+    bool? isRequired,
+  }) {
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
+    }
+
+    // validate only number
+    if (text.isContainsLetter ||
+        text.isContainsSpecialCharacter(
+          isWithOutComma: true,
+        )) {
+      return context.locale.onlyNumber;
+    }
+
+    // validate maximum amount
+    final amount = text.parseToDouble;
+    if (amount != null) {
+      if (amount > 999) {
+        return context.locale.maximum(999);
+      }
     }
 
     return null;

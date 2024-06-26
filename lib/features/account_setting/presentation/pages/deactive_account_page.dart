@@ -13,7 +13,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/buttons/radio_widget.dart';
+import '../../../../core/ui/widget/radios/radio_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';

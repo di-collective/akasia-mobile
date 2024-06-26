@@ -35,6 +35,7 @@ class RadioWidget<T> extends StatelessWidget {
             if (states.contains(MaterialState.selected)) {
               return colorScheme.primary;
             }
+
             // inactive
             return colorScheme.surfaceDim;
           }),
@@ -45,7 +46,7 @@ class RadioWidget<T> extends StatelessWidget {
             title!,
             style: titleStyle ??
                 textTheme.bodyLarge.copyWith(
-                  color: colorScheme.onSurface,
+                  color: colorScheme.onSurfaceDim,
                 ),
           ),
         ],

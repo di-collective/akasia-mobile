@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/config/env_config.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -15,10 +17,10 @@ import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../widget/bottom_nav_bar.dart';
 
 class MainPageParams {
-  final int? selectedIndex;
+  final BottomNavigationItem? selectedTab;
 
   MainPageParams({
-    this.selectedIndex,
+    this.selectedTab,
   });
 }
 
@@ -39,27 +41,16 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
-    if (widget.params?.selectedIndex != null) {
-      final selectedIndex = widget.params!.selectedIndex!;
-      if (selectedIndex < BottomNavigationItem.values.length) {
-        // init selected bottom navigation
-        final item = BottomNavigationItem.values[selectedIndex];
-        BlocProvider.of<BottomNavigationCubit>(context).onChanged(
-          item,
-        );
+    _init();
+  }
 
-        return;
-      }
-    }
+  void _init() {
+    // init selected bottom navigation
+    final selectedTab = widget.params?.selectedTab;
 
-    // init bottom navigation
-    BlocProvider.of<BottomNavigationCubit>(context).init();
-
-    final profileState = BlocProvider.of<ProfileCubit>(context).state;
-    if (profileState is! ProfileLoaded) {
-      // if state is not loaded, get data
-      _onGetProfile();
-    }
+    _onChange(
+      item: selectedTab,
+    );
   }
 
   Future<void> _onGetProfile() async {
@@ -79,20 +70,53 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: AppBottomNavBar(
               selectedItem: state.selectedItem,
               onTap: (item) {
-                if (item == BottomNavigationItem.chatUs) {
-                  // chat us navigation tapped
-                  // open phone
-                  _onOpenChatUs();
-                } else {
-                  BlocProvider.of<BottomNavigationCubit>(context).onChanged(
-                    item,
-                  );
-                }
+                _onChange(
+                  item: item,
+                );
               },
             ),
           ),
         );
       },
+    );
+  }
+
+  void _onChange({
+    required BottomNavigationItem? item,
+  }) async {
+    if (item == null) {
+      // if item null, init bottom navigation
+      BlocProvider.of<BottomNavigationCubit>(context).init();
+
+      // get profile
+      final profileState = BlocProvider.of<ProfileCubit>(context).state;
+      if (profileState is! ProfileLoaded) {
+        // if state is not loaded, get data
+        _onGetProfile();
+      }
+
+      return;
+    }
+
+    if (item == BottomNavigationItem.chatUs) {
+      // if item is chat us, open chat us
+      _onOpenChatUs();
+
+      return;
+    }
+
+    if (item == BottomNavigationItem.myTreatment) {
+      // if personal information is null, navigate to fill personal information
+      final isContinue = await context.pushNamed(
+        AppRoute.fillPersonalInformation.name,
+      );
+      if (isContinue != true) {
+        return;
+      }
+    }
+
+    BlocProvider.of<BottomNavigationCubit>(context).onChanged(
+      item,
     );
   }
 
