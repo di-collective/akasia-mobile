@@ -17,6 +17,7 @@ import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
+import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
@@ -192,32 +193,18 @@ class __BodyState extends State<_Body> {
                                   context: context,
                                 );
                               },
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            KtpTextFormWidget(
+                              context: context,
                               controller: _eKtpTextController,
                               title: context.locale.eKtpNumber,
-                              keyboardType: TextInputType.number,
                               readOnly: _activeProfile?.nik !=
                                   null, // if user has eKtp, set to true
-                              validator: (val) {
-                                if (_eKtpTextController.text.isEmpty &&
-                                    _activeProfile?.nik == null) {
-                                  return null;
-                                }
-
-                                return _eKtpTextController.validateKtp(
-                                  context: context,
-                                  isRequired: _activeProfile?.nik !=
-                                      null, // if user has eKtp, set to true
-                                );
-                              },
+                              isRequired: _activeProfile?.nik !=
+                                  null, // if user has eKtp, set to true
                               onChanged: (_) {
                                 // reload
                                 setState(() {});
@@ -246,17 +233,11 @@ class __BodyState extends State<_Body> {
                               height: 20,
                             ),
                             PhoneNumberFormFieldWidget(
+                              context: context,
                               controller: _phoneTextController,
                               title: context.locale.phoneNumber,
                               selectedCountry: _selectedCountry,
                               isRequired: true,
-                              onSelectedCountry: (val) {
-                                if (val != _selectedCountry) {
-                                  setState(() {
-                                    _selectedCountry = val;
-                                  });
-                                }
-                              },
                               onChanged: (_) {
                                 // reload
                                 setState(() {});

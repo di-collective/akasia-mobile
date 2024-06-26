@@ -1,42 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../features/country/domain/entities/country_entity.dart';
 import '../../extensions/validation_extension.dart';
 import 'text_form_field_widget.dart';
 
-class PhoneNumberFormFieldWidget extends TextFormFieldWidget {
+class KtpTextFormWidget extends TextFormFieldWidget {
   final BuildContext context;
-  final CountryEntity? selectedCountry;
-  final bool? isCannotSameAs;
-  final String? anotherPhoneNumber;
 
-  PhoneNumberFormFieldWidget({
+  KtpTextFormWidget({
     super.key,
     required this.context,
-    required this.selectedCountry,
-    this.isCannotSameAs,
-    this.anotherPhoneNumber,
     super.controller,
     super.title,
     super.hintText,
     super.isRequired,
     super.isLoading,
+    super.readOnly,
     super.onChanged,
     super.onTap,
   }) : super(
           keyboardType: const TextInputType.numberWithOptions(
             decimal: false,
           ),
-          prefixText: selectedCountry?.phoneCode != null
-              ? "+${selectedCountry?.phoneCode}"
-              : null,
           validator: (val) {
-            return controller?.validatePhoneNumber(
+            return controller?.validateKtp(
               context: context,
               isRequired: isRequired,
-              isCannotSameAs: isCannotSameAs,
-              anotherPhoneNumber: anotherPhoneNumber,
             );
           },
           inputFormatters: [

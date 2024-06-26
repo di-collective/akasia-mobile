@@ -202,18 +202,12 @@ class __BodyState extends State<_Body> {
                             BlocBuilder<CountriesCubit, CountriesState>(
                               builder: (context, state) {
                                 return PhoneNumberFormFieldWidget(
+                                  context: context,
                                   controller: _phoneTextController,
                                   title: context.locale.phoneNumber,
                                   selectedCountry: _selectedCountry,
                                   isRequired: true,
                                   isLoading: state is CountriesLoading,
-                                  onSelectedCountry: (val) {
-                                    if (val != _selectedCountry) {
-                                      setState(() {
-                                        _selectedCountry = val;
-                                      });
-                                    }
-                                  },
                                   onChanged: (val) {
                                     // reload
                                     setState(() {});
