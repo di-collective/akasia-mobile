@@ -14,7 +14,7 @@ import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
-import '../../../../core/ui/widget/forms/phone_number_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/domain/entities/country_entity.dart';
@@ -163,7 +163,7 @@ class __BodyState extends State<_Body> {
                     Form(
                       key: _phoneFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: PhoneNumberFormFieldWidget(
+                      child: PhoneNumberTextFormWidget(
                         context: context,
                         controller: _phoneTextController,
                         title: context.locale.phoneNumber,

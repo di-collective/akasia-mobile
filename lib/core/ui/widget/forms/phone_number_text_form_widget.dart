@@ -5,13 +5,13 @@ import '../../../../features/country/domain/entities/country_entity.dart';
 import '../../extensions/validation_extension.dart';
 import 'text_form_field_widget.dart';
 
-class PhoneNumberFormFieldWidget extends TextFormFieldWidget {
+class PhoneNumberTextFormWidget extends TextFormFieldWidget {
   final BuildContext context;
   final CountryEntity? selectedCountry;
   final bool? isCannotSameAs;
   final String? anotherPhoneNumber;
 
-  PhoneNumberFormFieldWidget({
+  PhoneNumberTextFormWidget({
     super.key,
     required this.context,
     required this.selectedCountry,

@@ -17,7 +17,7 @@ import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
-import '../../../../core/ui/widget/forms/date_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/date_form_widget.dart';
 import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
@@ -199,7 +199,7 @@ class __BodyState extends State<_Body> {
                                         const SizedBox(
                                           height: 20,
                                         ),
-                                        DateFormFieldWidget(
+                                        DateFormWidget(
                                           controller:
                                               _dateOfBirthTextController,
                                           title: context.locale.dateOfBirth,

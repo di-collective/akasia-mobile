@@ -6,7 +6,7 @@ import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
 import 'text_form_field_widget.dart';
 
-class DateFormFieldWidget extends StatelessWidget {
+class DateFormWidget extends StatelessWidget {
   final TextEditingController controller;
   final String? title;
   final String? hintText;
@@ -16,7 +16,7 @@ class DateFormFieldWidget extends StatelessWidget {
   final DateTime firstDate;
   final DateTime lastDate;
 
-  const DateFormFieldWidget({
+  const DateFormWidget({
     super.key,
     required this.controller,
     this.title,
