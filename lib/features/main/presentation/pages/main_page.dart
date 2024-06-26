@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
 
   void _onChange({
     required BottomNavigationItem? item,
-  }) {
+  }) async {
     if (item == null) {
       // if item null, init bottom navigation
       BlocProvider.of<BottomNavigationCubit>(context).init();
@@ -107,9 +107,12 @@ class _MainPageState extends State<MainPage> {
 
     if (item == BottomNavigationItem.myTreatment) {
       // if personal information is null, navigate to fill personal information
-      context.goNamed(AppRoute.fillPersonalInformation.name);
-
-      return;
+      final isContinue = await context.pushNamed(
+        AppRoute.fillPersonalInformation.name,
+      );
+      if (isContinue != true) {
+        return;
+      }
     }
 
     BlocProvider.of<BottomNavigationCubit>(context).onChanged(

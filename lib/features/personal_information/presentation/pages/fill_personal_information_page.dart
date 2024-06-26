@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routes/app_route.dart';
-import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -23,7 +21,6 @@ import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/domain/entities/activity_level_entity.dart';
-import '../../../main/presentation/pages/main_page.dart';
 import '../cubit/fill_personal_information/fill_personal_information_cubit.dart';
 import '../widgets/finish_chart_widget.dart';
 
@@ -481,13 +478,8 @@ class __BodyState extends State<_Body> {
   }
 
   void _onContinue() {
-    // go to main page with tab my treatment
-    context.goNamed(
-      AppRoute.main.name,
-      extra: MainPageParams(
-        selectedTab: BottomNavigationItem.myTreatment,
-      ),
-    );
+    // return true
+    context.pop(true);
   }
 }
 
