@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../widgets/emergency_call_widget.dart';
+import '../widgets/weight_chart_widget.dart';
 
 class MyTreatmentPage extends StatefulWidget {
   const MyTreatmentPage({super.key});
@@ -12,10 +13,14 @@ class MyTreatmentPage extends StatefulWidget {
 }
 
 class _MyTreatmentPageState extends State<MyTreatmentPage> {
+  bool _isDisabled = true;
+
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
+
+    _isDisabled = false;
 
     return Scaffold(
       appBar: AppBar(
@@ -23,6 +28,7 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
           context.locale.myTreatment,
         ),
       ),
+      backgroundColor: colorScheme.surfaceBright,
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: context.paddingHorizontal,
@@ -33,12 +39,57 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
             SizedBox(
               height: context.paddingTop,
             ),
-            const EmergencyCallWidget(
-              isDisabled: false,
+            EmergencyCallWidget(
+              isDisabled: _isDisabled,
+            ),
+            const SizedBox(
+              height: 32,
+            ),
+            WeightChartWidget(
+              isDisabled: _isDisabled,
+            ),
+            const SizedBox(
+              height: 32,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    context.locale.history(
+                      context.locale.procedure,
+                    ),
+                    style: textTheme.titleMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: colorScheme.onSurfaceDim,
+                    ),
+                    maxLines: 2,
+                  ),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                GestureDetector(
+                  onTap: _onViewAllProcedure,
+                  child: Text(
+                    context.locale.viewAll,
+                    style: textTheme.labelMedium.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: context.paddingBottom,
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _onViewAllProcedure() {
+    // TODO: implement _onViewAllProcedure
   }
 }
