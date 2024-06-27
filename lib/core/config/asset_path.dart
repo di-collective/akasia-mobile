@@ -38,4 +38,5 @@ class AssetIconsPath {
   static String icSmileySad = 'ic_smiley_sad.svg'.iconAsset;
   static String icSmileyFlat = 'ic_smiley_flat.svg'.iconAsset;
   static String icRatingStar = 'ic_rating_star.svg'.iconAsset;
+  static String icCall = 'ic_call.svg'.iconAsset;
 }

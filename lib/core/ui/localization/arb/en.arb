@@ -273,5 +273,7 @@
             }
         }
   },
-  "continues": "Continue"
+  "continues": "Continue",
+  "emergencyCall": "Emergency Call",
+  "dontHestiteToContactUse": "Don't hesitate to contact us if there's an emergency after LAMS. We're always ready to help!"
 }
