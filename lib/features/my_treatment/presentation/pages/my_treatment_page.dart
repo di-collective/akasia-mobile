@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../widgets/emergency_call_widget.dart';
+import '../widgets/procedure_history_widget.dart';
 import '../widgets/weight_chart_widget.dart';
 
 class MyTreatmentPage extends StatefulWidget {
@@ -51,34 +52,8 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
             const SizedBox(
               height: 32,
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    context.locale.history(
-                      context.locale.procedure,
-                    ),
-                    style: textTheme.titleMedium.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.onSurfaceDim,
-                    ),
-                    maxLines: 2,
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                GestureDetector(
-                  onTap: _onViewAllProcedure,
-                  child: Text(
-                    context.locale.viewAll,
-                    style: textTheme.labelMedium.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                )
-              ],
+            const ProcedureHistoryWidget(
+              procedureHistories: [1, 1, 1],
             ),
             SizedBox(
               height: context.paddingBottom,
@@ -87,9 +62,5 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
         ),
       ),
     );
-  }
-
-  void _onViewAllProcedure() {
-    // TODO: implement _onViewAllProcedure
   }
 }

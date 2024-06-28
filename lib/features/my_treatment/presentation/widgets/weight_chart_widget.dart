@@ -349,7 +349,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: "2",
+                    text: (_firstWeight - _currentWeight).parseToString,
                     style: TextStyle(
                       color: colorScheme.onSurfaceDim,
                       fontWeight: FontWeight.bold,

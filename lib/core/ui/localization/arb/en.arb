@@ -286,13 +286,22 @@
   "workouts": "Workouts",
   "recordWeight": "Record weight",
   "viewAll": "View all",
-  "history": "History {item}",
-   "@history": {
+  "historyItem": "{item} history",
+   "@historyItem": {
         "placeholders": {
             "item": {
                 "type": "String"
             }
         }
   },
-  "procedure": "Procedure"
+  "procedure": "Procedure",
+  "createItem": "Create {item}",
+   "@createItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "appointment": "Appointment"
 }
