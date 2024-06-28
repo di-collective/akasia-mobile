@@ -27,6 +27,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
   double _firstWeight = 0;
   double _currentWeight = 0;
   double _targetWeight = 0;
+  double _minimumWeight = 0;
   double _firstDate = 0;
   double _currentDate = 0;
   double _maxDate = 0;
@@ -41,6 +42,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
       _firstWeight = 52;
       _currentWeight = 50;
       _targetWeight = 47.2;
+      _minimumWeight = _targetWeight - 1;
       _firstDate = 1;
       _currentDate = 3;
       _maxDate = 10;
@@ -56,10 +58,6 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
               _currentDate,
               _currentWeight,
             ),
-            FlSpot(
-              _maxDate,
-              _targetWeight,
-            ),
           ],
           barWidth: 2,
           color: colorScheme.onSurfaceDim,
@@ -70,7 +68,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
             },
             getDotPainter: (spot, percent, barData, index) {
               return FlDotCirclePainter(
-                radius: 6,
+                radius: 4,
                 color: spot.y == _currentWeight
                     ? colorScheme.error
                     : colorScheme.onSurfaceDim,
@@ -158,7 +156,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
                     LineChartData(
                       minX: _firstDate,
                       maxX: _maxDate,
-                      minY: _targetWeight,
+                      minY: _minimumWeight,
                       maxY: _firstWeight,
                       lineBarsData: _lineBarsData,
                       lineTouchData: LineTouchData(

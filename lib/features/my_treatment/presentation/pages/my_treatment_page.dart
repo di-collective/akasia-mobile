@@ -18,7 +18,6 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
     _isDisabled = false;
