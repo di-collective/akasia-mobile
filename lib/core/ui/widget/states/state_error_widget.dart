@@ -6,11 +6,13 @@ import '../../extensions/theme_data_extension.dart';
 class StateErrorWidget extends StatelessWidget {
   final String? title;
   final String? description;
+  final double? paddingTop;
 
   const StateErrorWidget({
     super.key,
     this.title,
     this.description,
+    this.paddingTop,
   });
 
   @override
@@ -21,6 +23,11 @@ class StateErrorWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        if (paddingTop != null) ...[
+          SizedBox(
+            height: paddingTop,
+          ),
+        ],
         Text(
           "?",
           style: textTheme.headlineLarge.copyWith(

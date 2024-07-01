@@ -7,12 +7,9 @@ import '../../extensions/theme_data_extension.dart';
 import '../buttons/button_widget.dart';
 
 class StateEmptyWidget extends StatelessWidget {
-  final String? title;
-  final String? description;
-  final String? buttonText;
+  final String? title, description, buttonText;
   final Function()? onTapButton;
-  final double? imageWidth;
-  final double? imageHeight;
+  final double? imageWidth, imageHeight, paddingTop;
 
   const StateEmptyWidget({
     super.key,
@@ -22,6 +19,7 @@ class StateEmptyWidget extends StatelessWidget {
     this.imageWidth = 120,
     this.buttonText,
     this.onTapButton,
+    this.paddingTop,
   });
 
   @override
@@ -32,6 +30,11 @@ class StateEmptyWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        if (paddingTop != null) ...[
+          SizedBox(
+            height: paddingTop,
+          ),
+        ],
         // TODO: Add your empty state image here
         SizedBox(
           width: imageWidth,

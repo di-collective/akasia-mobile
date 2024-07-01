@@ -11,6 +11,7 @@ import '../../core/network/http/dio_interceptor.dart';
 import '../../core/utils/service_locator.dart';
 import '../../features/account/di/depedency_injection.dart';
 import '../../features/account_setting/di/depedency_injection.dart';
+import '../../features/appointment/di/depedency_injection.dart';
 import '../../features/auth/di/depedency_injection.dart';
 import '../../features/country/di/depedency_injection.dart';
 import '../../features/faq/di/depdency_injection.dart';
@@ -41,6 +42,8 @@ Future<void> init() async {
   NotificationDI.inject();
 
   PersonalInformationDI.inject();
+
+  AppointmentDI.inject();
 }
 
 Future<void> _injectPackages() async {

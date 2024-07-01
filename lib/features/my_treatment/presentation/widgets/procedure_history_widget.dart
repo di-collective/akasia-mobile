@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/config/asset_path.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
+import 'procedure_item_widget.dart';
 
 class ProcedureHistoryWidget extends StatefulWidget {
   final List? procedureHistories;
@@ -83,68 +84,8 @@ class _ProcedureHistoryWidgetState extends State<ProcedureHistoryWidget> {
                     return const Divider();
                   },
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                      ),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 16,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "*Nama Dokter*",
-                                  style: textTheme.bodyMedium.copyWith(
-                                    color: colorScheme.onSurface,
-                                  ),
-                                  maxLines: 3,
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  "Jenis Treatment",
-                                  style: textTheme.bodyMedium.copyWith(
-                                    color: colorScheme.onSurfaceDim,
-                                  ),
-                                  maxLines: 3,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "4 Mar",
-                                style: textTheme.bodyMedium.copyWith(
-                                  color: colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              SvgPicture.asset(
-                                AssetIconsPath.icChevronRight,
-                                height: 10,
-                                colorFilter: ColorFilter.mode(
-                                  colorScheme.onSurfaceBright,
-                                  BlendMode.srcIn,
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            width: 16,
-                          ),
-                        ],
-                      ),
+                    return ProcedureItemWidget(
+                      onTap: _onProcedure,
                     );
                   },
                 )
@@ -167,7 +108,10 @@ class _ProcedureHistoryWidgetState extends State<ProcedureHistoryWidget> {
   }
 
   void _onCreateAppointment() {
-    // TODO: implement _onCreateAppointment
+    // go to create appointment page
+    context.goNamed(
+      AppRoute.createAppointment.name,
+    );
   }
 
   void _onProcedure() {

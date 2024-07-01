@@ -11,6 +11,7 @@ import '../../features/account_setting/presentation/pages/change_password_page.d
 import '../../features/account_setting/presentation/pages/change_phone_number_page.dart';
 import '../../features/account_setting/presentation/pages/deactive_account_page.dart';
 import '../../features/account_setting/presentation/pages/success_deactive_account_page.dart';
+import '../../features/appointment/presentation/pages/create_appointment_page.dart';
 import '../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
@@ -78,6 +79,8 @@ extension AppRouteExtension on AppRoute {
         return 'write-review';
       case AppRoute.fillPersonalInformation:
         return 'fill-personal-information';
+      case AppRoute.createAppointment:
+        return 'create-appointment';
     }
   }
 
@@ -189,6 +192,8 @@ extension AppRouteExtension on AppRoute {
         );
       case AppRoute.fillPersonalInformation:
         return const FillPersonalInformationPage();
+      case AppRoute.createAppointment:
+        return const CreateAppointmentPage();
     }
   }
 
