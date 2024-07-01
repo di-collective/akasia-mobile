@@ -312,5 +312,9 @@
         }
   },
   "appointment": "Appointment",
-  "clinic": "clinic"
+  "clinic": "clinic",
+  "quotasAvailable": "Quotas available",
+  "fullQuota": "Full quota",
+  "selectedDate": "Selected date",
+  "quotasNotOpened": "Quotas not opened"
 }

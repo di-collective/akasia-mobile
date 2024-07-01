@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/appointment/presentation/widgets/calendar_information_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
@@ -22,6 +24,7 @@ import '../cubit/clinics/clinics_cubit.dart';
 import '../cubit/create_appointment/create_appointment_cubit.dart';
 import '../widgets/clinic_location_item_widget.dart';
 import '../widgets/clinic_locations_loading_widget.dart';
+import '../widgets/date_picker_widget.dart';
 
 enum CreateAppointmentStep {
   chooseClinic,
@@ -58,12 +61,14 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
-  int _currentPage = 0;
   late PageController _pageController;
   late CreateAppointmentStep _currentStep;
 
   ClinicEntity? _selectedClinic;
   ClinicLocationEntity? _selectedClinicLocation;
+
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
 
   @override
   void initState() {
@@ -74,13 +79,14 @@ class __BodyState extends State<_Body> {
 
   void _init() {
     _pageController = PageController(
-      initialPage: _currentPage,
+      initialPage: 0,
     );
 
     // listener
     _pageController.addListener(() {
       setState(() {
-        _currentPage = _pageController.page?.toInt() ?? 0;
+        _currentStep =
+            CreateAppointmentStep.values[_pageController.page?.toInt() ?? 0];
       });
     });
 
@@ -255,9 +261,34 @@ class __BodyState extends State<_Body> {
                         ],
                       ),
                     ),
-                    const SingleChildScrollView(
+                    SingleChildScrollView(
                       child: Column(
-                        children: [],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            child: DatePickerWidget(
+                              firstDate: DateTime.now(),
+                              initialDate: DateTime.now(),
+                              lastDate: DateTime.now().addDays(300),
+                              currentDate: _selectedDate,
+                              onDateSelected: (value) {
+                                _onDateChanged(
+                                  value: value,
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const CalendarInformationWidget(),
+                        ],
                       ),
                     ),
                   ],
@@ -284,9 +315,10 @@ class __BodyState extends State<_Body> {
         }
         break;
       case CreateAppointmentStep.selectDate:
-        if (_selectedClinic == null) {
+        if (_selectedDate == null || _selectedTime == null) {
           return true;
         }
+
         break;
     }
 
@@ -329,16 +361,17 @@ class __BodyState extends State<_Body> {
   }
 
   void _onBack() {
-    if (_currentPage == 0) {
-      context.pop();
-
-      return;
+    switch (_currentStep) {
+      case CreateAppointmentStep.chooseClinic:
+        context.pop();
+        break;
+      case CreateAppointmentStep.selectDate:
+        _pageController.previousPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        break;
     }
-
-    _pageController.previousPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
   }
 
   Future<void> _onNext() async {
@@ -350,7 +383,27 @@ class __BodyState extends State<_Body> {
         );
         break;
       case CreateAppointmentStep.selectDate:
+        _onSave();
+
         break;
     }
   }
+
+  Future<void> _onDateChanged({
+    required DateTime? value,
+  }) async {
+    try {
+      setState(() {
+        _selectedDate = value;
+      });
+    } catch (error) {
+      sl<ToastInfo>().show(
+        type: ToastType.error,
+        message: error.message(context),
+        context: context,
+      );
+    }
+  }
+
+  Future<void> _onSave() async {}
 }

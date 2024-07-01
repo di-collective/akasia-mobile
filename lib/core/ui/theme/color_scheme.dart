@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/color_swatch_extension.dart';
+
 class AppColorScheme extends ThemeExtension<AppColorScheme> {
   AppColorScheme._({
     required this.primary,
@@ -72,6 +74,12 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
   final Color scrim;
   final Color black;
   final Color white;
+  final ColorSwatch<AppColorSpec> vividTangelo = _AppColors.vividTangelo;
+  final ColorSwatch<AppColorSpec> ao = _AppColors.ao;
+  final ColorSwatch<AppColorSpec> coralRed = _AppColors.coralRed;
+  final ColorSwatch<AppColorSpec> yellow = _AppColors.yellow;
+  final ColorSwatch<AppColorSpec> neutral = _AppColors.neutral;
+  final ColorSwatch<AppColorSpec> cola = _AppColors.cola;
 
   factory AppColorScheme.light() => AppColorScheme._(
         primary: _AppColors.vividTangelo,
@@ -246,134 +254,134 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
 }
 
 abstract final class _AppColors {
-  static const ColorSwatch<_AppColorSpec> vividTangelo = ColorSwatch(
+  static const ColorSwatch<AppColorSpec> vividTangelo = ColorSwatch(
     0xFFF37021,
     {
-      _AppColorSpec.tint10: Color(0xFFFFFEFD),
-      _AppColorSpec.tint20: Color(0xFFFFF9F6),
-      _AppColorSpec.tint30: Color(0xFFFEF5EF),
-      _AppColorSpec.tint40: Color(0xFFFEEEE4),
-      _AppColorSpec.tint50: Color(0xFFFCDDCA),
-      _AppColorSpec.tint60: Color(0xFFFAC9AB),
-      _AppColorSpec.tint70: Color(0xFFF9B287),
-      _AppColorSpec.tint80: Color(0xFFF8A675),
-      _AppColorSpec.tint90: Color(0xFFF69459),
-      _AppColorSpec.tint100: Color(0xFFF3762A),
-      _AppColorSpec.shade10: Color(0xFFCA5D1C),
-      _AppColorSpec.shade20: Color(0xFFA24B16),
-      _AppColorSpec.shade30: Color(0xFF7A3811),
-      _AppColorSpec.shade40: Color(0xFF51250B),
-      _AppColorSpec.shade50: Color(0xFF311607),
+      AppColorSpec.tint10: Color(0xFFFFFEFD),
+      AppColorSpec.tint20: Color(0xFFFFF9F6),
+      AppColorSpec.tint30: Color(0xFFFEF5EF),
+      AppColorSpec.tint40: Color(0xFFFEEEE4),
+      AppColorSpec.tint50: Color(0xFFFCDDCA),
+      AppColorSpec.tint60: Color(0xFFFAC9AB),
+      AppColorSpec.tint70: Color(0xFFF9B287),
+      AppColorSpec.tint80: Color(0xFFF8A675),
+      AppColorSpec.tint90: Color(0xFFF69459),
+      AppColorSpec.tint100: Color(0xFFF3762A),
+      AppColorSpec.shade10: Color(0xFFCA5D1C),
+      AppColorSpec.shade20: Color(0xFFA24B16),
+      AppColorSpec.shade30: Color(0xFF7A3811),
+      AppColorSpec.shade40: Color(0xFF51250B),
+      AppColorSpec.shade50: Color(0xFF311607),
     },
   );
 
-  static const ColorSwatch<_AppColorSpec> ao = ColorSwatch(
+  static const ColorSwatch<AppColorSpec> ao = ColorSwatch(
     0xFF007900,
     {
-      _AppColorSpec.tint10: Color(0xFFFCFEFC),
-      _AppColorSpec.tint20: Color(0xFFF5FAF5),
-      _AppColorSpec.tint30: Color(0xFFEDF6ED),
-      _AppColorSpec.tint40: Color(0xFFE0EFE0),
-      _AppColorSpec.tint50: Color(0xFFC2DFC2),
-      _AppColorSpec.tint60: Color(0xFF9ECC9E),
-      _AppColorSpec.tint70: Color(0xFF75B775),
-      _AppColorSpec.tint80: Color(0xFF61AC61),
-      _AppColorSpec.tint90: Color(0xFF409A40),
-      _AppColorSpec.tint100: Color(0xFF0A7E0A),
-      _AppColorSpec.shade10: Color(0xFF006500),
-      _AppColorSpec.shade20: Color(0xFF005100),
-      _AppColorSpec.shade30: Color(0xFF003D00),
-      _AppColorSpec.shade40: Color(0xFF002800),
-      _AppColorSpec.shade50: Color(0xFF001800),
+      AppColorSpec.tint10: Color(0xFFFCFEFC),
+      AppColorSpec.tint20: Color(0xFFF5FAF5),
+      AppColorSpec.tint30: Color(0xFFEDF6ED),
+      AppColorSpec.tint40: Color(0xFFE0EFE0),
+      AppColorSpec.tint50: Color(0xFFC2DFC2),
+      AppColorSpec.tint60: Color(0xFF9ECC9E),
+      AppColorSpec.tint70: Color(0xFF75B775),
+      AppColorSpec.tint80: Color(0xFF61AC61),
+      AppColorSpec.tint90: Color(0xFF409A40),
+      AppColorSpec.tint100: Color(0xFF0A7E0A),
+      AppColorSpec.shade10: Color(0xFF006500),
+      AppColorSpec.shade20: Color(0xFF005100),
+      AppColorSpec.shade30: Color(0xFF003D00),
+      AppColorSpec.shade40: Color(0xFF002800),
+      AppColorSpec.shade50: Color(0xFF001800),
     },
   );
 
-  static const ColorSwatch<_AppColorSpec> coralRed = ColorSwatch(
+  static const ColorSwatch<AppColorSpec> coralRed = ColorSwatch(
     0xFFF93D3D,
     {
-      _AppColorSpec.tint10: Color(0xFFFFFDFD),
-      _AppColorSpec.tint20: Color(0xFFFFF7F7),
-      _AppColorSpec.tint30: Color(0xFFFFF1F1),
-      _AppColorSpec.tint40: Color(0xFFFEE8E8),
-      _AppColorSpec.tint50: Color(0xFFFED0D0),
-      _AppColorSpec.tint60: Color(0xFFFDB5B5),
-      _AppColorSpec.tint70: Color(0xFFFC9696),
-      _AppColorSpec.tint80: Color(0xFFFB8787),
-      _AppColorSpec.tint90: Color(0xFFFB6E6E),
-      _AppColorSpec.tint100: Color(0xFFF94545),
-      _AppColorSpec.shade10: Color(0xFFCF3333),
-      _AppColorSpec.shade20: Color(0xFFA62929),
-      _AppColorSpec.shade30: Color(0xFF7D1F1F),
-      _AppColorSpec.shade40: Color(0xFF531414),
-      _AppColorSpec.shade50: Color(0xFF320C0C),
+      AppColorSpec.tint10: Color(0xFFFFFDFD),
+      AppColorSpec.tint20: Color(0xFFFFF7F7),
+      AppColorSpec.tint30: Color(0xFFFFF1F1),
+      AppColorSpec.tint40: Color(0xFFFEE8E8),
+      AppColorSpec.tint50: Color(0xFFFED0D0),
+      AppColorSpec.tint60: Color(0xFFFDB5B5),
+      AppColorSpec.tint70: Color(0xFFFC9696),
+      AppColorSpec.tint80: Color(0xFFFB8787),
+      AppColorSpec.tint90: Color(0xFFFB6E6E),
+      AppColorSpec.tint100: Color(0xFFF94545),
+      AppColorSpec.shade10: Color(0xFFCF3333),
+      AppColorSpec.shade20: Color(0xFFA62929),
+      AppColorSpec.shade30: Color(0xFF7D1F1F),
+      AppColorSpec.shade40: Color(0xFF531414),
+      AppColorSpec.shade50: Color(0xFF320C0C),
     },
   );
 
-  static const ColorSwatch<_AppColorSpec> yellow = ColorSwatch(
+  static const ColorSwatch<AppColorSpec> yellow = ColorSwatch(
     0xFFFFCC00,
     {
-      _AppColorSpec.tint10: Color(0xFFFFFEFC),
-      _AppColorSpec.tint20: Color(0xFFFFFDF5),
-      _AppColorSpec.tint30: Color(0xFFFFFBED),
-      _AppColorSpec.tint40: Color(0xFFFFF9E0),
-      _AppColorSpec.tint50: Color(0xFFFFF3C2),
-      _AppColorSpec.tint60: Color(0xFFFFEC9E),
-      _AppColorSpec.tint70: Color(0xFFFFE375),
-      _AppColorSpec.tint80: Color(0xFFFFDF61),
-      _AppColorSpec.tint90: Color(0xFFFFD940),
-      _AppColorSpec.tint100: Color(0xFFFFCE0A),
-      _AppColorSpec.shade10: Color(0xFFD4AA00),
-      _AppColorSpec.shade20: Color(0xFFAA8800),
-      _AppColorSpec.shade30: Color(0xFF806600),
-      _AppColorSpec.shade40: Color(0xFF554400),
-      _AppColorSpec.shade50: Color(0xFF332900),
+      AppColorSpec.tint10: Color(0xFFFFFEFC),
+      AppColorSpec.tint20: Color(0xFFFFFDF5),
+      AppColorSpec.tint30: Color(0xFFFFFBED),
+      AppColorSpec.tint40: Color(0xFFFFF9E0),
+      AppColorSpec.tint50: Color(0xFFFFF3C2),
+      AppColorSpec.tint60: Color(0xFFFFEC9E),
+      AppColorSpec.tint70: Color(0xFFFFE375),
+      AppColorSpec.tint80: Color(0xFFFFDF61),
+      AppColorSpec.tint90: Color(0xFFFFD940),
+      AppColorSpec.tint100: Color(0xFFFFCE0A),
+      AppColorSpec.shade10: Color(0xFFD4AA00),
+      AppColorSpec.shade20: Color(0xFFAA8800),
+      AppColorSpec.shade30: Color(0xFF806600),
+      AppColorSpec.shade40: Color(0xFF554400),
+      AppColorSpec.shade50: Color(0xFF332900),
     },
   );
 
-  static const ColorSwatch<_AppColorSpec> neutral = ColorSwatch(
+  static const ColorSwatch<AppColorSpec> neutral = ColorSwatch(
     0xFFDFE0DF,
     {
-      _AppColorSpec.tint10: Color(0xFFFFFFFF),
-      _AppColorSpec.tint20: Color(0xFFFEFEFE),
-      _AppColorSpec.tint30: Color(0xFFFDFDFD),
-      _AppColorSpec.tint40: Color(0xFFFBFBFB),
-      _AppColorSpec.tint50: Color(0xFFF7F8F7),
-      _AppColorSpec.tint60: Color(0xFFF3F3F3),
-      _AppColorSpec.tint70: Color(0xFFEEEEEE),
-      _AppColorSpec.tint80: Color(0xFFEBECEB),
-      _AppColorSpec.tint90: Color(0xFFE7E8E7),
-      _AppColorSpec.tint100: Color(0xFFE0E1E0),
-      _AppColorSpec.shade10: Color(0xFFB2B3B2),
-      _AppColorSpec.shade20: Color(0xFF9C9D9C),
-      _AppColorSpec.shade30: Color(0xFF868686),
-      _AppColorSpec.shade40: Color(0xFF707070),
-      _AppColorSpec.shade50: Color(0xFF595A59),
+      AppColorSpec.tint10: Color(0xFFFFFFFF),
+      AppColorSpec.tint20: Color(0xFFFEFEFE),
+      AppColorSpec.tint30: Color(0xFFFDFDFD),
+      AppColorSpec.tint40: Color(0xFFFBFBFB),
+      AppColorSpec.tint50: Color(0xFFF7F8F7),
+      AppColorSpec.tint60: Color(0xFFF3F3F3),
+      AppColorSpec.tint70: Color(0xFFEEEEEE),
+      AppColorSpec.tint80: Color(0xFFEBECEB),
+      AppColorSpec.tint90: Color(0xFFE7E8E7),
+      AppColorSpec.tint100: Color(0xFFE0E1E0),
+      AppColorSpec.shade10: Color(0xFFB2B3B2),
+      AppColorSpec.shade20: Color(0xFF9C9D9C),
+      AppColorSpec.shade30: Color(0xFF868686),
+      AppColorSpec.shade40: Color(0xFF707070),
+      AppColorSpec.shade50: Color(0xFF595A59),
     },
   );
 
-  static const ColorSwatch<_AppColorSpec> cola = ColorSwatch(
+  static const ColorSwatch<AppColorSpec> cola = ColorSwatch(
     0xFF3F3126,
     {
-      _AppColorSpec.tint10: Color(0xFFFDFDFD),
-      _AppColorSpec.tint20: Color(0xFFF7F7F6),
-      _AppColorSpec.tint30: Color(0xFFF2F1F0),
-      _AppColorSpec.tint40: Color(0xFFE8E6E5),
-      _AppColorSpec.tint50: Color(0xFFD1CECB),
-      _AppColorSpec.tint60: Color(0xFFB6B1AD),
-      _AppColorSpec.tint70: Color(0xFF97908A),
-      _AppColorSpec.tint80: Color(0xFF887F78),
-      _AppColorSpec.tint90: Color(0xFF6F655C),
-      _AppColorSpec.tint100: Color(0xFF47392F),
-      _AppColorSpec.shade10: Color(0xFF352920),
-      _AppColorSpec.shade20: Color(0xFF2A2119),
-      _AppColorSpec.shade30: Color(0xFF201913),
-      _AppColorSpec.shade40: Color(0xFF15100D),
-      _AppColorSpec.shade50: Color(0xFF0D0A08),
+      AppColorSpec.tint10: Color(0xFFFDFDFD),
+      AppColorSpec.tint20: Color(0xFFF7F7F6),
+      AppColorSpec.tint30: Color(0xFFF2F1F0),
+      AppColorSpec.tint40: Color(0xFFE8E6E5),
+      AppColorSpec.tint50: Color(0xFFD1CECB),
+      AppColorSpec.tint60: Color(0xFFB6B1AD),
+      AppColorSpec.tint70: Color(0xFF97908A),
+      AppColorSpec.tint80: Color(0xFF887F78),
+      AppColorSpec.tint90: Color(0xFF6F655C),
+      AppColorSpec.tint100: Color(0xFF47392F),
+      AppColorSpec.shade10: Color(0xFF352920),
+      AppColorSpec.shade20: Color(0xFF2A2119),
+      AppColorSpec.shade30: Color(0xFF201913),
+      AppColorSpec.shade40: Color(0xFF15100D),
+      AppColorSpec.shade50: Color(0xFF0D0A08),
     },
   );
 }
 
-enum _AppColorSpec {
+enum AppColorSpec {
   tint10,
   tint20,
   tint30,
@@ -389,41 +397,4 @@ enum _AppColorSpec {
   shade30,
   shade40,
   shade50,
-}
-
-extension _ColorSwatchExtension on ColorSwatch<_AppColorSpec> {
-  Color get tint10 => this[_AppColorSpec.tint10]!;
-
-  Color get tint20 => this[_AppColorSpec.tint20]!;
-
-  Color get tint30 => this[_AppColorSpec.tint30]!;
-
-  Color get tint40 => this[_AppColorSpec.tint40]!;
-
-  // ignore: unused_element
-  Color get tint50 => this[_AppColorSpec.tint50]!;
-
-  Color get tint60 => this[_AppColorSpec.tint60]!;
-
-  // ignore: unused_element
-  Color get tint70 => this[_AppColorSpec.tint70]!;
-
-  Color get tint80 => this[_AppColorSpec.tint80]!;
-
-  Color get tint90 => this[_AppColorSpec.tint90]!;
-
-  Color get tint100 => this[_AppColorSpec.tint100]!;
-
-  // ignore: unused_element
-  Color get shade10 => this[_AppColorSpec.shade10]!;
-
-  Color get shade20 => this[_AppColorSpec.shade20]!;
-
-  // ignore: unused_element
-  Color get shade30 => this[_AppColorSpec.shade30]!;
-
-  // ignore: unused_element
-  Color get shade40 => this[_AppColorSpec.shade40]!;
-
-  Color get shade50 => this[_AppColorSpec.shade50]!;
 }
