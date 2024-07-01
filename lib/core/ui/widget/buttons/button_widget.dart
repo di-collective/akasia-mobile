@@ -6,7 +6,7 @@ import '../../theme/color_scheme.dart';
 import '../../theme/text_theme.dart';
 
 class ButtonWidget extends StatelessWidget {
-  final Color? textColor, borderColor, backgroundColor;
+  final Color? textColor, borderColor, backgroundColor, overlayColor;
   final Function()? onTap;
   final Widget? child;
   final double? elevation;
@@ -24,6 +24,7 @@ class ButtonWidget extends StatelessWidget {
     this.textColor,
     this.borderColor,
     this.backgroundColor,
+    this.overlayColor,
     this.elevation,
     this.isLoading,
     this.isDisabled,
@@ -67,6 +68,9 @@ class ButtonWidget extends StatelessWidget {
                 colorScheme: colorScheme,
               ),
             ),
+          ),
+          overlayColor: MaterialStateProperty.all(
+            overlayColor,
           ),
           padding: MaterialStateProperty.all(
             padding ?? const EdgeInsets.all(13),

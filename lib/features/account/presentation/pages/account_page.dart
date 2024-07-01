@@ -16,7 +16,6 @@ import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/dialog_widget.dart';
-import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
@@ -226,10 +225,9 @@ class _AccountPageState extends State<AccountPage> {
         BlocProvider.of<ProfileCubit>(context).refreshGetProfile(),
       ]);
     } catch (error) {
-      sl<ToastInfo>().show(
+      context.showToast(
         type: ToastType.error,
         message: error.message(context),
-        context: context,
       );
     }
   }
@@ -340,10 +338,9 @@ class _AccountPageState extends State<AccountPage> {
 
       return true;
     } catch (error) {
-      sl<ToastInfo>().show(
+      context.showToast(
         type: ToastType.error,
         message: error.message(context),
-        context: context,
       );
 
       return false;
@@ -414,10 +411,9 @@ class _AccountPageState extends State<AccountPage> {
       // go to splash page
       context.goNamed(AppRoute.splash.name);
     } catch (error) {
-      sl<ToastInfo>().show(
+      context.showToast(
         type: ToastType.error,
         message: error.message(context),
-        context: context,
       );
     } finally {
       // hide full screen loading

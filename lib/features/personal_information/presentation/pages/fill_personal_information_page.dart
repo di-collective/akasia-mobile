@@ -12,7 +12,6 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_widget.dart';
@@ -469,10 +468,9 @@ class __BodyState extends State<_Body> {
         curve: Curves.easeInOut,
       );
     } catch (error) {
-      sl<ToastInfo>().show(
+      context.showToast(
         type: ToastType.error,
         message: error.message(context),
-        context: context,
       );
     }
   }
