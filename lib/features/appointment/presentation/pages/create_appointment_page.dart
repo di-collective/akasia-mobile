@@ -1,4 +1,3 @@
-import 'package:akasia365mc/features/appointment/presentation/widgets/calendar_information_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +21,7 @@ import '../../domain/entities/clinic_location_entity.dart';
 import '../cubit/clinic_locations/clinic_locations_cubit.dart';
 import '../cubit/clinics/clinics_cubit.dart';
 import '../cubit/create_appointment/create_appointment_cubit.dart';
+import '../widgets/calendar_information_widget.dart';
 import '../widgets/clinic_location_item_widget.dart';
 import '../widgets/clinic_locations_loading_widget.dart';
 import '../widgets/date_picker_widget.dart';

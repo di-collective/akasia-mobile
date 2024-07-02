@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/color_swatch_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import 'calendar_date_picker_widget.dart';
 
 // The M3 sizes are coming from the tokens, but are hand coded,
 // as the current token DB does not contain landscape versions.
@@ -258,15 +259,27 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
           const Divider(
             height: 24,
           ),
-          CalendarDatePicker(
+          CalendarDatePickerWidget(
             key: _calendarPickerKey,
             initialDate: _selectedDate.value,
             firstDate: widget.firstDate,
             lastDate: widget.lastDate,
-            currentDate: widget.currentDate,
+            currentDate: DateTime.now(),
             selectableDayPredicate: widget.selectableDayPredicate,
             initialCalendarMode: widget.initialCalendarMode,
             onDateChanged: _handleDateChanged,
+            notOpenedDays: [
+              DateTime(2024, 7, 30),
+              DateTime(2024, 7, 31),
+            ],
+            fullDays: [
+              DateTime(2024, 7, 23),
+              DateTime(2024, 7, 24),
+            ],
+            availableDays: [
+              DateTime(2024, 7, 13),
+              DateTime(2024, 7, 14),
+            ],
           ),
           const SizedBox(
             height: 10,
