@@ -11,11 +11,15 @@ class StateEmptyWidget extends StatelessWidget {
   final String? description;
   final String? buttonText;
   final Function()? onTapButton;
+  final double? imageWidth;
+  final double? imageHeight;
 
   const StateEmptyWidget({
     super.key,
     this.title,
     this.description,
+    this.imageHeight = 120,
+    this.imageWidth = 120,
     this.buttonText,
     this.onTapButton,
   });
@@ -29,9 +33,9 @@ class StateEmptyWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // TODO: Add your empty state image here
-        const SizedBox(
-          width: 120,
-          height: 120,
+        SizedBox(
+          width: imageWidth,
+          height: imageHeight,
         ),
         const SizedBox(
           height: 8,

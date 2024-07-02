@@ -255,7 +255,14 @@
   "date": "Date",
   "gender": "Gender",
   "wePredictThatYouWillBe": "We predict that you’ll be",
-  "by": "By",
+  "byItem": "By {item}",
+  "@byItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
   "yourPlanIsReady": "Your Plan is Ready",
   "yourBudgetCalories": "Your budget is {calories} calories",
   "@yourBudgetCalories": {
@@ -273,5 +280,28 @@
             }
         }
   },
-  "continues": "Continue"
+  "continues": "Continue",
+  "emergencyCall": "Emergency Call",
+  "dontHestiteToContactUse": "Don't hesitate to contact us if there's an emergency after LAMS. We're always ready to help!",
+  "workouts": "Workouts",
+  "recordWeight": "Record weight",
+  "viewAll": "View all",
+  "historyItem": "{item} history",
+   "@historyItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "procedure": "Procedure",
+  "createItem": "Create {item}",
+   "@createItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
+  "appointment": "Appointment"
 }
