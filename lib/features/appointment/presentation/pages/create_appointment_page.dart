@@ -16,8 +16,11 @@ import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../../domain/entities/appointment_date_entity.dart';
+import '../../domain/entities/appointment_month_entity.dart';
 import '../../domain/entities/clinic_entity.dart';
 import '../../domain/entities/clinic_location_entity.dart';
+import '../cubit/calendars/calendars_cubit.dart';
 import '../cubit/clinic_locations/clinic_locations_cubit.dart';
 import '../cubit/clinics/clinics_cubit.dart';
 import '../cubit/create_appointment/create_appointment_cubit.dart';
@@ -48,6 +51,9 @@ class CreateAppointmentPage extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<ClinicLocationsCubit>(),
         ),
+        BlocProvider(
+          create: (context) => sl<CalendarsCubit>(),
+        ),
       ],
       child: const _Body(),
     );
@@ -68,6 +74,7 @@ class __BodyState extends State<_Body> {
   ClinicEntity? _selectedClinic;
   ClinicLocationEntity? _selectedClinicLocation;
 
+  late DateTime _selectedMonth;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
@@ -93,6 +100,8 @@ class __BodyState extends State<_Body> {
 
     _currentStep = CreateAppointmentStep.chooseClinic;
 
+    _selectedMonth = DateTime.now();
+
     final clinicsState = BlocProvider.of<ClinicsCubit>(context).state;
     if (clinicsState is! ClinicsLoaded) {
       _onGetClinics();
@@ -108,6 +117,12 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onGetClinics() async {
     await BlocProvider.of<ClinicsCubit>(context).getClinics();
+  }
+
+  Future<void> _onInitGetCalendars() async {
+    await BlocProvider.of<CalendarsCubit>(context).initGetCalendars(
+      month: _selectedMonth,
+    );
   }
 
   @override
@@ -269,19 +284,71 @@ class __BodyState extends State<_Body> {
                           const SizedBox(
                             height: 24,
                           ),
-                          // TODO: Remove default selected value on date picker
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
                             ),
-                            child: DatePickerWidget(
-                              firstDate: DateTime.now(),
-                              initialDate: DateTime.now(),
-                              lastDate: DateTime.now().addDays(300),
-                              currentDate: _selectedDate,
-                              onDateSelected: (value) {
-                                _onDateChanged(
-                                  value: value,
+                            child: BlocBuilder<CalendarsCubit, CalendarsState>(
+                              builder: (context, state) {
+                                AppointmentMonthEntity? appointmentMonthData;
+                                if (state is CalendarsLoaded) {
+                                  appointmentMonthData = state.calendars
+                                      .firstWhereOrNull((element) {
+                                    return element.month?.month ==
+                                        _selectedMonth.month;
+                                  });
+                                }
+
+                                List<DateTime?>? unavailableDays;
+                                List<DateTime?>? bookedDays;
+                                List<DateTime?>? availableDays;
+                                if (appointmentMonthData != null) {
+                                  unavailableDays = appointmentMonthData.dates
+                                      ?.where((element) {
+                                    return element.status ==
+                                        AppointmentDateStatus.unavailable;
+                                  }).map((e) {
+                                    return e.date;
+                                  }).toList();
+
+                                  bookedDays = appointmentMonthData.dates
+                                      ?.where((element) {
+                                    return element.status ==
+                                        AppointmentDateStatus.booked;
+                                  }).map((e) {
+                                    return e.date;
+                                  }).toList();
+
+                                  availableDays = appointmentMonthData.dates
+                                      ?.where((element) {
+                                    return element.status ==
+                                        AppointmentDateStatus.available;
+                                  }).map((e) {
+                                    return e.date;
+                                  }).toList();
+                                }
+
+                                return DatePickerWidget(
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime.now().addDays(300),
+                                  // initialDate: DateTime.now(),
+                                  currentDate: _selectedDate,
+                                  currentMonth: _selectedMonth,
+                                  isLoading: appointmentMonthData == null,
+                                  loadedDays: appointmentMonthData?.dates,
+                                  notOpenedDays: unavailableDays,
+                                  fullBookedDays: bookedDays,
+                                  availableDays: availableDays,
+                                  onDateSelected: (value) {
+                                    _onDateChanged(
+                                      value: value,
+                                    );
+                                  },
+                                  onMonthChanged: (value) {
+                                    _onMonthChanged(
+                                      value: value,
+                                    );
+                                  },
                                 );
                               },
                             ),
@@ -311,7 +378,7 @@ class __BodyState extends State<_Body> {
                 ),
               ),
               BottomSheetButtonWidget(
-                text: context.locale.next,
+                text: _buttonText,
                 isDisabled: _isDisabled,
                 width: context.width,
                 onTap: _onNext,
@@ -321,6 +388,15 @@ class __BodyState extends State<_Body> {
         ),
       ),
     );
+  }
+
+  String get _buttonText {
+    switch (_currentStep) {
+      case CreateAppointmentStep.chooseClinic:
+        return context.locale.next;
+      case CreateAppointmentStep.selectDate:
+        return context.locale.save;
+    }
   }
 
   bool get _isDisabled {
@@ -386,6 +462,14 @@ class __BodyState extends State<_Body> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
+
+        // reset state
+        setState(() {
+          _selectedDate = null;
+          _selectedTime = null;
+          _selectedMonth = DateTime.now();
+        });
+        BlocProvider.of<CalendarsCubit>(context).init();
         break;
     }
   }
@@ -397,11 +481,51 @@ class __BodyState extends State<_Body> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
+
+        final calendarsState = BlocProvider.of<CalendarsCubit>(context).state;
+        if (calendarsState is! CalendarsLoaded) {
+          _onInitGetCalendars();
+        }
+
         break;
       case CreateAppointmentStep.selectDate:
         _onSave();
 
         break;
+    }
+  }
+
+  Future<void> _onMonthChanged({
+    required DateTime value,
+  }) async {
+    try {
+      if (_selectedMonth == value) {
+        return;
+      }
+
+      setState(() {
+        _selectedMonth = value;
+      });
+
+      final result =
+          await BlocProvider.of<CalendarsCubit>(context).onChangedMonth(
+        month: value,
+      );
+
+      if (result == null) {
+        return;
+      }
+
+      // update state
+      BlocProvider.of<CalendarsCubit>(context).addLoadedCalendar(
+        calendar: result,
+      );
+    } catch (error) {
+      sl<ToastInfo>().show(
+        type: ToastType.error,
+        message: error.message(context),
+        context: context,
+      );
     }
   }
 
@@ -429,5 +553,19 @@ class __BodyState extends State<_Body> {
     });
   }
 
-  Future<void> _onSave() async {}
+  Future<void> _onSave() async {
+    try {
+      sl<ToastInfo>().show(
+        type: ToastType.success,
+        message: context.locale.successCreatedAppointment,
+        context: context,
+      );
+    } catch (error) {
+      sl<ToastInfo>().show(
+        type: ToastType.error,
+        message: error.message(context),
+        context: context,
+      );
+    }
+  }
 }

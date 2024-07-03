@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:akasia365mc/features/appointment/domain/entities/appointment_date_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -43,9 +44,13 @@ class DatePickerWidget extends StatefulWidget {
     this.switchToInputEntryModeIcon,
     this.switchToCalendarEntryModeIcon,
     this.onDateSelected,
-    this.availableQuotaDays,
-    this.fullQuoteDays,
-    this.notOpenedQuotaDays,
+    this.notOpenedDays,
+    this.fullBookedDays,
+    this.availableDays,
+    this.onMonthChanged,
+    this.currentMonth,
+    required this.isLoading,
+    this.loadedDays,
   })  : initialDate =
             initialDate == null ? null : DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
@@ -154,11 +159,20 @@ class DatePickerWidget extends StatefulWidget {
   /// {@macro flutter.material.date_picker.switchToCalendarEntryModeIcon}
   final Icon? switchToCalendarEntryModeIcon;
 
-  final List<int>? availableQuotaDays;
-  final List<int>? fullQuoteDays;
-  final List<int>? notOpenedQuotaDays;
-
   final Function(DateTime)? onDateSelected;
+
+  final List<DateTime?>? notOpenedDays;
+
+  final List<DateTime?>? fullBookedDays;
+
+  final List<DateTime?>? availableDays;
+
+  final Function(DateTime)? onMonthChanged;
+
+  final DateTime? currentMonth;
+
+  final bool isLoading;
+  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   State<DatePickerWidget> createState() => _DatePickerWidgetState();
@@ -166,8 +180,8 @@ class DatePickerWidget extends StatefulWidget {
 
 class _DatePickerWidgetState extends State<DatePickerWidget>
     with RestorationMixin {
-  late final RestorableDateTimeN _selectedDate =
-      RestorableDateTimeN(widget.initialDate);
+  // late final RestorableDateTimeN _selectedDate =
+  //     RestorableDateTimeN(widget.initialDate);
   late final _RestorableDatePickerEntryMode _entryMode =
       _RestorableDatePickerEntryMode(widget.initialEntryMode);
   final _RestorableAutovalidateMode _autovalidateMode =
@@ -175,7 +189,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
 
   @override
   void dispose() {
-    _selectedDate.dispose();
+    // _selectedDate.dispose();
     _entryMode.dispose();
     _autovalidateMode.dispose();
     super.dispose();
@@ -186,7 +200,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
 
   @override
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(_selectedDate, 'selected_date');
+    // registerForRestoration(_selectedDate, 'selected_date');
     registerForRestoration(_autovalidateMode, 'autovalidateMode');
     registerForRestoration(_entryMode, 'calendar_entry_mode');
   }
@@ -195,7 +209,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
 
   void _handleDateChanged(DateTime date) {
     setState(() {
-      _selectedDate.value = date;
+      // _selectedDate.value = date;
     });
 
     if (widget.onDateSelected != null) {
@@ -208,11 +222,10 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    final localizations = MaterialLocalizations.of(context);
 
-    final DatePickerThemeData datePickerTheme = DatePickerTheme.of(context);
-    final DatePickerThemeData defaults = DatePickerTheme.defaults(context);
+    final datePickerTheme = DatePickerTheme.of(context);
+    final defaults = DatePickerTheme.defaults(context);
     // final TextTheme textTheme = theme.textTheme;
 
     // There's no M3 spec for a landscape layout input (not calendar)
@@ -246,9 +259,12 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
               horizontal: 24,
             ),
             child: Text(
-              _selectedDate.value == null
-                  ? ''
-                  : localizations.formatMediumDate(_selectedDate.value!),
+              widget.currentMonth != null
+                  ? localizations
+                      .formatMonthYear(widget.currentMonth!)
+                      .split(' ')
+                      .first
+                  : '',
               style: textTheme.headlineLarge.copyWith(
                 color: colorScheme.cola.shade40,
               ),
@@ -261,25 +277,21 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
           ),
           CalendarDatePickerWidget(
             key: _calendarPickerKey,
-            initialDate: _selectedDate.value,
+            // initialDate: _selectedDate.value,
+            // initialDate: widget.currentDate,
+            initialDate: null,
             firstDate: widget.firstDate,
             lastDate: widget.lastDate,
-            currentDate: DateTime.now(),
+            // currentDate: DateTime.now(),
             selectableDayPredicate: widget.selectableDayPredicate,
             initialCalendarMode: widget.initialCalendarMode,
             onDateChanged: _handleDateChanged,
-            notOpenedDays: [
-              DateTime(2024, 7, 30),
-              DateTime(2024, 7, 31),
-            ],
-            fullDays: [
-              DateTime(2024, 7, 23),
-              DateTime(2024, 7, 24),
-            ],
-            availableDays: [
-              DateTime(2024, 7, 13),
-              DateTime(2024, 7, 14),
-            ],
+            notOpenedDays: widget.notOpenedDays,
+            fullBookedDays: widget.fullBookedDays,
+            availableDays: widget.availableDays,
+            onMonthChanged: widget.onMonthChanged,
+            isLoading: widget.isLoading,
+            loadedDays: widget.loadedDays,
           ),
           const SizedBox(
             height: 10,

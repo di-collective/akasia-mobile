@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:akasia365mc/features/appointment/domain/entities/appointment_date_entity.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/color_swatch_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 
 const Duration _monthScrollDuration = Duration(milliseconds: 200);
 
@@ -84,8 +86,11 @@ class CalendarDatePickerWidget extends StatefulWidget {
     this.initialCalendarMode = DatePickerMode.day,
     this.selectableDayPredicate,
     this.notOpenedDays,
-    this.fullDays,
+    this.fullBookedDays,
     this.availableDays,
+    this.onMonthChanged,
+    required this.isLoading,
+    this.loadedDays,
   })  : initialDate =
             initialDate == null ? null : DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
@@ -145,11 +150,17 @@ class CalendarDatePickerWidget extends StatefulWidget {
   /// Function to provide full control over which dates in the calendar can be selected.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  final List<DateTime>? notOpenedDays;
+  final List<DateTime?>? notOpenedDays;
 
-  final List<DateTime>? fullDays;
+  final List<DateTime?>? fullBookedDays;
 
-  final List<DateTime>? availableDays;
+  final List<DateTime?>? availableDays;
+
+  final Function(DateTime month)? onMonthChanged;
+
+  final bool isLoading;
+
+  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   State<CalendarDatePickerWidget> createState() =>
@@ -172,8 +183,10 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
     _mode = widget.initialCalendarMode;
     final DateTime currentDisplayedDate =
         widget.initialDate ?? widget.currentDate;
-    _currentDisplayedMonthDate =
-        DateTime(currentDisplayedDate.year, currentDisplayedDate.month);
+    _currentDisplayedMonthDate = DateTime(
+      currentDisplayedDate.year,
+      currentDisplayedDate.month,
+    );
     if (widget.initialDate != null) {
       _selectedDate = widget.initialDate;
     }
@@ -279,8 +292,11 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
           onDisplayedMonthChanged: _handleMonthChanged,
           selectableDayPredicate: widget.selectableDayPredicate,
           notOpenedDays: widget.notOpenedDays,
-          fullDays: widget.fullDays,
+          fullBookedDays: widget.fullBookedDays,
           availableDays: widget.availableDays,
+          onMonthChanged: widget.onMonthChanged,
+          isLoading: widget.isLoading,
+          loadedDays: widget.loadedDays,
         );
       case DatePickerMode.year:
         return Padding(
@@ -454,8 +470,11 @@ class _MonthPicker extends StatefulWidget {
     required this.onDisplayedMonthChanged,
     this.selectableDayPredicate,
     this.notOpenedDays,
-    this.fullDays,
+    this.fullBookedDays,
     this.availableDays,
+    this.onMonthChanged,
+    required this.isLoading,
+    this.loadedDays,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
         assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -497,11 +516,16 @@ class _MonthPicker extends StatefulWidget {
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  final List<DateTime>? notOpenedDays;
+  final List<DateTime?>? notOpenedDays;
 
-  final List<DateTime>? fullDays;
+  final List<DateTime?>? fullBookedDays;
 
-  final List<DateTime>? availableDays;
+  final List<DateTime?>? availableDays;
+
+  final Function(DateTime month)? onMonthChanged;
+
+  final bool isLoading;
+  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   _MonthPickerState createState() => _MonthPickerState();
@@ -523,7 +547,11 @@ class _MonthPickerState extends State<_MonthPicker> {
     super.initState();
     _currentMonth = widget.initialMonth;
     _pageController = PageController(
-        initialPage: DateUtils.monthDelta(widget.firstDate, _currentMonth));
+      initialPage: DateUtils.monthDelta(
+        widget.firstDate,
+        _currentMonth,
+      ),
+    );
     _shortcutMap = const <ShortcutActivator, Intent>{
       SingleActivator(LogicalKeyboardKey.arrowLeft):
           DirectionalFocusIntent(TraversalDirection.left),
@@ -565,6 +593,10 @@ class _MonthPickerState extends State<_MonthPicker> {
   }
 
   void _handleMonthPageChanged(int monthPage) {
+    if (widget.isLoading) {
+      return;
+    }
+
     setState(() {
       final DateTime monthDate =
           DateUtils.addMonthsToMonthDate(widget.firstDate, monthPage);
@@ -584,6 +616,11 @@ class _MonthPickerState extends State<_MonthPicker> {
         );
       }
     });
+
+    // callback changed month
+    if (widget.onMonthChanged != null) {
+      widget.onMonthChanged!(_currentMonth);
+    }
   }
 
   /// Returns a focusable date for the given month.
@@ -765,8 +802,10 @@ class _MonthPickerState extends State<_MonthPicker> {
       displayedMonth: month,
       selectableDayPredicate: widget.selectableDayPredicate,
       notOpenedDays: widget.notOpenedDays,
-      fullDays: widget.fullDays,
+      fullBookedDays: widget.fullBookedDays,
       availableDays: widget.availableDays,
+      isLoading: widget.isLoading,
+      loadedDays: widget.loadedDays,
     );
   }
 
@@ -793,15 +832,20 @@ class _MonthPickerState extends State<_MonthPicker> {
                   tooltip: _isDisplayingFirstMonth
                       ? null
                       : _localizations.previousMonthTooltip,
-                  onPressed:
-                      _isDisplayingFirstMonth ? null : _handlePreviousMonth,
+                  onPressed: (widget.isLoading)
+                      ? null
+                      : _isDisplayingFirstMonth
+                          ? null
+                          : _handlePreviousMonth,
                 ),
                 IconButton(
                   icon: const Icon(Icons.chevron_right),
                   color: controlColor,
-                  tooltip: _isDisplayingLastMonth
+                  tooltip: (widget.isLoading)
                       ? null
-                      : _localizations.nextMonthTooltip,
+                      : _isDisplayingLastMonth
+                          ? null
+                          : _localizations.nextMonthTooltip,
                   onPressed: _isDisplayingLastMonth ? null : _handleNextMonth,
                 ),
               ],
@@ -873,8 +917,10 @@ class _DayPicker extends StatefulWidget {
     required this.onChanged,
     this.selectableDayPredicate,
     this.notOpenedDays,
-    this.fullDays,
+    this.fullBookedDays,
     this.availableDays,
+    required this.isLoading,
+    this.loadedDays,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
         assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -906,11 +952,14 @@ class _DayPicker extends StatefulWidget {
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  final List<DateTime>? notOpenedDays;
+  final List<DateTime?>? notOpenedDays;
 
-  final List<DateTime>? fullDays;
+  final List<DateTime?>? fullBookedDays;
 
-  final List<DateTime>? availableDays;
+  final List<DateTime?>? availableDays;
+
+  final bool isLoading;
+  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   _DayPickerState createState() => _DayPickerState();
@@ -1019,7 +1068,7 @@ class _DayPickerState extends State<_DayPicker> {
           widget.selectedDate,
           dayToBuild,
         );
-        final isFullDay = widget.fullDays?.firstOrNullWhere((element) {
+        final isFullDay = widget.fullBookedDays?.firstOrNullWhere((element) {
               return DateUtils.isSameDay(
                 element,
                 dayToBuild,
@@ -1035,6 +1084,14 @@ class _DayPickerState extends State<_DayPicker> {
               },
             ) !=
             null;
+        final availableSlot = widget.loadedDays?.firstOrNullWhere(
+          (element) {
+            return DateUtils.isSameDay(
+              element.date,
+              dayToBuild,
+            );
+          },
+        );
 
         dayItems.add(
           _Day(
@@ -1046,6 +1103,8 @@ class _DayPickerState extends State<_DayPicker> {
             focusNode: _dayFocusNodes[day - 1],
             isFullDay: isFullDay,
             isAvailableDay: isAvailableDay,
+            isLoading: widget.isLoading,
+            availableSlot: availableSlot?.availableSlots,
           ),
         );
       }
@@ -1077,6 +1136,8 @@ class _Day extends StatefulWidget {
     required this.isAvailableDay,
     required this.onChanged,
     required this.focusNode,
+    required this.isLoading,
+    this.availableSlot,
   });
 
   final DateTime day;
@@ -1086,6 +1147,8 @@ class _Day extends StatefulWidget {
   final bool isAvailableDay;
   final ValueChanged<DateTime> onChanged;
   final FocusNode? focusNode;
+  final bool isLoading;
+  final int? availableSlot;
 
   @override
   State<_Day> createState() => _DayState();
@@ -1171,13 +1234,23 @@ class _DayState extends State<_Day> {
 
     return Column(
       children: [
-        Text(
-          "0",
-          style: textTheme.bodySmall.copyWith(
-            fontWeight: FontWeight.w700,
-            color: colorScheme.onSurfaceDim,
+        if (widget.isLoading) ...[
+          ShimmerLoading.circular(
+            width: 20,
+            height: 14,
+            shapeBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
           ),
-        ),
+        ] else ...[
+          Text(
+            "${widget.availableSlot ?? 0}",
+            style: textTheme.bodySmall.copyWith(
+              fontWeight: FontWeight.w700,
+              color: colorScheme.onSurfaceDim,
+            ),
+          ),
+        ],
         const SizedBox(
           height: 4,
         ),
