@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -377,11 +378,16 @@ class __BodyState extends State<_Body> {
                   ],
                 ),
               ),
-              BottomSheetButtonWidget(
-                text: _buttonText,
-                isDisabled: _isDisabled,
-                width: context.width,
-                onTap: _onNext,
+              BlocBuilder<CreateAppointmentCubit, CreateAppointmentState>(
+                builder: (context, state) {
+                  return BottomSheetButtonWidget(
+                    text: _buttonText,
+                    isDisabled: _isDisabled,
+                    width: context.width,
+                    isLoading: state is CreateAppointmentLoading,
+                    onTap: _onNext,
+                  );
+                },
               ),
             ],
           ),
@@ -555,10 +561,24 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onSave() async {
     try {
+      // create appointment
+      await BlocProvider.of<CreateAppointmentCubit>(context).createAppointment(
+        clinicId: _selectedClinic?.id,
+        clinicLocationId: _selectedClinicLocation?.id,
+        date: _selectedDate,
+        time: _selectedTime,
+      );
+
+      // show toast
       sl<ToastInfo>().show(
         type: ToastType.success,
         message: context.locale.successCreatedAppointment,
         context: context,
+      );
+
+      // go to my schedule
+      context.goNamed(
+        AppRoute.mySchedule.name,
       );
     } catch (error) {
       sl<ToastInfo>().show(

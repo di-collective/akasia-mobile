@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'create_appointment_state.dart';
@@ -6,7 +7,12 @@ part 'create_appointment_state.dart';
 class CreateAppointmentCubit extends Cubit<CreateAppointmentState> {
   CreateAppointmentCubit() : super(CreateAppointmentInitial());
 
-  Future<void> createAppointment() async {
+  Future<void> createAppointment({
+    required String? clinicId,
+    required String? clinicLocationId,
+    required DateTime? date,
+    required TimeOfDay? time,
+  }) async {
     try {
       emit(CreateAppointmentLoading());
 

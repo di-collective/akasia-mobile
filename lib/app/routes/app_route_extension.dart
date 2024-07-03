@@ -22,6 +22,7 @@ import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
@@ -81,6 +82,8 @@ extension AppRouteExtension on AppRoute {
         return 'fill-personal-information';
       case AppRoute.createAppointment:
         return 'create-appointment';
+      case AppRoute.mySchedule:
+        return 'my-schedule';
     }
   }
 
@@ -194,6 +197,8 @@ extension AppRouteExtension on AppRoute {
         return const FillPersonalInformationPage();
       case AppRoute.createAppointment:
         return const CreateAppointmentPage();
+      case AppRoute.mySchedule:
+        return const MySchedulePage();
     }
   }
 

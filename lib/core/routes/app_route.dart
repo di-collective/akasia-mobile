@@ -24,4 +24,5 @@ enum AppRoute {
   writeReview,
   fillPersonalInformation,
   createAppointment,
+  mySchedule,
 }
