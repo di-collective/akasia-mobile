@@ -316,5 +316,6 @@
   "quotasAvailable": "Quotas available",
   "fullQuota": "Full quota",
   "selectedDate": "Selected date",
-  "quotasNotOpened": "Quotas not opened"
+  "quotasNotOpened": "Quotas not opened",
+  "arrivalTime": "Arrival time"
 }

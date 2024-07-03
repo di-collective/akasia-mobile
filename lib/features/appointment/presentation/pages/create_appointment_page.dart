@@ -25,6 +25,7 @@ import '../widgets/calendar_information_widget.dart';
 import '../widgets/clinic_location_item_widget.dart';
 import '../widgets/clinic_locations_loading_widget.dart';
 import '../widgets/date_picker_widget.dart';
+import '../widgets/hour_widget.dart';
 
 enum CreateAppointmentStep {
   chooseClinic,
@@ -268,6 +269,7 @@ class __BodyState extends State<_Body> {
                           const SizedBox(
                             height: 24,
                           ),
+                          // TODO: Remove default selected value on date picker
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -285,9 +287,23 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                           const SizedBox(
-                            height: 10,
+                            height: 16,
                           ),
                           const CalendarInformationWidget(),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          HourWidget(
+                            selectedHour: _selectedTime,
+                            onHourSelected: (value) {
+                              _onHourSelected(
+                                value: value,
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: context.paddingBottom,
+                          ),
                         ],
                       ),
                     ),
@@ -389,20 +405,28 @@ class __BodyState extends State<_Body> {
     }
   }
 
-  Future<void> _onDateChanged({
+  void _onDateChanged({
     required DateTime? value,
-  }) async {
-    try {
-      setState(() {
-        _selectedDate = value;
-      });
-    } catch (error) {
-      sl<ToastInfo>().show(
-        type: ToastType.error,
-        message: error.message(context),
-        context: context,
-      );
+  }) {
+    if (_selectedDate == value) {
+      return;
     }
+
+    setState(() {
+      _selectedDate = value;
+    });
+  }
+
+  void _onHourSelected({
+    required TimeOfDay value,
+  }) {
+    if (_selectedTime == value) {
+      return;
+    }
+
+    setState(() {
+      _selectedTime = value;
+    });
   }
 
   Future<void> _onSave() async {}
