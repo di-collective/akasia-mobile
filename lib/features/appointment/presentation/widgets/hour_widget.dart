@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/extensions/time_of_day_extension.dart';
 
 class HourWidget extends StatefulWidget {
   final TimeOfDay? selectedHour;
@@ -82,7 +82,7 @@ class _HourWidgetState extends State<HourWidget> {
                       ),
                     ),
                     child: Text(
-                      hour.format(context),
+                      hour.toTimeMinute,
                       style: textTheme.bodyMedium.copyWith(
                         color: isSelected
                             ? colorScheme.primary

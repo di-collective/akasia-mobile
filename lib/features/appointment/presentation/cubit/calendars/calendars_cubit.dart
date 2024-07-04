@@ -20,7 +20,7 @@ class CalendarsCubit extends Cubit<CalendarsState> {
 
     try {
       // TODO: Implement getCalendars
-      final result = await Future.delayed(const Duration(seconds: 2)).then(
+      final result = await Future.delayed(const Duration(seconds: 3)).then(
         (value) => mockMonth(
           month: month,
         ),

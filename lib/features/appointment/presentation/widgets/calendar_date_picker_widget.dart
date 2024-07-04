@@ -329,6 +329,10 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
           mode: _mode,
           title: _localizations.formatMonthYear(_currentDisplayedMonthDate),
           onTitlePressed: () {
+            if (widget.isLoading) {
+              return;
+            }
+
             // Toggle the day/year mode.
             _handleModeChanged(_mode == DatePickerMode.day
                 ? DatePickerMode.year
@@ -588,6 +592,11 @@ class _MonthPickerState extends State<_MonthPicker> {
   }
 
   void _handleDateSelected(DateTime selectedDate) {
+    // TODO: Disabled changed date when is loading
+    if (widget.isLoading) {
+      return;
+    }
+
     _focusedDay = selectedDate;
     widget.onChanged(selectedDate);
   }
@@ -841,12 +850,14 @@ class _MonthPickerState extends State<_MonthPicker> {
                 IconButton(
                   icon: const Icon(Icons.chevron_right),
                   color: controlColor,
-                  tooltip: (widget.isLoading)
+                  tooltip: _isDisplayingLastMonth
+                      ? null
+                      : _localizations.nextMonthTooltip,
+                  onPressed: (widget.isLoading)
                       ? null
                       : _isDisplayingLastMonth
                           ? null
-                          : _localizations.nextMonthTooltip,
-                  onPressed: _isDisplayingLastMonth ? null : _handleNextMonth,
+                          : _handleNextMonth,
                 ),
               ],
             ),

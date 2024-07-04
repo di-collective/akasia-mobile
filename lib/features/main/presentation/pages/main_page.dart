@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/config/env_config.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -104,15 +106,15 @@ class _MainPageState extends State<MainPage> {
     }
 
     // TODO: Check if user has filled personal information
-    // if (item == BottomNavigationItem.myTreatment) {
-    //   // if personal information is null, navigate to fill personal information
-    //   final isContinue = await context.pushNamed(
-    //     AppRoute.fillPersonalInformation.name,
-    //   );
-    //   if (isContinue != true) {
-    //     return;
-    //   }
-    // }
+    if (item == BottomNavigationItem.myTreatment) {
+      // if personal information is null, navigate to fill personal information
+      final isContinue = await context.pushNamed(
+        AppRoute.fillPersonalInformation.name,
+      );
+      if (isContinue != true) {
+        return;
+      }
+    }
 
     BlocProvider.of<BottomNavigationCubit>(context).onChanged(
       item,
