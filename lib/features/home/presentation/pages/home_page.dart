@@ -210,7 +210,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onNextSchedule() {
-    // TODO: Implement this method
+    // go to my schedule
+    context.goNamed(
+      AppRoute.mySchedule.name,
+    );
   }
 
   void _onSuccessStory() {
