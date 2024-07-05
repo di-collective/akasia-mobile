@@ -4,6 +4,10 @@ import '../../common/exception.dart';
 import 'build_context_extension.dart';
 import 'exception_extension.dart';
 
+enum AppExceptionType {
+  accessTokenNotFound,
+}
+
 extension AppExceptionExtension on AppException {
   String errorMessage(BuildContext context) {
     if (this is AppNetworkException) {
@@ -24,6 +28,13 @@ extension AppExceptionExtension on AppException {
         }
       }
     } else if (this is AuthException) {
+      if (code == AppExceptionType) {
+        switch (code) {
+          case AppExceptionType.accessTokenNotFound:
+            return context.locale.invalidCredential;
+        }
+      }
+
       if (code == 'invalid-credential') {
         return context.locale.invalidCredential;
       } else if (code == 'not-registered') {

@@ -67,6 +67,8 @@ class AppRouteInfoImpl implements AppRouteInfo {
           AppRoute.helpCenter.route(),
           AppRoute.notifications.route(),
           AppRoute.fillPersonalInformation.route(),
+          AppRoute.createAppointment.route(),
+          AppRoute.mySchedule.route(),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

@@ -131,6 +131,14 @@
   "invalidFormat": "Invalid format",
   "dateOfBirth": "Date of Birth",
   "choose": "Choose",
+  "chooseItem": "Choose {item}",
+  "@chooseItem": {
+      "placeholders": {
+          "item": {
+              "type": "String"
+          }
+      }
+  },
   "male": "Male",
   "female": "Female",
   "youHaveAnyAllergies": "You have any allergies",
@@ -303,5 +311,13 @@
             }
         }
   },
-  "appointment": "Appointment"
+  "appointment": "Appointment",
+  "clinic": "clinic",
+  "quotasAvailable": "Quotas available",
+  "fullQuota": "Full quota",
+  "selectedDate": "Selected date",
+  "quotasNotOpened": "Quotas not opened",
+  "arrivalTime": "Arrival time",
+  "successCreatedAppointment": "Appointment successfully scheduled",
+  "mySchedule": "My Schedule"
 }

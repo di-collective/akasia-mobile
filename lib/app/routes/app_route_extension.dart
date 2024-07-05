@@ -11,6 +11,7 @@ import '../../features/account_setting/presentation/pages/change_password_page.d
 import '../../features/account_setting/presentation/pages/change_phone_number_page.dart';
 import '../../features/account_setting/presentation/pages/deactive_account_page.dart';
 import '../../features/account_setting/presentation/pages/success_deactive_account_page.dart';
+import '../../features/appointment/presentation/pages/create_appointment_page.dart';
 import '../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
@@ -21,6 +22,7 @@ import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
@@ -78,6 +80,10 @@ extension AppRouteExtension on AppRoute {
         return 'write-review';
       case AppRoute.fillPersonalInformation:
         return 'fill-personal-information';
+      case AppRoute.createAppointment:
+        return 'create-appointment';
+      case AppRoute.mySchedule:
+        return 'my-schedule';
     }
   }
 
@@ -189,6 +195,10 @@ extension AppRouteExtension on AppRoute {
         );
       case AppRoute.fillPersonalInformation:
         return const FillPersonalInformationPage();
+      case AppRoute.createAppointment:
+        return const CreateAppointmentPage();
+      case AppRoute.mySchedule:
+        return const MySchedulePage();
     }
   }
 

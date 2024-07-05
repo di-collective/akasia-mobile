@@ -7,6 +7,7 @@ import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
 import '../../theme/color_scheme.dart';
 import '../../theme/text_theme.dart';
+import '../loadings/shimmer_loading.dart';
 
 class DropdownWidget<T> extends StatelessWidget {
   final String? title, hintText;
@@ -20,6 +21,7 @@ class DropdownWidget<T> extends StatelessWidget {
   final bool? isDisabled, isLoading, isRequired;
   final Color? backgroundColor;
   final double? itemHeight;
+  final TextStyle? titleTextStyle;
 
   const DropdownWidget({
     super.key,
@@ -38,6 +40,7 @@ class DropdownWidget<T> extends StatelessWidget {
     this.isRequired,
     this.backgroundColor,
     this.itemHeight,
+    this.titleTextStyle,
   });
 
   @override
@@ -56,12 +59,18 @@ class DropdownWidget<T> extends StatelessWidget {
                 if (isRequired == true)
                   TextSpan(
                     text: ' *',
-                    style: textTheme.labelMedium.copyWith(
+                    style: titleStyle(
+                      textTheme: textTheme,
+                      colorScheme: colorScheme,
+                    ).copyWith(
                       color: colorScheme.error,
                     ),
                   ),
               ],
-              style: textTheme.labelMedium,
+              style: titleStyle(
+                textTheme: textTheme,
+                colorScheme: colorScheme,
+              ),
             ),
           ),
           const SizedBox(
@@ -136,19 +145,11 @@ class DropdownWidget<T> extends StatelessWidget {
             ),
             if (isLoading == true) ...[
               Positioned.fill(
-                child: Container(
-                  color: Colors.transparent,
-                  child: Center(
-                    child: SizedBox(
-                      height: 11,
-                      width: 11,
-                      child: CircularProgressIndicator(
-                        color: textColor(
-                          colorScheme: colorScheme,
-                        ),
-                        strokeWidth: 1.5,
-                      ),
-                    ),
+                child: ShimmerLoading.circular(
+                  width: context.width,
+                  height: context.height,
+                  shapeBorder: RoundedRectangleBorder(
+                    borderRadius: _borderRadius,
                   ),
                 ),
               ),
@@ -163,6 +164,19 @@ class DropdownWidget<T> extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  TextStyle titleStyle({
+    required AppTextTheme textTheme,
+    required AppColorScheme colorScheme,
+  }) {
+    if (titleTextStyle != null) {
+      return titleTextStyle!;
+    }
+
+    return textTheme.labelMedium.copyWith(
+      color: colorScheme.onSurface,
     );
   }
 
@@ -201,10 +215,14 @@ class DropdownWidget<T> extends StatelessWidget {
     required Color borderColor,
   }) {
     return OutlineInputBorder(
-      borderRadius: borderRadius ?? BorderRadius.circular(8),
+      borderRadius: _borderRadius,
       borderSide: BorderSide(
         color: borderColor,
       ),
     );
+  }
+
+  BorderRadius get _borderRadius {
+    return borderRadius ?? BorderRadius.circular(8);
   }
 }

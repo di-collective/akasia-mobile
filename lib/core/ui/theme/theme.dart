@@ -59,7 +59,7 @@ class AppTheme {
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w500,
         ),
-        selectedColor: colorScheme.primaryTonal
+        selectedColor: colorScheme.primaryTonal,
       ),
       dividerTheme: DividerThemeData(
         color: colorScheme.outlineBright,
@@ -68,6 +68,15 @@ class AppTheme {
       ),
       colorScheme: const ColorScheme.light().copyWith(
         primary: colorScheme.primary,
+      ),
+      datePickerTheme: DatePickerThemeData(
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+          side: BorderSide(
+            color: colorScheme.primary,
+          ),
+        ),
       ),
     );
   }

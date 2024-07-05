@@ -105,6 +105,7 @@ class _MainPageState extends State<MainPage> {
       return;
     }
 
+    // TODO: Check if user has filled personal information
     if (item == BottomNavigationItem.myTreatment) {
       // if personal information is null, navigate to fill personal information
       final isContinue = await context.pushNamed(
