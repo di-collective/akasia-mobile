@@ -53,9 +53,11 @@ class _FaqDetailsPageState extends State<FaqDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          context.locale.frequentlyAskedQuestions,
+        backgroundColor: colorScheme.white,
+        iconTheme: IconThemeData(
+          color: colorScheme.primary,
         ),
+        surfaceTintColor: colorScheme.white,
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -66,6 +66,13 @@ class __BodyState extends State<_Body> {
             appBar: AppBar(
               title: Text(
                 context.locale.deactiveAccount.toCapitalizes(),
+                style: TextStyle(
+                  color: colorScheme.onSurfaceDim,
+                ),
+              ),
+              backgroundColor: colorScheme.white,
+              iconTheme: IconThemeData(
+                color: colorScheme.primary,
               ),
             ),
             body: Padding(

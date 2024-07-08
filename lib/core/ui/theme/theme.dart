@@ -23,6 +23,7 @@ class AppTheme {
         fontWeight: FontWeight.bold,
       ),
       centerTitle: true,
+      surfaceTintColor: colorScheme.primary,
     );
 
     return ThemeData(

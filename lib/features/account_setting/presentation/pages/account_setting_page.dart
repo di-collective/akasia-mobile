@@ -17,6 +17,13 @@ class AccountSettingPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           context.locale.accountSettings,
+          style: TextStyle(
+            color: colorScheme.onSurfaceDim,
+          ),
+        ),
+        backgroundColor: colorScheme.white,
+        iconTheme: IconThemeData(
+          color: colorScheme.primary,
         ),
       ),
       body: SingleChildScrollView(
