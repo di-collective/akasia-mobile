@@ -10,7 +10,7 @@ class ShimmerLoading extends StatelessWidget {
 
   const ShimmerLoading.circular({
     super.key,
-    required this.width,
+    this.width,
     required this.height,
     this.shapeBorder = const CircleBorder(),
   });

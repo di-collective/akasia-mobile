@@ -4,13 +4,14 @@ import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
 import '../../theme/color_scheme.dart';
 import '../../theme/text_theme.dart';
+import '../loadings/shimmer_loading.dart';
 
 class ButtonWidget extends StatelessWidget {
   final Color? textColor, borderColor, backgroundColor, overlayColor;
   final Function()? onTap;
   final Widget? child;
   final double? elevation;
-  final bool? isLoading, isDisabled;
+  final bool? isLoading, isDisabled, isUseShimmerLoading;
   final String? text;
   final double? height, width;
   final BorderRadiusGeometry? borderRadius;
@@ -28,6 +29,7 @@ class ButtonWidget extends StatelessWidget {
     this.elevation,
     this.isLoading,
     this.isDisabled,
+    this.isUseShimmerLoading,
     this.text,
     this.height,
     this.width,
@@ -44,46 +46,65 @@ class ButtonWidget extends StatelessWidget {
     return SizedBox(
       height: height,
       width: width,
-      child: ElevatedButton(
-        onPressed: () {
-          if (isDisabled == true) {
-            return;
-          }
+      child: buttonWidget(
+        textTheme: textTheme,
+        colorScheme: colorScheme,
+      ),
+    );
+  }
 
-          if (onTap == null) {
-            return;
-          }
+  Widget buttonWidget({
+    required AppTextTheme textTheme,
+    required AppColorScheme colorScheme,
+  }) {
+    if (isLoading == true && isUseShimmerLoading == true) {
+      return ShimmerLoading.circular(
+        height: 48,
+        shapeBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      );
+    }
 
-          if (isLoading == true) {
-            return;
-          }
+    return ElevatedButton(
+      onPressed: () {
+        if (isDisabled == true) {
+          return;
+        }
 
-          onTap!();
-        },
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: borderRadius ?? BorderRadius.circular(8),
-              side: borderSide(
-                colorScheme: colorScheme,
-              ),
+        if (onTap == null) {
+          return;
+        }
+
+        if (isLoading == true) {
+          return;
+        }
+
+        onTap!();
+      },
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: borderRadius ?? BorderRadius.circular(8),
+            side: borderSide(
+              colorScheme: colorScheme,
             ),
           ),
-          overlayColor: MaterialStateProperty.all(
-            overlayColor,
-          ),
-          padding: MaterialStateProperty.all(
-            padding ?? const EdgeInsets.all(13),
-          ),
-          elevation: MaterialStateProperty.all(elevation ?? 0),
-          backgroundColor: MaterialStateProperty.all(
-            buttonBackgroundColor(colorScheme: colorScheme),
-          ),
         ),
-        child: buttonChild(
-          colorScheme: colorScheme,
-          textTheme: textTheme,
+        overlayColor: MaterialStateProperty.all(
+          overlayColor,
         ),
+        padding: MaterialStateProperty.all(
+          padding ?? const EdgeInsets.all(13),
+        ),
+        elevation: MaterialStateProperty.all(elevation ?? 0),
+        backgroundColor: MaterialStateProperty.all(
+          buttonBackgroundColor(colorScheme: colorScheme),
+        ),
+      ),
+      child: buttonChild(
+        colorScheme: colorScheme,
+        textTheme: textTheme,
       ),
     );
   }
