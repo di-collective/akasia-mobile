@@ -21,7 +21,7 @@ import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../activity_level/domain/entities/activity_level_entity.dart';
 import '../cubit/fill_personal_information/fill_personal_information_cubit.dart';
-import '../widgets/finish_chart_widget.dart';
+import '../widgets/finish_page_widget.dart';
 
 class FillPersonalInformationPage extends StatelessWidget {
   const FillPersonalInformationPage({super.key});
@@ -293,108 +293,8 @@ class __BodyState extends State<_Body> {
                               ],
                             ),
                           ),
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: context.height * 0.07,
-                              ),
-                              Text(
-                                context.locale.wePredictThatYouWillBe
-                                    .toCapitalizes(),
-                                style: textTheme.bodyLarge.copyWith(
-                                  color: colorScheme.onSurfaceDim,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "${_weightGoalTextController.text}kg",
-                                      style: TextStyle(
-                                        color: colorScheme.primary,
-                                      ),
-                                    ),
-                                    const TextSpan(text: " by "),
-                                    TextSpan(
-                                      text: "April 9",
-                                      style: TextStyle(
-                                        color: colorScheme.primary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                maxLines: 2,
-                                textAlign: TextAlign.center,
-                                style: textTheme.headlineLarge.copyWith(
-                                  color: colorScheme.onSurfaceDim,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              TitleDividerWidget(
-                                color: colorScheme.onSurfaceDim,
-                                width: 80,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Spacer(),
-                              SizedBox(
-                                height: context.height * 0.4,
-                                child: const FinishChartWidget(),
-                              ),
-                              const Spacer(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                context.locale.yourPlanIsReady.toCapitalizes(),
-                                style: textTheme.titleLarge.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.onSurfaceDim,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: context.paddingHorizontal,
-                                ),
-                                child: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: context.locale
-                                            .yourBudgetCalories("1.478"),
-                                      ),
-                                      const TextSpan(text: ". "),
-                                      TextSpan(
-                                        text: context.locale
-                                            .ifYourConsistenlyEatAnAverage(
-                                                "1.478"),
-                                      ),
-                                      const TextSpan(text: "."),
-                                    ],
-                                  ),
-                                  maxLines: 5,
-                                  textAlign: TextAlign.center,
-                                  style: textTheme.labelLarge.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
+                          FinishPageWidget(
+                            weightGoal: _weightGoalTextController.text,
                           ),
                         ],
                       ),
