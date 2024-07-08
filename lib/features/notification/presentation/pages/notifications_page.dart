@@ -20,6 +20,8 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  final _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _init() async {
+    _scrollController.addListener(_scrollListener);
+
     final notificationsState =
         BlocProvider.of<NotificationsCubit>(context).state;
     if (notificationsState is! NotificationsLoaded) {
@@ -39,38 +43,60 @@ class _NotificationsPageState extends State<NotificationsPage> {
     await BlocProvider.of<NotificationsCubit>(context).getNotifications();
   }
 
+  void _scrollListener() {
+    // reload state
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
     return Scaffold(
-      appBar: AppBar(),
-      body: RefreshIndicator(
-        onRefresh: _onRefreshNotifications,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: context.paddingTop,
+      body: NestedScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: _scrollController,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 120,
+              pinned: true,
+              stretch: true,
+              backgroundColor: colorScheme.white,
+              surfaceTintColor: colorScheme.white,
+              iconTheme: IconThemeData(
+                color: colorScheme.primary,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.paddingHorizontal,
-                ),
-                child: Text(
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: false,
+                title: Text(
                   context.locale.notifications,
-                  style: textTheme.headlineSmall.copyWith(
+                  style: textTheme.titleMedium.copyWith(
                     color: colorScheme.onSurfaceDim,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                titlePadding: EdgeInsets.only(
+                  left: _paddingLeft,
+                  bottom: 16,
+                ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+            ),
+          ];
+        },
+        body: RefreshIndicator(
+          onRefresh: _onRefreshNotifications,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               SizedBox(
                 width: context.width,
                 child: BlocBuilder<NotificationsCubit, NotificationsState>(
@@ -135,6 +161,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ),
       ),
     );
+  }
+
+  double get _paddingLeft {
+    const double minPadding = 16;
+    const double maxPadding = 60;
+    const double maxOffset = 120;
+
+    if (!_scrollController.hasClients) {
+      return minPadding;
+    }
+
+    final offset = _scrollController.offset;
+    if (offset <= 0) {
+      return minPadding;
+    } else if (offset >= maxOffset) {
+      return maxPadding;
+    }
+
+    // Calculate padding linearly
+    return minPadding + ((maxPadding - minPadding) * (offset / maxOffset));
   }
 
   Future<void> _onRefreshNotifications() async {
