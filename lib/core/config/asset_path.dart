@@ -1,12 +1,17 @@
 import '../ui/extensions/asset_name_extension.dart';
 
 class AssetImagesPath {
+  const AssetImagesPath._();
+
   static String logoTextWhite = 'logo_text_white.svg'.imageAsset;
   static String logoTextColored = 'logo_text_colored.svg'.imageAsset;
+  static String dietPlanChart = 'diet_plan_chart.svg'.imageAsset;
   static String placeholder = 'placeholder.jpg'.imageAsset;
 }
 
 class AssetIconsPath {
+  const AssetIconsPath._();
+
   static String icGoogle = 'ic_google.svg'.iconAsset;
   static String icApple = 'ic_apple.svg'.iconAsset;
   static String icNotification = 'ic_notification.svg'.iconAsset;

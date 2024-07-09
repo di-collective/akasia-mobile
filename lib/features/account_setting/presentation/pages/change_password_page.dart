@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
+import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
@@ -48,6 +49,8 @@ class __BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.theme.appColorScheme;
+
     return GestureDetector(
       onTap: () => context.closeKeyboard,
       child: BlocBuilder<ChangePasswordCubit, ChangePasswordState>(
@@ -56,6 +59,13 @@ class __BodyState extends State<_Body> {
             appBar: AppBar(
               title: Text(
                 context.locale.changePassword.toCapitalizes(),
+                style: TextStyle(
+                  color: colorScheme.onSurfaceDim,
+                ),
+              ),
+              backgroundColor: colorScheme.white,
+              iconTheme: IconThemeData(
+                color: colorScheme.primary,
               ),
             ),
             body: Padding(

@@ -1,7 +1,7 @@
-import '../../extensions/build_context_extension.dart';
-import '../../extensions/theme_data_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../extensions/build_context_extension.dart';
+import '../../extensions/theme_data_extension.dart';
 import 'button_widget.dart';
 
 class BottomSheetButtonWidget extends StatelessWidget {
@@ -9,7 +9,7 @@ class BottomSheetButtonWidget extends StatelessWidget {
   final Function()? onTap;
   final Widget? child;
   final double? elevation;
-  final bool? isLoading, isDisabled;
+  final bool? isLoading, isDisabled, isUseShimmerLoading;
   final String? text;
   final double? height, width;
   final BorderRadiusGeometry? borderRadius;
@@ -27,6 +27,7 @@ class BottomSheetButtonWidget extends StatelessWidget {
     this.elevation,
     this.isLoading,
     this.isDisabled,
+    this.isUseShimmerLoading,
     this.text,
     this.height,
     this.width,
@@ -62,6 +63,7 @@ class BottomSheetButtonWidget extends StatelessWidget {
         borderRadius: borderRadius,
         padding: padding,
         style: style,
+        isUseShimmerLoading: isUseShimmerLoading,
         child: child,
       ),
     );

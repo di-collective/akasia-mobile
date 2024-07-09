@@ -11,6 +11,7 @@ import '../core/utils/service_locator.dart';
 import '../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
+import '../features/my_schedule/presentation/cubit/my_schedules/my_schedules_cubit.dart';
 import '../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
 import 'routes/app_route_info.dart';
 
@@ -35,6 +36,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<BottomNavigationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<MySchedulesCubit>(),
         ),
       ],
       child: MaterialApp.router(
