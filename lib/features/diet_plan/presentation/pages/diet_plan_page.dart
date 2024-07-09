@@ -7,6 +7,7 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/localization/app_supported_locales.dart';
+import '../widgets/nutrition_information_widget.dart';
 
 class DietPlanPage extends StatefulWidget {
   const DietPlanPage({super.key});
@@ -168,6 +169,10 @@ class _DietPlanPageState extends State<DietPlanPage> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 32,
+            ),
+            const NutritionInformationWidget(),
             const SizedBox(
               height: 32,
             ),

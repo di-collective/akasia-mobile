@@ -321,5 +321,17 @@
   "successCreatedAppointment": "Appointment successfully scheduled",
   "mySchedule": "My Schedule",
   "mealPlanRecomendation": "Meal Plan Recomendation",
-  "mealPlanRecomendationDescription": "A higher calorie plan suitable for active individuals looking to maintain or lose weight"
+  "mealPlanRecomendationDescription": "A higher calorie plan suitable for active individuals looking to maintain or lose weight",
+  "nutritionInformation": "Nutrition Information",
+  "carbo": "Carbo",
+  "fat": "Fat",
+  "protein": "Protein",
+  "sugar": "Sugar",
+  "trackDailyCalories": "Track daily calories and keep you motivated",
+  "whatDidYouEatToday": "What did you eat today?",
+  "breakfast": "Breakfast",
+  "lunch": "Lunch",
+  "dinner": "Dinner",
+  "snacks": "Snacks",
+  "noData": "No Data"
 }
