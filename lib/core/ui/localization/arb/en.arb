@@ -319,5 +319,7 @@
   "quotasNotOpened": "Quotas not opened",
   "arrivalTime": "Arrival time",
   "successCreatedAppointment": "Appointment successfully scheduled",
-  "mySchedule": "My Schedule"
+  "mySchedule": "My Schedule",
+  "mealPlanRecomendation": "Meal Plan Recomendation",
+  "mealPlanRecomendationDescription": "A higher calorie plan suitable for active individuals looking to maintain or lose weight"
 }

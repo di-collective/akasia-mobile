@@ -18,6 +18,8 @@ import '../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../features/auth/presentation/pages/sign_up_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/success_create_new_password_page.dart';
+import '../../features/diet_plan/presentation/pages/add_eat_page.dart';
+import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
@@ -84,6 +86,10 @@ extension AppRouteExtension on AppRoute {
         return 'create-appointment';
       case AppRoute.mySchedule:
         return 'my-schedule';
+      case AppRoute.dietPlan:
+        return 'diet-plan';
+      case AppRoute.addEat:
+        return 'add-eat';
     }
   }
 
@@ -199,6 +205,10 @@ extension AppRouteExtension on AppRoute {
         return const CreateAppointmentPage();
       case AppRoute.mySchedule:
         return const MySchedulePage();
+      case AppRoute.dietPlan:
+        return const DietPlanPage();
+      case AppRoute.addEat:
+        return const AddEatPage();
     }
   }
 

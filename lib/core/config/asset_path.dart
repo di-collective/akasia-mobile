@@ -7,6 +7,7 @@ class AssetImagesPath {
   static String logoTextColored = 'logo_text_colored.svg'.imageAsset;
   static String dietPlanChart = 'diet_plan_chart.svg'.imageAsset;
   static String placeholder = 'placeholder.jpg'.imageAsset;
+  static String mealPlan = 'meal_plan.png'.imageAsset;
 }
 
 class AssetIconsPath {

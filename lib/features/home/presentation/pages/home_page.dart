@@ -225,6 +225,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onDietPlan() {
-    // TODO: Implement this method
+    // go to diet plan
+    context.goNamed(
+      AppRoute.dietPlan.name,
+    );
   }
 }
