@@ -47,4 +47,5 @@ class AssetIconsPath {
   static String icRatingStar = 'ic_rating_star.svg'.iconAsset;
   static String icCall = 'ic_call.svg'.iconAsset;
   static String icFire = 'ic_fire.svg'.iconAsset;
+  static String icAdd = 'ic_add.svg'.iconAsset;
 }
