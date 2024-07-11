@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerLoading extends StatelessWidget {
-  const ShimmerLoading.rectangular({
+  ShimmerLoading.rectangular({
     super.key,
     this.width = double.infinity,
     required this.height,
-  }) : shapeBorder = const RoundedRectangleBorder();
+    this.borderRadius = 4,
+  }) : shapeBorder = RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        );
 
   const ShimmerLoading.circular({
     super.key,
     this.width,
-    required this.height,
+    this.height,
     this.shapeBorder = const CircleBorder(),
-  });
+  }) : borderRadius = 99;
 
   final double? width, height;
+  final double borderRadius;
   final ShapeBorder shapeBorder;
 
   @override

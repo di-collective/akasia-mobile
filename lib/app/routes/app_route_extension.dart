@@ -18,7 +18,7 @@ import '../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../features/auth/presentation/pages/sign_up_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/success_create_new_password_page.dart';
-import '../../features/diet_plan/presentation/pages/add_eat_page.dart';
+import '../../features/diet_plan/presentation/pages/add_eaten_food_page.dart';
 import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
@@ -208,7 +208,14 @@ extension AppRouteExtension on AppRoute {
       case AppRoute.dietPlan:
         return const DietPlanPage();
       case AppRoute.addEat:
-        return const AddEatPage();
+        AddEatenFoodPageParams? params;
+        if (arguments is AddEatenFoodPageParams) {
+          params = arguments;
+        }
+
+        return AddEatenFoodPage(
+          params: params,
+        );
     }
   }
 

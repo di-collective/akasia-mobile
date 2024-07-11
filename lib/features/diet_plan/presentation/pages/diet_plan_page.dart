@@ -177,7 +177,9 @@ class _DietPlanPageState extends State<DietPlanPage> {
             const SizedBox(
               height: 32,
             ),
-            const EatWidget(),
+            EatWidget(
+              date: _selectedDate,
+            ),
             SizedBox(
               height: context.paddingBottom,
             ),
@@ -187,11 +189,19 @@ class _DietPlanPageState extends State<DietPlanPage> {
     );
   }
 
-  void _onPreviousCalendar() {}
+  void _onPreviousCalendar() {
+    // TODO: Implement this method
+  }
 
-  void _onCalendar() {}
+  void _onCalendar() {
+    // TODO: Implement this method
+  }
 
-  void _onNextCalendar() {}
+  void _onNextCalendar() {
+    // TODO: Implement this method
+  }
 
-  void _onMealPlan() {}
+  void _onMealPlan() {
+    // TODO: Implement this method
+  }
 }

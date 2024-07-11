@@ -333,5 +333,20 @@
   "lunch": "Lunch",
   "dinner": "Dinner",
   "snacks": "Snacks",
-  "noData": "No Data"
+  "noData": "No Data",
+  "results": "Results",
+  "inputItem": "Input {item}",
+  "@inputItem": {
+      "placeholders": {
+          "item": {
+              "type": "String"
+          }
+      }
+  },
+  "quantity": "Quantity",
+  "add": "Add",
+  "servings": "Servings",
+  "grams": "Grams",
+  "cup": "Cup",
+  "successAddFood": "Your food successfully added"
 }

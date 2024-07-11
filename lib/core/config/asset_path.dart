@@ -48,4 +48,5 @@ class AssetIconsPath {
   static String icCall = 'ic_call.svg'.iconAsset;
   static String icFire = 'ic_fire.svg'.iconAsset;
   static String icAdd = 'ic_add.svg'.iconAsset;
+  static String icSearch = 'ic_search.svg'.iconAsset;
 }

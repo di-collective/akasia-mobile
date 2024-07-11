@@ -9,7 +9,7 @@ abstract class BottomSheetInfo {
   Future<T> showMaterialModal<T>({
     required BuildContext context,
     Color? backgroundColor,
-    required Widget child,
+    required Widget Function(BuildContext) builder,
     bool? isDismissible,
     bool? enableDrag,
   });
@@ -43,7 +43,7 @@ class BottomSheetInfoImpl implements BottomSheetInfo {
   Future<T> showMaterialModal<T>({
     required BuildContext context,
     Color? backgroundColor,
-    required Widget child,
+    required Widget Function(BuildContext) builder,
     bool? isDismissible,
     bool? enableDrag,
     double? maxHeight,
@@ -58,12 +58,10 @@ class BottomSheetInfoImpl implements BottomSheetInfo {
       duration: const Duration(milliseconds: 250),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(10),
+          top: Radius.circular(20),
         ),
       ),
-      builder: (context) {
-        return child;
-      },
+      builder: builder,
     );
   }
 }

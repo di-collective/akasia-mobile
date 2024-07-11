@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/eat_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -13,10 +15,21 @@ import '../../../../core/ui/widget/buttons/icon_button_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../pages/add_eaten_food_page.dart';
 
-class EatWidget extends StatelessWidget {
-  const EatWidget({super.key});
+class EatWidget extends StatefulWidget {
+  final DateTime date;
 
+  const EatWidget({
+    super.key,
+    required this.date,
+  });
+
+  @override
+  State<EatWidget> createState() => _EatWidgetState();
+}
+
+class _EatWidgetState extends State<EatWidget> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
@@ -50,19 +63,38 @@ class EatWidget extends StatelessWidget {
 
             return _EatItemWidget(
               eatTime: eatTime,
+              onAddFood: () {
+                _onAddFood(
+                  eatTime: eatTime,
+                );
+              },
             );
           },
         ),
       ],
     );
   }
+
+  void _onAddFood({
+    required EatTime eatTime,
+  }) {
+    context.goNamed(
+      AppRoute.addEat.name,
+      extra: AddEatenFoodPageParams(
+        eatTime: eatTime,
+        date: widget.date,
+      ),
+    );
+  }
 }
 
 class _EatItemWidget extends StatefulWidget {
   final EatTime eatTime;
+  final Function() onAddFood;
 
   const _EatItemWidget({
     required this.eatTime,
+    required this.onAddFood,
   });
 
   @override
@@ -227,7 +259,7 @@ class __EatItemWidgetState extends State<_EatItemWidget> {
                   width: 20,
                 ),
                 backgroundColor: colorScheme.primaryTonal,
-                onPressed: _onAddFood,
+                onPressed: widget.onAddFood,
               ),
             ),
           ),
@@ -266,6 +298,4 @@ class __EatItemWidgetState extends State<_EatItemWidget> {
       context.hideFullScreenLoading;
     }
   }
-
-  Future<void> _onAddFood() async {}
 }

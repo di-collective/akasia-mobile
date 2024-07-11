@@ -14,6 +14,7 @@ import '../../features/account_setting/di/depedency_injection.dart';
 import '../../features/appointment/di/depedency_injection.dart';
 import '../../features/auth/di/depedency_injection.dart';
 import '../../features/country/di/depedency_injection.dart';
+import '../../features/diet_plan/di/depedency_injection.dart';
 import '../../features/faq/di/depdency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/my_schedule/di/depedency_injection.dart';
@@ -47,6 +48,8 @@ Future<void> init() async {
   AppointmentDI.inject();
 
   MyScheduleDI.inject();
+
+  DietPlanDI.inject();
 }
 
 Future<void> _injectPackages() async {
