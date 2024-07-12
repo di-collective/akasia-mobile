@@ -72,6 +72,7 @@ class AppRouteInfoImpl implements AppRouteInfo {
           AppRoute.dietPlan.route(
             routes: [
               AppRoute.addEat.route(),
+              AppRoute.dietPlanCalendar.route(),
             ],
           ),
         ],

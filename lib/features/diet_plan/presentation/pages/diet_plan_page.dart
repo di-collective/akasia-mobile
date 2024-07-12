@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
@@ -9,6 +11,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/localization/app_supported_locales.dart';
 import '../widgets/eat_widget.dart';
 import '../widgets/nutrition_information_widget.dart';
+import 'diet_plan_calendar_page.dart';
 
 class DietPlanPage extends StatefulWidget {
   const DietPlanPage({super.key});
@@ -194,7 +197,13 @@ class _DietPlanPageState extends State<DietPlanPage> {
   }
 
   void _onCalendar() {
-    // TODO: Implement this method
+    // go to diet plan calendar page
+    context.goNamed(
+      AppRoute.dietPlanCalendar.name,
+      extra: DietPlanCalendarPageParams(
+        date: _selectedDate,
+      ),
+    );
   }
 
   void _onNextCalendar() {

@@ -348,5 +348,7 @@
   "servings": "Servings",
   "grams": "Grams",
   "cup": "Cup",
-  "successAddFood": "Your food successfully added"
+  "successAddFood": "Your food successfully added",
+  "close": "Close",
+  "today": "Today"
 }

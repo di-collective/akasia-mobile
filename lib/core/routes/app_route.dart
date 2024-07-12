@@ -27,4 +27,5 @@ enum AppRoute {
   mySchedule,
   dietPlan,
   addEat,
+  dietPlanCalendar,
 }
