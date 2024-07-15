@@ -24,7 +24,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
 
       // TODO: Implement getNotifications
       // final result = await appHttpClient.get(
-      //   url: "${EnvConfig.baseAkasiaApiUrl}/notifications",
+      //   url: "${EnvConfig.akasiaUserApiUrl}/notifications",
       //   headers: {
       //     'Authorization': 'Bearer $accessToken',
       //   },

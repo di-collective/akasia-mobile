@@ -31,7 +31,7 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
 
       // TODO: Implement getClinics
       // final response = await appHttpClient.get(
-      //   url: "${EnvConfig.baseAkasiaApiUrl}/clinics",
+      //   url: "${EnvConfig.akasiaUserApiUrl}/clinics",
       //   headers: {
       //     'Authorization': 'Bearer $accessToken',
       //   },

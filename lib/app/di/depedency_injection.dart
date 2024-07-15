@@ -76,7 +76,15 @@ Future<void> _injectPackages() async {
 
   // dio
   sl.registerLazySingleton<Dio>(() {
-    return Dio()..interceptors.add(DioInterceptor());
+    return Dio()
+      ..interceptors.add(
+        DioInterceptor(),
+      )
+      ..options = BaseOptions(
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
+        sendTimeout: const Duration(seconds: 60),
+      );
   });
 
   // image picker

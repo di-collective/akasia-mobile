@@ -171,7 +171,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         final String? accessToken = resultToken.accessToken;
         final resultSubmitProfile = await appHttpClient.post(
-          url: "${EnvConfig.baseAkasiaApiUrl}/profile",
+          url: "${EnvConfig.akasiaUserApiUrl}/profile",
           headers: {
             'Authorization': 'Bearer $accessToken',
           },
@@ -374,7 +374,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'getToken params: firebaseIdToken $firebaseIdToken, email $email, password $password, repeatPassword $repeatPassword');
 
       final result = await appHttpClient.post(
-        url: "${EnvConfig.baseAkasiaApiUrl}/credentials/firebase-auth",
+        url: "${EnvConfig.akasiaUserApiUrl}/credentials/firebase-auth",
         queryParameters: {
           'idToken': firebaseIdToken,
         },
@@ -424,7 +424,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.info('forgotPassword params: email $email');
 
       final result = await appHttpClient.post(
-        url: "${EnvConfig.baseAkasiaApiUrl}/credentials/forgot-password",
+        url: "${EnvConfig.akasiaUserApiUrl}/credentials/forgot-password",
         data: {
           'email': email,
         },
@@ -472,7 +472,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'updatePassword params: userId $userId, resetToken $resetToken, newPassword $newPassword');
 
       final result = await appHttpClient.post(
-        url: "${EnvConfig.baseAkasiaApiUrl}/credentials/update-password",
+        url: "${EnvConfig.akasiaUserApiUrl}/credentials/update-password",
         data: {
           'user_id': userId,
           'reset_token': resetToken,
@@ -497,7 +497,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // if (accessToken != null) {
       //   // logout from backend
       //   final resultLogoutBackend = await appHttpClient.post(
-      //     url: "${EnvConfig.baseAkasiaApiUrl}/logout",
+      //     url: "${EnvConfig.akasiaUserApiUrl}/logout",
       //     headers: {
       //       'Authorization': 'Bearer $accessToken',
       //     },
