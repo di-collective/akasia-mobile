@@ -350,5 +350,7 @@
   "cup": "Cup",
   "successAddFood": "Your food successfully added",
   "close": "Close",
-  "today": "Today"
+  "today": "Today",
+  "under": "Under",
+  "over": "Over"
 }

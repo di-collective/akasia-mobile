@@ -381,13 +381,14 @@ class _MonthPickerState extends State<_MonthPicker> {
     final colorScheme = context.theme.appColorScheme;
 
     const List<String> shortWeekdays = <String>[
+      'Sun',
       'Mon',
       'Tue',
       'Wed',
       'Thu',
       'Fri',
       'Sat',
-      'Sun',
+      'Week',
     ];
 
     final List<Widget> result = <Widget>[];
@@ -415,6 +416,8 @@ class _MonthPickerState extends State<_MonthPicker> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.theme.appColorScheme;
+
     return Column(
       children: [
         Padding(
@@ -450,21 +453,29 @@ class _MonthPickerState extends State<_MonthPicker> {
                   widget.firstDate,
                   index,
                 );
+                final isActiveMonth = DateUtils.isSameMonth(
+                  month,
+                  _currentMonth,
+                );
 
-                return _DayPicker(
-                  key: ValueKey<DateTime>(month),
-                  selectedDate: widget.currentDate,
-                  currentDate: widget.currentDate,
-                  onChanged: _handleDateSelected,
-                  firstDate: widget.firstDate,
-                  lastDate: widget.lastDate,
-                  displayedMonth: month,
-                  selectableDayPredicate: widget.selectableDayPredicate,
-                  notOpenedDays: widget.notOpenedDays,
-                  fullBookedDays: widget.fullBookedDays,
-                  availableDays: widget.availableDays,
-                  isLoading: widget.isLoading,
-                  loadedDays: widget.loadedDays,
+                return Material(
+                  color: isActiveMonth ? null : colorScheme.surfaceBright,
+                  child: _DayPicker(
+                    key: ValueKey<DateTime>(month),
+                    selectedDate: widget.currentDate,
+                    currentDate: widget.currentDate,
+                    onChanged: _handleDateSelected,
+                    firstDate: widget.firstDate,
+                    lastDate: widget.lastDate,
+                    displayedMonth: month,
+                    selectableDayPredicate: widget.selectableDayPredicate,
+                    notOpenedDays: widget.notOpenedDays,
+                    fullBookedDays: widget.fullBookedDays,
+                    availableDays: widget.availableDays,
+                    isLoading: widget.isLoading,
+                    loadedDays: widget.loadedDays,
+                    isActiveMonth: isActiveMonth,
+                  ),
                 );
               },
             ),
@@ -519,6 +530,7 @@ class _DayPicker extends StatefulWidget {
     this.availableDays,
     required this.isLoading,
     this.loadedDays,
+    required this.isActiveMonth,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
         assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -558,6 +570,7 @@ class _DayPicker extends StatefulWidget {
 
   final bool isLoading;
   final List<EatCalendarEntity>? loadedDays;
+  final bool isActiveMonth;
 
   @override
   _DayPickerState createState() => _DayPickerState();
@@ -608,6 +621,9 @@ class _DayPickerState extends State<_DayPicker> {
     final daysInMonth = DateUtils.getDaysInMonth(year, month);
     final dayOffset = DateUtils.firstDayOffset(year, month, localizations);
 
+    final textTheme = context.theme.appTextTheme;
+    final colorScheme = context.theme.appColorScheme;
+
     final List<Widget> dayItems = [];
     // 1-based day of month, e.g. 1-31 for January, and 1-29 for February on
     // a leap year.
@@ -615,18 +631,19 @@ class _DayPickerState extends State<_DayPicker> {
     while (day < daysInMonth) {
       day++;
       if (day < 1) {
-        dayItems.add(Container());
+        dayItems.add(const SizedBox.shrink());
       } else {
-        final DateTime dayToBuild = DateTime(year, month, day);
-        final bool isDisabled = dayToBuild.isAfter(widget.lastDate) ||
-            dayToBuild.isBefore(widget.firstDate) ||
-            (widget.selectableDayPredicate != null &&
-                !widget.selectableDayPredicate!(dayToBuild)) ||
-            widget.notOpenedDays?.firstOrNullWhere((element) {
-                  return DateUtils.isSameDay(element, dayToBuild);
-                }) !=
-                null;
-        final bool isSelectedDay = DateUtils.isSameDay(
+        final dayToBuild = DateTime(year, month, day);
+        // final isDisabled = dayToBuild.isAfter(widget.lastDate) ||
+        //     dayToBuild.isBefore(widget.firstDate) ||
+        //     (widget.selectableDayPredicate != null &&
+        //         !widget.selectableDayPredicate!(dayToBuild)) ||
+        //     widget.notOpenedDays?.firstOrNullWhere((element) {
+        //           return DateUtils.isSameDay(element, dayToBuild);
+        //         }) !=
+        //         null;
+        final isDisabled = !widget.isActiveMonth;
+        final isSelectedDay = DateUtils.isSameDay(
           widget.selectedDate,
           dayToBuild,
         );
@@ -663,6 +680,48 @@ class _DayPickerState extends State<_DayPicker> {
             isFirstDay: isFirstDay,
           ),
         );
+
+        // calculate for the week
+        final currentDayWeekday = (day + dayOffset) % 7;
+        final isWeek = currentDayWeekday == 0;
+        final weekColor = isDisabled ? colorScheme.success : colorScheme.error;
+        final weekValue = isDisabled ? 0 : 20; // TODO: calculate week value
+        if (isWeek) {
+          dayItems.add(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  isDisabled ? context.locale.under : context.locale.over,
+                  style: textTheme.labelSmall.copyWith(
+                    color: weekColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: weekColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  child: Text(
+                    weekValue.toString(),
+                    style: textTheme.labelSmall.copyWith(
+                      color: colorScheme.onError,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
       }
     }
 
@@ -790,21 +849,23 @@ class _DayState extends State<_Day> {
                     strokeWidth: 4,
                   ),
                 ),
-                SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: CircularProgressIndicator(
-                    value: 0.6,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      colorScheme.success,
+                if (!widget.isDisabled) ...[
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: CircularProgressIndicator(
+                      value: 0.6,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        colorScheme.success,
+                      ),
+                      strokeWidth: 4,
                     ),
-                    strokeWidth: 4,
                   ),
-                ),
-                Icon(
-                  Icons.check_circle,
-                  color: iconColor,
-                ),
+                  Icon(
+                    Icons.check_circle,
+                    color: iconColor,
+                  ),
+                ],
               ],
             ),
           ],
@@ -844,7 +905,7 @@ class _DayNameGridDelegate extends SliverGridDelegate {
 
   @override
   SliverGridLayout getLayout(SliverConstraints constraints) {
-    const columnCount = DateTime.daysPerWeek;
+    const columnCount = DateTime.daysPerWeek + 1;
     final tileWidth = constraints.crossAxisExtent / columnCount;
 
     return SliverGridRegularTileLayout(
@@ -870,7 +931,7 @@ class _DayPickerGridDelegate extends SliverGridDelegate {
 
   @override
   SliverGridLayout getLayout(SliverConstraints constraints) {
-    const columnCount = DateTime.daysPerWeek;
+    const columnCount = DateTime.daysPerWeek + 1;
     final tileWidth = constraints.crossAxisExtent / columnCount;
     final tileHeight = math.min(
       _dayPickerRowHeight,
