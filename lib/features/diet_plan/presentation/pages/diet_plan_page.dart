@@ -193,21 +193,35 @@ class _DietPlanPageState extends State<DietPlanPage> {
   }
 
   void _onPreviousCalendar() {
-    // TODO: Implement this method
+    // change selected date to previous day
+    setState(() {
+      _selectedDate = _selectedDate.addDays(-1);
+    });
   }
 
-  void _onCalendar() {
-    // go to diet plan calendar page
-    context.goNamed(
+  Future<void> _onCalendar() async {
+    // push to diet plan calendar page
+    final selectedCalendar = await context.pushNamed<DateTime?>(
       AppRoute.dietPlanCalendar.name,
       extra: DietPlanCalendarPageParams(
         date: _selectedDate,
       ),
     );
+    if (selectedCalendar == null || selectedCalendar == _selectedDate) {
+      return;
+    }
+
+    // change selected date
+    setState(() {
+      _selectedDate = selectedCalendar;
+    });
   }
 
   void _onNextCalendar() {
-    // TODO: Implement this method
+    // change selected date to next day
+    setState(() {
+      _selectedDate = _selectedDate.addDays(1);
+    });
   }
 
   void _onMealPlan() {

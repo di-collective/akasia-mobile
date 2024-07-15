@@ -132,7 +132,7 @@ class _DietPlanCalendarPageState extends State<DietPlanCalendarPage> {
           firstDate: DateTime.now().addDays(-365),
           lastDate: DateTime.now().addDays(365),
           isLoading: false,
-          initialDate: _selectedDate,
+          currentDate: _selectedDate,
           onMonthChanged: _onMonthChanged,
           onDateSelected: _onDateSelected,
         ),
@@ -141,23 +141,32 @@ class _DietPlanCalendarPageState extends State<DietPlanCalendarPage> {
   }
 
   void _onToday() {
-    // TODO: Implement this method
+    // change selected date to today
+    setState(() {
+      _selectedDate = DateTime.now();
+    });
   }
 
   void _onPreviousCalendar() {
-    // TODO: Implement this method
+    // change selected date to previous day
+    setState(() {
+      _selectedDate = _selectedDate.addDays(-1);
+    });
   }
 
   void _onNextCalendar() {
-    // TODO: Implement this method
+    // change selected date to next day
+    setState(() {
+      _selectedDate = _selectedDate.addDays(1);
+    });
   }
 
   void _onClose() {
-    // TODO: Implement this method
-    context.pop();
+    context.pop(_selectedDate);
   }
 
   void _onDateSelected(DateTime date) {
+    // change selected date
     setState(() {
       _selectedDate = date;
     });

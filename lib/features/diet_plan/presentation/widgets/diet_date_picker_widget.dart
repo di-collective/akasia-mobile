@@ -8,7 +8,6 @@ class DietDatePickerWidget extends StatefulWidget {
   /// A Material-style date picker dialog.
   DietDatePickerWidget({
     super.key,
-    DateTime? initialDate,
     required DateTime firstDate,
     required DateTime lastDate,
     DateTime? currentDate,
@@ -31,36 +30,14 @@ class DietDatePickerWidget extends StatefulWidget {
     this.currentMonth,
     required this.isLoading,
     this.loadedDays,
-  })  : initialDate =
-            initialDate == null ? null : DateUtils.dateOnly(initialDate),
-        firstDate = DateUtils.dateOnly(firstDate),
+  })  : firstDate = DateUtils.dateOnly(firstDate),
         lastDate = DateUtils.dateOnly(lastDate),
         currentDate = DateUtils.dateOnly(currentDate ?? DateTime.now()) {
     assert(
       !this.lastDate.isBefore(this.firstDate),
       'lastDate ${this.lastDate} must be on or after firstDate ${this.firstDate}.',
     );
-    assert(
-      initialDate == null || !this.initialDate!.isBefore(this.firstDate),
-      'initialDate ${this.initialDate} must be on or after firstDate ${this.firstDate}.',
-    );
-    assert(
-      initialDate == null || !this.initialDate!.isAfter(this.lastDate),
-      'initialDate ${this.initialDate} must be on or before lastDate ${this.lastDate}.',
-    );
-    assert(
-      selectableDayPredicate == null ||
-          initialDate == null ||
-          selectableDayPredicate!(this.initialDate!),
-      'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate',
-    );
   }
-
-  /// The initially selected [DateTime] that the picker should display.
-  ///
-  /// If this is null, there is no selected date. A date must be selected to
-  /// submit the dialog.
-  final DateTime? initialDate;
 
   /// The earliest allowable [DateTime] that the user can select.
   final DateTime firstDate;
@@ -163,7 +140,6 @@ class _DietDatePickerWidgetState extends State<DietDatePickerWidget> {
   Widget build(BuildContext context) {
     return CalendarDietDatePickerWidget(
       key: _calendarPickerKey,
-      initialDate: widget.initialDate,
       firstDate: widget.firstDate,
       lastDate: widget.lastDate,
       selectableDayPredicate: widget.selectableDayPredicate,

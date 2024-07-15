@@ -64,7 +64,6 @@ class CalendarDietDatePickerWidget extends StatefulWidget {
   /// [selectableDayPredicate] must return `true` for the [initialDate].
   CalendarDietDatePickerWidget({
     super.key,
-    required DateTime? initialDate,
     required DateTime firstDate,
     required DateTime lastDate,
     DateTime? currentDate,
@@ -77,38 +76,14 @@ class CalendarDietDatePickerWidget extends StatefulWidget {
     this.onMonthChanged,
     required this.isLoading,
     this.loadedDays,
-  })  : initialDate =
-            initialDate == null ? null : DateUtils.dateOnly(initialDate),
-        firstDate = DateUtils.dateOnly(firstDate),
+  })  : firstDate = DateUtils.dateOnly(firstDate),
         lastDate = DateUtils.dateOnly(lastDate),
         currentDate = DateUtils.dateOnly(currentDate ?? DateTime.now()) {
     assert(
       !this.lastDate.isBefore(this.firstDate),
       'lastDate ${this.lastDate} must be on or after firstDate ${this.firstDate}.',
     );
-    assert(
-      this.initialDate == null || !this.initialDate!.isBefore(this.firstDate),
-      'initialDate ${this.initialDate} must be on or after firstDate ${this.firstDate}.',
-    );
-    assert(
-      this.initialDate == null || !this.initialDate!.isAfter(this.lastDate),
-      'initialDate ${this.initialDate} must be on or before lastDate ${this.lastDate}.',
-    );
-    assert(
-      selectableDayPredicate == null ||
-          this.initialDate == null ||
-          selectableDayPredicate!(this.initialDate!),
-      'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate.',
-    );
   }
-
-  /// The initially selected [DateTime] that the picker should display.
-  ///
-  /// Subsequently changing this has no effect. To change the selected date,
-  /// change the [key] to create a new instance of the [CalendarDietDatePickerWidget], and
-  /// provide that widget the new [initialDate]. This will reset the widget's
-  /// interactive state.
-  final DateTime? initialDate;
 
   /// The earliest allowable [DateTime] that the user can select.
   final DateTime firstDate;
@@ -147,25 +122,17 @@ class CalendarDietDatePickerWidget extends StatefulWidget {
 
 class _CalendarDietDatePickerWidgetState
     extends State<CalendarDietDatePickerWidget> {
-  bool _announcedInitialDate = false;
   late DateTime _currentDisplayedMonthDate;
-  DateTime? _selectedDate;
   final GlobalKey _monthPickerKey = GlobalKey();
-  late MaterialLocalizations _localizations;
-  late TextDirection _textDirection;
 
   @override
   void initState() {
     super.initState();
-    final DateTime currentDisplayedDate =
-        widget.initialDate ?? widget.currentDate;
+    final DateTime currentDisplayedDate = widget.currentDate;
     _currentDisplayedMonthDate = DateTime(
       currentDisplayedDate.year,
       currentDisplayedDate.month,
     );
-    if (widget.initialDate != null) {
-      _selectedDate = widget.initialDate;
-    }
   }
 
   @override
@@ -174,20 +141,6 @@ class _CalendarDietDatePickerWidgetState
     assert(debugCheckHasMaterial(context));
     assert(debugCheckHasMaterialLocalizations(context));
     assert(debugCheckHasDirectionality(context));
-    _localizations = MaterialLocalizations.of(context);
-    _textDirection = Directionality.of(context);
-    if (!_announcedInitialDate && widget.initialDate != null) {
-      assert(_selectedDate != null);
-      _announcedInitialDate = true;
-      final bool isToday =
-          DateUtils.isSameDay(widget.currentDate, _selectedDate);
-      final String semanticLabelSuffix =
-          isToday ? ', ${_localizations.currentDateLabel}' : '';
-      SemanticsService.announce(
-        '${_localizations.formatFullDate(_selectedDate!)}$semanticLabelSuffix',
-        _textDirection,
-      );
-    }
   }
 
   void _handleMonthChanged(DateTime date) {
@@ -202,9 +155,7 @@ class _CalendarDietDatePickerWidgetState
 
   void _handleDayChanged(DateTime value) {
     setState(() {
-      _selectedDate = value;
-
-      widget.onDateChanged(_selectedDate!);
+      widget.onDateChanged(value);
     });
   }
 
@@ -220,7 +171,6 @@ class _CalendarDietDatePickerWidgetState
       currentDate: widget.currentDate,
       firstDate: widget.firstDate,
       lastDate: widget.lastDate,
-      selectedDate: _selectedDate,
       onChanged: _handleDayChanged,
       onDisplayedMonthChanged: _handleMonthChanged,
       selectableDayPredicate: widget.selectableDayPredicate,
@@ -242,7 +192,6 @@ class _MonthPicker extends StatefulWidget {
     required this.currentDate,
     required this.firstDate,
     required this.lastDate,
-    required this.selectedDate,
     required this.onChanged,
     required this.onDisplayedMonthChanged,
     this.selectableDayPredicate,
@@ -252,9 +201,7 @@ class _MonthPicker extends StatefulWidget {
     this.onMonthChanged,
     required this.isLoading,
     this.loadedDays,
-  })  : assert(!firstDate.isAfter(lastDate)),
-        assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
-        assert(selectedDate == null || !selectedDate.isAfter(lastDate));
+  }) : assert(!firstDate.isAfter(lastDate));
 
   /// The initial month to display.
   ///
@@ -278,11 +225,6 @@ class _MonthPicker extends StatefulWidget {
   ///
   /// This date must be on or after the [firstDate].
   final DateTime lastDate;
-
-  /// The currently selected date.
-  ///
-  /// This date is highlighted in the picker.
-  final DateTime? selectedDate;
 
   /// Called when the user picks a day.
   final ValueChanged<DateTime> onChanged;
@@ -511,7 +453,7 @@ class _MonthPickerState extends State<_MonthPicker> {
 
                 return _DayPicker(
                   key: ValueKey<DateTime>(month),
-                  selectedDate: widget.selectedDate,
+                  selectedDate: widget.currentDate,
                   currentDate: widget.currentDate,
                   onChanged: _handleDateSelected,
                   firstDate: widget.firstDate,
