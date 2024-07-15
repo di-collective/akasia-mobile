@@ -24,8 +24,8 @@ class FullScreenLoadingWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 130,
-              width: 130,
+              height: 140,
+              width: 140,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,

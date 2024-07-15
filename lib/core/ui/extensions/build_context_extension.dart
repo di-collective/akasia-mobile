@@ -78,6 +78,14 @@ extension BuildContextExtension on BuildContext {
     );
   }
 
+  void updateFullScreenLoading({
+    String? message,
+  }) {
+    BlocProvider.of<FullScreenLoadingCubit>(this).update(
+      message: message,
+    );
+  }
+
   void get hideFullScreenLoading {
     BlocProvider.of<FullScreenLoadingCubit>(this).hide();
   }

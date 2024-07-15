@@ -2,6 +2,8 @@ import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,4 +98,10 @@ Future<void> _injectPackages() async {
   sl.registerLazySingleton<AppLinks>(() {
     return AppLinks();
   });
+
+  // // flutter downloader
+  await FlutterDownloader.initialize(
+    debug: kDebugMode,
+    ignoreSsl: true,
+  );
 }

@@ -14,6 +14,14 @@ class FullScreenLoadingCubit extends Cubit<FullScreenLoadingState> {
     ));
   }
 
+  void update({
+    String? message,
+  }) {
+    emit(ShowFullScreenLoading(
+      message: message,
+    ));
+  }
+
   void hide() {
     emit(HideFullScreenLoading());
   }

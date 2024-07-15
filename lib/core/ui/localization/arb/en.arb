@@ -352,5 +352,13 @@
   "close": "Close",
   "today": "Today",
   "under": "Under",
-  "over": "Over"
+  "over": "Over",
+  "downloadingProgress": "Downloading {progress} %",
+  "@downloadingProgress": {
+      "placeholders": {
+          "progress": {
+              "type": "String"
+          }
+      }
+  }
 }

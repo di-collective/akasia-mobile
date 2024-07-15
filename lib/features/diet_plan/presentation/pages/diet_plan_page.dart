@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/common/directory_info.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/localization/app_supported_locales.dart';
+import '../../../../core/ui/widget/dialogs/toast_info.dart';
+import '../../../../core/utils/logger.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../widgets/eat_widget.dart';
 import '../widgets/nutrition_information_widget.dart';
 import 'diet_plan_calendar_page.dart';
@@ -224,7 +231,76 @@ class _DietPlanPageState extends State<DietPlanPage> {
     });
   }
 
-  void _onMealPlan() {
-    // TODO: Implement this method
+  Future<void> _onMealPlan() async {
+    try {
+      final directory = await sl<DirectoryInfo>().documentsDirectory;
+      if (directory == null) {
+        throw "External storage directory not found";
+      }
+
+      // download tasks
+      // TODO: Change the pdfUrl to the actual URL
+      const pdfUrl =
+          "https://drive.google.com/uc?export=download&id=11DOhVWM0EbNnlPVfRF6eBZnZbMeMmWt1";
+      final taskId = await FlutterDownloader.enqueue(
+        url: pdfUrl,
+        savedDir: directory.path,
+        showNotification: true,
+        openFileFromNotification: true,
+        saveInPublicStorage: true,
+        fileName: "meal_plan-${DateTime.now().millisecondsSinceEpoch}.pdf",
+      );
+      if (taskId == null) {
+        throw "Download task not found";
+      }
+
+      // show loading
+      context.showFullScreenLoading(
+        message: context.locale.downloadingProgress("0"),
+      );
+
+      while (true) {
+        final tasks = await FlutterDownloader.loadTasksWithRawQuery(
+          query: "SELECT * FROM task WHERE task_id = '$taskId'",
+        );
+        Logger.success("Download tasks: $tasks");
+        if (tasks == null || tasks.isEmpty) {
+          break;
+        }
+
+        final task = tasks.first;
+        final status = task.status;
+        Logger.success("Download status: $status");
+        if (status == DownloadTaskStatus.complete) {
+          break;
+        }
+
+        // update progress
+        final progress = task.progress;
+        context.updateFullScreenLoading(
+          message: context.locale.downloadingProgress(
+            progress.toString(),
+          ),
+        );
+
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      Logger.success("Download taskId: $taskId");
+
+      // open file
+      // FIXME: Error: java.lang.IllegalArgumentException: Failed to find configured root that contains /data/data/com.akasia365mc/app_flutter/meal_plan-1721037534156.pdf
+      await FlutterDownloader.open(
+        taskId: taskId,
+      );
+    } catch (error) {
+      sl<ToastInfo>().show(
+        type: ToastType.error,
+        message: error.message(context),
+        context: context,
+      );
+    } finally {
+      // hide loading
+      context.hideFullScreenLoading;
+    }
   }
 }
