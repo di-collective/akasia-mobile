@@ -62,7 +62,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     return Scaffold(
       body: NestedScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
@@ -94,69 +93,72 @@ class _NotificationsPageState extends State<NotificationsPage> {
         },
         body: RefreshIndicator(
           onRefresh: _onRefreshNotifications,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: context.width,
-                child: BlocBuilder<NotificationsCubit, NotificationsState>(
-                  builder: (context, state) {
-                    if (state is NotificationsLoaded) {
-                      final notifications = state.notifications;
-                      if (notifications == null || notifications.isEmpty) {
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: context.width,
+                  child: BlocBuilder<NotificationsCubit, NotificationsState>(
+                    builder: (context, state) {
+                      if (state is NotificationsLoaded) {
+                        final notifications = state.notifications;
+                        if (notifications == null || notifications.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              top: context.height * 0.3,
+                              left: context.paddingHorizontal,
+                              right: context.paddingHorizontal,
+                            ),
+                            child: const StateEmptyWidget(),
+                          );
+                        }
+
+                        return ListView.separated(
+                          itemCount: notifications.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          primary: false,
+                          separatorBuilder: (context, index) {
+                            return const Divider();
+                          },
+                          itemBuilder: (context, index) {
+                            final notification = notifications[index];
+
+                            return NotificationItemWidget(
+                              notification: notification,
+                              onTap: _onTapNotification,
+                            );
+                          },
+                        );
+                      } else if (state is NotificationsError) {
                         return Padding(
                           padding: EdgeInsets.only(
                             top: context.height * 0.3,
                             left: context.paddingHorizontal,
                             right: context.paddingHorizontal,
                           ),
-                          child: const StateEmptyWidget(),
+                          child: StateErrorWidget(
+                            description: state.error.message(context),
+                          ),
                         );
                       }
 
-                      return ListView.separated(
-                        itemCount: notifications.length,
+                      return ListView.builder(
+                        itemCount: 8,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         primary: false,
-                        separatorBuilder: (context, index) {
-                          return const Divider();
-                        },
                         itemBuilder: (context, index) {
-                          final notification = notifications[index];
-
-                          return NotificationItemWidget(
-                            notification: notification,
-                            onTap: _onTapNotification,
-                          );
+                          return const NotificationLoadingItemWidget();
                         },
                       );
-                    } else if (state is NotificationsError) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          top: context.height * 0.3,
-                          left: context.paddingHorizontal,
-                          right: context.paddingHorizontal,
-                        ),
-                        child: StateErrorWidget(
-                          description: state.error.message(context),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemCount: 8,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      primary: false,
-                      itemBuilder: (context, index) {
-                        return const NotificationLoadingItemWidget();
-                      },
-                    );
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

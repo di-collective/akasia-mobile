@@ -22,12 +22,54 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.914531999231-figmknvmfl44tv052f24pv8njro04rjj</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.akasia365mc</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FDAllFilesDownloadedMessage</key>
+	<string>All files have been downloaded</string>
+	<key>FDMaximumConcurrentTasks</key>
+	<integer>5</integer>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>mailto</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera permission is required for get photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library permission is required for get photo.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -45,46 +87,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	
-	<key>CFBundleURLTypes</key>
-	<array>
-		<!-- Google Sign-in Section -->
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-				<string>com.googleusercontent.apps.914531999231-figmknvmfl44tv052f24pv8njro04rjj</string>
-			</array>
-		</dict>
-		<!-- End of the Google Sign-in Section -->
-		
-		<!-- Universal Link Section -->
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-			<string>app</string>
-			</array>
-			<key>CFBundleURLName</key>
-			<string>com.akasia365mc</string>
-		</dict>
-		<!-- End of the Universal Link Section -->
-	</array>
-	
-	<!-- App Query Schemes Section -->
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>tel</string>
-		<string>mailto</string>
-	</array>
-	<!-- End of the App Query Schemes Section -->
-
-	<!-- Permissions Section -->
-	<key>NSCameraUsageDescription</key>
-	<string>Camera permission is required for get photo.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo library permission is required for get photo.</string>
-	<!-- End of the Permissions Section -->
 </dict>
 </plist>

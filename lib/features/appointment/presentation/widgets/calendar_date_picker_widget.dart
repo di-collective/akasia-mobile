@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:akasia365mc/features/appointment/domain/entities/appointment_date_entity.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/color_swatch_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
+import '../../domain/entities/appointment_date_entity.dart';
 
 const Duration _monthScrollDuration = Duration(milliseconds: 200);
 

@@ -319,5 +319,46 @@
   "quotasNotOpened": "Quotas not opened",
   "arrivalTime": "Arrival time",
   "successCreatedAppointment": "Appointment successfully scheduled",
-  "mySchedule": "My Schedule"
+  "mySchedule": "My Schedule",
+  "mealPlanRecomendation": "Meal Plan Recomendation",
+  "mealPlanRecomendationDescription": "A higher calorie plan suitable for active individuals looking to maintain or lose weight",
+  "nutritionInformation": "Nutrition Information",
+  "carbo": "Carbo",
+  "fat": "Fat",
+  "protein": "Protein",
+  "sugar": "Sugar",
+  "trackDailyCalories": "Track daily calories and keep you motivated",
+  "whatDidYouEatToday": "What did you eat today?",
+  "breakfast": "Breakfast",
+  "lunch": "Lunch",
+  "dinner": "Dinner",
+  "snacks": "Snacks",
+  "noData": "No Data",
+  "results": "Results",
+  "inputItem": "Input {item}",
+  "@inputItem": {
+      "placeholders": {
+          "item": {
+              "type": "String"
+          }
+      }
+  },
+  "quantity": "Quantity",
+  "add": "Add",
+  "servings": "Servings",
+  "grams": "Grams",
+  "cup": "Cup",
+  "successAddFood": "Your food successfully added",
+  "close": "Close",
+  "today": "Today",
+  "under": "Under",
+  "over": "Over",
+  "downloadingProgress": "Downloading {progress} %",
+  "@downloadingProgress": {
+      "placeholders": {
+          "progress": {
+              "type": "String"
+          }
+      }
+  }
 }

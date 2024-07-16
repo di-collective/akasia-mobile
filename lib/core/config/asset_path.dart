@@ -7,6 +7,7 @@ class AssetImagesPath {
   static String logoTextColored = 'logo_text_colored.svg'.imageAsset;
   static String dietPlanChart = 'diet_plan_chart.svg'.imageAsset;
   static String placeholder = 'placeholder.jpg'.imageAsset;
+  static String mealPlan = 'meal_plan.png'.imageAsset;
 }
 
 class AssetIconsPath {
@@ -45,4 +46,7 @@ class AssetIconsPath {
   static String icSmileyFlat = 'ic_smiley_flat.svg'.iconAsset;
   static String icRatingStar = 'ic_rating_star.svg'.iconAsset;
   static String icCall = 'ic_call.svg'.iconAsset;
+  static String icFire = 'ic_fire.svg'.iconAsset;
+  static String icAdd = 'ic_add.svg'.iconAsset;
+  static String icSearch = 'ic_search.svg'.iconAsset;
 }

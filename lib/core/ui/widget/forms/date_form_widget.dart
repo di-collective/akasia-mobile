@@ -51,14 +51,15 @@ class DateFormWidget extends StatelessWidget {
 
         onSelectedDate(result);
       },
-      suffixIcon: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            AssetIconsPath.icCalendarOutlined,
-            height: 16,
-          ),
-        ],
+      suffixIcon: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 13,
+          vertical: 14,
+        ),
+        child: SvgPicture.asset(
+          AssetIconsPath.icCalendarOutlined,
+          height: 16,
+        ),
       ),
     );
   }

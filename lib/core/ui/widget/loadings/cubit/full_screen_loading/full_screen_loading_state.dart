@@ -16,6 +16,14 @@ final class ShowFullScreenLoading extends FullScreenLoadingState {
     this.message,
   });
 
+  ShowFullScreenLoading copyWith({
+    String? message,
+  }) {
+    return ShowFullScreenLoading(
+      message: message ?? this.message,
+    );
+  }
+
   @override
   List<Object?> get props => [message];
 }

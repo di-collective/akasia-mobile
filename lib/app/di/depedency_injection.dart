@@ -2,6 +2,8 @@ import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +16,7 @@ import '../../features/account_setting/di/depedency_injection.dart';
 import '../../features/appointment/di/depedency_injection.dart';
 import '../../features/auth/di/depedency_injection.dart';
 import '../../features/country/di/depedency_injection.dart';
+import '../../features/diet_plan/di/depedency_injection.dart';
 import '../../features/faq/di/depdency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/my_schedule/di/depedency_injection.dart';
@@ -47,6 +50,8 @@ Future<void> init() async {
   AppointmentDI.inject();
 
   MyScheduleDI.inject();
+
+  DietPlanDI.inject();
 }
 
 Future<void> _injectPackages() async {
@@ -73,7 +78,15 @@ Future<void> _injectPackages() async {
 
   // dio
   sl.registerLazySingleton<Dio>(() {
-    return Dio()..interceptors.add(DioInterceptor());
+    return Dio()
+      ..interceptors.add(
+        DioInterceptor(),
+      )
+      ..options = BaseOptions(
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
+        sendTimeout: const Duration(seconds: 60),
+      );
   });
 
   // image picker
@@ -85,4 +98,10 @@ Future<void> _injectPackages() async {
   sl.registerLazySingleton<AppLinks>(() {
     return AppLinks();
   });
+
+  // // flutter downloader
+  await FlutterDownloader.initialize(
+    debug: kDebugMode,
+    ignoreSsl: true,
+  );
 }

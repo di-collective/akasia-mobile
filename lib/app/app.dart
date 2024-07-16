@@ -10,6 +10,7 @@ import '../core/ui/widget/loadings/full_screen_loading_widget.dart';
 import '../core/utils/service_locator.dart';
 import '../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
+import '../features/diet_plan/presentation/cubit/eat_calendar/eat_calendar_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../features/my_schedule/presentation/cubit/my_schedules/my_schedules_cubit.dart';
 import '../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
@@ -39,6 +40,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<MySchedulesCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<EatCalendarCubit>(),
         ),
       ],
       child: MaterialApp.router(

@@ -8,7 +8,7 @@ class IconButtonWidget extends StatelessWidget {
   final Widget icon;
   final EdgeInsetsGeometry? padding;
   final OutlinedBorder? shape;
-  final Color? rippleColor;
+  final Color? rippleColor, backgroundColor;
 
   const IconButtonWidget({
     super.key,
@@ -17,6 +17,7 @@ class IconButtonWidget extends StatelessWidget {
     this.padding,
     this.shape,
     this.rippleColor,
+    this.backgroundColor,
   });
 
   @override
@@ -35,6 +36,9 @@ class IconButtonWidget extends StatelessWidget {
         ),
         overlayColor: MaterialStateProperty.all(
           rippleColor ?? colorScheme.outlinePrimary,
+        ),
+        backgroundColor: MaterialStateProperty.all(
+          backgroundColor ?? colorScheme.white,
         ),
       ),
     );

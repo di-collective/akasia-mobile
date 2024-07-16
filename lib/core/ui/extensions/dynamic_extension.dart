@@ -29,4 +29,24 @@ extension DynamicExtension on dynamic {
       return 0.0;
     }
   }
+
+  DateTime? get dynamicToDateTime {
+    try {
+      Logger.info('dynamicToDateTime $this type $runtimeType');
+
+      DateTime? result;
+
+      if (this is String) {
+        result = DateTime.tryParse(this);
+      }
+
+      Logger.success('dynamicToDateTime result $result');
+
+      return result;
+    } catch (e) {
+      Logger.error('dynamicToDateTime error $e');
+
+      return null;
+    }
+  }
 }

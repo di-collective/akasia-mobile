@@ -11,6 +11,7 @@ import '../ui/widget/dialogs/bottom_sheet_info.dart';
 import '../ui/widget/dialogs/toast_info.dart';
 import '../ui/widget/loadings/cubit/countdown/countdown_cubit.dart';
 import '../ui/widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
+import '../utils/permission_info.dart';
 import '../utils/service_locator.dart';
 
 class CoreDI {
@@ -93,6 +94,11 @@ class CoreDI {
         appLinks: sl(),
         appRouteInfo: sl(),
       );
+    });
+
+    // permission info
+    sl.registerLazySingleton<PermissionInfo>(() {
+      return PermissionInfoImpl();
     });
   }
 }

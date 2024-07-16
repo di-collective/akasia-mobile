@@ -42,7 +42,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       Logger.info('getProfile accessToken: $accessToken');
 
       final result = await appHttpClient.get(
-        url: "${EnvConfig.baseAkasiaApiUrl}/profile",
+        url: "${EnvConfig.akasiaUserApiUrl}/profile",
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -87,7 +87,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         filename: compressedImage.fileName,
       );
       final result = await appHttpClient.patch(
-        url: "${EnvConfig.baseAkasiaApiUrl}/profile/$userId/photo",
+        url: "${EnvConfig.akasiaUserApiUrl}/profile/$userId/photo",
         headers: {
           'Authorization': 'Bearer $accessToken',
           'Content-Type': 'multipart/form-data',
@@ -116,7 +116,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       Logger.info('updateProfile accessToken: $accessToken, profile: $profile');
 
       final result = await appHttpClient.patch(
-        url: "${EnvConfig.baseAkasiaApiUrl}/profile/${profile.userId}",
+        url: "${EnvConfig.akasiaUserApiUrl}/profile/${profile.userId}",
         headers: {
           'Authorization': 'Bearer $accessToken',
         },

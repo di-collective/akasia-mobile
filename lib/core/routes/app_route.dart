@@ -25,4 +25,7 @@ enum AppRoute {
   fillPersonalInformation,
   createAppointment,
   mySchedule,
+  dietPlan,
+  addEat,
+  dietPlanCalendar,
 }

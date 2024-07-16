@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../config/asset_path.dart';
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
 import '../../theme/color_scheme.dart';
@@ -19,7 +22,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Widget? suffixIcon;
   final String? suffixText;
   final Function()? onTapSuffixText;
-  final bool? readOnly;
+  final bool? readOnly, isRequired, isLoading, autofocus;
   final String? initialValue;
   final Color? backgroundColor, textColor;
   final FocusNode? focusNode;
@@ -31,7 +34,6 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onTap;
   final Function()? onEditingComplete;
   final Function()? onClear;
-  final bool? isRequired, isLoading;
   final String? description;
 
   const TextFormFieldWidget({
@@ -63,6 +65,7 @@ class TextFormFieldWidget extends StatefulWidget {
     this.onClear,
     this.isRequired,
     this.isLoading,
+    this.autofocus,
     this.description,
   });
 
@@ -116,6 +119,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
               textAlign: widget.textAlign ?? TextAlign.start,
               keyboardType: widget.keyboardType,
               readOnly: widget.readOnly ?? false,
+              autofocus: widget.autofocus ?? false,
               focusNode: widget.focusNode,
               onChanged: _onChange,
               maxLines: widget.maxLines,
@@ -311,8 +315,43 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
     required AppColorScheme colorScheme,
     required AppTextTheme textTheme,
   }) {
+    List<Widget> listSuffix = [];
+    if (widget.onClear != null && widget.controller?.text.isNotEmpty == true) {
+      listSuffix.add(
+        GestureDetector(
+          onTap: () {
+            // close keyboard
+            context.closeKeyboard;
+
+            // clear text
+            widget.controller?.clear();
+
+            // reload
+            setState(() {});
+
+            // callback
+            widget.onClear!();
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
+            child: SvgPicture.asset(
+              AssetIconsPath.icCloseCircle,
+              colorFilter: ColorFilter.mode(
+                colorScheme.onSurfaceBright,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     if (widget.suffixIcon != null) {
-      return widget.suffixIcon!;
+      listSuffix.add(
+        widget.suffixIcon!,
+      );
     }
 
     if (widget.suffixText != null && widget.suffixText!.isNotEmpty) {
@@ -337,12 +376,27 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                widget.suffixText!,
-                style: textTheme.bodyLarge.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.suffixText!,
+                    style: textTheme.bodyLarge.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (widget.onTapSuffixText != null) ...[
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SvgPicture.asset(
+                      AssetIconsPath.icChevronDown,
+                      height: 7,
+                      width: 7,
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
@@ -364,29 +418,11 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       );
     }
 
-    if (widget.onClear != null && widget.controller?.text.isNotEmpty == true) {
-      return GestureDetector(
-        onTap: () {
-          // close keyboard
-          context.closeKeyboard;
-
-          // clear text
-          widget.controller?.clear();
-
-          // reload
-          setState(() {});
-
-          // callback
-          widget.onClear!();
-        },
-        child: Icon(
-          Icons.close,
-          color: colorScheme.onSurface,
-        ),
-      );
-    }
-
-    return null;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: listSuffix,
+    );
   }
 
   OutlineInputBorder _buildOutlineInputBorder({
