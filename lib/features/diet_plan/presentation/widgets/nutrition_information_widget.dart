@@ -84,7 +84,7 @@ class NutritionInformationWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                width: 20,
+                width: 14,
               ),
               Expanded(
                 child: Column(

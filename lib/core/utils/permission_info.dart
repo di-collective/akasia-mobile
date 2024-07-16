@@ -3,27 +3,30 @@ import 'package:permission_handler/permission_handler.dart';
 import 'logger.dart';
 
 abstract class PermissionInfo {
-  Future<bool> get directoryPermission;
+  Future<bool> requestPermission({
+    required Permission permission,
+  });
 }
 
 class PermissionInfoImpl implements PermissionInfo {
   @override
-  Future<bool> get directoryPermission async {
+  Future<bool> requestPermission({
+    required Permission permission,
+  }) async {
     try {
-      Logger.info('directoryPermission');
+      Logger.info('requestPermission');
 
-      PermissionStatus permissionStatus = await Permission.storage.status;
-      Logger.success('directoryPermission permissionStatus: $permissionStatus');
+      PermissionStatus permissionStatus = await permission.status;
+      Logger.success('requestPermission permissionStatus: $permissionStatus');
 
       if (!permissionStatus.isGranted) {
-        permissionStatus = await Permission.storage.request();
-        Logger.success(
-            'directoryPermission permissionStatus: $permissionStatus');
+        permissionStatus = await permission.request();
+        Logger.success('requestPermission permissionStatus: $permissionStatus');
       }
 
       return permissionStatus.isGranted;
     } catch (error) {
-      Logger.error('directoryPermission error: $error');
+      Logger.error('requestPermission error: $error');
 
       rethrow;
     }

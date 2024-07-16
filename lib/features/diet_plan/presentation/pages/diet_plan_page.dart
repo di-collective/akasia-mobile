@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/common/directory_info.dart';
 import '../../../../core/config/asset_path.dart';
@@ -15,6 +16,7 @@ import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/localization/app_supported_locales.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../../core/utils/permission_info.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../widgets/eat_widget.dart';
 import '../widgets/nutrition_information_widget.dart';
@@ -233,22 +235,32 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   Future<void> _onMealPlan() async {
     try {
+      // check permission for notification
+      final isGranted = await sl<PermissionInfo>().requestPermission(
+        permission: Permission.notification,
+      );
+      if (!isGranted) {
+        throw "Permission not granted";
+      }
+
+      // get documents directory
       final directory = await sl<DirectoryInfo>().documentsDirectory;
       if (directory == null) {
-        throw "External storage directory not found";
+        throw "Failed to get documents directory";
       }
 
       // download tasks
       // TODO: Change the pdfUrl to the actual URL
       const pdfUrl =
           "https://drive.google.com/uc?export=download&id=11DOhVWM0EbNnlPVfRF6eBZnZbMeMmWt1";
+      final fileName = "meal_plan-${DateTime.now().millisecondsSinceEpoch}.pdf";
       final taskId = await FlutterDownloader.enqueue(
         url: pdfUrl,
         savedDir: directory.path,
         showNotification: true,
         openFileFromNotification: true,
         saveInPublicStorage: true,
-        fileName: "meal_plan-${DateTime.now().millisecondsSinceEpoch}.pdf",
+        fileName: fileName,
       );
       if (taskId == null) {
         throw "Download task not found";
@@ -289,9 +301,9 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
       // open file
       // FIXME: Error: java.lang.IllegalArgumentException: Failed to find configured root that contains /data/data/com.akasia365mc/app_flutter/meal_plan-1721037534156.pdf
-      await FlutterDownloader.open(
-        taskId: taskId,
-      );
+      // await FlutterDownloader.open(
+      //   taskId: taskId,
+      // );
     } catch (error) {
       sl<ToastInfo>().show(
         type: ToastType.error,
