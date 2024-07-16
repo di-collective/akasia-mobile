@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../widgets/activities_widget.dart';
 import '../widgets/home_dashboard_item_widget.dart';
 import '../widgets/home_menu_item_widget.dart';
 import '../widgets/membership_barcode_widget.dart';
@@ -22,9 +22,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final textTheme = context.theme.appTextTheme;
-    final colorScheme = context.theme.appColorScheme;
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -160,26 +157,14 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 16,
                       ),
-                      Text(
-                        context.locale.membership,
-                        style: textTheme.titleMedium.copyWith(
-                          color: colorScheme.onSurfaceDim,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        context.locale.askCashierToScanThisBarcode,
-                        style: textTheme.labelMedium.copyWith(
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
                       const MembershipBarcodeWidget(),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      const ActivitiesWidget(),
+                      SizedBox(
+                        height: context.paddingBottom,
+                      ),
                     ],
                   ),
                 ),

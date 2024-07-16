@@ -25,74 +25,98 @@ class _MembershipBarcodeWidgetState extends State<MembershipBarcodeWidget> {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        if (state is ProfileLoaded && state.profile.medicalId != null) {
-          return GestureDetector(
-            onTap: () => _onShowBrightnessBarcode(
-              medicalId: state.profile.medicalId!,
-            ),
-            child: _ContainerWidget(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.locale.membership,
+          style: textTheme.titleMedium.copyWith(
+            color: colorScheme.onSurfaceDim,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          context.locale.askCashierToScanThisBarcode,
+          style: textTheme.labelMedium.copyWith(
+            color: colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoaded && state.profile.medicalId != null) {
+              return GestureDetector(
+                onTap: () => _onShowBrightnessBarcode(
+                  medicalId: state.profile.medicalId!,
+                ),
+                child: _ContainerWidget(
+                  child: Column(
+                    children: [
+                      BarcodeWidget(
+                        barcode: Barcode.code128(),
+                        data: state.profile.medicalId!,
+                        height: 80,
+                        width: context.width,
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            AssetIconsPath.icSun,
+                            height: 20,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            context.locale.brightness,
+                            style: textTheme.labelMedium.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            return _ContainerWidget(
               child: Column(
                 children: [
-                  BarcodeWidget(
-                    barcode: Barcode.code128(),
-                    data: state.profile.medicalId!,
-                    height: 80,
+                  ShimmerLoading.circular(
                     width: context.width,
+                    shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    height: 80,
                   ),
                   const SizedBox(
                     height: 12,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        AssetIconsPath.icSun,
-                        height: 20,
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        context.locale.brightness,
-                        style: textTheme.labelMedium.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  )
+                  ShimmerLoading.circular(
+                    width: context.width,
+                    shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    height: 20,
+                  ),
                 ],
               ),
-            ),
-          );
-        }
-
-        return _ContainerWidget(
-          child: Column(
-            children: [
-              ShimmerLoading.circular(
-                width: context.width,
-                shapeBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                height: 80,
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              ShimmerLoading.circular(
-                width: context.width,
-                shapeBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                height: 20,
-              ),
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 

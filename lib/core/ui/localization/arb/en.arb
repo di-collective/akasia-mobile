@@ -360,5 +360,11 @@
               "type": "String"
           }
       }
-  }
+  },
+  "summary": "Summary",
+  "steps": "Steps",
+  "heartRate": "Heart Rate",
+  "nutritions": "Nutritions",
+  "workouts": "Workouts",
+  "sleep": "Sleep"
 }

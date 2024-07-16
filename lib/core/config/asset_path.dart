@@ -49,4 +49,10 @@ class AssetIconsPath {
   static String icFire = 'ic_fire.svg'.iconAsset;
   static String icAdd = 'ic_add.svg'.iconAsset;
   static String icSearch = 'ic_search.svg'.iconAsset;
+  static String icSteps = 'ic_steps.svg'.iconAsset;
+  static String icHeartRate = 'ic_heart_rate.svg'.iconAsset;
+  static String icFish = 'ic_fish.svg'.iconAsset;
+  static String icWorkout = 'ic_workout.svg'.iconAsset;
+  static String icBed = 'ic_bed.svg'.iconAsset;
+  static String icLove = 'ic_love.svg'.iconAsset;
 }
