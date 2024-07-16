@@ -18,11 +18,16 @@ import '../../features/auth/di/depedency_injection.dart';
 import '../../features/country/di/depedency_injection.dart';
 import '../../features/diet_plan/di/depedency_injection.dart';
 import '../../features/faq/di/depdency_injection.dart';
+import '../../features/heart_rate/di/depedency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/my_schedule/di/depedency_injection.dart';
 import '../../features/notification/di/depedency_injection.dart';
+import '../../features/nutritions/di/depedency_injection.dart';
 import '../../features/personal_information/di/depedency_injection.dart';
 import '../../features/ratings/di/depedency_injection.dart';
+import '../../features/sleep/di/depedency_injection.dart';
+import '../../features/steps/di/depedency_injection.dart';
+import '../../features/workouts/di/depedency_injection.dart';
 
 Future<void> init() async {
   await _injectPackages();
@@ -52,6 +57,16 @@ Future<void> init() async {
   MyScheduleDI.inject();
 
   DietPlanDI.inject();
+
+  StepsDI.inject();
+
+  HeartRateDI.inject();
+
+  NutritionsDI.inject();
+
+  WorkoutsDI.inject();
+
+  SleepDI.inject();
 }
 
 Future<void> _injectPackages() async {
@@ -99,7 +114,7 @@ Future<void> _injectPackages() async {
     return AppLinks();
   });
 
-  // // flutter downloader
+  // flutter downloader
   await FlutterDownloader.initialize(
     debug: kDebugMode,
     ignoreSsl: true,

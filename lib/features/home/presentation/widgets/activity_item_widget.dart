@@ -7,6 +7,9 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/border_radius_config.dart';
+import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
+
+const _maxDataLength = 7;
 
 class ActivityWidget extends StatelessWidget {
   final String iconPath;
@@ -17,6 +20,8 @@ class ActivityWidget extends StatelessWidget {
   final String? unit;
   final String time;
   final List<double> data;
+  final bool isLoading;
+  final bool isError;
 
   const ActivityWidget({
     super.key,
@@ -28,6 +33,8 @@ class ActivityWidget extends StatelessWidget {
     this.unit,
     required this.time,
     required this.data,
+    required this.isLoading,
+    required this.isError,
   });
 
   @override
@@ -35,14 +42,13 @@ class ActivityWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadiusConfig.l,
-        border: Border.all(
-          color: colorScheme.outlineBright,
-        ),
-      ),
+    if (isLoading) {
+      return const _ContainerWidget(
+        child: _LoadingWidget(),
+      );
+    }
+
+    return _ContainerWidget(
       child: Column(
         children: [
           Row(
@@ -167,11 +173,13 @@ class ActivityWidget extends StatelessWidget {
                           show: false,
                         ),
                         barGroups: List.generate(
-                          data.length,
+                          data.length > _maxDataLength
+                              ? _maxDataLength
+                              : data.length,
                           (index) {
                             final x = index;
                             final y = data[index];
-                            final isLast = index == data.length - 1;
+                            final isLast = index == _maxDataLength - 1;
 
                             return BarChartGroupData(
                               x: x,
@@ -184,7 +192,6 @@ class ActivityWidget extends StatelessWidget {
                                   borderRadius: const BorderRadius.vertical(
                                     top: Radius.circular(3),
                                   ),
-                                  borderDashArray: x >= 4 ? [4, 4] : null,
                                   width: 12,
                                 ),
                               ],
@@ -200,6 +207,130 @@ class ActivityWidget extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ContainerWidget extends StatelessWidget {
+  final Widget child;
+
+  const _ContainerWidget({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.theme.appColorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadiusConfig.l,
+        border: Border.all(
+          color: colorScheme.outlineBright,
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _LoadingWidget extends StatelessWidget {
+  const _LoadingWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.theme.appColorScheme;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                ShimmerLoading.rectangular(
+                  width: 16,
+                  height: 16,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                ShimmerLoading.rectangular(
+                  width: 58,
+                  height: 16,
+                ),
+              ],
+            ),
+            ShimmerLoading.rectangular(
+              width: 58,
+              height: 16,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 55,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                ShimmerLoading.rectangular(
+                  width: 44,
+                  height: 44,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Column(
+                  children: [
+                    ShimmerLoading.rectangular(
+                      width: 20,
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    ShimmerLoading.rectangular(
+                      width: 20,
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Row(
+              children: List.generate(
+                _maxDataLength,
+                (index) {
+                  final isLast = index == 6;
+
+                  return Container(
+                    width: 12,
+                    height: 2,
+                    margin: EdgeInsets.only(
+                      right: isLast ? 0 : 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isLast
+                          ? colorScheme.primary
+                          : colorScheme.outlineBright,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(3),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ],
     );
   }
 }

@@ -1,18 +1,18 @@
 import 'dart:math';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'daily_steps_state.dart';
+part 'daily_heart_rate_state.dart';
 
-class DailyStepsCubit extends Cubit<DailyStepsState> {
-  DailyStepsCubit() : super(DailyStepsInitial());
+class DailyHeartRateCubit extends Cubit<DailyHeartRateState> {
+  DailyHeartRateCubit() : super(DailyHeartRateInitial());
 
-  Future<void> getDailySteps() async {
+  Future<void> getDailyHeartRate() async {
     try {
-      emit(DailyStepsLoading());
+      emit(DailyHeartRateLoading());
 
-      // TODO: Implement getDailySteps
+      // TODO: Implement getDailyHeartRate
       final data = await Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           return List.generate(
@@ -22,25 +22,25 @@ class DailyStepsCubit extends Cubit<DailyStepsState> {
         },
       );
 
-      emit(DailyStepsLoaded(
+      emit(DailyHeartRateLoaded(
         data: data,
       ));
     } catch (error) {
-      emit(DailyStepsError(
+      emit(DailyHeartRateError(
         error: error,
       ));
     }
   }
 
-  Future<void> refreshDailySteps() async {
+  Future<void> refreshDailyHeartRate() async {
     final currentState = state;
 
     try {
-      if (currentState is! DailyStepsLoaded) {
-        emit(DailyStepsLoading());
+      if (currentState is! DailyHeartRateLoaded) {
+        emit(DailyHeartRateLoading());
       }
 
-      // TODO: Implement getDailySteps
+      // TODO: Implement getDailyHeartRate
       final data = await Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           return List.generate(
@@ -50,12 +50,12 @@ class DailyStepsCubit extends Cubit<DailyStepsState> {
         },
       );
 
-      emit(DailyStepsLoaded(
+      emit(DailyHeartRateLoaded(
         data: data,
       ));
     } catch (error) {
-      if (currentState is! DailyStepsLoaded) {
-        emit(DailyStepsError(
+      if (currentState is! DailyHeartRateLoaded) {
+        emit(DailyHeartRateError(
           error: error,
         ));
       }

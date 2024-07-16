@@ -1,19 +1,19 @@
 import 'dart:math';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-part 'daily_steps_state.dart';
+part 'daily_sleep_state.dart';
 
-class DailyStepsCubit extends Cubit<DailyStepsState> {
-  DailyStepsCubit() : super(DailyStepsInitial());
+class DailySleepCubit extends Cubit<DailySleepState> {
+  DailySleepCubit() : super(DailySleepInitial());
 
-  Future<void> getDailySteps() async {
+  Future<void> getDailySleep() async {
     try {
-      emit(DailyStepsLoading());
+      emit(DailySleepLoading());
 
-      // TODO: Implement getDailySteps
-      final data = await Future.delayed(const Duration(seconds: 1)).then(
+      // TODO: Implement getDailySleep
+      final data = await Future.delayed(const Duration(seconds: 3)).then(
         (value) {
           return List.generate(
             7,
@@ -22,25 +22,25 @@ class DailyStepsCubit extends Cubit<DailyStepsState> {
         },
       );
 
-      emit(DailyStepsLoaded(
+      emit(DailySleepLoaded(
         data: data,
       ));
     } catch (error) {
-      emit(DailyStepsError(
+      emit(DailySleepError(
         error: error,
       ));
     }
   }
 
-  Future<void> refreshDailySteps() async {
+  Future<void> refreshDailySleep() async {
     final currentState = state;
 
     try {
-      if (currentState is! DailyStepsLoaded) {
-        emit(DailyStepsLoading());
+      if (currentState is! DailySleepLoaded) {
+        emit(DailySleepLoading());
       }
 
-      // TODO: Implement getDailySteps
+      // TODO: Implement getDailySleep
       final data = await Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           return List.generate(
@@ -50,12 +50,12 @@ class DailyStepsCubit extends Cubit<DailyStepsState> {
         },
       );
 
-      emit(DailyStepsLoaded(
+      emit(DailySleepLoaded(
         data: data,
       ));
     } catch (error) {
-      if (currentState is! DailyStepsLoaded) {
-        emit(DailyStepsError(
+      if (currentState is! DailySleepLoaded) {
+        emit(DailySleepError(
           error: error,
         ));
       }

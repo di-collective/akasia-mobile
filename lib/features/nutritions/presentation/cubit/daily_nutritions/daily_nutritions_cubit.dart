@@ -1,18 +1,18 @@
 import 'dart:math';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'daily_steps_state.dart';
+part 'daily_nutritions_state.dart';
 
-class DailyStepsCubit extends Cubit<DailyStepsState> {
-  DailyStepsCubit() : super(DailyStepsInitial());
+class DailyNutritionsCubit extends Cubit<DailyNutritionsState> {
+  DailyNutritionsCubit() : super(DailyNutritionsInitial());
 
-  Future<void> getDailySteps() async {
+  Future<void> getDailyNutritions() async {
     try {
-      emit(DailyStepsLoading());
+      emit(DailyNutritionsLoading());
 
-      // TODO: Implement getDailySteps
+      // TODO: Implement getDailyNutritions
       final data = await Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           return List.generate(
@@ -22,25 +22,25 @@ class DailyStepsCubit extends Cubit<DailyStepsState> {
         },
       );
 
-      emit(DailyStepsLoaded(
+      emit(DailyNutritionsLoaded(
         data: data,
       ));
     } catch (error) {
-      emit(DailyStepsError(
+      emit(DailyNutritionsError(
         error: error,
       ));
     }
   }
 
-  Future<void> refreshDailySteps() async {
+  Future<void> refreshDailyNutritions() async {
     final currentState = state;
 
     try {
-      if (currentState is! DailyStepsLoaded) {
-        emit(DailyStepsLoading());
+      if (currentState is! DailyNutritionsLoaded) {
+        emit(DailyNutritionsLoading());
       }
 
-      // TODO: Implement getDailySteps
+      // TODO: Implement getDailyNutritions
       final data = await Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           return List.generate(
@@ -50,12 +50,12 @@ class DailyStepsCubit extends Cubit<DailyStepsState> {
         },
       );
 
-      emit(DailyStepsLoaded(
+      emit(DailyNutritionsLoaded(
         data: data,
       ));
     } catch (error) {
-      if (currentState is! DailyStepsLoaded) {
-        emit(DailyStepsError(
+      if (currentState is! DailyNutritionsLoaded) {
+        emit(DailyNutritionsError(
           error: error,
         ));
       }

@@ -4,8 +4,8 @@ import 'package:shimmer/shimmer.dart';
 class ShimmerLoading extends StatelessWidget {
   ShimmerLoading.rectangular({
     super.key,
-    this.width = double.infinity,
-    required this.height,
+    this.width,
+    this.height,
     this.borderRadius = 4,
   }) : shapeBorder = RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),

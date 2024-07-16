@@ -11,9 +11,14 @@ import '../core/utils/service_locator.dart';
 import '../features/account/presentation/cubit/profile/profile_cubit.dart';
 import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/diet_plan/presentation/cubit/eat_calendar/eat_calendar_cubit.dart';
+import '../features/heart_rate/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../features/my_schedule/presentation/cubit/my_schedules/my_schedules_cubit.dart';
 import '../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
+import '../features/nutritions/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
+import '../features/sleep/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
+import '../features/steps/presentation/cubit/daily_steps/daily_steps_cubit.dart';
+import '../features/workouts/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
 import 'routes/app_route_info.dart';
 
 class App extends StatelessWidget {
@@ -43,6 +48,21 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<EatCalendarCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DailyStepsCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DailyHeartRateCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DailyNutritionsCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DailyWorkoutsCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DailySleepCubit>(),
         ),
       ],
       child: MaterialApp.router(

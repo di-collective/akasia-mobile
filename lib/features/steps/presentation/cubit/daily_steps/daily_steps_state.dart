@@ -11,6 +11,32 @@ final class DailyStepsInitial extends DailyStepsState {}
 
 final class DailyStepsLoading extends DailyStepsState {}
 
-final class DailyStepsLoaded extends DailyStepsState {}
+final class DailyStepsLoaded extends DailyStepsState {
+  final List<double> data;
 
-final class DailyStepsError extends DailyStepsState {}
+  const DailyStepsLoaded({
+    required this.data,
+  });
+
+  DailyStepsLoaded copyWith({
+    List<double>? data,
+  }) {
+    return DailyStepsLoaded(
+      data: data ?? this.data,
+    );
+  }
+
+  @override
+  List<Object?> get props => [data];
+}
+
+final class DailyStepsError extends DailyStepsState {
+  final Object error;
+
+  const DailyStepsError({
+    required this.error,
+  });
+
+  @override
+  List<Object?> get props => [error];
+}
