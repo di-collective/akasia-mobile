@@ -6,7 +6,6 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -169,17 +168,15 @@ class __BodyState extends State<_Body> {
       );
 
       // show success message
-      context.showToast(
+      context.showSuccessToast(
         message: context.locale.successChangePhoneNumber,
-        type: ToastType.success,
       );
 
       // close page
       Navigator.pop(context);
     } catch (error) {
-      context.showToast(
+      context.showErrorToast(
         message: error.message(context),
-        type: ToastType.error,
       );
     }
   }

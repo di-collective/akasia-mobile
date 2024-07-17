@@ -10,7 +10,6 @@ import '../../../../core/ui/extensions/auth_type_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
@@ -421,8 +420,7 @@ class __BodyState extends State<_Body> {
       // go to main page
       context.goNamed(AppRoute.main.name);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

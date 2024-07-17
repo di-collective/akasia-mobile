@@ -10,7 +10,6 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/sex_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
@@ -562,8 +561,7 @@ class __BodyState extends State<_Body> {
       );
 
       // show toast
-      context.showToast(
-        type: ToastType.success,
+      context.showSuccessToast(
         message: context.locale.successEditInformation,
       );
 
@@ -591,8 +589,7 @@ class __BodyState extends State<_Body> {
         );
       }
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

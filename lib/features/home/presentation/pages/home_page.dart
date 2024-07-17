@@ -11,12 +11,12 @@ import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
-import '../../../heart_rate/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
-import '../../../nutritions/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
-import '../../../sleep/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
-import '../../../steps/presentation/cubit/daily_steps/daily_steps_cubit.dart';
-import '../../../workouts/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
-import '../widgets/activities_widget.dart';
+import '../../../health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
+import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
+import '../../../health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
+import '../../../health/presentation/cubit/daily_steps/daily_steps_cubit.dart';
+import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
+import '../widgets/heatlh_activities_widget.dart';
 import '../widgets/home_dashboard_item_widget.dart';
 import '../widgets/home_menu_item_widget.dart';
 import '../widgets/membership_barcode_widget.dart';
@@ -31,30 +31,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-
-    _init();
-  }
-
-  void _init() {
-    // get daily steps
-    BlocProvider.of<DailyStepsCubit>(context).getDailySteps();
-
-    // get daily heart rate
-    BlocProvider.of<DailyHeartRateCubit>(context).getDailyHeartRate();
-
-    // get daily nutritions
-    BlocProvider.of<DailyNutritionsCubit>(context).getDailyNutritions();
-
-    // get daily workouts
-    BlocProvider.of<DailyWorkoutsCubit>(context).getDailyWorkouts();
-
-    // get daily sleep
-    BlocProvider.of<DailySleepCubit>(context).getDailySleep();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           height: 32,
                         ),
-                        const ActivitiesWidget(),
+                        const HealthActivitiesWidget(),
                         SizedBox(
                           height: context.paddingBottom,
                         ),

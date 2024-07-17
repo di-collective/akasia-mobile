@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
+import '../buttons/button_widget.dart';
 
 class StateErrorWidget extends StatelessWidget {
-  final String? title;
-  final String? description;
+  final String? title, description, buttonText;
+  final Function()? onTapButton;
   final double? paddingTop, width;
 
   const StateErrorWidget({
@@ -14,6 +15,8 @@ class StateErrorWidget extends StatelessWidget {
     this.description,
     this.paddingTop,
     this.width,
+    this.buttonText,
+    this.onTapButton,
   });
 
   @override
@@ -57,6 +60,20 @@ class StateErrorWidget extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          if (buttonText != null && buttonText!.isNotEmpty) ...[
+            const SizedBox(
+              height: 20,
+            ),
+            ButtonWidget(
+              text: buttonText,
+              width: context.width * 0.6,
+              onTap: onTapButton,
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 16,
+              ),
+            ),
+          ],
         ],
       ),
     );

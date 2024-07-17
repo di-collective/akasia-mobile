@@ -22,6 +22,7 @@ class ActivityWidget extends StatelessWidget {
   final List<double> data;
   final bool isLoading;
   final bool isError;
+  final bool isInitial;
 
   const ActivityWidget({
     super.key,
@@ -35,6 +36,7 @@ class ActivityWidget extends StatelessWidget {
     required this.data,
     required this.isLoading,
     required this.isError,
+    required this.isInitial,
   });
 
   @override
@@ -42,7 +44,19 @@ class ActivityWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    if (isLoading) {
+    if (isInitial) {
+      // TODO: handle initial
+      return const _ContainerWidget(
+        child: SizedBox(
+          height: 100,
+        ),
+      );
+    } else if (isLoading) {
+      return const _ContainerWidget(
+        child: _LoadingWidget(),
+      );
+    } else if (isError) {
+      // TODO: handle error
       return const _ContainerWidget(
         child: _LoadingWidget(),
       );

@@ -10,7 +10,6 @@ import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
@@ -136,8 +135,7 @@ class _MainPageState extends State<MainPage> {
         );
       }
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

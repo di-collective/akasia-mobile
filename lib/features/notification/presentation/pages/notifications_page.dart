@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../domain/entities/notification_entity.dart';
@@ -189,8 +188,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     try {
       await BlocProvider.of<NotificationsCubit>(context).refreshNotifications();
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

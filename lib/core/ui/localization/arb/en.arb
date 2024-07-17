@@ -366,5 +366,14 @@
   "heartRate": "Heart Rate",
   "nutritions": "Nutritions",
   "workouts": "Workouts",
-  "sleep": "Sleep"
+  "sleep": "Sleep",
+  "itemPermissionNotGranted": "{item} permission is not granted",
+  "@itemPermissionNotGranted": {
+      "placeholders": {
+          "item": {
+              "type": "String"
+          }
+      }
+  },
+  "refresh": "Refresh"
 }

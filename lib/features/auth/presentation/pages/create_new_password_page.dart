@@ -7,7 +7,6 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/password_indicator_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
@@ -213,8 +212,7 @@ class __BodyState extends State<_Body> {
       // go to success create new password page
       context.goNamed(AppRoute.successCreateNewPassword.name);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

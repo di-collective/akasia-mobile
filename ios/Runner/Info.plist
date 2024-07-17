@@ -59,10 +59,16 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<!-- START PERMISSION -->
 	<key>NSCameraUsageDescription</key>
 	<string>Camera permission is required for get photo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo library permission is required for get photo.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>We will sync your data with the Apple Health app to give you better insights</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>We will sync your data with the Apple Health app to give you better insights</string>
+	<!-- END PERMISSION -->
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

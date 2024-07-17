@@ -47,7 +47,59 @@ extension BuildContextExtension on BuildContext {
   T cubit<T extends StateStreamableSource<Object>>() =>
       BlocProvider.of<T>(this);
 
-  Future<bool?> showToast({
+  Future<bool?> showErrorToast({
+    required String message,
+  }) async {
+    try {
+      return await _showToast(
+        type: ToastType.error,
+        message: message,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> showSuccessToast({
+    required String message,
+  }) async {
+    try {
+      return await _showToast(
+        type: ToastType.success,
+        message: message,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> showWarningToast({
+    required String message,
+  }) async {
+    try {
+      return await _showToast(
+        type: ToastType.warning,
+        message: message,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> showInfoToast({
+    required String message,
+  }) async {
+    try {
+      return await _showToast(
+        type: ToastType.info,
+        message: message,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> _showToast({
     required ToastType type,
     required String message,
   }) async {

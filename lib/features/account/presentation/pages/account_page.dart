@@ -11,7 +11,6 @@ import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
@@ -225,8 +224,7 @@ class _AccountPageState extends State<AccountPage> {
         BlocProvider.of<ProfileCubit>(context).refreshGetProfile(),
       ]);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
@@ -338,8 +336,7 @@ class _AccountPageState extends State<AccountPage> {
 
       return true;
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
 
@@ -411,8 +408,7 @@ class _AccountPageState extends State<AccountPage> {
       // go to splash page
       context.goNamed(AppRoute.splash.name);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     } finally {
