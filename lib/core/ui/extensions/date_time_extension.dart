@@ -68,4 +68,22 @@ extension DateTimeExtension on DateTime {
   DateTime addDays(int days) {
     return add(Duration(days: days));
   }
+
+  DateTime get firstHourOfDay {
+    return DateTime(year, month, day, 0, 0, 0, 0, 0);
+  }
+
+  DateTime get lastHourOfDay {
+    return DateTime(year, month, day, 23, 59, 59, 999, 999);
+  }
+
+  String get hourMinute {
+    return DateFormat('HH:mm').format(this);
+  }
+
+  bool isSameDay({
+    required DateTime? other,
+  }) {
+    return year == other?.year && month == other?.month && day == other?.day;
+  }
 }

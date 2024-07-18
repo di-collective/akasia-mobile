@@ -1,11 +1,15 @@
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../core/utils/logger.dart';
-import '../../../../core/utils/permission_info.dart';
+import '../utils/logger.dart';
+import '../utils/permission_info.dart';
 
 abstract class HealthService {
   Future<bool?> requestPermission();
+  Future<int?> getTotalStepsInInterval({
+    required DateTime startTime,
+    required DateTime endTime,
+  });
 }
 
 class HealthServiceImpl implements HealthService {
@@ -75,6 +79,29 @@ class HealthServiceImpl implements HealthService {
       return isAuthorized;
     } catch (error) {
       Logger.error('requestPermission error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<int?> getTotalStepsInInterval({
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    try {
+      Logger.info(
+          'getTotalStepsInInterval startTime: $startTime, endTime: $endTime');
+
+      final result = await health.getTotalStepsInInterval(
+        startTime,
+        endTime,
+      );
+      Logger.success('getTotalStepsInInterval result: $result');
+
+      return result;
+    } catch (error) {
+      Logger.error('getTotalStepsInInterval error: $error');
 
       rethrow;
     }

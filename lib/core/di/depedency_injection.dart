@@ -7,6 +7,7 @@ import '../common/open_app_info.dart';
 import '../flavors/flavor_info.dart';
 import '../network/http/app_http_client.dart';
 import '../network/network_info.dart';
+import '../services/health_service.dart';
 import '../ui/widget/dialogs/bottom_sheet_info.dart';
 import '../ui/widget/dialogs/toast_info.dart';
 import '../ui/widget/loadings/cubit/countdown/countdown_cubit.dart';
@@ -99,6 +100,14 @@ class CoreDI {
     // permission info
     sl.registerLazySingleton<PermissionInfo>(() {
       return PermissionInfoImpl();
+    });
+
+    // health service
+    sl.registerLazySingleton<HealthService>(() {
+      return HealthServiceImpl(
+        health: sl(),
+        permissionInfo: sl(),
+      );
     });
   }
 }

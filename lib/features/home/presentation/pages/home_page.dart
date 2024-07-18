@@ -14,8 +14,8 @@ import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../../health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
 import '../../../health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
-import '../../../health/presentation/cubit/daily_steps/daily_steps_cubit.dart';
 import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
+import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import '../widgets/heatlh_activities_widget.dart';
 import '../widgets/home_dashboard_item_widget.dart';
 import '../widgets/home_menu_item_widget.dart';
@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
         BlocProvider.of<ProfileCubit>(context).refreshGetProfile(),
 
         // get daily steps
-        BlocProvider.of<DailyStepsCubit>(context).refreshDailySteps(),
+        BlocProvider.of<StepsCubit>(context).refreshStepsInOneWeek(),
 
         // get daily heart rate
         BlocProvider.of<DailyHeartRateCubit>(context).refreshDailyHeartRate(),

@@ -14,7 +14,7 @@ import '../features/diet_plan/presentation/cubit/eat_calendar/eat_calendar_cubit
 import '../features/health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../features/health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
 import '../features/health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
-import '../features/health/presentation/cubit/daily_steps/daily_steps_cubit.dart';
+import '../features/health/presentation/cubit/steps/steps_cubit.dart';
 import '../features/health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../features/my_schedule/presentation/cubit/my_schedules/my_schedules_cubit.dart';
@@ -50,7 +50,7 @@ class App extends StatelessWidget {
           create: (context) => sl<EatCalendarCubit>(),
         ),
         BlocProvider(
-          create: (context) => sl<DailyStepsCubit>(),
+          create: (context) => sl<StepsCubit>(),
         ),
         BlocProvider(
           create: (context) => sl<DailyHeartRateCubit>(),

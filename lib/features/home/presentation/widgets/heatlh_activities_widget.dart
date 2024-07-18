@@ -4,17 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/config/asset_path.dart';
+import '../../../../core/services/health_service.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
+import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../health/data/datasources/health_service.dart';
+import '../../../health/domain/entities/activity_entity.dart';
+import '../../../health/domain/entities/steps_activity_entity.dart';
 import '../../../health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
 import '../../../health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
-import '../../../health/presentation/cubit/daily_steps/daily_steps_cubit.dart';
 import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
+import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import 'activity_item_widget.dart';
 
 class HealthActivitiesWidget extends StatefulWidget {
@@ -46,8 +50,8 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         return;
       }
 
-      // get daily steps
-      BlocProvider.of<DailyStepsCubit>(context).getDailySteps();
+      // get steps
+      BlocProvider.of<StepsCubit>(context).getStepsInOneWeek();
 
       // get daily heart rate
       BlocProvider.of<DailyHeartRateCubit>(context).getDailyHeartRate();
@@ -92,23 +96,34 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
             onTapButton: _onRefresh,
           ),
         ] else ...[
-          BlocBuilder<DailyStepsCubit, DailyStepsState>(
+          BlocBuilder<StepsCubit, StepsState>(
             builder: (context, state) {
-              List<double> data = [];
-              if (state is DailyStepsLoaded) {
-                data = state.data;
+              ActivityEntity<List<StepsActivityEntity>>? steps;
+              List<StepsActivityEntity>? data;
+              DateTime? updatedAt;
+              int? todaySteps;
+              if (state is StepsLoaded) {
+                steps = state.steps;
+                data = state.getLastOneWeekData();
+                updatedAt = steps?.updatedAt;
+                todaySteps = state.todaySteps?.count;
               }
 
               return ActivityWidget(
                 iconPath: AssetIconsPath.icSteps,
                 activity: context.locale.steps,
-                value: "1.900",
+                value: todaySteps?.formatNumber(
+                      locale: const Locale("id").languageCode,
+                    ) ??
+                    "0",
                 unit: "steps",
-                time: "12:00",
-                isInitial: state is DailyStepsInitial,
-                isLoading: state is DailyStepsLoading,
-                isError: state is DailyStepsError,
-                data: data,
+                time: updatedAt?.hourMinute ?? "",
+                isInitial: state is StepsInitial,
+                isLoading: state is StepsLoading,
+                isError: state is StepsError,
+                data: data?.map((e) {
+                  return e.count?.toDouble() ?? 0;
+                }).toList(),
               );
             },
           ),

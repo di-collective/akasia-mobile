@@ -19,7 +19,7 @@ class ActivityWidget extends StatelessWidget {
   final String? unitIconPath;
   final String? unit;
   final String time;
-  final List<double> data;
+  final List<double>? data;
   final bool isLoading;
   final bool isError;
   final bool isInitial;
@@ -115,6 +115,7 @@ class ActivityWidget extends StatelessWidget {
             height: 32,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               ConstrainedBox(
@@ -165,58 +166,64 @@ class ActivityWidget extends StatelessWidget {
               const SizedBox(
                 width: 16,
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 8,
-                  ),
-                  child: SizedBox(
-                    height: 58,
-                    child: BarChart(
-                      BarChartData(
-                        barTouchData: BarTouchData(
-                          enabled: false,
-                        ),
-                        titlesData: const FlTitlesData(
-                          show: false,
-                        ),
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        gridData: const FlGridData(
-                          show: false,
-                        ),
-                        barGroups: List.generate(
-                          data.length > _maxDataLength
-                              ? _maxDataLength
-                              : data.length,
-                          (index) {
-                            final x = index;
-                            final y = data[index];
-                            final isLast = index == _maxDataLength - 1;
+              if (data == null) ...[
+                const _EmptyChartWidget(),
+              ] else ...[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 8,
+                    ),
+                    child: SizedBox(
+                      height: 58,
+                      child: BarChart(
+                        BarChartData(
+                          barTouchData: BarTouchData(
+                            enabled: false,
+                          ),
+                          titlesData: const FlTitlesData(
+                            show: false,
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          gridData: const FlGridData(
+                            show: false,
+                          ),
+                          barGroups: List.generate(
+                            data!.length > _maxDataLength
+                                ? _maxDataLength
+                                : data!.length,
+                            (index) {
+                              final x = index;
+                              final y = data![index];
+                              final isLast = index == _maxDataLength - 1;
 
-                            return BarChartGroupData(
-                              x: x,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: y,
-                                  color: isLast
-                                      ? colorScheme.primary
-                                      : colorScheme.outlineBright,
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(3),
+                              // TODO: Handle data if y is 0, show little bar height
+
+                              return BarChartGroupData(
+                                x: x,
+                                barRods: [
+                                  BarChartRodData(
+                                    toY: y,
+                                    color: isLast
+                                        ? colorScheme.primary
+                                        : colorScheme.outlineBright,
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(3),
+                                    ),
+                                    width: 12,
                                   ),
-                                  width: 12,
-                                ),
-                              ],
-                            );
-                          },
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         ],
@@ -254,8 +261,6 @@ class _LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.theme.appColorScheme;
-
     return Column(
       children: [
         Row(
@@ -318,33 +323,42 @@ class _LoadingWidget extends StatelessWidget {
             const SizedBox(
               width: 16,
             ),
-            Row(
-              children: List.generate(
-                _maxDataLength,
-                (index) {
-                  final isLast = index == 6;
-
-                  return Container(
-                    width: 12,
-                    height: 2,
-                    margin: EdgeInsets.only(
-                      right: isLast ? 0 : 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isLast
-                          ? colorScheme.primary
-                          : colorScheme.outlineBright,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(3),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
+            const _EmptyChartWidget(),
           ],
         ),
       ],
+    );
+  }
+}
+
+class _EmptyChartWidget extends StatelessWidget {
+  const _EmptyChartWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.theme.appColorScheme;
+
+    return Row(
+      children: List.generate(
+        _maxDataLength,
+        (index) {
+          final isLast = index == 6;
+
+          return Container(
+            width: 12,
+            height: 2,
+            margin: EdgeInsets.only(
+              right: isLast ? 0 : 2,
+            ),
+            decoration: BoxDecoration(
+              color: isLast ? colorScheme.primary : colorScheme.outlineBright,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(3),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
