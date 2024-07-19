@@ -75,6 +75,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
               AppRoute.dietPlanCalendar.route(),
             ],
           ),
+          AppRoute.steps.route(
+            routes: [
+              AppRoute.allStepsData.route(),
+            ],
+          ),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

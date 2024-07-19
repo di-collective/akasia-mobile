@@ -363,6 +363,7 @@
   },
   "summary": "Summary",
   "steps": "Steps",
+  "stepsUnit": "steps",
   "heartRate": "Heart Rate",
   "nutritions": "Nutritions",
   "workouts": "Workouts",
@@ -375,5 +376,9 @@
           }
       }
   },
-  "refresh": "Refresh"
+  "refresh": "Refresh",
+  "average": "Average",
+  "showAllData": "Show All Data",
+  "dataSourceAndAccess": "Data Source & Access",
+  "options": "Options"
 }

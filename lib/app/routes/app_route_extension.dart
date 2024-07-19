@@ -23,6 +23,8 @@ import '../../features/diet_plan/presentation/pages/diet_plan_calendar_page.dart
 import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
+import '../../features/health/presentation/pages/all_steps_data_page.dart';
+import '../../features/health/presentation/pages/steps_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
@@ -93,6 +95,10 @@ extension AppRouteExtension on AppRoute {
         return 'add-eat';
       case AppRoute.dietPlanCalendar:
         return 'diet-plan-calendar';
+      case AppRoute.steps:
+        return 'steps';
+      case AppRoute.allStepsData:
+        return 'all-steps-data';
     }
   }
 
@@ -228,6 +234,10 @@ extension AppRouteExtension on AppRoute {
         return DietPlanCalendarPage(
           params: params,
         );
+      case AppRoute.steps:
+        return const StepsPage();
+      case AppRoute.allStepsData:
+        return const AllStepsDataPage();
     }
   }
 

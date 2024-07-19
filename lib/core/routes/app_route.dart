@@ -28,4 +28,6 @@ enum AppRoute {
   dietPlan,
   addEat,
   dietPlanCalendar,
+  steps,
+  allStepsData,
 }

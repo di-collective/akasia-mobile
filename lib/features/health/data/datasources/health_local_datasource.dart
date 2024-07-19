@@ -35,6 +35,8 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
+      await activityBox.clear();
+
       ActivityEntity<List<StepsActivityEntity>>? currentStepsData =
           activityBox.get('steps');
       Logger.success('getSteps currentStepsData: $currentStepsData');

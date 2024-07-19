@@ -50,6 +50,33 @@ final class StepsLoaded extends StepsState {
     return result;
   }
 
+  List<StepsActivityEntity>? getCurrentWeekData() {
+    final List<StepsActivityEntity> result = [];
+    final allData = steps?.data ?? [];
+
+    final currentDate = DateTime.now();
+    int maxDays = 7;
+    final firstDate = currentDate.firstDayOfTheWeek;
+    // get date from first day of the week
+    for (int i = 0; i < maxDays; i++) {
+      final date = firstDate.addDays(i);
+      final data = allData.firstWhereOrNull((element) {
+        return element.date?.isSameDay(other: date) ?? false;
+      });
+
+      if (data != null) {
+        result.add(data);
+      } else {
+        result.add(StepsActivityEntity(
+          date: date,
+          count: 0,
+        ));
+      }
+    }
+
+    return result;
+  }
+
   StepsActivityEntity? get todaySteps {
     final allData = steps?.data ?? [];
     if (allData.isNotEmpty) {

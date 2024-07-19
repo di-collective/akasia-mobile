@@ -23,6 +23,7 @@ class ActivityWidget extends StatelessWidget {
   final bool isLoading;
   final bool isError;
   final bool isInitial;
+  final Function()? onTap;
 
   const ActivityWidget({
     super.key,
@@ -37,6 +38,7 @@ class ActivityWidget extends StatelessWidget {
     required this.isLoading,
     required this.isError,
     required this.isInitial,
+    this.onTap,
   });
 
   @override
@@ -63,6 +65,7 @@ class ActivityWidget extends StatelessWidget {
     }
 
     return _ContainerWidget(
+      onTap: onTap,
       child: Column(
         children: [
           Row(
@@ -234,24 +237,29 @@ class ActivityWidget extends StatelessWidget {
 
 class _ContainerWidget extends StatelessWidget {
   final Widget child;
+  final Function()? onTap;
 
   const _ContainerWidget({
     required this.child,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadiusConfig.l,
-        border: Border.all(
-          color: colorScheme.outlineBright,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadiusConfig.l,
+          border: Border.all(
+            color: colorScheme.outlineBright,
+          ),
         ),
+        child: child,
       ),
-      child: child,
     );
   }
 }

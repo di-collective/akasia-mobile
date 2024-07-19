@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
   String get toDateApi {
@@ -85,5 +85,28 @@ extension DateTimeExtension on DateTime {
     required DateTime? other,
   }) {
     return year == other?.year && month == other?.month && day == other?.day;
+  }
+
+  String formmatDateRange({
+    required DateTime? endDate,
+  }) {
+    final startDate = formatDate(format: 'dd') ?? '';
+    final endDateFormatted = endDate?.formatDate(format: 'dd MMM yyyy') ?? '';
+
+    return '$startDate - $endDateFormatted';
+  }
+
+  DateTime get firstDayOfTheWeek {
+    // first date is monday
+    final int day = weekday;
+
+    return subtract(Duration(days: day - 1));
+  }
+
+  DateTime get lastDayOfTheWeek {
+    // last date is sunday
+    final int day = weekday;
+
+    return add(Duration(days: 7 - day));
   }
 }

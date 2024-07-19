@@ -289,6 +289,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           authType: authType,
           firebaseIdToken: idToken,
         );
+
+        // TODO: Clear local storage from previous user
       }
 
       return userCredential;
