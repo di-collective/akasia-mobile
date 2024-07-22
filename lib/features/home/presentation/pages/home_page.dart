@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
         BlocProvider.of<DailyWorkoutsCubit>(context).refreshDailyWorkouts(),
 
         // get daily sleep
-        BlocProvider.of<SleepCubit>(context).refreshSleep(),
+        BlocProvider.of<SleepCubit>(context).refreshSleepInOneWeek(),
       ]);
     } catch (error) {
       // show toast

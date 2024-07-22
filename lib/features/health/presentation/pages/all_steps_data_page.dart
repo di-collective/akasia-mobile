@@ -11,8 +11,28 @@ import '../cubit/steps/steps_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
 
-class AllStepsDataPage extends StatelessWidget {
+class AllStepsDataPage extends StatefulWidget {
   const AllStepsDataPage({super.key});
+
+  @override
+  State<AllStepsDataPage> createState() => _AllStepsDataPageState();
+}
+
+class _AllStepsDataPageState extends State<AllStepsDataPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    _onGetStepsAll();
+  }
+
+  Future<void> _onGetStepsAll() async {
+    await BlocProvider.of<StepsCubit>(context).getStepsAll();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +74,8 @@ class AllStepsDataPage extends StatelessWidget {
                   final step = steps[index];
 
                   return ActivityItemWidget(
+                    isLast: index == 0,
+                    isFirst: index == steps.length - 1,
                     title: step.date?.formatDate(
                           format: 'dd MMMM yyyy',
                         ) ??

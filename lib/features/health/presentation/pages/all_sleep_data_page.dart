@@ -3,16 +3,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
+import '../../domain/entities/sleep_activity_entity.dart';
 import '../cubit/sleep/sleep_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
 
-class AllSleepDataPage extends StatelessWidget {
+class AllSleepDataPage extends StatefulWidget {
   const AllSleepDataPage({super.key});
+
+  @override
+  State<AllSleepDataPage> createState() => _AllSleepDataPageState();
+}
+
+class _AllSleepDataPageState extends State<AllSleepDataPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    _onGetSleepsAll();
+  }
+
+  Future<void> _onGetSleepsAll() async {
+    await BlocProvider.of<SleepCubit>(context).getSleepAll();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +55,31 @@ class AllSleepDataPage extends StatelessWidget {
               return const StateEmptyWidget();
             }
 
+            Map<DateTime, List<SleepActivityEntity>> sortedSleeps = {};
+            for (int i = 0; i < sleeps.length; i++) {
+              final sleep = sleeps[i];
+
+              final fromDate = sleep.fromDate;
+              if (fromDate == null) {
+                continue;
+              }
+
+              final data = sleeps.where((element) {
+                return element.fromDate?.isSameDay(other: fromDate) ?? false;
+              });
+
+              sortedSleeps.addAll({
+                fromDate: data.toList(),
+              });
+            }
+
             return Container(
               margin: EdgeInsets.symmetric(
                 horizontal: context.paddingHorizontal,
                 vertical: 16,
               ),
-              decoration: BoxDecoration(
-                color: colorScheme.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
               child: ListView.separated(
-                itemCount: sleeps.length,
+                itemCount: sortedSleeps.keys.length,
                 primary: false,
                 shrinkWrap: true,
                 reverse: true,
@@ -51,13 +87,35 @@ class AllSleepDataPage extends StatelessWidget {
                   return const Divider();
                 },
                 itemBuilder: (context, index) {
-                  final sleep = sleeps[index];
+                  final sleep = sortedSleeps.entries.toList()[index];
 
                   // date range
-                  final fromDate = sleep.fromDate;
-                  final toDate = sleep.toDate;
+                  DateTime? fromDate;
+                  DateTime? toDate;
                   String formattedDateRange = '';
-                  List<double> data = [];
+                  Duration totalDuration = const Duration();
+
+                  for (final item in sleep.value) {
+                    final currentFromDate = item.fromDate;
+                    final currentToDate = item.toDate;
+                    if (currentFromDate == null || currentToDate == null) {
+                      continue;
+                    }
+
+                    if (fromDate == null ||
+                        currentFromDate.isBefore(fromDate)) {
+                      fromDate = currentFromDate;
+                    }
+
+                    if (toDate == null || currentToDate.isAfter(toDate)) {
+                      toDate = currentToDate;
+                    }
+
+                    final duration = currentToDate.difference(currentFromDate);
+
+                    totalDuration += duration;
+                  }
+
                   if (fromDate != null && toDate != null) {
                     formattedDateRange = fromDate.formmatDateRange(
                       endDate: toDate,
@@ -65,8 +123,12 @@ class AllSleepDataPage extends StatelessWidget {
                   }
 
                   return ActivityItemWidget(
+                    isLast: index == 0,
+                    isFirst: index == sortedSleeps.keys.length - 1,
                     title: formattedDateRange,
-                    value: "",
+                    value:
+                        "${sleep.value.length} interval (${totalDuration.inHours}h ${totalDuration.remainingMinutes}m)",
+                    onTap: () {},
                   );
                 },
               ),

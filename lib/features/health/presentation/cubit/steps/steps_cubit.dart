@@ -37,6 +37,28 @@ class StepsCubit extends Cubit<StepsState> {
     }
   }
 
+  Future<void> getStepsAll() async {
+    try {
+      if (state is! StepsLoaded) {
+        emit(StepsLoading());
+      }
+
+      final steps = await getStepsUseCase.call(
+        GetStepsUseCaseParams(),
+      );
+
+      emit(StepsLoaded(
+        steps: steps,
+      ));
+    } catch (error) {
+      if (state is! StepsLoaded) {
+        emit(StepsError(
+          error: error,
+        ));
+      }
+    }
+  }
+
   Future<void> refreshStepsInOneWeek() async {
     final currentState = state;
 

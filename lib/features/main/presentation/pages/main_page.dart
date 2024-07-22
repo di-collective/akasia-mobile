@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
       BlocProvider.of<DailyWorkoutsCubit>(context).getDailyWorkouts();
 
       // get daily sleep
-      BlocProvider.of<SleepCubit>(context).getSleep();
+      BlocProvider.of<SleepCubit>(context).getSleepInOneWeek();
     } catch (_) {
       rethrow;
     }

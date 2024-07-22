@@ -15,7 +15,7 @@ class SleepCubit extends Cubit<SleepState> {
     required this.getSleepUseCase,
   }) : super(SleepInitial());
 
-  Future<void> getSleep() async {
+  Future<void> getSleepInOneWeek() async {
     try {
       emit(SleepLoading());
 
@@ -36,7 +36,29 @@ class SleepCubit extends Cubit<SleepState> {
     }
   }
 
-  Future<void> refreshSleep() async {
+  Future<void> getSleepAll() async {
+    try {
+      if (state is! SleepLoaded) {
+        emit(SleepLoading());
+      }
+
+      final sleep = await getSleepUseCase.call(
+        GetSleepUseCaseParams(),
+      );
+
+      emit(SleepLoaded(
+        sleep: sleep,
+      ));
+    } catch (error) {
+      if (state is! SleepLoaded) {
+        emit(SleepError(
+          error: error,
+        ));
+      }
+    }
+  }
+
+  Future<void> refreshSleepInOneWeek() async {
     final currentState = state;
 
     try {

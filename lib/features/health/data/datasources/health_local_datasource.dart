@@ -155,7 +155,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         ),
       );
 
-      List<StepsActivityEntity>? result;
+      List<StepsActivityEntity>? result = List.from(steps ?? []);
       // if startDate is not null, filter data from startDate to currentDate
       if (startDate != null) {
         result = steps?.where((e) {
@@ -334,7 +334,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         ),
       );
 
-      List<SleepActivityEntity>? result;
+      List<SleepActivityEntity>? result = List.from(sleep ?? []);
       // if startDate is not null, filter data from startDate to currentDate
       if (startDate != null) {
         result = sleep?.where((e) {
