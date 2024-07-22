@@ -55,4 +55,5 @@ class AssetIconsPath {
   static String icWorkout = 'ic_workout.svg'.iconAsset;
   static String icBed = 'ic_bed.svg'.iconAsset;
   static String icLove = 'ic_love.svg'.iconAsset;
+  static String icWatch = 'ic_watch.svg'.iconAsset;
 }

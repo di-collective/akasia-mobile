@@ -22,7 +22,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
     required this.activityBox,
   });
 
-  final _maxRefreshInterval = const Duration(minutes: 30);
+  final _refreshInterval = const Duration(minutes: 30);
   final _maxRangeDaysQuery = 30;
 
   @override
@@ -35,8 +35,6 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
-      await activityBox.clear();
-
       ActivityEntity<List<StepsActivityEntity>>? currentStepsData =
           activityBox.get('steps');
       Logger.success('getSteps currentStepsData: $currentStepsData');
@@ -45,7 +43,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       DateTime? createdAt = currentStepsData?.createdAt;
       List<StepsActivityEntity>? steps = currentStepsData?.data;
       if (lastUpdatedAtData == null) {
-        // assume first time user and steps is null
+        // assume user first time access and steps is null
         // get for 30 days
         for (int i = _maxRangeDaysQuery; i >= 0; i--) {
           final nextDate = currentDate.add(Duration(days: -i));
@@ -68,10 +66,11 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         final difference = currentDate.difference(lastUpdatedAtData);
         Logger.info('getSteps difference: $difference');
 
-        if (difference > _maxRefreshInterval) {
-          // if last updated is more than _maxRefreshInterval, get new data from health service
+        if (difference > _refreshInterval) {
+          // if last updated is more than _refreshInterval, get new data from health service
           // get different in days
-          final diffInDays = difference.inDays;
+          final diffInDays = currentDate.day - lastUpdatedAtData.day;
+          Logger.info('getSteps diffInDays: $diffInDays');
           if (diffInDays > 0) {
             // if diffInDays is more than 0, get data per day
             for (int i = 0; i <= diffInDays; i++) {

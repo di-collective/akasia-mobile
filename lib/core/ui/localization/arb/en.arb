@@ -380,5 +380,6 @@
   "average": "Average",
   "showAllData": "Show All Data",
   "dataSourceAndAccess": "Data Source & Access",
-  "options": "Options"
+  "options": "Options",
+  "allData": "All Data"
 }
