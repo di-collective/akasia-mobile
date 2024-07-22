@@ -40,6 +40,7 @@ final class StepsLoaded extends StepsState {
           continue;
         }
 
+        // add empty data if no data in that date
         result.add(StepsActivityEntity(
           date: DateTime.now().addDays(lastOffset),
           count: 0,

@@ -3,11 +3,12 @@ import '../../../core/utils/service_locator.dart';
 import '../data/datasources/health_local_datasource.dart';
 import '../data/repositories/health_repository_impl.dart';
 import '../domain/repositories/activity_repository.dart';
+import '../domain/usecases/get_sleep_usecase.dart';
 import '../domain/usecases/get_steps_usecase.dart';
 import '../presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
-import '../presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
 import '../presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
+import '../presentation/cubit/sleep/sleep_cubit.dart';
 import '../presentation/cubit/steps/steps_cubit.dart';
 
 class HealthDI {
@@ -50,6 +51,11 @@ class HealthDI {
         healthRepository: sl(),
       );
     });
+    sl.registerLazySingleton<GetSleepUseCase>(() {
+      return GetSleepUseCase(
+        healthRepository: sl(),
+      );
+    });
   }
 
   static void _injectCubits() {
@@ -68,8 +74,10 @@ class HealthDI {
     sl.registerFactory<DailyWorkoutsCubit>(() {
       return DailyWorkoutsCubit();
     });
-    sl.registerFactory<DailySleepCubit>(() {
-      return DailySleepCubit();
+    sl.registerFactory<SleepCubit>(() {
+      return SleepCubit(
+        getSleepUseCase: sl(),
+      );
     });
   }
 }

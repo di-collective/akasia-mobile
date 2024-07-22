@@ -1,21 +1,21 @@
 import '../../../../core/usecases/usecase.dart';
 import '../entities/activity_entity.dart';
-import '../entities/steps_activity_entity.dart';
+import '../entities/sleep_activity_entity.dart';
 import '../repositories/activity_repository.dart';
 
-class GetStepsUseCase extends UseCase<
-    ActivityEntity<List<StepsActivityEntity>>?, GetStepsUseCaseParams> {
+class GetSleepUseCase extends UseCase<
+    ActivityEntity<List<SleepActivityEntity>>?, GetSleepUseCaseParams> {
   final HealthRepository healthRepository;
 
-  GetStepsUseCase({
+  GetSleepUseCase({
     required this.healthRepository,
   });
 
   @override
-  Future<ActivityEntity<List<StepsActivityEntity>>?> call(
-      GetStepsUseCaseParams params) async {
+  Future<ActivityEntity<List<SleepActivityEntity>>?> call(
+      GetSleepUseCaseParams params) async {
     try {
-      return await healthRepository.getSteps(
+      return await healthRepository.getSleep(
         startDate: params.startDate,
         endDate: params.endDate,
       );
@@ -25,11 +25,11 @@ class GetStepsUseCase extends UseCase<
   }
 }
 
-class GetStepsUseCaseParams {
+class GetSleepUseCaseParams {
   final DateTime? startDate;
   final DateTime? endDate;
 
-  GetStepsUseCaseParams({
+  GetSleepUseCaseParams({
     this.startDate,
     this.endDate,
   });

@@ -7,14 +7,16 @@ import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/app_locale_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../health/domain/entities/activity_entity.dart';
+import '../../../health/domain/entities/sleep_activity_entity.dart';
 import '../../../health/domain/entities/steps_activity_entity.dart';
 import '../../../health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
-import '../../../health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
 import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
+import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import 'activity_item_widget.dart';
 
@@ -157,28 +159,48 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         const SizedBox(
           height: 10,
         ),
-        BlocBuilder<DailySleepCubit, DailySleepState>(
+        BlocBuilder<SleepCubit, SleepState>(
           builder: (context, state) {
-            List<double> data = [];
-            String? hours;
-            String? minutes;
-            if (state is DailySleepLoaded) {
-              data = state.data;
-              hours = "5"; // TODO: Get hours
-              minutes = "30"; // TODO: Get minutes
-            }
+            ActivityEntity<List<SleepActivityEntity>>? sleep;
+            List<SleepActivityEntity>? data = [];
+            DateTime? updatedAt;
+            String hours = "0";
+            String minutes = "0";
+            if (state is SleepLoaded) {
+              sleep = state.sleep;
+              data = state.getLastSevenData();
+              updatedAt = sleep?.updatedAt;
 
-            hours ??= "0";
-            minutes ??= "0";
+              if (data != null && data.isNotEmpty) {
+                final fromDate = data.last.fromDate;
+                final toDate = data.last.toDate;
+
+                if (fromDate != null && toDate != null) {
+                  final lastSleepDuration = toDate.difference(fromDate);
+
+                  hours = lastSleepDuration.inHours.toString();
+                  minutes = lastSleepDuration.remainingMinutes;
+                }
+              }
+            }
 
             return ActivityWidget(
               iconPath: AssetIconsPath.icBed,
               activity: context.locale.sleep,
-              time: "12:00",
-              isInitial: state is DailySleepInitial,
-              isLoading: state is DailySleepLoading,
-              isError: state is DailySleepError,
-              data: data,
+              time: updatedAt?.hourMinute ?? "",
+              isInitial: state is SleepInitial,
+              isLoading: state is SleepLoading,
+              isError: state is SleepError,
+              data: data?.map((e) {
+                final fromDate = e.fromDate;
+                final toDate = e.toDate;
+
+                if (fromDate != null && toDate != null) {
+                  return toDate.difference(fromDate).inHours.toDouble();
+                }
+
+                return 0.0;
+              }).toList(),
               valueWidget: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -269,7 +291,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   //     BlocProvider.of<DailyWorkoutsCubit>(context).getDailyWorkouts();
 
   //     // get daily sleep
-  //     BlocProvider.of<DailySleepCubit>(context).getDailySleep();
+  //     BlocProvider.of<SleepCubit>(context).getSleep();
   //   } catch (error) {
   //     context.showErrorToast(
   //       message: context.message(context),

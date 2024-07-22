@@ -1,6 +1,6 @@
 class HiveTypeIdConfig {
   const HiveTypeIdConfig._();
 
-  static const int activity = 0;
-  static const int stepsActivity = 1;
+  static const int stepsActivity = 0;
+  static const int sleepActivity = 1;
 }

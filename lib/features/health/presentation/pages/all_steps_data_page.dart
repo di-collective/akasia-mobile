@@ -82,7 +82,7 @@ class AllStepsDataPage extends StatelessWidget {
                                 height: 2,
                               ),
                               Text(
-                                "${step.count ?? 0} ${context.locale.steps}",
+                                "${step.count ?? 0} ${context.locale.stepsUnit}",
                                 style: textTheme.titleSmall.copyWith(
                                   color: colorScheme.onSurfaceDim,
                                 ),

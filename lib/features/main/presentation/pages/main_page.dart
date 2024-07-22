@@ -15,7 +15,7 @@ import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../../health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
-import '../../../health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
+import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
       BlocProvider.of<DailyWorkoutsCubit>(context).getDailyWorkouts();
 
       // get daily sleep
-      BlocProvider.of<DailySleepCubit>(context).getDailySleep();
+      BlocProvider.of<SleepCubit>(context).getSleep();
     } catch (_) {
       rethrow;
     }

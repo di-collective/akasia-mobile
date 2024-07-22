@@ -10,6 +10,10 @@ abstract class HealthService {
     required DateTime startTime,
     required DateTime endTime,
   });
+  Future<List<HealthDataPoint>> getSleepSessions({
+    required DateTime startTime,
+    required DateTime endTime,
+  });
 }
 
 class HealthServiceImpl implements HealthService {
@@ -102,6 +106,31 @@ class HealthServiceImpl implements HealthService {
       return result;
     } catch (error) {
       Logger.error('getTotalStepsInInterval error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HealthDataPoint>> getSleepSessions({
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    try {
+      Logger.info('getSleepSessions startTime: $startTime, endTime: $endTime');
+
+      final result = await health.getHealthDataFromTypes(
+        types: [
+          HealthDataType.SLEEP_SESSION,
+        ],
+        startTime: startTime,
+        endTime: endTime,
+      );
+      Logger.success('getSleepSessions result: $result');
+
+      return result;
+    } catch (error) {
+      Logger.error('getSleepSessions error: $error');
 
       rethrow;
     }

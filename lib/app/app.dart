@@ -13,7 +13,7 @@ import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/diet_plan/presentation/cubit/eat_calendar/eat_calendar_cubit.dart';
 import '../features/health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../features/health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
-import '../features/health/presentation/cubit/daily_sleep/daily_sleep_cubit.dart';
+import '../features/health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../features/health/presentation/cubit/steps/steps_cubit.dart';
 import '../features/health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
@@ -62,7 +62,7 @@ class App extends StatelessWidget {
           create: (context) => sl<DailyWorkoutsCubit>(),
         ),
         BlocProvider(
-          create: (context) => sl<DailySleepCubit>(),
+          create: (context) => sl<SleepCubit>(),
         ),
       ],
       child: MaterialApp.router(

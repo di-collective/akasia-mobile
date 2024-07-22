@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import '../core/flavors/flavor_name_key.dart';
 import '../core/flavors/flavor_type_extension.dart';
 import '../core/ui/extensions/hive_box_extension.dart';
-import '../features/health/domain/entities/activity_entity.dart';
+import '../features/health/domain/entities/sleep_activity_entity.dart';
 import '../features/health/domain/entities/steps_activity_entity.dart';
 import 'app.dart';
 import 'di/depedency_injection.dart' as di;
@@ -53,7 +53,7 @@ Future<void> init() async {
 
   // register adapters
   Hive.registerAdapter(StepsActivityEntityAdapter());
-  Hive.registerAdapter(ActivityEntityAdapter());
+  Hive.registerAdapter(SleepActivityEntityAdapter());
 
   // open box
   await Future.wait(HiveBox.values.map((e) {
