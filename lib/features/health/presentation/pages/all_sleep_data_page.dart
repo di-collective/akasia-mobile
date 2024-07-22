@@ -7,12 +7,12 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
-import '../cubit/steps/steps_cubit.dart';
+import '../cubit/sleep/sleep_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
 
-class AllStepsDataPage extends StatelessWidget {
-  const AllStepsDataPage({super.key});
+class AllSleepDataPage extends StatelessWidget {
+  const AllSleepDataPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +25,11 @@ class AllStepsDataPage extends StatelessWidget {
         ),
       ),
       backgroundColor: colorScheme.surfaceBright,
-      body: BlocBuilder<StepsCubit, StepsState>(
+      body: BlocBuilder<SleepCubit, SleepState>(
         builder: (context, state) {
-          if (state is StepsLoaded) {
-            final steps = state.steps?.data;
-            if (steps == null || steps.isEmpty) {
+          if (state is SleepLoaded) {
+            final sleeps = state.sleep?.data;
+            if (sleeps == null || sleeps.isEmpty) {
               return const StateEmptyWidget();
             }
 
@@ -43,7 +43,7 @@ class AllStepsDataPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: ListView.separated(
-                itemCount: steps.length,
+                itemCount: sleeps.length,
                 primary: false,
                 shrinkWrap: true,
                 reverse: true,
@@ -51,19 +51,27 @@ class AllStepsDataPage extends StatelessWidget {
                   return const Divider();
                 },
                 itemBuilder: (context, index) {
-                  final step = steps[index];
+                  final sleep = sleeps[index];
+
+                  // date range
+                  final fromDate = sleep.fromDate;
+                  final toDate = sleep.toDate;
+                  String formattedDateRange = '';
+                  List<double> data = [];
+                  if (fromDate != null && toDate != null) {
+                    formattedDateRange = fromDate.formmatDateRange(
+                      endDate: toDate,
+                    );
+                  }
 
                   return ActivityItemWidget(
-                    title: step.date?.formatDate(
-                          format: 'dd MMMM yyyy',
-                        ) ??
-                        '',
-                    value: "${step.count ?? 0} ${context.locale.stepsUnit}",
+                    title: formattedDateRange,
+                    value: "",
                   );
                 },
               ),
             );
-          } else if (state is StepsError) {
+          } else if (state is SleepError) {
             return StateErrorWidget(
               description: state.error.message(context),
             );

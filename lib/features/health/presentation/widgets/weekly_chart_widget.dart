@@ -4,20 +4,30 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/extensions/app_locale_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/double_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 
 class WeeklyChartWidget extends StatelessWidget {
   final List<DateTime> dates;
   final List<double> dataInWeek;
-  final String unit;
+  final String? unit;
+  final String? averageText;
+  final Widget? averageWidget;
+  final List<BarChartGroupData> barGroups;
+  final Widget Function(double, TitleMeta) getTitlesWidget;
+  final List<TextSpan> Function(BarChartGroupData, int, BarChartRodData, int)?
+      tooltipTextWidget;
 
   const WeeklyChartWidget({
     super.key,
     required this.dates,
-    required this.unit,
+    this.unit,
     required this.dataInWeek,
+    this.averageText,
+    this.averageWidget,
+    required this.barGroups,
+    required this.getTitlesWidget,
+    this.tooltipTextWidget,
   });
 
   @override
@@ -37,13 +47,16 @@ class WeeklyChartWidget extends StatelessWidget {
         return previousValue + element;
       },
     );
-    final average = total ~/ dataInWeek.length;
+    int average = 0;
+    if (dataInWeek.isNotEmpty) {
+      average = total ~/ dataInWeek.length;
+    }
 
     // date range
     DateTime? firstDate;
     DateTime? endDate;
     String formattedDateRange = '';
-    if (dataInWeek.isNotEmpty) {
+    if (days.isNotEmpty) {
       firstDate = dates.first;
       endDate = dates.last;
     }
@@ -91,21 +104,30 @@ class WeeklyChartWidget extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                           children: [
-                            TextSpan(
-                              text: ' $unit',
-                              style: textTheme.bodySmall.copyWith(
-                                color: colorScheme.onSurface,
-                                fontWeight: FontWeight.w500,
+                            if (tooltipTextWidget != null) ...[
+                              ...tooltipTextWidget!(
+                                group,
+                                groupIndex,
+                                rod,
+                                rodIndex,
                               ),
-                            ),
-                            TextSpan(
-                              text:
-                                  '\n${date.formatDate(format: 'dd MMM yyyy')}',
-                              style: textTheme.bodySmall.copyWith(
-                                color: colorScheme.onSurface,
-                                fontWeight: FontWeight.w500,
+                            ] else ...[
+                              TextSpan(
+                                text: ' $unit',
+                                style: textTheme.bodySmall.copyWith(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
+                              TextSpan(
+                                text:
+                                    '\n${date.formatDate(format: 'dd MMM yyyy')}',
+                                style: textTheme.bodySmall.copyWith(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ],
                         );
                       },
@@ -148,32 +170,7 @@ class WeeklyChartWidget extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 35,
-                        getTitlesWidget: (value, meta) {
-                          final isFirst = value.isSame(otherValue: meta.min);
-                          final lastDay =
-                              dataInWeek.isNotEmpty ? dataInWeek.last : null;
-                          final isMiddle =
-                              value == (lastDay != null ? lastDay / 2 : 0);
-                          final isLast = value.isSame(otherValue: meta.max);
-
-                          if (isFirst || isMiddle || isLast) {
-                            return SideTitleWidget(
-                              axisSide: meta.axisSide,
-                              space: 2,
-                              child: Text(
-                                value.toInt().formatNumber(
-                                      locale: AppLocale.id.locale.countryCode,
-                                    ),
-                                style: textTheme.labelSmall.copyWith(
-                                  color: colorScheme.onSurfaceBright,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            );
-                          }
-
-                          return const SizedBox.shrink();
-                        },
+                        getTitlesWidget: getTitlesWidget,
                       ),
                     ),
                   ),
@@ -199,27 +196,7 @@ class WeeklyChartWidget extends StatelessWidget {
                       );
                     },
                   ),
-                  barGroups: List.generate(
-                    dataInWeek.length,
-                    (index) {
-                      final x = index;
-                      final y = dataInWeek[index];
-
-                      return BarChartGroupData(
-                        x: x,
-                        barRods: [
-                          BarChartRodData(
-                            toY: y,
-                            color: colorScheme.primary,
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(3),
-                            ),
-                            width: 25,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                  barGroups: barGroups,
                 ),
               ),
             ),
@@ -235,7 +212,7 @@ class WeeklyChartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.locale.average,
+                  averageText ?? context.locale.average,
                   style: textTheme.bodyMedium.copyWith(
                     color: colorScheme.onSurfaceBright,
                   ),
@@ -243,34 +220,38 @@ class WeeklyChartWidget extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      average.formatNumber(
-                        locale: AppLocale.id.locale.countryCode,
-                      ),
-                      style: textTheme.headlineLarge.copyWith(
-                        color: colorScheme.onSurfaceDim,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 8,
-                      ),
-                      child: Text(
-                        unit,
-                        style: textTheme.bodySmall.copyWith(
-                          color: colorScheme.onSurface,
+                if (averageWidget != null) ...[
+                  averageWidget!,
+                ] else ...[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        average.formatNumber(
+                          locale: AppLocale.id.locale.countryCode,
+                        ),
+                        style: textTheme.headlineLarge.copyWith(
+                          color: colorScheme.onSurfaceDim,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 8,
+                        ),
+                        child: Text(
+                          unit ?? '',
+                          style: textTheme.bodySmall.copyWith(
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(
                   height: 2,
                 ),

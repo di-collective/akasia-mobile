@@ -56,10 +56,9 @@ final class StepsLoaded extends StepsState {
     final allData = steps?.data ?? [];
 
     final currentDate = DateTime.now();
-    int maxDays = 7;
     final firstDate = currentDate.firstDayOfTheWeek;
     // get date from first day of the week
-    for (int i = 0; i < maxDays; i++) {
+    for (int i = 0; i < DateTime.daysPerWeek; i++) {
       final date = firstDate.addDays(i);
       final data = allData.firstWhereOrNull((element) {
         return element.date?.isSameDay(other: date) ?? false;

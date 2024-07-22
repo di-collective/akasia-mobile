@@ -23,7 +23,9 @@ import '../../features/diet_plan/presentation/pages/diet_plan_calendar_page.dart
 import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
+import '../../features/health/presentation/pages/all_sleep_data_page.dart';
 import '../../features/health/presentation/pages/all_steps_data_page.dart';
+import '../../features/health/presentation/pages/sleep_page.dart';
 import '../../features/health/presentation/pages/steps_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
@@ -99,6 +101,10 @@ extension AppRouteExtension on AppRoute {
         return 'steps';
       case AppRoute.allStepsData:
         return 'all-steps-data';
+      case AppRoute.sleep:
+        return 'sleep';
+      case AppRoute.allSleepData:
+        return 'all-sleep-data';
     }
   }
 
@@ -238,6 +244,10 @@ extension AppRouteExtension on AppRoute {
         return const StepsPage();
       case AppRoute.allStepsData:
         return const AllStepsDataPage();
+      case AppRoute.sleep:
+        return const SleepPage();
+      case AppRoute.allSleepData:
+        return const AllSleepDataPage();
     }
   }
 

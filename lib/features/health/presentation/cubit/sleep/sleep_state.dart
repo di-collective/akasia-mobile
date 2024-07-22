@@ -45,6 +45,29 @@ final class SleepLoaded extends SleepState {
     return result;
   }
 
+  Map<DateTime, List<SleepActivityEntity>> getCurrentWeekData() {
+    final Map<DateTime, List<SleepActivityEntity>> result = {};
+    final allData = sleep?.data ?? [];
+
+    final currentDate =
+        DateTime.now().addDays(-7).firstHourOfDay; // TODO: Change this
+    final firstDate = currentDate.firstDayOfTheWeek;
+    // get date from first day of the week
+    for (int i = 0; i < DateTime.daysPerWeek; i++) {
+      final date = firstDate.addDays(i);
+
+      final data = allData.where((element) {
+        return element.fromDate?.isSameDay(other: date) ?? false;
+      });
+
+      result.addAll({
+        date: data.toList(),
+      });
+    }
+
+    return result;
+  }
+
   @override
   List<Object?> get props => [sleep];
 }

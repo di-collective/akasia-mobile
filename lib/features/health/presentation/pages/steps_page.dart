@@ -1,3 +1,7 @@
+import '../../../../core/ui/extensions/app_locale_extension.dart';
+import '../../../../core/ui/extensions/double_extension.dart';
+import '../../../../core/ui/extensions/int_extension.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -60,6 +64,52 @@ class _StepsPageState extends State<StepsPage> {
                   dates: dates,
                   dataInWeek: data,
                   unit: context.locale.stepsUnit,
+                  barGroups: List.generate(
+                    data.length,
+                    (index) {
+                      final x = index;
+                      final y = data[index];
+
+                      return BarChartGroupData(
+                        x: x,
+                        barRods: [
+                          BarChartRodData(
+                            toY: y,
+                            color: colorScheme.primary,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(3),
+                            ),
+                            width: 25,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  getTitlesWidget: (value, meta) {
+                    final isFirst = value.isSame(otherValue: meta.min);
+                    final lastDay = data.isNotEmpty ? data.last : null;
+                    final isMiddle = value ==
+                        (lastDay != null ? lastDay / 2 : 0); // TODO: Fix this
+                    final isLast = value.isSame(otherValue: meta.max);
+
+                    if (isFirst || isMiddle || isLast) {
+                      return SideTitleWidget(
+                        axisSide: meta.axisSide,
+                        space: 2,
+                        child: Text(
+                          value.toInt().formatNumber(
+                                locale: AppLocale.id.locale.countryCode,
+                              ),
+                          style: textTheme.labelSmall.copyWith(
+                            color: colorScheme.onSurfaceBright,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
                 );
               },
             ),

@@ -80,6 +80,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
               AppRoute.allStepsData.route(),
             ],
           ),
+          AppRoute.sleep.route(
+            routes: [
+              AppRoute.allSleepData.route(),
+            ],
+          ),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

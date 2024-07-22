@@ -191,6 +191,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               isInitial: state is SleepInitial,
               isLoading: state is SleepLoading,
               isError: state is SleepError,
+              onTap: _onTapSleep,
               data: data?.map((e) {
                 final fromDate = e.fromDate;
                 final toDate = e.toDate;
@@ -305,5 +306,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   void _onTapSteps() {
     // go to steps page
     context.goNamed(AppRoute.steps.name);
+  }
+
+  void _onTapSleep() {
+    // go to sleep page
+    context.goNamed(AppRoute.sleep.name);
   }
 }
