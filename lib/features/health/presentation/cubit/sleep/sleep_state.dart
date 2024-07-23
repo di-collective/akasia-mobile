@@ -49,8 +49,7 @@ final class SleepLoaded extends SleepState {
     final Map<DateTime, List<SleepActivityEntity>> result = {};
     final allData = sleep?.data ?? [];
 
-    final currentDate =
-        DateTime.now().addDays(-7).firstHourOfDay; // TODO: Change this
+    final currentDate = DateTime.now().firstHourOfDay;
     final firstDate = currentDate.firstDayOfTheWeek;
     // get date from first day of the week
     for (int i = 0; i < DateTime.daysPerWeek; i++) {

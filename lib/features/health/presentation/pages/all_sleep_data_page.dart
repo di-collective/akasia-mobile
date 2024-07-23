@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/duration_extension.dart';
@@ -12,6 +14,7 @@ import '../../domain/entities/sleep_activity_entity.dart';
 import '../cubit/sleep/sleep_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
+import 'sleep_details_page.dart';
 
 class AllSleepDataPage extends StatefulWidget {
   const AllSleepDataPage({super.key});
@@ -69,69 +72,77 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
               });
 
               sortedSleeps.addAll({
-                fromDate: data.toList(),
+                fromDate.firstHourOfDay: data.toList(),
               });
             }
 
-            return Container(
-              margin: EdgeInsets.symmetric(
+            return ListView.separated(
+              itemCount: sortedSleeps.keys.length,
+              primary: false,
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(
                 horizontal: context.paddingHorizontal,
                 vertical: 16,
               ),
-              child: ListView.separated(
-                itemCount: sortedSleeps.keys.length,
-                primary: false,
-                shrinkWrap: true,
-                reverse: true,
-                separatorBuilder: (context, index) {
-                  return const Divider();
-                },
-                itemBuilder: (context, index) {
-                  final sleep = sortedSleeps.entries.toList()[index];
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+              itemBuilder: (context, index) {
+                final sleep = sortedSleeps.entries.toList()[index];
 
-                  // date range
-                  DateTime? fromDate;
-                  DateTime? toDate;
-                  String formattedDateRange = '';
-                  Duration totalDuration = const Duration();
+                // date range
+                DateTime? fromDate;
+                DateTime? toDate;
+                String formattedDateRange = '';
+                Duration totalDuration = const Duration();
 
-                  for (final item in sleep.value) {
-                    final currentFromDate = item.fromDate;
-                    final currentToDate = item.toDate;
-                    if (currentFromDate == null || currentToDate == null) {
-                      continue;
-                    }
-
-                    if (fromDate == null ||
-                        currentFromDate.isBefore(fromDate)) {
-                      fromDate = currentFromDate;
-                    }
-
-                    if (toDate == null || currentToDate.isAfter(toDate)) {
-                      toDate = currentToDate;
-                    }
-
-                    final duration = currentToDate.difference(currentFromDate);
-
-                    totalDuration += duration;
+                for (final item in sleep.value) {
+                  final currentFromDate = item.fromDate;
+                  final currentToDate = item.toDate;
+                  if (currentFromDate == null || currentToDate == null) {
+                    continue;
                   }
 
-                  if (fromDate != null && toDate != null) {
-                    formattedDateRange = fromDate.formmatDateRange(
-                      endDate: toDate,
-                    );
+                  if (fromDate == null || currentFromDate.isBefore(fromDate)) {
+                    fromDate = currentFromDate;
                   }
 
-                  return ActivityItemWidget(
-                    isLast: index == 0,
-                    isFirst: index == sortedSleeps.keys.length - 1,
-                    title: formattedDateRange,
-                    value:
-                        "${sleep.value.length} interval (${totalDuration.inHours}h ${totalDuration.remainingMinutes}m)",
-                    onTap: () {},
+                  if (toDate == null || currentToDate.isAfter(toDate)) {
+                    toDate = currentToDate;
+                  }
+
+                  final duration = currentToDate.difference(currentFromDate);
+
+                  totalDuration += duration;
+                }
+
+                final formattedTotalDuration =
+                    "${totalDuration.inHours}hrs ${totalDuration.remainingMinutes}min";
+
+                if (fromDate != null && toDate != null) {
+                  formattedDateRange = fromDate.formmatDateRange(
+                    endDate: toDate,
+                    formatEndDate: 'dd MMM',
                   );
-                },
-              ),
+                }
+
+                return ActivityItemWidget(
+                  isFirst: index == 0,
+                  isLast: index == sortedSleeps.keys.length - 1,
+                  title: formattedDateRange,
+                  value:
+                      "${sleep.value.length} interval ($formattedTotalDuration)",
+                  onTap: () {
+                    _onSleep(
+                      params: SleepDetailsPageParams(
+                        sleeps: sleep.value,
+                        formattedDateRange: formattedDateRange,
+                        totalDuration: totalDuration,
+                      ),
+                    );
+                  },
+                );
+              },
             );
           } else if (state is SleepError) {
             return StateErrorWidget(
@@ -149,6 +160,15 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
           );
         },
       ),
+    );
+  }
+
+  void _onSleep({
+    required SleepDetailsPageParams params,
+  }) {
+    context.goNamed(
+      AppRoute.sleepDetails.name,
+      extra: params,
     );
   }
 }

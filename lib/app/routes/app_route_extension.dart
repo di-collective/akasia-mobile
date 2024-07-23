@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/health/presentation/pages/sleep_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -105,6 +106,8 @@ extension AppRouteExtension on AppRoute {
         return 'sleep';
       case AppRoute.allSleepData:
         return 'all-sleep-data';
+      case AppRoute.sleepDetails:
+        return 'sleep-details';
     }
   }
 
@@ -248,6 +251,15 @@ extension AppRouteExtension on AppRoute {
         return const SleepPage();
       case AppRoute.allSleepData:
         return const AllSleepDataPage();
+      case AppRoute.sleepDetails:
+        SleepDetailsPageParams? params;
+        if (arguments is SleepDetailsPageParams) {
+          params = arguments;
+        }
+
+        return SleepDetailsPage(
+          params: params,
+        );
     }
   }
 

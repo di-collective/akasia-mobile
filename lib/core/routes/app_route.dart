@@ -32,4 +32,5 @@ enum AppRoute {
   allStepsData,
   sleep,
   allSleepData,
+  sleepDetails,
 }

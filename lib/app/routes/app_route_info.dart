@@ -82,7 +82,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
           ),
           AppRoute.sleep.route(
             routes: [
-              AppRoute.allSleepData.route(),
+              AppRoute.allSleepData.route(
+                routes: [
+                  AppRoute.sleepDetails.route(),
+                ],
+              ),
             ],
           ),
         ],

@@ -381,5 +381,6 @@
   "showAllData": "Show All Data",
   "dataSourceAndAccess": "Data Source & Access",
   "options": "Options",
-  "allData": "All Data"
+  "allData": "All Data",
+  "inBedIntervals": "In Bed Intervals"
 }

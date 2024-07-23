@@ -53,37 +53,30 @@ class _AllStepsDataPageState extends State<AllStepsDataPage> {
               return const StateEmptyWidget();
             }
 
-            return Container(
-              margin: EdgeInsets.symmetric(
+            return ListView.separated(
+              itemCount: steps.length,
+              primary: false,
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(
                 horizontal: context.paddingHorizontal,
                 vertical: 16,
               ),
-              decoration: BoxDecoration(
-                color: colorScheme.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ListView.separated(
-                itemCount: steps.length,
-                primary: false,
-                shrinkWrap: true,
-                reverse: true,
-                separatorBuilder: (context, index) {
-                  return const Divider();
-                },
-                itemBuilder: (context, index) {
-                  final step = steps[index];
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+              itemBuilder: (context, index) {
+                final step = steps[index];
 
-                  return ActivityItemWidget(
-                    isLast: index == 0,
-                    isFirst: index == steps.length - 1,
-                    title: step.date?.formatDate(
-                          format: 'dd MMMM yyyy',
-                        ) ??
-                        '',
-                    value: "${step.count ?? 0} ${context.locale.stepsUnit}",
-                  );
-                },
-              ),
+                return ActivityItemWidget(
+                  isFirst: index == 0,
+                  isLast: index == steps.length - 1,
+                  title: step.date?.formatDate(
+                        format: 'dd MMMM yyyy',
+                      ) ??
+                      '',
+                  value: "${step.count ?? 0} ${context.locale.stepsUnit}",
+                );
+              },
             );
           } else if (state is StepsError) {
             return StateErrorWidget(

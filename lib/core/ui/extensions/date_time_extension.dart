@@ -19,6 +19,10 @@ extension DateTimeExtension on DateTime {
       if (locale != null) {
         initializeDateFormatting();
 
+        if (format != null) {
+          return DateFormat(format, locale).format(this);
+        }
+
         // final String dayName = DateFormat('EEEE', locale).format(this);
         late String dayName;
         if (isShortDay == true) {
@@ -89,11 +93,14 @@ extension DateTimeExtension on DateTime {
 
   String formmatDateRange({
     required DateTime? endDate,
+    String? formatStartDate,
+    String? formatEndDate,
   }) {
-    final startDate = formatDate(format: 'dd') ?? '';
-    final endDateFormatted = endDate?.formatDate(format: 'dd MMM yyyy') ?? '';
+    final startDate = formatDate(format: formatStartDate ?? 'dd') ?? '';
+    final endDateFormatted =
+        endDate?.formatDate(format: formatEndDate ?? 'dd MMM yyyy') ?? '';
 
-    return '$startDate - $endDateFormatted';
+    return '$startDate-$endDateFormatted';
   }
 
   DateTime get firstDayOfTheWeek {
