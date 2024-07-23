@@ -48,7 +48,7 @@ class _AllStepsDataPageState extends State<AllStepsDataPage> {
       body: BlocBuilder<StepsCubit, StepsState>(
         builder: (context, state) {
           if (state is StepsLoaded) {
-            final steps = state.steps?.data;
+            final steps = state.steps?.data?.reversed.toList();
             if (steps == null || steps.isEmpty) {
               return const StateEmptyWidget();
             }

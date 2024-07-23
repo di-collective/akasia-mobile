@@ -59,7 +59,7 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
             }
 
             Map<DateTime, List<SleepActivityEntity>> sortedSleeps = {};
-            for (int i = 0; i < sleeps.length; i++) {
+            for (int i = sleeps.length - 1; i > 0; i--) {
               final sleep = sleeps[i];
 
               final fromDate = sleep.fromDate;
