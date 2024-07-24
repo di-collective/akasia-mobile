@@ -365,6 +365,7 @@
   "steps": "Steps",
   "stepsUnit": "steps",
   "heartRate": "Heart Rate",
+  "heartRateUnit": "BPM",
   "nutritions": "Nutritions",
   "workouts": "Workouts",
   "sleep": "Sleep",
@@ -382,5 +383,7 @@
   "dataSourceAndAccess": "Data Source & Access",
   "options": "Options",
   "allData": "All Data",
-  "inBedIntervals": "In Bed Intervals"
+  "inBedIntervals": "In Bed Intervals",
+  "range": "Range",
+  "beatsPerMinute": "Beats per minute"
 }

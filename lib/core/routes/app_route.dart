@@ -33,4 +33,7 @@ enum AppRoute {
   sleep,
   allSleepData,
   sleepDetails,
+  heartRate,
+  allHeartRateData,
+  heartRateDetails,
 }

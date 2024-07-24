@@ -45,6 +45,28 @@ final class HeartRateLoaded extends HeartRateState {
     return result;
   }
 
+  Map<DateTime, List<HeartRateActivityEntity>> getCurrentWeekData() {
+    final Map<DateTime, List<HeartRateActivityEntity>> result = {};
+    final allData = heartRate?.data ?? [];
+
+    final currentDate = DateTime.now().firstHourOfDay;
+    final firstDate = currentDate.firstDayOfTheWeek;
+    // get date from first day of the week
+    for (int i = 0; i < DateTime.daysPerWeek; i++) {
+      final date = firstDate.addDays(i);
+
+      final data = allData.where((element) {
+        return element.fromDate?.isSameDay(other: date) ?? false;
+      });
+
+      result.addAll({
+        date: data.toList(),
+      });
+    }
+
+    return result;
+  }
+
   @override
   List<Object?> get props => [heartRate];
 }

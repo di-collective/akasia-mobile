@@ -92,11 +92,6 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         ),
         BlocBuilder<HeartRateCubit, HeartRateState>(
           builder: (context, state) {
-            // List<double> data = [];
-            // if (state is HeartRateLoaded) {
-            //   // data = state.data;
-            // }
-
             ActivityEntity<List<HeartRateActivityEntity>>? heartRate;
             List<HeartRateActivityEntity>? data = [];
             DateTime? updatedAt;
@@ -118,7 +113,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               iconPath: AssetIconsPath.icHeartRate,
               activity: context.locale.heartRate,
               value: currentHeartRate,
-              unit: "bpm",
+              unit: context.locale.heartRateUnit,
               unitIconPath: AssetIconsPath.icLove,
               time: updatedAt?.hourMinute ?? "",
               isInitial: state is HeartRateInitial,
@@ -127,6 +122,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               data: data?.map((e) {
                 return e.value?.toDouble() ?? 0;
               }).toList(),
+              onTap: _onHeartRate,
             );
           },
         ),
@@ -331,5 +327,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   void _onTapSleep() {
     // go to sleep page
     context.goNamed(AppRoute.sleep.name);
+  }
+
+  void _onHeartRate() {
+    // go to heart rate page
+    context.goNamed(AppRoute.heartRate.name);
   }
 }

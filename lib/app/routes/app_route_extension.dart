@@ -1,4 +1,3 @@
-import 'package:akasia365mc/features/health/presentation/pages/sleep_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,8 +23,12 @@ import '../../features/diet_plan/presentation/pages/diet_plan_calendar_page.dart
 import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
+import '../../features/health/presentation/pages/all_heart_rate_data_page.dart';
 import '../../features/health/presentation/pages/all_sleep_data_page.dart';
 import '../../features/health/presentation/pages/all_steps_data_page.dart';
+import '../../features/health/presentation/pages/heart_rate_details_page.dart';
+import '../../features/health/presentation/pages/heart_rate_page.dart';
+import '../../features/health/presentation/pages/sleep_details_page.dart';
 import '../../features/health/presentation/pages/sleep_page.dart';
 import '../../features/health/presentation/pages/steps_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
@@ -108,6 +111,12 @@ extension AppRouteExtension on AppRoute {
         return 'all-sleep-data';
       case AppRoute.sleepDetails:
         return 'sleep-details';
+      case AppRoute.heartRate:
+        return 'heart-rate';
+      case AppRoute.allHeartRateData:
+        return 'all-heart-rate-data';
+      case AppRoute.heartRateDetails:
+        return 'heart-rate-details';
     }
   }
 
@@ -258,6 +267,19 @@ extension AppRouteExtension on AppRoute {
         }
 
         return SleepDetailsPage(
+          params: params,
+        );
+      case AppRoute.heartRate:
+        return const HeartRatePage();
+      case AppRoute.allHeartRateData:
+        return const AllHeartRateDataPage();
+      case AppRoute.heartRateDetails:
+        HeartRateDetailsPageParams? params;
+        if (arguments is HeartRateDetailsPageParams) {
+          params = arguments;
+        }
+
+        return HeartRateDetailsPage(
           params: params,
         );
     }

@@ -98,6 +98,13 @@ class _StepsPageState extends State<StepsPage> {
                     locale: AppLocale.id.locale.countryCode,
                   ),
                   barGroups: barGroups,
+                  tooltipTextValue: (group, groupIndex, rod, rodInde) {
+                    final toY = rod.toY.toInt();
+
+                    return toY.formatNumber(
+                      locale: AppLocale.id.locale.countryCode,
+                    );
+                  },
                 );
               },
             ),

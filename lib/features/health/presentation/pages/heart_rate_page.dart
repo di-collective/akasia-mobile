@@ -1,26 +1,26 @@
-import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../cubit/sleep/sleep_cubit.dart';
+import '../cubit/heart_rate/heart_rate_cubit.dart';
 import '../widgets/option_button_item_widget.dart';
 import '../widgets/weekly_chart_widget.dart';
 
-class SleepPage extends StatefulWidget {
-  const SleepPage({super.key});
+class HeartRatePage extends StatefulWidget {
+  const HeartRatePage({super.key});
 
   @override
-  State<SleepPage> createState() => _SleepPageState();
+  State<HeartRatePage> createState() => _HeartRatePageState();
 }
 
-class _SleepPageState extends State<SleepPage> {
+class _HeartRatePageState extends State<HeartRatePage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
@@ -29,7 +29,7 @@ class _SleepPageState extends State<SleepPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          context.locale.sleep,
+          context.locale.heartRate,
         ),
       ),
       backgroundColor: colorScheme.surfaceBright,
@@ -43,37 +43,60 @@ class _SleepPageState extends State<SleepPage> {
             const SizedBox(
               height: 32,
             ),
-            BlocBuilder<SleepCubit, SleepState>(
+            BlocBuilder<HeartRateCubit, HeartRateState>(
               builder: (context, state) {
                 final List<DateTime> dates = [];
                 final List<BarChartGroupData> barGroups = [];
-                String hours = "0";
-                String minutes = "0";
-                if (state is SleepLoaded) {
+                int? minHeartRate;
+                int? maxHeartRate;
+                if (state is HeartRateLoaded) {
                   final dataInWeek = state.getCurrentWeekData();
                   if (dataInWeek.isNotEmpty) {
-                    List<int> sleepDurationInMinutes = [];
                     for (final dayEntry in dataInWeek.entries) {
                       // add day
                       dates.add(dayEntry.key);
 
-                      // calculte sleep duration in minutes
-                      int currentDayDurationInMinutes = 0;
-                      for (final sleep in dayEntry.value) {
-                        final fromDate = sleep.fromDate;
-                        final toDate = sleep.toDate;
-                        if (fromDate != null && toDate != null) {
-                          final duration = toDate.difference(fromDate);
+                      int? currentMinHeartRate;
+                      int? currentMaxHeartRate;
 
-                          sleepDurationInMinutes.add(duration.inMinutes);
-                          currentDayDurationInMinutes += duration.inMinutes;
+                      // get min and max heart rate
+                      for (final heartRate in dayEntry.value) {
+                        final value = heartRate.value;
+                        if (value == null) {
+                          continue;
+                        }
+
+                        // min
+                        if (currentMinHeartRate == null) {
+                          currentMinHeartRate = value;
+                        } else if (value < currentMinHeartRate) {
+                          currentMinHeartRate = value;
+                        }
+
+                        // max
+                        if (currentMaxHeartRate == null) {
+                          currentMaxHeartRate = value;
+                        } else if (value > currentMaxHeartRate) {
+                          currentMaxHeartRate = value;
                         }
                       }
-                      final currentDayDuration = Duration(
-                        minutes: currentDayDurationInMinutes,
-                      );
-                      final hours = currentDayDuration.inHours.toString();
-                      final minutes = currentDayDuration.remainingMinutes;
+
+                      // set min and max heart rate for the week
+                      if (minHeartRate == null) {
+                        minHeartRate = currentMinHeartRate;
+                      } else if (currentMinHeartRate != null &&
+                          currentMinHeartRate < minHeartRate) {
+                        minHeartRate = currentMinHeartRate;
+                      }
+                      if (maxHeartRate == null) {
+                        maxHeartRate = currentMaxHeartRate;
+                      } else if (currentMaxHeartRate != null &&
+                          currentMaxHeartRate > maxHeartRate) {
+                        maxHeartRate = currentMaxHeartRate;
+                      }
+
+                      currentMinHeartRate ??= 0;
+                      currentMaxHeartRate ??= 0;
 
                       // add data to chart
                       barGroups.add(
@@ -82,28 +105,15 @@ class _SleepPageState extends State<SleepPage> {
                           groupVertically: true,
                           barRods: [
                             BarChartRodData(
-                              toY: "$hours.$minutes".toDouble(),
+                              toY: currentMaxHeartRate.toDouble(),
+                              fromY: currentMinHeartRate.toDouble(),
                               color: colorScheme.primary,
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(3),
-                              ),
+                              borderRadius: BorderRadius.circular(3),
                               width: 25,
                             ),
                           ],
                         ),
                       );
-                    }
-
-                    if (dataInWeek.isNotEmpty) {
-                      // calculate average sleep duration
-                      final sleepDurationTotalInMinutes =
-                          sleepDurationInMinutes.sum();
-                      final averageSleepDuration = Duration(
-                        minutes: sleepDurationTotalInMinutes ~/
-                            sleepDurationInMinutes.length,
-                      );
-                      hours = averageSleepDuration.inHours.toString();
-                      minutes = averageSleepDuration.remainingMinutes;
                     }
                   }
                 }
@@ -111,36 +121,32 @@ class _SleepPageState extends State<SleepPage> {
                 return WeeklyChartWidget(
                   dates: dates,
                   barGroups: barGroups,
+                  averageLabel: context.locale.range,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final toYHour = rod.toY.toInt();
-                    final toYMin = rod.toY.toString().split(".")[1];
+                    final fromY = rod.fromY.toInt();
+                    final toY = rod.toY.toInt();
                     final date = dates[group.x.toInt()];
 
                     return BarTooltipItem(
                       textAlign: TextAlign.start,
-                      toYHour.toString(),
+                      fromY.toString(),
                       textTheme.titleMedium.copyWith(
                         color: colorScheme.onSurfaceDim,
                         fontWeight: FontWeight.w700,
                       ),
                       children: [
                         TextSpan(
-                          text: 'h ',
-                          style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                          ),
-                        ),
-                        TextSpan(
-                          text: toYMin,
+                          text: "-$toY ",
                           style: textTheme.titleMedium.copyWith(
                             color: colorScheme.onSurfaceDim,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         TextSpan(
-                          text: 'min',
+                          text: context.locale.heartRateUnit,
                           style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         TextSpan(
@@ -157,45 +163,27 @@ class _SleepPageState extends State<SleepPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        hours,
+                        "$minHeartRate-$maxHeartRate",
                         style: textTheme.headlineLarge.copyWith(
                           color: colorScheme.onSurfaceDim,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 8,
-                        ),
-                        child: Text(
-                          "h",
-                          style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                          ),
+                    ],
+                  ),
+                  unitWidget: Column(
+                    children: [
+                      SvgPicture.asset(
+                        AssetIconsPath.icLove,
+                        colorFilter: ColorFilter.mode(
+                          colorScheme.error,
+                          BlendMode.srcIn,
                         ),
                       ),
                       Text(
-                        minutes,
-                        style: textTheme.headlineLarge.copyWith(
-                          color: colorScheme.onSurfaceDim,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 8,
-                        ),
-                        child: Text(
-                          "min",
-                          style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                          ),
+                        context.locale.heartRateUnit,
+                        style: textTheme.bodySmall.copyWith(
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -242,7 +230,7 @@ class _SleepPageState extends State<SleepPage> {
 
   void _onShowAllData() {
     // go to show all data page
-    context.goNamed(AppRoute.allSleepData.name);
+    context.goNamed(AppRoute.allHeartRateData.name);
   }
 
   void _onDataSourceAndAccess() {

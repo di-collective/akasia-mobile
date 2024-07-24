@@ -7,35 +7,44 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 
-class WeeklyChartWidget extends StatelessWidget {
+class WeeklyChartWidget extends StatefulWidget {
   final List<DateTime> dates;
   final String? unit;
+  final Widget? unitWidget;
   final String? averageLabel;
   final Widget? averageWidget;
   final String? average;
   final List<BarChartGroupData> barGroups;
-
-  final List<TextSpan> Function(BarChartGroupData, int, BarChartRodData, int)?
-      tooltipTextWidget;
+  final String? Function(BarChartGroupData, int, BarChartRodData, int)?
+      tooltipTextValue;
+  final BarTooltipItem? Function(BarChartGroupData, int, BarChartRodData, int)?
+      getTooltipItem;
 
   const WeeklyChartWidget({
     super.key,
     required this.dates,
     this.unit,
+    this.unitWidget,
     this.averageLabel,
     this.average,
     this.averageWidget,
     required this.barGroups,
-    this.tooltipTextWidget,
+    this.tooltipTextValue,
+    this.getTooltipItem,
   });
 
+  @override
+  State<WeeklyChartWidget> createState() => _WeeklyChartWidgetState();
+}
+
+class _WeeklyChartWidgetState extends State<WeeklyChartWidget> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
     // days
-    final days = dates.map((e) {
+    final days = widget.dates.map((e) {
       return e.formatDate(format: 'E') ?? '';
     }).toList();
 
@@ -44,8 +53,8 @@ class WeeklyChartWidget extends StatelessWidget {
     DateTime? endDate;
     String formattedDateRange = '';
     if (days.isNotEmpty) {
-      firstDate = dates.first;
-      endDate = dates.last;
+      firstDate = widget.dates.first;
+      endDate = widget.dates.last;
     }
     if (firstDate != null && endDate != null) {
       formattedDateRange = firstDate.formmatDateRange(
@@ -79,46 +88,7 @@ class WeeklyChartWidget extends StatelessWidget {
                       getTooltipColor: (_) => colorScheme.outlineBright,
                       tooltipRoundedRadius: 4,
                       tooltipPadding: const EdgeInsets.all(4),
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        final date = dates[group.x.toInt()];
-
-                        return BarTooltipItem(
-                          textAlign: TextAlign.start,
-                          rod.toY.toInt().formatNumber(
-                                locale: AppLocale.id.locale.countryCode,
-                              ),
-                          textTheme.titleMedium.copyWith(
-                            color: colorScheme.onSurfaceDim,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          children: [
-                            if (tooltipTextWidget != null) ...[
-                              ...tooltipTextWidget!(
-                                group,
-                                groupIndex,
-                                rod,
-                                rodIndex,
-                              ),
-                            ] else ...[
-                              TextSpan(
-                                text: ' $unit',
-                                style: textTheme.bodySmall.copyWith(
-                                  color: colorScheme.onSurface,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    '\n${date.formatDate(format: 'dd MMM yyyy')}',
-                                style: textTheme.bodySmall.copyWith(
-                                  color: colorScheme.onSurface,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ],
-                        );
-                      },
+                      getTooltipItem: _getTooltipItem,
                     ),
                   ),
                   titlesData: FlTitlesData(
@@ -198,7 +168,7 @@ class WeeklyChartWidget extends StatelessWidget {
                       );
                     },
                   ),
-                  barGroups: barGroups,
+                  barGroups: widget.barGroups,
                 ),
               ),
             ),
@@ -214,7 +184,7 @@ class WeeklyChartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  averageLabel ?? context.locale.average,
+                  widget.averageLabel ?? context.locale.average,
                   style: textTheme.bodyMedium.copyWith(
                     color: colorScheme.onSurfaceBright,
                   ),
@@ -222,36 +192,31 @@ class WeeklyChartWidget extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                if (averageWidget != null) ...[
-                  averageWidget!,
-                ] else if (average != null) ...[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    if (widget.averageWidget != null) ...[
+                      widget.averageWidget!,
+                    ] else if (widget.average != null) ...[
                       Text(
-                        average!,
+                        widget.average!,
                         style: textTheme.headlineLarge.copyWith(
                           color: colorScheme.onSurfaceDim,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 8,
-                        ),
-                        child: Text(
-                          unit ?? '',
-                          style: textTheme.bodySmall.copyWith(
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
                     ],
-                  ),
-                ],
+                    const SizedBox(
+                      width: 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 6,
+                      ),
+                      child: _unitWidget,
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 2,
                 ),
@@ -267,5 +232,80 @@ class WeeklyChartWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  BarTooltipItem? _getTooltipItem(
+    BarChartGroupData group,
+    int groupIndex,
+    BarChartRodData rod,
+    int rodIndex,
+  ) {
+    if (widget.getTooltipItem != null) {
+      return widget.getTooltipItem!(
+        group,
+        groupIndex,
+        rod,
+        rodIndex,
+      );
+    }
+
+    if (widget.tooltipTextValue != null) {
+      final textTheme = context.theme.appTextTheme;
+      final colorScheme = context.theme.appColorScheme;
+
+      final date = widget.dates[group.x.toInt()];
+
+      return BarTooltipItem(
+        textAlign: TextAlign.start,
+        widget.tooltipTextValue!(
+          group,
+          groupIndex,
+          rod,
+          rodIndex,
+        )!,
+        textTheme.titleMedium.copyWith(
+          color: colorScheme.onSurfaceDim,
+          fontWeight: FontWeight.w700,
+        ),
+        children: [
+          TextSpan(
+            text: ' ${widget.unit}',
+            style: textTheme.bodySmall.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          TextSpan(
+            text: '\n${date.formatDate(format: 'dd MMM yyyy')}',
+            style: textTheme.bodySmall.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return null;
+  }
+
+  Widget? get _unitWidget {
+    if (widget.unitWidget != null) {
+      return widget.unitWidget!;
+    }
+
+    if (widget.unit != null) {
+      final textTheme = context.theme.appTextTheme;
+      final colorScheme = context.theme.appColorScheme;
+
+      return Text(
+        widget.unit ?? '',
+        style: textTheme.bodySmall.copyWith(
+          color: colorScheme.onSurface,
+        ),
+      );
+    }
+
+    return null;
   }
 }

@@ -89,6 +89,15 @@ class AppRouteInfoImpl implements AppRouteInfo {
               ),
             ],
           ),
+          AppRoute.heartRate.route(
+            routes: [
+              AppRoute.allHeartRateData.route(
+                routes: [
+                  AppRoute.heartRateDetails.route(),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),
