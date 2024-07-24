@@ -14,6 +14,10 @@ abstract class HealthService {
     required DateTime startTime,
     required DateTime endTime,
   });
+  Future<List<HealthDataPoint>> getHearRate({
+    required DateTime startTime,
+    required DateTime endTime,
+  });
 }
 
 class HealthServiceImpl implements HealthService {
@@ -131,6 +135,31 @@ class HealthServiceImpl implements HealthService {
       return result;
     } catch (error) {
       Logger.error('getSleepSessions error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HealthDataPoint>> getHearRate({
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    try {
+      Logger.info('getHearRate startTime: $startTime, endTime: $endTime');
+
+      final result = await health.getHealthDataFromTypes(
+        types: [
+          HealthDataType.HEART_RATE,
+        ],
+        startTime: startTime,
+        endTime: endTime,
+      );
+      Logger.success('getHearRate result: $result');
+
+      return result;
+    } catch (error) {
+      Logger.error('getHearRate error: $error');
 
       rethrow;
     }

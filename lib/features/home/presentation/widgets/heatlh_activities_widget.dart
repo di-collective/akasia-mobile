@@ -11,11 +11,12 @@ import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../health/domain/entities/activity_entity.dart';
+import '../../../health/domain/entities/heart_rate_activity_entity.dart';
 import '../../../health/domain/entities/sleep_activity_entity.dart';
 import '../../../health/domain/entities/steps_activity_entity.dart';
-import '../../../health/presentation/cubit/daily_heart_rate/daily_heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
 import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
+import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import 'activity_item_widget.dart';
@@ -89,24 +90,43 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         const SizedBox(
           height: 10,
         ),
-        BlocBuilder<DailyHeartRateCubit, DailyHeartRateState>(
+        BlocBuilder<HeartRateCubit, HeartRateState>(
           builder: (context, state) {
-            List<double> data = [];
-            if (state is DailyHeartRateLoaded) {
-              data = state.data;
+            // List<double> data = [];
+            // if (state is HeartRateLoaded) {
+            //   // data = state.data;
+            // }
+
+            ActivityEntity<List<HeartRateActivityEntity>>? heartRate;
+            List<HeartRateActivityEntity>? data = [];
+            DateTime? updatedAt;
+            String currentHeartRate = "0";
+            if (state is HeartRateLoaded) {
+              heartRate = state.heartRate;
+              data = state.getLastSevenData();
+              updatedAt = heartRate?.updatedAt;
+
+              if (data != null && data.isNotEmpty) {
+                final value = data.last.value;
+                if (value != null) {
+                  currentHeartRate = value.toString();
+                }
+              }
             }
 
             return ActivityWidget(
               iconPath: AssetIconsPath.icHeartRate,
               activity: context.locale.heartRate,
-              value: "68",
+              value: currentHeartRate,
               unit: "bpm",
               unitIconPath: AssetIconsPath.icLove,
-              time: "12:00",
-              isInitial: state is DailyHeartRateInitial,
-              isLoading: state is DailyHeartRateLoading,
-              isError: state is DailyHeartRateError,
-              data: data,
+              time: updatedAt?.hourMinute ?? "",
+              isInitial: state is HeartRateInitial,
+              isLoading: state is HeartRateLoading,
+              isError: state is HeartRateError,
+              data: data?.map((e) {
+                return e.value?.toDouble() ?? 0;
+              }).toList(),
             );
           },
         ),
@@ -283,7 +303,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   //     BlocProvider.of<StepsCubit>(context).getStepsInOneWeek();
 
   //     // get daily heart rate
-  //     BlocProvider.of<DailyHeartRateCubit>(context).getDailyHeartRate();
+  //     BlocProvider.of<HeartRateCubit>(context).getHeartRateInOneWeek();
 
   //     // get daily nutritions
   //     BlocProvider.of<DailyNutritionsCubit>(context).getDailyNutritions();

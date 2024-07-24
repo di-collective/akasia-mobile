@@ -55,6 +55,8 @@ class SleepCubit extends Cubit<SleepState> {
           error: error,
         ));
       }
+
+      rethrow;
     }
   }
 

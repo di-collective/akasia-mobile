@@ -2,8 +2,10 @@ import 'package:hive/hive.dart';
 
 import '../../../../core/services/health_service.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/dynamic_extension.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/activity_entity.dart';
+import '../../domain/entities/heart_rate_activity_entity.dart';
 import '../../domain/entities/sleep_activity_entity.dart';
 import '../../domain/entities/steps_activity_entity.dart';
 
@@ -13,6 +15,10 @@ abstract class HealthLocalDataSource {
     DateTime? endDate,
   });
   Future<ActivityEntity<List<SleepActivityEntity>>?> getSleep({
+    DateTime? startDate,
+    DateTime? endDate,
+  });
+  Future<ActivityEntity<List<HeartRateActivityEntity>>?> getHeartRate({
     DateTime? startDate,
     DateTime? endDate,
   });
@@ -370,6 +376,197 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       );
     } catch (error) {
       Logger.error('getSleep error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ActivityEntity<List<HeartRateActivityEntity>>?> getHeartRate({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Logger.info('getHeartRate startDate: $startDate, endDate: $endDate');
+
+      final currentDate = DateTime.now();
+
+      // clear all data
+      // await activityBox.delete('heart_rate');
+
+      final ActivityEntity<List<HeartRateActivityEntity>>?
+          currentHeartRateData = activityBox.get('heart_rate');
+      Logger.success(
+          'getHeartRate currentHeartRateData: $currentHeartRateData');
+
+      DateTime? lastUpdatedAtData = currentHeartRateData?.updatedAt;
+      DateTime? createdAt = currentHeartRateData?.createdAt;
+      List<HeartRateActivityEntity>? heartRates = currentHeartRateData?.data;
+      if (lastUpdatedAtData == null) {
+        // assume user first time access and heartRates is null
+        // get for 30 days
+        for (int i = _maxRangeDaysQuery; i >= 0; i--) {
+          final nextDate = currentDate.add(Duration(days: -i));
+          final newHeartRateData = await healthService.getHearRate(
+            startTime: nextDate.firstHourOfDay,
+            endTime: nextDate.lastHourOfDay,
+          );
+
+          final List<HeartRateActivityEntity> newHeartRateActivity = [];
+          for (final data in newHeartRateData) {
+            newHeartRateActivity.add(
+              HeartRateActivityEntity(
+                fromDate: data.dateFrom,
+                toDate: data.dateTo,
+                value: data.value.dynamicToInt,
+              ),
+            );
+          }
+
+          // add new data to last data
+          heartRates = [
+            ...heartRates ?? [],
+            ...newHeartRateActivity,
+          ];
+        }
+
+        createdAt = currentDate;
+      } else {
+        final difference = currentDate.difference(lastUpdatedAtData);
+        Logger.info('getHeartRate difference: $difference');
+
+        if (difference > _refreshInterval) {
+          // if last updated is more than _refreshInterval, get new data from health service
+          // get different in days
+          final diffInDays = currentDate.day - lastUpdatedAtData.day;
+          Logger.info('getHeartRate diffInDays: $diffInDays');
+          if (diffInDays > 0) {
+            // if diffInDays is more than 0, get data per day
+            for (int i = 0; i <= diffInDays; i++) {
+              if (i == 0) {
+                // if i is 0, get data from lastUpdatedAtData to last hour of day
+                final newHeartRateData = await healthService.getHearRate(
+                  startTime: lastUpdatedAtData,
+                  endTime: lastUpdatedAtData.lastHourOfDay,
+                );
+
+                final List<HeartRateActivityEntity> newHeartRateActivity = [];
+                for (final data in newHeartRateData) {
+                  newHeartRateActivity.add(
+                    HeartRateActivityEntity(
+                      fromDate: data.dateFrom,
+                      toDate: data.dateTo,
+                      value: data.value.dynamicToInt,
+                    ),
+                  );
+                }
+
+                // add new data to last data
+                heartRates = [
+                  ...heartRates ?? [],
+                  ...newHeartRateActivity,
+                ];
+
+                continue;
+              }
+
+              // get data per day
+              final nextDate = lastUpdatedAtData.add(Duration(days: i));
+              final newHeartRateData = await healthService.getHearRate(
+                startTime: nextDate.firstHourOfDay,
+                endTime: nextDate.lastHourOfDay,
+              );
+
+              final List<HeartRateActivityEntity> newHeartRateActivity = [];
+              for (final data in newHeartRateData) {
+                newHeartRateActivity.add(
+                  HeartRateActivityEntity(
+                    fromDate: data.dateFrom,
+                    toDate: data.dateTo,
+                    value: data.value.dynamicToInt,
+                  ),
+                );
+              }
+
+              heartRates = [
+                ...heartRates ?? [],
+                ...newHeartRateActivity,
+              ];
+            }
+          } else {
+            // if diffInDays is 0, get data from first hour of currentDate to currentDate
+            final newHeartRateData = await healthService.getHearRate(
+              startTime: lastUpdatedAtData,
+              endTime: currentDate,
+            );
+
+            final List<HeartRateActivityEntity> newHeartRateActivity = [];
+            for (final data in newHeartRateData) {
+              newHeartRateActivity.add(
+                HeartRateActivityEntity(
+                  fromDate: data.dateFrom,
+                  toDate: data.dateTo,
+                  value: data.value.dynamicToInt,
+                ),
+              );
+            }
+
+            // add new data to last data
+            heartRates = [
+              ...heartRates ?? [],
+              ...newHeartRateActivity,
+            ];
+          }
+        }
+      }
+
+      // update local database
+      activityBox.put(
+        'heart_rate',
+        ActivityEntity<List<HeartRateActivityEntity>>(
+          updatedAt: currentDate,
+          data: heartRates,
+          createdAt: createdAt,
+        ),
+      );
+
+      List<HeartRateActivityEntity>? result = List.from(heartRates ?? []);
+      // if startDate is not null, filter data from startDate to currentDate
+      if (startDate != null) {
+        result = heartRates?.where((e) {
+          return e.fromDate?.isAfter(startDate.addDays(-1)) ?? false;
+        }).toList();
+      }
+
+      // if endDate is not null, filter data until endDate
+      if (endDate != null) {
+        List<HeartRateActivityEntity>? filtered;
+        if (startDate != null) {
+          filtered = result;
+        } else {
+          filtered = heartRates;
+        }
+
+        result = filtered?.where((e) {
+          return e.fromDate?.isBefore(endDate.addDays(1)) ?? false;
+        }).toList();
+      }
+
+      Logger.success('getHeartRate result: $result');
+
+      return ActivityEntity(
+        data: result?.map((e) {
+          return HeartRateActivityEntity(
+            fromDate: e.fromDate,
+            toDate: e.toDate,
+            value: e.value,
+          );
+        }).toList(),
+        updatedAt: currentDate,
+        createdAt: createdAt,
+      );
+    } catch (error) {
+      Logger.error('getHeartRate error: $error');
 
       rethrow;
     }
