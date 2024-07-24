@@ -44,44 +44,37 @@ class _SleepPageState extends State<SleepPage> {
             ),
             BlocBuilder<SleepCubit, SleepState>(
               builder: (context, state) {
-                List<double> data = [];
-                List<DateTime> dates = [];
+                final List<DateTime> dates = [];
+                final List<BarChartGroupData> barGroups = [];
                 String hours = "0";
                 String minutes = "0";
-                List<BarChartGroupData> barGroups = [];
                 if (state is SleepLoaded) {
                   final dataInWeek = state.getCurrentWeekData();
                   if (dataInWeek.isNotEmpty) {
-                    // data = dataInWeek.map((e) {
-                    //   return e.count?.toDouble() ?? 0;
-                    // }).toList();
+                    List<int> sleepDurationInMinutes = [];
+                    for (final dayEntry in dataInWeek.entries) {
+                      // add day
+                      dates.add(dayEntry.key);
 
-                    int sleepDurationInMinutes = 0;
-
-                    dates = dataInWeek.keys.map((e) {
-                      return e;
-                    }).toList();
-
-                    for (final day in dataInWeek.values) {
+                      // calculte sleep duration in minutes
                       int currentDayDurationInMinutes = 0;
-
-                      for (final sleep in day) {
+                      for (final sleep in dayEntry.value) {
                         final fromDate = sleep.fromDate;
                         final toDate = sleep.toDate;
                         if (fromDate != null && toDate != null) {
                           final duration = toDate.difference(fromDate);
-                          sleepDurationInMinutes += duration.inMinutes;
 
+                          sleepDurationInMinutes.add(duration.inMinutes);
                           currentDayDurationInMinutes += duration.inMinutes;
                         }
                       }
-
                       final currentDayDuration = Duration(
                         minutes: currentDayDurationInMinutes,
                       );
                       final hours = currentDayDuration.inHours.toString();
                       final minutes = currentDayDuration.remainingMinutes;
 
+                      // add data to chart
                       barGroups.add(
                         BarChartGroupData(
                           x: barGroups.length,
@@ -101,8 +94,12 @@ class _SleepPageState extends State<SleepPage> {
                     }
 
                     if (dataInWeek.isNotEmpty) {
+                      // calculate average sleep duration
+                      final sleepDurationTotalInMinutes =
+                          sleepDurationInMinutes.sum();
                       final averageSleepDuration = Duration(
-                        minutes: sleepDurationInMinutes ~/ dataInWeek.length,
+                        minutes: sleepDurationTotalInMinutes ~/
+                            sleepDurationInMinutes.length,
                       );
                       hours = averageSleepDuration.inHours.toString();
                       minutes = averageSleepDuration.remainingMinutes;
@@ -112,7 +109,6 @@ class _SleepPageState extends State<SleepPage> {
 
                 return WeeklyChartWidget(
                   dates: dates,
-                  dataInWeek: data,
                   barGroups: barGroups,
                   tooltipTextWidget: (group, groupIndex, rod, rodIndex) {
                     return [
@@ -184,19 +180,6 @@ class _SleepPageState extends State<SleepPage> {
                       ),
                     ],
                   ),
-                  getTitlesWidget: (value, meta) {
-                    return SideTitleWidget(
-                      axisSide: meta.axisSide,
-                      space: 2,
-                      child: Text(
-                        value.toString(),
-                        style: textTheme.labelSmall.copyWith(
-                          color: colorScheme.onSurfaceBright,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    );
-                  },
                 );
               },
             ),

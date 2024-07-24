@@ -69,7 +69,7 @@ final class StepsLoaded extends StepsState {
       } else {
         result.add(StepsActivityEntity(
           date: date,
-          count: 0,
+          count: null,
         ));
       }
     }

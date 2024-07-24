@@ -9,12 +9,12 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 
 class WeeklyChartWidget extends StatelessWidget {
   final List<DateTime> dates;
-  final List<double> dataInWeek;
   final String? unit;
-  final String? averageText;
+  final String? averageLabel;
   final Widget? averageWidget;
+  final String? average;
   final List<BarChartGroupData> barGroups;
-  final Widget Function(double, TitleMeta) getTitlesWidget;
+
   final List<TextSpan> Function(BarChartGroupData, int, BarChartRodData, int)?
       tooltipTextWidget;
 
@@ -22,11 +22,10 @@ class WeeklyChartWidget extends StatelessWidget {
     super.key,
     required this.dates,
     this.unit,
-    required this.dataInWeek,
-    this.averageText,
+    this.averageLabel,
+    this.average,
     this.averageWidget,
     required this.barGroups,
-    required this.getTitlesWidget,
     this.tooltipTextWidget,
   });
 
@@ -39,18 +38,6 @@ class WeeklyChartWidget extends StatelessWidget {
     final days = dates.map((e) {
       return e.formatDate(format: 'E') ?? '';
     }).toList();
-
-    // average
-    final total = dataInWeek.fold<double>(
-      0,
-      (previousValue, element) {
-        return previousValue + element;
-      },
-    );
-    int average = 0;
-    if (dataInWeek.isNotEmpty) {
-      average = total ~/ dataInWeek.length;
-    }
 
     // date range
     DateTime? firstDate;
@@ -76,6 +63,7 @@ class WeeklyChartWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
             aspectRatio: 1,
@@ -170,7 +158,21 @@ class WeeklyChartWidget extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 35,
-                        getTitlesWidget: getTitlesWidget,
+                        getTitlesWidget: (value, meta) {
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            space: 2,
+                            child: Text(
+                              value.toInt().formatNumber(
+                                    locale: AppLocale.id.locale.countryCode,
+                                  ),
+                              style: textTheme.labelSmall.copyWith(
+                                color: colorScheme.onSurfaceBright,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -212,7 +214,7 @@ class WeeklyChartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  averageText ?? context.locale.average,
+                  averageLabel ?? context.locale.average,
                   style: textTheme.bodyMedium.copyWith(
                     color: colorScheme.onSurfaceBright,
                   ),
@@ -222,14 +224,12 @@ class WeeklyChartWidget extends StatelessWidget {
                 ),
                 if (averageWidget != null) ...[
                   averageWidget!,
-                ] else ...[
+                ] else if (average != null) ...[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        average.formatNumber(
-                          locale: AppLocale.id.locale.countryCode,
-                        ),
+                        average!,
                         style: textTheme.headlineLarge.copyWith(
                           color: colorScheme.onSurfaceDim,
                           fontWeight: FontWeight.w700,

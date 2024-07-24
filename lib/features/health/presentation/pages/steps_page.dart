@@ -1,13 +1,13 @@
-import '../../../../core/ui/extensions/app_locale_extension.dart';
-import '../../../../core/ui/extensions/double_extension.dart';
-import '../../../../core/ui/extensions/int_extension.dart';
+import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routes/app_route.dart';
+import '../../../../core/ui/extensions/app_locale_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../cubit/steps/steps_cubit.dart';
 import '../widgets/option_button_item_widget.dart';
@@ -45,71 +45,59 @@ class _StepsPageState extends State<StepsPage> {
             ),
             BlocBuilder<StepsCubit, StepsState>(
               builder: (context, state) {
-                List<double> data = [];
-                List<DateTime> dates = [];
+                final List<DateTime> dates = [];
+                final List<BarChartGroupData> barGroups = [];
+                int average = 0;
                 if (state is StepsLoaded) {
                   final dataInWeek = state.getCurrentWeekData();
                   if (dataInWeek != null && dataInWeek.isNotEmpty) {
-                    data = dataInWeek.map((e) {
-                      return e.count?.toDouble() ?? 0;
-                    }).toList();
+                    List<int> stepsTotal = [];
+                    for (final value in dataInWeek) {
+                      final date = value.date;
+                      final count = value.count;
 
-                    dates = dataInWeek.map((e) {
-                      return e.date ?? DateTime.now();
-                    }).toList();
+                      // add date
+                      dates.add(date ?? DateTime.now());
+
+                      // add data to chart
+                      barGroups.add(
+                        BarChartGroupData(
+                          x: barGroups.length,
+                          groupVertically: true,
+                          barRods: [
+                            BarChartRodData(
+                              toY: (count ?? 0).toDouble(),
+                              color: colorScheme.primary,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(3),
+                              ),
+                              width: 25,
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (count != null) {
+                        // add for counting average
+                        stepsTotal.add(count);
+                      }
+                    }
+
+                    // calculate average
+                    final total = stepsTotal.sum();
+                    if (dataInWeek.isNotEmpty) {
+                      average = total ~/ stepsTotal.length;
+                    }
                   }
                 }
 
                 return WeeklyChartWidget(
                   dates: dates,
-                  dataInWeek: data,
                   unit: context.locale.stepsUnit,
-                  barGroups: List.generate(
-                    data.length,
-                    (index) {
-                      final x = index;
-                      final y = data[index];
-
-                      return BarChartGroupData(
-                        x: x,
-                        barRods: [
-                          BarChartRodData(
-                            toY: y,
-                            color: colorScheme.primary,
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(3),
-                            ),
-                            width: 25,
-                          ),
-                        ],
-                      );
-                    },
+                  average: average.formatNumber(
+                    locale: AppLocale.id.locale.countryCode,
                   ),
-                  getTitlesWidget: (value, meta) {
-                    final isFirst = value.isSame(otherValue: meta.min);
-                    final lastDay = data.isNotEmpty ? data.last : null;
-                    final isMiddle = value ==
-                        (lastDay != null ? lastDay / 2 : 0); // TODO: Fix this
-                    final isLast = value.isSame(otherValue: meta.max);
-
-                    if (isFirst || isMiddle || isLast) {
-                      return SideTitleWidget(
-                        axisSide: meta.axisSide,
-                        space: 2,
-                        child: Text(
-                          value.toInt().formatNumber(
-                                locale: AppLocale.id.locale.countryCode,
-                              ),
-                          style: textTheme.labelSmall.copyWith(
-                            color: colorScheme.onSurfaceBright,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      );
-                    }
-
-                    return const SizedBox.shrink();
-                  },
+                  barGroups: barGroups,
                 );
               },
             ),
