@@ -199,7 +199,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   void _onShowAllData() {
     // go to show all data page
-    context.goNamed(AppRoute.allSleepData.name);
+    context.goNamed(AppRoute.allWorkoutData.name);
   }
 
   void _onDataSourceAndAccess() {

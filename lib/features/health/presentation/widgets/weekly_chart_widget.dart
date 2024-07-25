@@ -59,7 +59,7 @@ class _WeeklyChartWidgetState extends State<WeeklyChartWidget> {
       endDate = widget.dates.last;
     }
     if (firstDate != null && endDate != null) {
-      formattedDateRange = firstDate.formmatDateRange(
+      formattedDateRange = firstDate.formatDateRange(
         endDate: endDate,
       );
     }

@@ -91,7 +91,7 @@ extension DateTimeExtension on DateTime {
     return year == other?.year && month == other?.month && day == other?.day;
   }
 
-  String formmatDateRange({
+  String formatDateRange({
     required DateTime? endDate,
     String? formatStartDate,
     String? formatEndDate,

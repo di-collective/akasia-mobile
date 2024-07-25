@@ -10,20 +10,20 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
-import '../../domain/entities/sleep_activity_entity.dart';
-import '../cubit/sleep/sleep_cubit.dart';
+import '../../domain/entities/workout_activity_entity.dart';
+import '../cubit/workout/workout_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
 import 'sleep_details_page.dart';
 
-class AllSleepDataPage extends StatefulWidget {
-  const AllSleepDataPage({super.key});
+class AllWorkoutDataPage extends StatefulWidget {
+  const AllWorkoutDataPage({super.key});
 
   @override
-  State<AllSleepDataPage> createState() => _AllSleepDataPageState();
+  State<AllWorkoutDataPage> createState() => _AllWorkoutDataPageState();
 }
 
-class _AllSleepDataPageState extends State<AllSleepDataPage> {
+class _AllWorkoutDataPageState extends State<AllWorkoutDataPage> {
   @override
   void initState() {
     super.initState();
@@ -32,11 +32,11 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
   }
 
   void _init() {
-    _onGetSleepsAll();
+    _onGetWorkoutAll();
   }
 
-  Future<void> _onGetSleepsAll() async {
-    await BlocProvider.of<SleepCubit>(context).getSleepAll();
+  Future<void> _onGetWorkoutAll() async {
+    await BlocProvider.of<WorkoutCubit>(context).getWorkoutAll();
   }
 
   @override
@@ -50,24 +50,24 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
         ),
       ),
       backgroundColor: colorScheme.surfaceBright,
-      body: BlocBuilder<SleepCubit, SleepState>(
+      body: BlocBuilder<WorkoutCubit, WorkoutState>(
         builder: (context, state) {
-          if (state is SleepLoaded) {
-            final sleeps = state.sleep?.data;
-            if (sleeps == null || sleeps.isEmpty) {
+          if (state is WorkoutLoaded) {
+            final workout = state.workout?.data;
+            if (workout == null || workout.isEmpty) {
               return const StateEmptyWidget();
             }
 
-            Map<DateTime, List<SleepActivityEntity>> sortedSleeps = {};
-            for (int i = sleeps.length - 1; i > 0; i--) {
-              final sleep = sleeps[i];
+            Map<DateTime, List<WorkoutActivityEntity>> sortedSleeps = {};
+            for (int i = workout.length - 1; i > 0; i--) {
+              final sleep = workout[i];
 
               final fromDate = sleep.fromDate;
               if (fromDate == null) {
                 continue;
               }
 
-              final data = sleeps.where((element) {
+              final data = workout.where((element) {
                 return element.fromDate?.isSameDay(other: fromDate) ?? false;
               });
 
@@ -88,15 +88,13 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
                 return const Divider();
               },
               itemBuilder: (context, index) {
-                final sleep = sortedSleeps.entries.toList()[index];
+                final workout = sortedSleeps.entries.toList()[index];
 
                 // date range
                 DateTime? fromDate;
                 DateTime? toDate;
-                String formattedDateRange = '';
                 Duration totalDuration = const Duration();
-
-                for (final item in sleep.value) {
+                for (final item in workout.value) {
                   final currentFromDate = item.fromDate;
                   final currentToDate = item.toDate;
                   if (currentFromDate == null || currentToDate == null) {
@@ -116,35 +114,30 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
                   totalDuration += duration;
                 }
 
+                final formattedFromDate = fromDate?.formatDate(
+                  format: "dd MMM yyyy",
+                );
                 final formattedTotalDuration =
-                    "${totalDuration.inHours}hrs ${totalDuration.remainingMinutes}min";
-
-                if (fromDate != null && toDate != null) {
-                  formattedDateRange = fromDate.formatDateRange(
-                    endDate: toDate,
-                    formatEndDate: 'dd MMM',
-                  );
-                }
+                    "${totalDuration.inMinutes}m ${totalDuration.remainingSeconds}s";
 
                 return ActivityItemWidget(
                   isFirst: index == 0,
                   isLast: index == sortedSleeps.keys.length - 1,
-                  title: formattedDateRange,
-                  value:
-                      "${sleep.value.length} interval ($formattedTotalDuration)",
+                  title: formattedFromDate ?? "",
+                  value: formattedTotalDuration,
                   onTap: () {
-                    _onSleep(
-                      params: SleepDetailsPageParams(
-                        sleeps: sleep.value,
-                        formattedDateRange: formattedDateRange,
-                        totalDuration: totalDuration,
-                      ),
-                    );
+                    // _onWorkout(
+                    //   params: SleepDetailsPageParams(
+                    //     sleeps: sleep.value,
+                    //     formattedDateRange: formattedDateRange,
+                    //     totalDuration: totalDuration,
+                    //   ),
+                    // );
                   },
                 );
               },
             );
-          } else if (state is SleepError) {
+          } else if (state is WorkoutError) {
             return StateErrorWidget(
               description: state.error.message(context),
             );
@@ -163,7 +156,7 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
     );
   }
 
-  void _onSleep({
+  void _onWorkout({
     required SleepDetailsPageParams params,
   }) {
     context.goNamed(
