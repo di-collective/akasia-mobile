@@ -14,6 +14,7 @@ class WeeklyChartWidget extends StatefulWidget {
   final String? averageLabel;
   final Widget? averageWidget;
   final String? average;
+  final String? rightTitleUnit;
   final List<BarChartGroupData> barGroups;
   final String? Function(BarChartGroupData, int, BarChartRodData, int)?
       tooltipTextValue;
@@ -26,8 +27,9 @@ class WeeklyChartWidget extends StatefulWidget {
     this.unit,
     this.unitWidget,
     this.averageLabel,
-    this.average,
     this.averageWidget,
+    this.average,
+    this.rightTitleUnit,
     required this.barGroups,
     this.tooltipTextValue,
     this.getTooltipItem,
@@ -127,15 +129,21 @@ class _WeeklyChartWidgetState extends State<WeeklyChartWidget> {
                     rightTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 35,
+                        reservedSize: 38,
                         getTitlesWidget: (value, meta) {
+                          final valueInt = value.toInt();
+                          String formattedValue = valueInt.formatNumber(
+                            locale: AppLocale.id.locale.countryCode,
+                          );
+                          if (widget.rightTitleUnit != null) {
+                            formattedValue += ' ${widget.rightTitleUnit}';
+                          }
+
                           return SideTitleWidget(
                             axisSide: meta.axisSide,
                             space: 2,
                             child: Text(
-                              value.toInt().formatNumber(
-                                    locale: AppLocale.id.locale.countryCode,
-                                  ),
+                              formattedValue,
                               style: textTheme.labelSmall.copyWith(
                                 color: colorScheme.onSurfaceBright,
                                 fontWeight: FontWeight.w500,

@@ -31,6 +31,7 @@ import '../../features/health/presentation/pages/heart_rate_page.dart';
 import '../../features/health/presentation/pages/sleep_details_page.dart';
 import '../../features/health/presentation/pages/sleep_page.dart';
 import '../../features/health/presentation/pages/steps_page.dart';
+import '../../features/health/presentation/pages/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
@@ -117,6 +118,8 @@ extension AppRouteExtension on AppRoute {
         return 'all-heart-rate-data';
       case AppRoute.heartRateDetails:
         return 'heart-rate-details';
+      case AppRoute.workout:
+        return 'workout';
     }
   }
 
@@ -282,6 +285,8 @@ extension AppRouteExtension on AppRoute {
         return HeartRateDetailsPage(
           params: params,
         );
+      case AppRoute.workout:
+        return const WorkoutPage();
     }
   }
 

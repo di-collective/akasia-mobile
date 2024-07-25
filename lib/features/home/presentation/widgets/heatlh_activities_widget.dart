@@ -203,6 +203,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               isLoading: state is WorkoutLoading,
               isError: state is WorkoutError,
               data: data,
+              onTap: _onWorkout,
             );
           },
         ),
@@ -368,5 +369,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   void _onHeartRate() {
     // go to heart rate page
     context.goNamed(AppRoute.heartRate.name);
+  }
+
+  void _onWorkout() {
+    // go to workout page
+    context.goNamed(AppRoute.workout.name);
   }
 }

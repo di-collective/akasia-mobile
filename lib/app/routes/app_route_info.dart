@@ -98,6 +98,7 @@ class AppRouteInfoImpl implements AppRouteInfo {
               ),
             ],
           ),
+          AppRoute.workout.route(),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),
