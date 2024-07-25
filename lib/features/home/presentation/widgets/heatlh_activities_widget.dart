@@ -10,15 +10,14 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../health/domain/entities/activity_entity.dart';
 import '../../../health/domain/entities/heart_rate_activity_entity.dart';
 import '../../../health/domain/entities/sleep_activity_entity.dart';
 import '../../../health/domain/entities/steps_activity_entity.dart';
 import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
-import '../../../health/presentation/cubit/daily_workouts/daily_workouts_cubit.dart';
 import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
+import '../../../health/presentation/cubit/workout/workout_cubit.dart';
 import 'activity_item_widget.dart';
 
 class HealthActivitiesWidget extends StatefulWidget {
@@ -57,24 +56,31 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         // ),
         BlocBuilder<StepsCubit, StepsState>(
           builder: (context, state) {
-            ActivityEntity<List<StepsActivityEntity>>? steps;
             List<StepsActivityEntity>? data;
             DateTime? updatedAt;
-            int? todaySteps;
+            int currentSteps = 0;
             if (state is StepsLoaded) {
-              steps = state.steps;
-              data = state.getLastOneWeekData();
+              final steps = state.steps;
               updatedAt = steps?.updatedAt;
-              todaySteps = state.todaySteps?.count;
+
+              // get last seven data
+              data = state.getLastOneWeekData();
+
+              // get current steps
+              if (data != null && data.isNotEmpty) {
+                final value = data.last.count;
+                if (value != null) {
+                  currentSteps = value;
+                }
+              }
             }
 
             return ActivityWidget(
               iconPath: AssetIconsPath.icSteps,
               activity: context.locale.steps,
-              value: todaySteps?.formatNumber(
-                    locale: AppLocale.id.locale.countryCode,
-                  ) ??
-                  "0",
+              value: currentSteps.formatNumber(
+                locale: AppLocale.id.locale.countryCode,
+              ),
               unit: context.locale.stepsUnit,
               time: updatedAt?.hourMinute ?? "",
               isInitial: state is StepsInitial,
@@ -92,15 +98,17 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         ),
         BlocBuilder<HeartRateCubit, HeartRateState>(
           builder: (context, state) {
-            ActivityEntity<List<HeartRateActivityEntity>>? heartRate;
             List<HeartRateActivityEntity>? data = [];
             DateTime? updatedAt;
             String currentHeartRate = "0";
             if (state is HeartRateLoaded) {
-              heartRate = state.heartRate;
-              data = state.getLastSevenData();
+              final heartRate = state.heartRate;
               updatedAt = heartRate?.updatedAt;
 
+              // get last seven data
+              data = state.getLastSevenData();
+
+              // get current heart rate
               if (data != null && data.isNotEmpty) {
                 final value = data.last.value;
                 if (value != null) {
@@ -152,22 +160,48 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         const SizedBox(
           height: 10,
         ),
-        BlocBuilder<DailyWorkoutsCubit, DailyWorkoutsState>(
+        BlocBuilder<WorkoutCubit, WorkoutState>(
           builder: (context, state) {
             List<double> data = [];
-            if (state is DailyWorkoutsLoaded) {
-              data = state.data;
+            DateTime? updatedAt;
+            Duration currentWorkoutTime = const Duration();
+            if (state is WorkoutLoaded) {
+              final workout = state.workout;
+              updatedAt = workout?.updatedAt;
+
+              // get last seven data
+              final lastSevenData = state.getLastSevenData();
+
+              // get current workout time
+              if (lastSevenData.isNotEmpty) {
+                final fromDate = lastSevenData.last.fromDate;
+                final toDate = lastSevenData.last.toDate;
+
+                if (fromDate != null && toDate != null) {
+                  currentWorkoutTime = toDate.difference(fromDate);
+                }
+              }
+
+              // get data for chart
+              for (final item in lastSevenData) {
+                final fromDate = item.fromDate;
+                final toDate = item.toDate;
+
+                if (fromDate != null && toDate != null) {
+                  data.add(toDate.difference(fromDate).inMinutes.toDouble());
+                }
+              }
             }
 
             return ActivityWidget(
               iconPath: AssetIconsPath.icWorkout,
               activity: context.locale.workouts,
-              value: "30",
+              value: currentWorkoutTime.inMinutes.toString(),
               unit: "min",
-              time: "12:00",
-              isInitial: state is DailyWorkoutsInitial,
-              isLoading: state is DailyWorkoutsLoading,
-              isError: state is DailyWorkoutsError,
+              time: updatedAt?.hourMinute ?? "",
+              isInitial: state is WorkoutInitial,
+              isLoading: state is WorkoutLoading,
+              isError: state is WorkoutError,
               data: data,
             );
           },
@@ -177,16 +211,18 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         ),
         BlocBuilder<SleepCubit, SleepState>(
           builder: (context, state) {
-            ActivityEntity<List<SleepActivityEntity>>? sleep;
             List<SleepActivityEntity>? data = [];
             DateTime? updatedAt;
             String hours = "0";
             String minutes = "0";
             if (state is SleepLoaded) {
-              sleep = state.sleep;
-              data = state.getLastSevenData();
+              final sleep = state.sleep;
               updatedAt = sleep?.updatedAt;
 
+              // get last seven data
+              data = state.getLastSevenData();
+
+              // get current sleep duration
               if (data != null && data.isNotEmpty) {
                 final fromDate = data.last.fromDate;
                 final toDate = data.last.toDate;
@@ -305,7 +341,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   //     BlocProvider.of<DailyNutritionsCubit>(context).getDailyNutritions();
 
   //     // get daily workouts
-  //     BlocProvider.of<DailyWorkoutsCubit>(context).getDailyWorkouts();
+  //     BlocProvider.of<WorkoutCubit>(context).getWorkoutInOneWeek();
 
   //     // get daily sleep
   //     BlocProvider.of<SleepCubit>(context).getSleep();

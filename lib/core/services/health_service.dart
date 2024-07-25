@@ -1,3 +1,4 @@
+import 'package:akasia365mc/core/ui/extensions/date_time_extension.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -15,6 +16,10 @@ abstract class HealthService {
     required DateTime endTime,
   });
   Future<List<HealthDataPoint>> getHearRate({
+    required DateTime startTime,
+    required DateTime endTime,
+  });
+  Future<List<HealthDataPoint>> getWorkout({
     required DateTime startTime,
     required DateTime endTime,
   });
@@ -132,6 +137,11 @@ class HealthServiceImpl implements HealthService {
       );
       Logger.success('getSleepSessions result: $result');
 
+      await getWorkout(
+        startTime: startTime.firstHourOfDay,
+        endTime: endTime,
+      );
+
       return result;
     } catch (error) {
       Logger.error('getSleepSessions error: $error');
@@ -160,6 +170,31 @@ class HealthServiceImpl implements HealthService {
       return result;
     } catch (error) {
       Logger.error('getHearRate error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HealthDataPoint>> getWorkout({
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    try {
+      Logger.info('getWorkout startTime: $startTime, endTime: $endTime');
+
+      final result = await health.getHealthDataFromTypes(
+        types: [
+          HealthDataType.WORKOUT,
+        ],
+        startTime: startTime,
+        endTime: endTime,
+      );
+      Logger.success('getWorkout result: $result');
+
+      return result;
+    } catch (error) {
+      Logger.error('getWorkout error: $error');
 
       rethrow;
     }

@@ -77,15 +77,6 @@ final class StepsLoaded extends StepsState {
     return result;
   }
 
-  StepsActivityEntity? get todaySteps {
-    final allData = steps?.data ?? [];
-    if (allData.isNotEmpty) {
-      return allData.last;
-    }
-
-    return null;
-  }
-
   @override
   List<Object?> get props => [steps];
 }

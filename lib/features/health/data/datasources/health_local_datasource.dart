@@ -8,6 +8,7 @@ import '../../domain/entities/activity_entity.dart';
 import '../../domain/entities/heart_rate_activity_entity.dart';
 import '../../domain/entities/sleep_activity_entity.dart';
 import '../../domain/entities/steps_activity_entity.dart';
+import '../../domain/entities/workout_activity_entity.dart';
 
 abstract class HealthLocalDataSource {
   Future<ActivityEntity<List<StepsActivityEntity>>?> getSteps({
@@ -19,6 +20,10 @@ abstract class HealthLocalDataSource {
     DateTime? endDate,
   });
   Future<ActivityEntity<List<HeartRateActivityEntity>>?> getHeartRate({
+    DateTime? startDate,
+    DateTime? endDate,
+  });
+  Future<ActivityEntity<List<WorkoutActivityEntity>>?> getWorkout({
     DateTime? startDate,
     DateTime? endDate,
   });
@@ -494,7 +499,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
               ];
             }
           } else {
-            // if diffInDays is 0, get data from first hour of currentDate to currentDate
+            // if diffInDays is 0, get data from lastUpdatedAtData to currentDate
             final newHeartRateData = await healthService.getHearRate(
               startTime: lastUpdatedAtData,
               endTime: currentDate,
@@ -567,6 +572,189 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       );
     } catch (error) {
       Logger.error('getHeartRate error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ActivityEntity<List<WorkoutActivityEntity>>?> getWorkout({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Logger.info('getWorkout startDate: $startDate, endDate: $endDate');
+
+      final currentDate = DateTime.now();
+
+      final ActivityEntity<List<WorkoutActivityEntity>>? currentWorkoutData =
+          activityBox.get('workout');
+      Logger.success('getWorkout currentWorkoutData: $currentWorkoutData');
+
+      DateTime? lastUpdatedAtData = currentWorkoutData?.updatedAt;
+      DateTime? createdAt = currentWorkoutData?.createdAt;
+      List<WorkoutActivityEntity>? workouts = currentWorkoutData?.data;
+      if (lastUpdatedAtData == null) {
+        // assume user first time access and workouts is null
+        // get for 30 days
+        for (int i = _maxRangeDaysQuery; i >= 0; i--) {
+          final nextDate = currentDate.add(Duration(days: -i));
+          final newWorkoutData = await healthService.getWorkout(
+            startTime: nextDate.firstHourOfDay,
+            endTime: nextDate.lastHourOfDay,
+          );
+
+          final List<WorkoutActivityEntity> newWorkoutActivity = [];
+          for (final data in newWorkoutData) {
+            newWorkoutActivity.add(
+              WorkoutActivityEntity(
+                fromDate: data.dateFrom,
+                toDate: data.dateTo,
+              ),
+            );
+          }
+
+          // add new data to last data
+          workouts = [
+            ...workouts ?? [],
+            ...newWorkoutActivity,
+          ];
+        }
+
+        createdAt = currentDate;
+      } else {
+        final difference = currentDate.difference(lastUpdatedAtData);
+        Logger.info('getWorkout difference: $difference');
+
+        if (difference > _refreshInterval) {
+          // if last updated is more than _refreshInterval, get new data from health service
+          // get different in days
+          final diffInDays = currentDate.day - lastUpdatedAtData.day;
+          Logger.info('getWorkout diffInDays: $diffInDays');
+          if (diffInDays > 0) {
+            // if diffInDays is more than 0, get data per day
+            for (int i = 0; i <= diffInDays; i++) {
+              if (i == 0) {
+                // if i is 0, get data from lastUpdatedAtData to last hour of day
+                final newWorkoutData = await healthService.getWorkout(
+                  startTime: lastUpdatedAtData,
+                  endTime: lastUpdatedAtData.lastHourOfDay,
+                );
+
+                final List<WorkoutActivityEntity> newWorkoutActivity = [];
+                for (final data in newWorkoutData) {
+                  newWorkoutActivity.add(
+                    WorkoutActivityEntity(
+                      fromDate: data.dateFrom,
+                      toDate: data.dateTo,
+                    ),
+                  );
+                }
+
+                // add new data to last data
+                workouts = [
+                  ...workouts ?? [],
+                  ...newWorkoutActivity,
+                ];
+
+                continue;
+              }
+
+              // get data per day
+              final nextDate = lastUpdatedAtData.add(Duration(days: i));
+              final newWorkoutData = await healthService.getWorkout(
+                startTime: nextDate.firstHourOfDay,
+                endTime: nextDate.lastHourOfDay,
+              );
+
+              final List<WorkoutActivityEntity> newWorkoutActivity = [];
+              for (final data in newWorkoutData) {
+                newWorkoutActivity.add(
+                  WorkoutActivityEntity(
+                    fromDate: data.dateFrom,
+                    toDate: data.dateTo,
+                  ),
+                );
+              }
+
+              workouts = [
+                ...workouts ?? [],
+                ...newWorkoutActivity,
+              ];
+            }
+          } else {
+            // if diffInDays is 0, get data from lastUpdatedAtData to currentDate
+            final newWorkoutData = await healthService.getWorkout(
+              startTime: lastUpdatedAtData,
+              endTime: currentDate,
+            );
+
+            final List<WorkoutActivityEntity> newWorkoutActivity = [];
+            for (final data in newWorkoutData) {
+              newWorkoutActivity.add(
+                WorkoutActivityEntity(
+                  fromDate: data.dateFrom,
+                  toDate: data.dateTo,
+                ),
+              );
+            }
+
+            // add new data to last data
+            workouts = [
+              ...workouts ?? [],
+              ...newWorkoutActivity,
+            ];
+          }
+        }
+      }
+
+      // update local database
+      activityBox.put(
+        'workout',
+        ActivityEntity<List<WorkoutActivityEntity>>(
+          updatedAt: currentDate,
+          data: workouts,
+          createdAt: createdAt,
+        ),
+      );
+
+      List<WorkoutActivityEntity>? result = List.from(workouts ?? []);
+
+      // if startDate is not null, filter data from startDate to currentDate
+      if (startDate != null) {
+        result = workouts?.where((e) {
+          return e.fromDate?.isAfter(startDate.addDays(-1)) ?? false;
+        }).toList();
+      }
+
+      // if endDate is not null, filter data until endDate
+      if (endDate != null) {
+        List<WorkoutActivityEntity>? filtered;
+        if (startDate != null) {
+          filtered = result;
+        } else {
+          filtered = workouts;
+        }
+
+        result = filtered?.where((e) {
+          return e.fromDate?.isBefore(endDate.addDays(1)) ?? false;
+        }).toList();
+      }
+
+      Logger.success('getWorkout result: $result');
+
+      return ActivityEntity(
+        data: result?.map((e) {
+          return WorkoutActivityEntity(
+            fromDate: e.fromDate,
+            toDate: e.toDate,
+          );
+        }).toList(),
+        updatedAt: currentDate,
+        createdAt: createdAt,
+      );
+    } catch (error) {
+      Logger.error('getWorkout error: $error');
 
       rethrow;
     }
