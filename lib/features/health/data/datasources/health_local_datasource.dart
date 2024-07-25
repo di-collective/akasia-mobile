@@ -1,3 +1,4 @@
+import 'package:health/health.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/services/health_service.dart';
@@ -606,10 +607,18 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
           final List<WorkoutActivityEntity> newWorkoutActivity = [];
           for (final data in newWorkoutData) {
+            // get workout type
+            final value = data.value;
+            String? type;
+            if (value is WorkoutHealthValue) {
+              type = value.workoutActivityType.name;
+            }
+
             newWorkoutActivity.add(
               WorkoutActivityEntity(
                 fromDate: data.dateFrom,
                 toDate: data.dateTo,
+                type: type,
               ),
             );
           }
@@ -643,10 +652,18 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
                 final List<WorkoutActivityEntity> newWorkoutActivity = [];
                 for (final data in newWorkoutData) {
+                  // get workout type
+                  final value = data.value;
+                  String? type;
+                  if (value is WorkoutHealthValue) {
+                    type = value.workoutActivityType.name;
+                  }
+
                   newWorkoutActivity.add(
                     WorkoutActivityEntity(
                       fromDate: data.dateFrom,
                       toDate: data.dateTo,
+                      type: type,
                     ),
                   );
                 }
@@ -669,10 +686,18 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
               final List<WorkoutActivityEntity> newWorkoutActivity = [];
               for (final data in newWorkoutData) {
+                // get workout type
+                final value = data.value;
+                String? type;
+                if (value is WorkoutHealthValue) {
+                  type = value.workoutActivityType.name;
+                }
+
                 newWorkoutActivity.add(
                   WorkoutActivityEntity(
                     fromDate: data.dateFrom,
                     toDate: data.dateTo,
+                    type: type,
                   ),
                 );
               }
@@ -691,10 +716,18 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
             final List<WorkoutActivityEntity> newWorkoutActivity = [];
             for (final data in newWorkoutData) {
+              // get workout type
+              final value = data.value;
+              String? type;
+              if (value is WorkoutHealthValue) {
+                type = value.workoutActivityType.name;
+              }
+
               newWorkoutActivity.add(
                 WorkoutActivityEntity(
                   fromDate: data.dateFrom,
                   toDate: data.dateTo,
+                  type: type,
                 ),
               );
             }

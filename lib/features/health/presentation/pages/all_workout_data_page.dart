@@ -130,7 +130,7 @@ class _AllWorkoutDataPageState extends State<AllWorkoutDataPage> {
                   isFirst: index == 0,
                   isLast: index == sortedItems.keys.length - 1,
                   title: formattedFromDate,
-                  value: formattedTotalDuration,
+                  value: "${context.locale.workouts} ($formattedTotalDuration)",
                   onTap: () {
                     _onWorkout(
                       params: WorkoutDetailsPageParams(

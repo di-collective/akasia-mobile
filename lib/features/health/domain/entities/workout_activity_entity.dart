@@ -7,14 +7,20 @@ import 'activity_entity.dart';
 class WorkoutActivityEntity extends Equatable {
   final DateTime? fromDate;
   final DateTime? toDate;
+  final String? type;
 
   const WorkoutActivityEntity({
     this.fromDate,
     this.toDate,
+    this.type,
   });
 
   @override
-  List<Object?> get props => [fromDate, toDate];
+  List<Object?> get props => [
+        fromDate,
+        toDate,
+        type,
+      ];
 }
 
 class WorkoutActivityEntityAdapter
@@ -33,6 +39,7 @@ class WorkoutActivityEntityAdapter
       data.add(WorkoutActivityEntity(
         fromDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         toDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
+        type: reader.readString(),
       ));
     }
 
@@ -53,6 +60,7 @@ class WorkoutActivityEntityAdapter
     obj.data?.forEach((activity) {
       writer.writeInt(activity.fromDate?.millisecondsSinceEpoch ?? 0);
       writer.writeInt(activity.toDate?.millisecondsSinceEpoch ?? 0);
+      writer.writeString(activity.type ?? '');
     });
   }
 }

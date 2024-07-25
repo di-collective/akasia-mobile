@@ -5,6 +5,7 @@ import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/duration_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../domain/entities/workout_activity_entity.dart';
 import '../widgets/activity_detail_item_widget.dart';
@@ -184,14 +185,27 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                   );
                 }
 
-                final title =
-                    "${durationInMinutes}min $durationRemainingInSeconds sec";
-
                 return ActivityDetailItemWidget(
                   isFirst: index == 0,
                   isLast: index == items.length - 1,
-                  title: title,
                   description: "$formattedStartHour - $formattedEndHour",
+                  titleWidget: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        workout.type?.toCapitalize() ?? "",
+                        style: textTheme.bodySmall.copyWith(
+                          color: colorScheme.onSurfaceBright,
+                        ),
+                      ),
+                      Text(
+                        "${durationInMinutes}min $durationRemainingInSeconds sec",
+                        style: textTheme.titleSmall.copyWith(
+                          color: colorScheme.onSurfaceDim,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

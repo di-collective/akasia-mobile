@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/theme/color_scheme.dart';
+import '../../../../core/ui/theme/text_theme.dart';
 
 class ActivityDetailItemWidget extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
-  final String title;
+  final String? title;
+  final Widget? titleWidget;
   final String description;
 
   const ActivityDetailItemWidget({
     super.key,
     required this.isFirst,
     required this.isLast,
-    required this.title,
+    this.title,
+    this.titleWidget,
     required this.description,
   });
 
@@ -31,11 +35,9 @@ class ActivityDetailItemWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title,
-              style: textTheme.titleSmall.copyWith(
-                color: colorScheme.onSurfaceDim,
-              ),
+            child: _buildTitle(
+              colorScheme: colorScheme,
+              textTheme: textTheme,
             ),
           ),
           const SizedBox(
@@ -50,6 +52,26 @@ class ActivityDetailItemWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildTitle({
+    required AppColorScheme colorScheme,
+    required AppTextTheme textTheme,
+  }) {
+    if (titleWidget != null) {
+      return titleWidget!;
+    }
+
+    if (title != null) {
+      return Text(
+        title!,
+        style: textTheme.titleSmall.copyWith(
+          color: colorScheme.onSurfaceDim,
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   BorderRadius get _borderRadius {
