@@ -14,7 +14,7 @@ import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/domain/entities/country_entity.dart';
 import '../cubit/sign_up/sign_up_cubit.dart';
@@ -140,7 +140,7 @@ class __BodyState extends State<_Body> {
                     Form(
                       key: _nameFormKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: TextFormFieldWidget(
+                      child: TextFormWidget(
                         controller: _nameTextController,
                         title: context.locale.fullName,
                         keyboardType: TextInputType.name,
@@ -182,7 +182,7 @@ class __BodyState extends State<_Body> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         children: [
-                          TextFormFieldWidget(
+                          TextFormWidget(
                             controller: _emailTextController,
                             title: context.locale.email,
                             keyboardType: TextInputType.emailAddress,
@@ -203,7 +203,7 @@ class __BodyState extends State<_Body> {
                           const SizedBox(
                             height: 20,
                           ),
-                          TextFormFieldWidget(
+                          TextFormWidget(
                             controller: _passwordTextController,
                             title: context.locale.password,
                             keyboardType: TextInputType.visiblePassword,
@@ -224,7 +224,7 @@ class __BodyState extends State<_Body> {
                           const SizedBox(
                             height: 20,
                           ),
-                          TextFormFieldWidget(
+                          TextFormWidget(
                             controller: _confirmPasswordTextController,
                             title: context.locale.repeatPassword,
                             keyboardType: TextInputType.visiblePassword,

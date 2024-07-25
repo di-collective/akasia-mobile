@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../extensions/validation_extension.dart';
-import 'text_form_field_widget.dart';
+import 'text_form_widget.dart';
 
-class WeightTextFormWidget extends TextFormFieldWidget {
+class WeightTextFormWidget extends TextFormWidget {
   final BuildContext context;
 
   WeightTextFormWidget({

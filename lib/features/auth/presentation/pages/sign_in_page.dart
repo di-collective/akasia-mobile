@@ -15,7 +15,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../cubit/sign_in/sign_in_cubit.dart';
 import '../widgets/social_auth_button_widget.dart';
@@ -96,7 +96,7 @@ class __BodyState extends State<_Body> {
                         const SizedBox(
                           height: 40,
                         ),
-                        TextFormFieldWidget(
+                        TextFormWidget(
                           controller: _emailTextController,
                           title: context.locale.email,
                           keyboardType: TextInputType.emailAddress,
@@ -113,7 +113,7 @@ class __BodyState extends State<_Body> {
                         const SizedBox(
                           height: 20,
                         ),
-                        TextFormFieldWidget(
+                        TextFormWidget(
                           controller: _passwordTextController,
                           title: context.locale.password,
                           keyboardType: TextInputType.visiblePassword,

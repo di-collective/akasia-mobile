@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 
 import '../../../../features/country/domain/entities/country_entity.dart';
 import '../../extensions/validation_extension.dart';
-import 'text_form_field_widget.dart';
+import 'text_form_widget.dart';
 
-class PhoneNumberTextFormWidget extends TextFormFieldWidget {
+class PhoneNumberTextFormWidget extends TextFormWidget {
   final BuildContext context;
   final CountryEntity? selectedCountry;
   final bool? isCannotSameAs;

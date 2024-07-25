@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../extensions/validation_extension.dart';
-import 'text_form_field_widget.dart';
+import 'text_form_widget.dart';
 
-class HeightTextFormWidget extends TextFormFieldWidget {
+class HeightTextFormWidget extends TextFormWidget {
   final BuildContext context;
 
   HeightTextFormWidget({

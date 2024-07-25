@@ -89,7 +89,6 @@ class __BodyState extends State<_Body> {
                     child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
                             const SizedBox(
@@ -114,10 +113,7 @@ class __BodyState extends State<_Body> {
                               controller: _newPhoneNumberTextController,
                               title: context.locale.newPhoneNumber,
                               isRequired: true,
-                              isCannotSameAs: true,
                               selectedCountry: _selectedCountry,
-                              anotherPhoneNumber:
-                                  _oldPhoneNumberTextController.text,
                               onChanged: (_) {
                                 // reload
                                 setState(() {});
@@ -161,10 +157,18 @@ class __BodyState extends State<_Body> {
         return;
       }
 
+      final oldPhoneNumber = _oldPhoneNumberTextController.text;
+      final newPhoneNumber = _newPhoneNumberTextController.text;
+
+      // validate if same
+      if (oldPhoneNumber.isSame(otherValue: newPhoneNumber)) {
+        throw context.locale.phoneNumberCannotSame;
+      }
+
       // call change phone number
       await BlocProvider.of<ChangePhoneNumberCubit>(context).changePassword(
-        oldPhoneNumber: _oldPhoneNumberTextController.text,
-        newPhoneNumber: _newPhoneNumberTextController.text,
+        oldPhoneNumber: oldPhoneNumber,
+        newPhoneNumber: newPhoneNumber,
       );
 
       // show success message

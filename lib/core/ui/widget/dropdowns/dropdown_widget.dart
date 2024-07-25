@@ -134,6 +134,10 @@ class DropdownWidget<T> extends StatelessWidget {
                 focusedErrorBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
                 ),
+                errorStyle: textTheme.bodySmall.copyWith(
+                  color: colorScheme.error,
+                ),
+                errorMaxLines: 5,
                 contentPadding: contentPadding ??
                     const EdgeInsets.fromLTRB(
                       12,

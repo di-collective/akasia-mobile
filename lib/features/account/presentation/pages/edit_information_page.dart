@@ -18,7 +18,7 @@ import '../../../../core/ui/widget/forms/date_form_widget.dart';
 import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -181,7 +181,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 24,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _membershipIdTextController,
                               title: context.locale.membershipId,
                               keyboardType: TextInputType.number,
@@ -212,7 +212,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _fullNameTextController,
                               title: context.locale.fullName,
                               isRequired: true,
@@ -245,7 +245,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _ageTextController,
                               title: context.locale.age,
                               suffixText: "yo",

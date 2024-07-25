@@ -6,7 +6,7 @@ import '../../../../core/ui/extensions/food_quantity_unit_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../domain/entities/food_entity.dart';
 
 class InputFoodQuantityWidget extends StatefulWidget {
@@ -140,7 +140,7 @@ class _InputFoodQuantityWidgetState extends State<InputFoodQuantityWidget> {
           child: Form(
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: TextFormFieldWidget(
+            child: TextFormWidget(
               controller: _quantityTextController,
               hintText: context.locale.inputItem(
                 context.locale.quantity,

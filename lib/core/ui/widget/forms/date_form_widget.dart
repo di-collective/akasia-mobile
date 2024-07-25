@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../config/asset_path.dart';
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
-import 'text_form_field_widget.dart';
+import 'text_form_widget.dart';
 
 class DateFormWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -32,7 +32,7 @@ class DateFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
-    return TextFormFieldWidget(
+    return TextFormWidget(
       controller: controller,
       title: title,
       hintText: hintText,

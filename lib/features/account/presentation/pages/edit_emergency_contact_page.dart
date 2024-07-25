@@ -11,7 +11,7 @@ import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../country/domain/entities/country_entity.dart';
 import '../../../country/presentation/cubit/countries/countries_cubit.dart';
@@ -180,7 +180,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _nameTextController,
                               title: context.locale.fullName,
                               isRequired: true,

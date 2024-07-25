@@ -1,8 +1,8 @@
-import '../../extensions/build_context_extension.dart';
-import '../../extensions/theme_data_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../extensions/build_context_extension.dart';
 import '../../extensions/sex_extension.dart';
+import '../../extensions/theme_data_extension.dart';
 import 'radio_widget.dart';
 
 class GenderRadioWidget extends StatelessWidget {
@@ -59,6 +59,23 @@ class GenderRadioWidget extends StatelessWidget {
             },
           ).toList(),
         ),
+        if (isRequired == true && groupValue == null) ...[
+          const SizedBox(
+            height: 2,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+            ),
+            child: Text(
+              context.locale.cannotBeEmpty,
+              style: textTheme.bodySmall.copyWith(
+                color: colorScheme.error,
+              ),
+              maxLines: 5,
+            ),
+          ),
+        ],
       ],
     );
   }

@@ -9,7 +9,7 @@ import '../../../../core/ui/extensions/password_indicator_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../cubit/create_new_password/create_new_password_cubit.dart';
 import '../widgets/password_indicator_widget.dart';
@@ -143,7 +143,7 @@ class __BodyState extends State<_Body> {
                   Form(
                     key: _formKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: TextFormFieldWidget(
+                    child: TextFormWidget(
                       controller: _passwordTextController,
                       keyboardType: TextInputType.visiblePassword,
                       hintText: context.locale.inputNewPassword,

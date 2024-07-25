@@ -52,7 +52,7 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
               height: 32,
             ),
             const ProcedureHistoryWidget(
-              procedureHistories: null,
+              procedureHistories: [1, 2, 3],
             ),
             SizedBox(
               height: context.paddingBottom,

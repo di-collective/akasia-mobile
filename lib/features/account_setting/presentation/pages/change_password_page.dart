@@ -7,7 +7,7 @@ import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../cubit/change_password/change_password_cubit.dart';
 
@@ -77,13 +77,12 @@ class __BodyState extends State<_Body> {
                     child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
                             const SizedBox(
                               height: 16,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _oldPasswordTextController,
                               title: context.locale.oldPassword,
                               keyboardType: TextInputType.visiblePassword,
@@ -102,7 +101,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _newPasswordTextController,
                               title: context.locale.newPassword,
                               keyboardType: TextInputType.visiblePassword,
@@ -121,7 +120,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _confirmPasswordTextController,
                               title: context.locale.resetPassword,
                               keyboardType: TextInputType.visiblePassword,

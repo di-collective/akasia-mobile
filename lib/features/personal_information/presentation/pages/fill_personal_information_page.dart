@@ -325,7 +325,7 @@ class __BodyState extends State<_Body> {
 
   bool get _isDisabled {
     if (_currentPage == 0) {
-      return _formKey.currentState?.validate() != true;
+      return _formKey.currentState?.validate() != true || _selectedSex == null;
     }
 
     return false;
@@ -350,7 +350,7 @@ class __BodyState extends State<_Body> {
   Future<void> _onNextPage() async {
     try {
       // validate
-      if (_formKey.currentState?.validate() != true) {
+      if (_formKey.currentState?.validate() != true || _selectedSex == null) {
         return;
       }
 

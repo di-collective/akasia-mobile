@@ -13,7 +13,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/ui/widget/radios/radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
@@ -142,7 +142,7 @@ class __BodyState extends State<_Body> {
                                           right: 16,
                                           left: 48,
                                         ),
-                                        child: TextFormFieldWidget(
+                                        child: TextFormWidget(
                                           controller: _otherTextController,
                                           hintText: context.locale.example,
                                           validator: (value) {

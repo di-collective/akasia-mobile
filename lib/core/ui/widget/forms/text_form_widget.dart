@@ -9,7 +9,7 @@ import '../../extensions/theme_data_extension.dart';
 import '../../theme/color_scheme.dart';
 import '../../theme/text_theme.dart';
 
-class TextFormFieldWidget extends StatefulWidget {
+class TextFormWidget extends StatefulWidget {
   final String? title;
   final String? hintText;
   final TextEditingController? controller;
@@ -36,7 +36,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onClear;
   final String? description;
 
-  const TextFormFieldWidget({
+  const TextFormWidget({
     super.key,
     this.title,
     this.hintText,
@@ -70,10 +70,10 @@ class TextFormFieldWidget extends StatefulWidget {
   });
 
   @override
-  State<TextFormFieldWidget> createState() => _TextFormFieldWidgetState();
+  State<TextFormWidget> createState() => _TextFormWidgetState();
 }
 
-class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
+class _TextFormWidgetState extends State<TextFormWidget> {
   bool _obscureText = false;
 
   @override
@@ -114,6 +114,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
         Stack(
           children: [
             TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: widget.controller,
               initialValue: widget.initialValue,
               textAlign: widget.textAlign ?? TextAlign.start,
@@ -165,6 +166,10 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
                 focusedErrorBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
                 ),
+                errorStyle: textTheme.bodySmall.copyWith(
+                  color: colorScheme.error,
+                ),
+                errorMaxLines: 5,
               ),
               validator: widget.validator,
             ),
