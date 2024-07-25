@@ -14,7 +14,7 @@ import '../../domain/entities/workout_activity_entity.dart';
 import '../cubit/workout/workout_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
-import 'sleep_details_page.dart';
+import 'workout_details_page.dart';
 
 class AllWorkoutDataPage extends StatefulWidget {
   const AllWorkoutDataPage({super.key});
@@ -53,31 +53,36 @@ class _AllWorkoutDataPageState extends State<AllWorkoutDataPage> {
       body: BlocBuilder<WorkoutCubit, WorkoutState>(
         builder: (context, state) {
           if (state is WorkoutLoaded) {
-            final workout = state.workout?.data;
-            if (workout == null || workout.isEmpty) {
+            final items = state.workout?.data;
+            if (items == null || items.isEmpty) {
               return const StateEmptyWidget();
             }
 
-            Map<DateTime, List<WorkoutActivityEntity>> sortedSleeps = {};
-            for (int i = workout.length - 1; i > 0; i--) {
-              final sleep = workout[i];
-
-              final fromDate = sleep.fromDate;
+            Map<DateTime, List<WorkoutActivityEntity>> tempSortedItems = {};
+            for (var item in items) {
+              final fromDate = item.fromDate;
               if (fromDate == null) {
                 continue;
               }
 
-              final data = workout.where((element) {
-                return element.fromDate?.isSameDay(other: fromDate) ?? false;
-              });
-
-              sortedSleeps.addAll({
-                fromDate.firstHourOfDay: data.toList(),
-              });
+              final dayStart = fromDate.firstHourOfDay;
+              tempSortedItems.putIfAbsent(dayStart, () => []);
+              tempSortedItems[dayStart]?.add(item);
             }
 
+            // Sort the keys (dates) in reverse order
+            final sortedKeys = tempSortedItems.keys.toList()
+              ..sort((a, b) {
+                return b.compareTo(a);
+              });
+
+            // Rebuild the sortedItems map with sorted keys
+            Map<DateTime, List<WorkoutActivityEntity>> sortedItems = {
+              for (var key in sortedKeys) key: tempSortedItems[key]!,
+            };
+
             return ListView.separated(
-              itemCount: sortedSleeps.keys.length,
+              itemCount: sortedItems.keys.length,
               primary: false,
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(
@@ -88,7 +93,7 @@ class _AllWorkoutDataPageState extends State<AllWorkoutDataPage> {
                 return const Divider();
               },
               itemBuilder: (context, index) {
-                final workout = sortedSleeps.entries.toList()[index];
+                final workout = sortedItems.entries.toList()[index];
 
                 // date range
                 DateTime? fromDate;
@@ -115,24 +120,25 @@ class _AllWorkoutDataPageState extends State<AllWorkoutDataPage> {
                 }
 
                 final formattedFromDate = fromDate?.formatDate(
-                  format: "dd MMM yyyy",
-                );
+                      format: "dd MMM yyyy",
+                    ) ??
+                    "";
                 final formattedTotalDuration =
                     "${totalDuration.inMinutes}m ${totalDuration.remainingSeconds}s";
 
                 return ActivityItemWidget(
                   isFirst: index == 0,
-                  isLast: index == sortedSleeps.keys.length - 1,
-                  title: formattedFromDate ?? "",
+                  isLast: index == sortedItems.keys.length - 1,
+                  title: formattedFromDate,
                   value: formattedTotalDuration,
                   onTap: () {
-                    // _onWorkout(
-                    //   params: SleepDetailsPageParams(
-                    //     sleeps: sleep.value,
-                    //     formattedDateRange: formattedDateRange,
-                    //     totalDuration: totalDuration,
-                    //   ),
-                    // );
+                    _onWorkout(
+                      params: WorkoutDetailsPageParams(
+                        items: workout.value,
+                        totalDuration: totalDuration,
+                        formattedDate: formattedFromDate,
+                      ),
+                    );
                   },
                 );
               },
@@ -157,10 +163,10 @@ class _AllWorkoutDataPageState extends State<AllWorkoutDataPage> {
   }
 
   void _onWorkout({
-    required SleepDetailsPageParams params,
+    required WorkoutDetailsPageParams params,
   }) {
     context.goNamed(
-      AppRoute.sleepDetails.name,
+      AppRoute.workoutDetails.name,
       extra: params,
     );
   }

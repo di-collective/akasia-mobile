@@ -100,7 +100,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
           ),
           AppRoute.workout.route(
             routes: [
-              AppRoute.allWorkoutData.route(),
+              AppRoute.allWorkoutData.route(
+                routes: [
+                  AppRoute.workoutDetails.route(),
+                ],
+              ),
             ],
           ),
         ],

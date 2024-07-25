@@ -32,6 +32,7 @@ import '../../features/health/presentation/pages/heart_rate_page.dart';
 import '../../features/health/presentation/pages/sleep_details_page.dart';
 import '../../features/health/presentation/pages/sleep_page.dart';
 import '../../features/health/presentation/pages/steps_page.dart';
+import '../../features/health/presentation/pages/workout_details_page.dart';
 import '../../features/health/presentation/pages/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
@@ -123,6 +124,8 @@ extension AppRouteExtension on AppRoute {
         return 'workout';
       case AppRoute.allWorkoutData:
         return 'all-workout-data';
+      case AppRoute.workoutDetails:
+        return 'workout-details';
     }
   }
 
@@ -292,6 +295,15 @@ extension AppRouteExtension on AppRoute {
         return const WorkoutPage();
       case AppRoute.allWorkoutData:
         return const AllWorkoutDataPage();
+      case AppRoute.workoutDetails:
+        WorkoutDetailsPageParams? params;
+        if (arguments is WorkoutDetailsPageParams) {
+          params = arguments;
+        }
+
+        return WorkoutDetailsPage(
+          params: params,
+        );
     }
   }
 

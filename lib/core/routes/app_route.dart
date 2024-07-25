@@ -38,4 +38,5 @@ enum AppRoute {
   heartRateDetails,
   workout,
   allWorkoutData,
+  workoutDetails,
 }
