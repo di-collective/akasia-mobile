@@ -7,6 +7,7 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../domain/entities/sleep_activity_entity.dart';
+import '../widgets/activity_detail_item_widget.dart';
 
 class SleepDetailsPageParams {
   final List<SleepActivityEntity> sleeps;
@@ -183,85 +184,20 @@ class _SleepDetailsPageState extends State<SleepDetailsPage> {
                   );
                 }
 
-                return _SleepDetailItemWidget(
+                final title =
+                    "$durationInHours hrs $durationRemainingInMinutes min";
+                final description = "$formattedStartHour - $formattedEndHour";
+                return ActivityDetailItemWidget(
                   isFirst: index == 0,
                   isLast: index == sleeps.length - 1,
-                  durationInHours: durationInHours,
-                  durationRemainingInMinutes: durationRemainingInMinutes,
-                  formattedStartHour: formattedStartHour,
-                  formattedEndHour: formattedEndHour,
+                  title: title,
+                  description: description,
                 );
               },
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _SleepDetailItemWidget extends StatelessWidget {
-  final bool isFirst;
-  final bool isLast;
-  final String? durationInHours;
-  final String? durationRemainingInMinutes;
-  final String? formattedStartHour;
-  final String? formattedEndHour;
-
-  const _SleepDetailItemWidget({
-    required this.isFirst,
-    required this.isLast,
-    required this.durationInHours,
-    required this.durationRemainingInMinutes,
-    required this.formattedStartHour,
-    required this.formattedEndHour,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = context.theme.appTextTheme;
-    final colorScheme = context.theme.appColorScheme;
-
-    final inHours = durationInHours ?? "00";
-    final remainingMinutes = durationRemainingInMinutes ?? "00";
-
-    final startHour = formattedStartHour ?? "00.00";
-    final endHour = formattedEndHour ?? "00.00";
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.white,
-        borderRadius: _borderRadius,
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              "$inHours hrs $remainingMinutes min",
-              style: textTheme.titleSmall.copyWith(
-                color: colorScheme.onSurfaceDim,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          Text(
-            "$startHour - $endHour",
-            style: textTheme.titleSmall.copyWith(
-              color: colorScheme.onSurfaceBright,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  BorderRadius get _borderRadius {
-    return BorderRadius.vertical(
-      top: Radius.circular(isFirst ? 16 : 0),
-      bottom: Radius.circular(isLast ? 16 : 0),
     );
   }
 }

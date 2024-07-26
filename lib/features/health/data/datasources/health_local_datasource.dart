@@ -781,6 +781,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
           return WorkoutActivityEntity(
             fromDate: e.fromDate,
             toDate: e.toDate,
+            type: e.type,
           );
         }).toList(),
         updatedAt: currentDate,
