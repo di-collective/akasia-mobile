@@ -13,16 +13,20 @@ final class SleepLoading extends SleepState {}
 
 final class SleepLoaded extends SleepState {
   final ActivityEntity<List<SleepActivityEntity>>? sleep;
+  final DateTime? checkedAt;
 
   const SleepLoaded({
     required this.sleep,
+    required this.checkedAt,
   });
 
   SleepLoaded copyWith({
     ActivityEntity<List<SleepActivityEntity>>? sleep,
+    DateTime? checkedAt,
   }) {
     return SleepLoaded(
       sleep: sleep ?? this.sleep,
+      checkedAt: checkedAt ?? this.checkedAt,
     );
   }
 
@@ -68,7 +72,10 @@ final class SleepLoaded extends SleepState {
   }
 
   @override
-  List<Object?> get props => [sleep];
+  List<Object?> get props => [
+        sleep,
+        checkedAt,
+      ];
 }
 
 final class SleepError extends SleepState {

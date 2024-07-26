@@ -7,6 +7,9 @@ import '../utils/permission_info.dart';
 
 abstract class HealthService {
   Future<bool?> requestPermission();
+
+  Duration get refreshIntervalDuration;
+
   Future<int?> getTotalStepsInInterval({
     required DateTime startTime,
     required DateTime endTime,
@@ -95,6 +98,13 @@ class HealthServiceImpl implements HealthService {
 
       rethrow;
     }
+  }
+
+  @override
+  Duration get refreshIntervalDuration {
+    return const Duration(
+      minutes: 3, // TODO: Change this to 30 minutes
+    );
   }
 
   @override

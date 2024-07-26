@@ -13,16 +13,20 @@ final class HeartRateLoading extends HeartRateState {}
 
 final class HeartRateLoaded extends HeartRateState {
   final ActivityEntity<List<HeartRateActivityEntity>>? heartRate;
+  final DateTime? checkedAt;
 
   const HeartRateLoaded({
     required this.heartRate,
+    required this.checkedAt,
   });
 
   HeartRateLoaded copyWith({
     ActivityEntity<List<HeartRateActivityEntity>>? heartRate,
+    DateTime? checkedAt,
   }) {
     return HeartRateLoaded(
       heartRate: heartRate ?? this.heartRate,
+      checkedAt: checkedAt ?? this.checkedAt,
     );
   }
 
@@ -68,7 +72,10 @@ final class HeartRateLoaded extends HeartRateState {
   }
 
   @override
-  List<Object?> get props => [heartRate];
+  List<Object?> get props => [
+        heartRate,
+        checkedAt,
+      ];
 }
 
 final class HeartRateError extends HeartRateState {

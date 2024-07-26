@@ -13,16 +13,20 @@ final class WorkoutLoading extends WorkoutState {}
 
 final class WorkoutLoaded extends WorkoutState {
   final ActivityEntity<List<WorkoutActivityEntity>>? workout;
+  final DateTime? checkedAt;
 
   const WorkoutLoaded({
     required this.workout,
+    required this.checkedAt,
   });
 
   WorkoutLoaded copyWith({
     ActivityEntity<List<WorkoutActivityEntity>>? workout,
+    DateTime? checkedAt,
   }) {
     return WorkoutLoaded(
       workout: workout ?? this.workout,
+      checkedAt: checkedAt ?? this.checkedAt,
     );
   }
 
@@ -68,7 +72,10 @@ final class WorkoutLoaded extends WorkoutState {
   }
 
   @override
-  List<Object?> get props => [workout];
+  List<Object?> get props => [
+        workout,
+        checkedAt,
+      ];
 }
 
 final class WorkoutError extends WorkoutState {

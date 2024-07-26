@@ -39,8 +39,6 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
     required this.activityBox,
   });
 
-  final _refreshInterval =
-      const Duration(minutes: 1); // TODO: Change this to 30
   final _maxRangeDaysQuery = 30;
 
   @override
@@ -84,8 +82,8 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         final difference = currentDate.difference(lastUpdatedAtData);
         Logger.info('getSteps difference: $difference');
 
-        if (difference > _refreshInterval) {
-          // if last updated is more than _refreshInterval, get new data from health service
+        if (difference > healthService.refreshIntervalDuration) {
+          // if last updated is more than refresh interval, get new data from health service
           // get different in days
           final diffInDays = currentDate.day - lastUpdatedAtData.day;
           Logger.info('getSteps diffInDays: $diffInDays');
@@ -256,8 +254,8 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         final difference = currentDate.difference(lastUpdatedAtData);
         Logger.info('getSleep difference: $difference');
 
-        if (difference > _refreshInterval) {
-          // if last updated is more than _refreshInterval, get new data from health service
+        if (difference > healthService.refreshIntervalDuration) {
+          // if last updated is more than refresh interval, get new data from health service
           // get different in days
           final diffInDays = currentDate.day - lastUpdatedAtData.day;
           Logger.info('getSleep diffInDays: $diffInDays');
@@ -441,8 +439,8 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         final difference = currentDate.difference(lastUpdatedAtData);
         Logger.info('getHeartRate difference: $difference');
 
-        if (difference > _refreshInterval) {
-          // if last updated is more than _refreshInterval, get new data from health service
+        if (difference > healthService.refreshIntervalDuration) {
+          // if last updated is more than refresh interval, get new data from health service
           // get different in days
           final diffInDays = currentDate.day - lastUpdatedAtData.day;
           Logger.info('getHeartRate diffInDays: $diffInDays');
@@ -635,8 +633,8 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
         final difference = currentDate.difference(lastUpdatedAtData);
         Logger.info('getWorkout difference: $difference');
 
-        if (difference > _refreshInterval) {
-          // if last updated is more than _refreshInterval, get new data from health service
+        if (difference > healthService.refreshIntervalDuration) {
+          // if last updated is more than refresh interval, get new data from health service
           // get different in days
           final diffInDays = currentDate.day - lastUpdatedAtData.day;
           Logger.info('getWorkout diffInDays: $diffInDays');

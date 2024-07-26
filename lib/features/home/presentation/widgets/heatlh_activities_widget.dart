@@ -57,11 +57,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         BlocBuilder<StepsCubit, StepsState>(
           builder: (context, state) {
             List<StepsActivityEntity>? data;
-            DateTime? updatedAt;
+            DateTime? checkedAt;
             int currentSteps = 0;
             if (state is StepsLoaded) {
-              final steps = state.steps;
-              updatedAt = steps?.updatedAt;
+              checkedAt = state.checkedAt;
 
               // get last seven data
               data = state.getLastOneWeekData();
@@ -82,7 +81,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
                 locale: AppLocale.id.locale.countryCode,
               ),
               unit: context.locale.stepsUnit,
-              time: updatedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute ?? "",
               isInitial: state is StepsInitial,
               isLoading: state is StepsLoading,
               isError: state is StepsError,
@@ -99,11 +98,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         BlocBuilder<HeartRateCubit, HeartRateState>(
           builder: (context, state) {
             List<HeartRateActivityEntity>? data = [];
-            DateTime? updatedAt;
+            DateTime? checkedAt;
             String currentHeartRate = "0";
             if (state is HeartRateLoaded) {
-              final heartRate = state.heartRate;
-              updatedAt = heartRate?.updatedAt;
+              checkedAt = state.checkedAt;
 
               // get last seven data
               data = state.getLastSevenData();
@@ -123,7 +121,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               value: currentHeartRate,
               unit: context.locale.heartRateUnit,
               unitIconPath: AssetIconsPath.icLove,
-              time: updatedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute ?? "",
               isInitial: state is HeartRateInitial,
               isLoading: state is HeartRateLoading,
               isError: state is HeartRateError,
@@ -163,11 +161,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         BlocBuilder<WorkoutCubit, WorkoutState>(
           builder: (context, state) {
             List<double> data = [];
-            DateTime? updatedAt;
+            DateTime? checkedAt;
             Duration currentWorkoutTime = const Duration();
             if (state is WorkoutLoaded) {
-              final workout = state.workout;
-              updatedAt = workout?.updatedAt;
+              checkedAt = state.checkedAt;
 
               // get last seven data
               final lastSevenData = state.getLastSevenData();
@@ -198,7 +195,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               activity: context.locale.workouts,
               value: currentWorkoutTime.inMinutes.toString(),
               unit: "min",
-              time: updatedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute ?? "",
               isInitial: state is WorkoutInitial,
               isLoading: state is WorkoutLoading,
               isError: state is WorkoutError,
@@ -213,12 +210,11 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         BlocBuilder<SleepCubit, SleepState>(
           builder: (context, state) {
             List<SleepActivityEntity>? data = [];
-            DateTime? updatedAt;
+            DateTime? checkedAt;
             String hours = "0";
             String minutes = "0";
             if (state is SleepLoaded) {
-              final sleep = state.sleep;
-              updatedAt = sleep?.updatedAt;
+              checkedAt = state.checkedAt;
 
               // get last seven data
               data = state.getLastSevenData();
@@ -240,7 +236,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
             return ActivityWidget(
               iconPath: AssetIconsPath.icBed,
               activity: context.locale.sleep,
-              time: updatedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute ?? "",
               isInitial: state is SleepInitial,
               isLoading: state is SleepLoading,
               isError: state is SleepError,

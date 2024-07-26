@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/services/health_service.dart';
 import '../../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../domain/entities/activity_entity.dart';
 import '../../../domain/entities/steps_activity_entity.dart';
@@ -11,13 +12,50 @@ part 'steps_state.dart';
 
 class StepsCubit extends Cubit<StepsState> {
   final GetStepsUseCase getStepsUseCase;
+  final HealthService healthService;
 
   StepsCubit({
     required this.getStepsUseCase,
-  }) : super(StepsInitial());
+    required this.healthService,
+  }) : super(StepsInitial()) {
+    refreshIntervalDuration = healthService.refreshIntervalDuration;
+  }
+
+  late Duration refreshIntervalDuration;
+
+  bool get isRefreshable {
+    final currentState = state;
+    if (currentState is! StepsLoaded) {
+      return true;
+    }
+
+    final currentDate = DateTime.now();
+    final updatedAt = currentState.steps?.updatedAt;
+    // if updatedAt is less than refreshIntervalDuration, then return false
+    if (updatedAt != null) {
+      final diff = currentDate.difference(updatedAt);
+
+      if (diff < refreshIntervalDuration) {
+        // emit checkedAt
+        emit(
+          currentState.copyWith(
+            checkedAt: currentDate,
+          ),
+        );
+
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   Future<void> getStepsInOneWeek() async {
     try {
+      if (!isRefreshable) {
+        return;
+      }
+
       emit(StepsLoading());
 
       final steps = await getStepsUseCase.call(
@@ -29,6 +67,7 @@ class StepsCubit extends Cubit<StepsState> {
 
       emit(StepsLoaded(
         steps: steps,
+        checkedAt: DateTime.now(),
       ));
     } catch (error) {
       emit(StepsError(
@@ -49,6 +88,7 @@ class StepsCubit extends Cubit<StepsState> {
 
       emit(StepsLoaded(
         steps: steps,
+        checkedAt: DateTime.now(),
       ));
     } catch (error) {
       if (state is! StepsLoaded) {
@@ -63,6 +103,10 @@ class StepsCubit extends Cubit<StepsState> {
     final currentState = state;
 
     try {
+      if (!isRefreshable) {
+        return;
+      }
+
       if (currentState is! StepsLoaded) {
         emit(StepsLoading());
       }
@@ -104,10 +148,12 @@ class StepsCubit extends Cubit<StepsState> {
             updatedAt: newSteps?.updatedAt,
             data: currentData,
           ),
+          checkedAt: DateTime.now(),
         ));
       } else {
         emit(StepsLoaded(
           steps: newSteps,
+          checkedAt: DateTime.now(),
         ));
       }
     } catch (error) {

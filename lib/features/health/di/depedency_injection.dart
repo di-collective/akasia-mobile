@@ -75,10 +75,12 @@ class HealthDI {
     sl.registerFactory<StepsCubit>(() {
       return StepsCubit(
         getStepsUseCase: sl(),
+        healthService: sl(),
       );
     });
     sl.registerFactory<HeartRateCubit>(() {
       return HeartRateCubit(
+        healthService: sl(),
         getHeartRateUseCase: sl(),
       );
     });
@@ -88,11 +90,13 @@ class HealthDI {
     sl.registerFactory<WorkoutCubit>(() {
       return WorkoutCubit(
         getWorkoutUseCase: sl(),
+        healthService: sl(),
       );
     });
     sl.registerFactory<SleepCubit>(() {
       return SleepCubit(
         getSleepUseCase: sl(),
+        healthService: sl(),
       );
     });
   }

@@ -1,7 +1,8 @@
-import 'package:akasia365mc/core/ui/extensions/date_time_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/services/health_service.dart';
+import '../../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../domain/entities/activity_entity.dart';
 import '../../../domain/entities/heart_rate_activity_entity.dart';
 import '../../../domain/usecases/get_heart_rate_usecase.dart';
@@ -10,13 +11,50 @@ part 'heart_rate_state.dart';
 
 class HeartRateCubit extends Cubit<HeartRateState> {
   final GetHeartRateUseCase getHeartRateUseCase;
+  final HealthService healthService;
 
   HeartRateCubit({
     required this.getHeartRateUseCase,
-  }) : super(HeartRateInitial());
+    required this.healthService,
+  }) : super(HeartRateInitial()) {
+    refreshIntervalDuration = healthService.refreshIntervalDuration;
+  }
+
+  late Duration refreshIntervalDuration;
+
+  bool get isRefreshable {
+    final currentState = state;
+    if (currentState is! HeartRateLoaded) {
+      return true;
+    }
+
+    final currentDate = DateTime.now();
+    final updatedAt = currentState.heartRate?.updatedAt;
+    // if updatedAt is less than refreshIntervalDuration, then return false
+    if (updatedAt != null) {
+      final diff = currentDate.difference(updatedAt);
+
+      if (diff < refreshIntervalDuration) {
+        // emit checkedAt
+        emit(
+          currentState.copyWith(
+            checkedAt: currentDate,
+          ),
+        );
+
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   Future<void> getHeartRateInOneWeek() async {
     try {
+      if (!isRefreshable) {
+        return;
+      }
+
       emit(HeartRateLoading());
 
       final heartRate = await getHeartRateUseCase.call(
@@ -28,6 +66,7 @@ class HeartRateCubit extends Cubit<HeartRateState> {
 
       emit(HeartRateLoaded(
         heartRate: heartRate,
+        checkedAt: DateTime.now(),
       ));
     } catch (error) {
       emit(HeartRateError(
@@ -48,6 +87,7 @@ class HeartRateCubit extends Cubit<HeartRateState> {
 
       emit(HeartRateLoaded(
         heartRate: heartRate,
+        checkedAt: DateTime.now(),
       ));
     } catch (error) {
       if (state is! HeartRateLoaded) {
@@ -64,6 +104,10 @@ class HeartRateCubit extends Cubit<HeartRateState> {
     final currentState = state;
 
     try {
+      if (!isRefreshable) {
+        return;
+      }
+
       if (currentState is! HeartRateLoaded) {
         emit(HeartRateLoading());
       }
@@ -105,10 +149,12 @@ class HeartRateCubit extends Cubit<HeartRateState> {
             updatedAt: newHeartRate?.updatedAt,
             data: currentData,
           ),
+          checkedAt: DateTime.now(),
         ));
       } else {
         emit(HeartRateLoaded(
           heartRate: newHeartRate,
+          checkedAt: DateTime.now(),
         ));
       }
     } catch (error) {

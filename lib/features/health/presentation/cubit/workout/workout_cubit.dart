@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/services/health_service.dart';
 import '../../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../domain/entities/activity_entity.dart';
 import '../../../domain/entities/workout_activity_entity.dart';
@@ -10,13 +11,50 @@ part 'workout_state.dart';
 
 class WorkoutCubit extends Cubit<WorkoutState> {
   final GetWorkoutUseCase getWorkoutUseCase;
+  final HealthService healthService;
 
   WorkoutCubit({
     required this.getWorkoutUseCase,
-  }) : super(WorkoutInitial());
+    required this.healthService,
+  }) : super(WorkoutInitial()) {
+    refreshIntervalDuration = healthService.refreshIntervalDuration;
+  }
+
+  late Duration refreshIntervalDuration;
+
+  bool get isRefreshable {
+    final currentState = state;
+    if (currentState is! WorkoutLoaded) {
+      return true;
+    }
+
+    final currentDate = DateTime.now();
+    final updatedAt = currentState.workout?.updatedAt;
+    // if updatedAt is less than refreshIntervalDuration, then return false
+    if (updatedAt != null) {
+      final diff = currentDate.difference(updatedAt);
+
+      if (diff < refreshIntervalDuration) {
+        // emit checkedAt
+        emit(
+          currentState.copyWith(
+            checkedAt: currentDate,
+          ),
+        );
+
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   Future<void> getWorkoutInOneWeek() async {
     try {
+      if (!isRefreshable) {
+        return;
+      }
+
       emit(WorkoutLoading());
 
       final workout = await getWorkoutUseCase.call(
@@ -28,6 +66,7 @@ class WorkoutCubit extends Cubit<WorkoutState> {
 
       emit(WorkoutLoaded(
         workout: workout,
+        checkedAt: DateTime.now(),
       ));
     } catch (error) {
       emit(WorkoutError(
@@ -48,6 +87,7 @@ class WorkoutCubit extends Cubit<WorkoutState> {
 
       emit(WorkoutLoaded(
         workout: workout,
+        checkedAt: DateTime.now(),
       ));
     } catch (error) {
       if (state is! WorkoutLoaded) {
@@ -64,6 +104,10 @@ class WorkoutCubit extends Cubit<WorkoutState> {
     final currentState = state;
 
     try {
+      if (!isRefreshable) {
+        return;
+      }
+
       if (currentState is! WorkoutLoaded) {
         emit(WorkoutLoading());
       }
@@ -98,9 +142,19 @@ class WorkoutCubit extends Cubit<WorkoutState> {
             }
           }
         }
+
+        emit(WorkoutLoaded(
+          workout: ActivityEntity(
+            createdAt: currentWorkout?.createdAt,
+            updatedAt: newWorkout?.updatedAt,
+            data: currentData,
+          ),
+          checkedAt: DateTime.now(),
+        ));
       } else {
         emit(WorkoutLoaded(
           workout: newWorkout,
+          checkedAt: DateTime.now(),
         ));
       }
     } catch (error) {

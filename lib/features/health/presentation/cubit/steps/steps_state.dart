@@ -13,16 +13,20 @@ final class StepsLoading extends StepsState {}
 
 final class StepsLoaded extends StepsState {
   final ActivityEntity<List<StepsActivityEntity>>? steps;
+  final DateTime? checkedAt;
 
   const StepsLoaded({
     required this.steps,
+    required this.checkedAt,
   });
 
   StepsLoaded copyWith({
     ActivityEntity<List<StepsActivityEntity>>? steps,
+    DateTime? checkedAt,
   }) {
     return StepsLoaded(
       steps: steps ?? this.steps,
+      checkedAt: checkedAt ?? this.checkedAt,
     );
   }
 
@@ -78,7 +82,10 @@ final class StepsLoaded extends StepsState {
   }
 
   @override
-  List<Object?> get props => [steps];
+  List<Object?> get props => [
+        steps,
+        checkedAt,
+      ];
 }
 
 final class StepsError extends StepsState {
