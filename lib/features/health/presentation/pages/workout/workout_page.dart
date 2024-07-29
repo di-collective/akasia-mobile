@@ -1,17 +1,20 @@
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routes/app_route.dart';
-import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/duration_extension.dart';
-import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../cubit/workout/workout_cubit.dart';
-import '../widgets/option_button_item_widget.dart';
-import '../widgets/weekly_chart_widget.dart';
+import '../../../../../core/routes/app_route.dart';
+import '../../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../../core/ui/extensions/duration_extension.dart';
+import '../../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../../core/ui/theme/dimens.dart';
+import '../../../../../core/ui/widget/images/network_image_widget.dart';
+import '../../cubit/workout/workout_cubit.dart';
+import '../../widgets/option_button_item_widget.dart';
+import '../../widgets/weekly_chart_widget.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key});
@@ -163,6 +166,42 @@ class _WorkoutPageState extends State<WorkoutPage> {
             const SizedBox(
               height: 32,
             ),
+            GestureDetector(
+              onTap: _onTenDaysWorkout,
+              child: NetworkImageWidget(
+                size: Size(context.width, 147),
+                fit: BoxFit.cover,
+                opcatity: 0.4,
+                borderRadius: BorderRadius.circular(
+                  AppRadius.large,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        context.locale.workoutsRecommendationsForYou,
+                        style: textTheme.bodySmall.copyWith(
+                          color: colorScheme.white,
+                        ),
+                      ),
+                      Text(
+                        "10 ${context.locale.daysWorkout}",
+                        style: textTheme.titleSmall.copyWith(
+                          color: colorScheme.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 32,
+            ),
             Text(
               context.locale.options,
               style: textTheme.titleMedium.copyWith(
@@ -195,6 +234,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ),
       ),
     );
+  }
+
+  void _onTenDaysWorkout() {
+    // go to ten days workout page
+    context.goNamed(AppRoute.tenDaysWorkout.name);
   }
 
   void _onShowAllData() {

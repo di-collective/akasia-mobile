@@ -105,6 +105,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
                   AppRoute.workoutDetails.route(),
                 ],
               ),
+              AppRoute.tenDaysWorkout.route(
+                routes: [
+                  AppRoute.dayWorkoutDetails.route(),
+                ],
+              ),
             ],
           ),
         ],

@@ -26,14 +26,16 @@ import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/health/presentation/pages/all_heart_rate_data_page.dart';
 import '../../features/health/presentation/pages/all_sleep_data_page.dart';
 import '../../features/health/presentation/pages/all_steps_data_page.dart';
-import '../../features/health/presentation/pages/all_workout_data_page.dart';
 import '../../features/health/presentation/pages/heart_rate_details_page.dart';
 import '../../features/health/presentation/pages/heart_rate_page.dart';
 import '../../features/health/presentation/pages/sleep_details_page.dart';
 import '../../features/health/presentation/pages/sleep_page.dart';
 import '../../features/health/presentation/pages/steps_page.dart';
-import '../../features/health/presentation/pages/workout_details_page.dart';
-import '../../features/health/presentation/pages/workout_page.dart';
+import '../../features/health/presentation/pages/workout/all_workout_data_page.dart';
+import '../../features/ten_days_workout/presentation/pages/day_workout_details_page.dart';
+import '../../features/ten_days_workout/presentation/pages/ten_days_workout_page.dart';
+import '../../features/health/presentation/pages/workout/workout_details_page.dart';
+import '../../features/health/presentation/pages/workout/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
@@ -126,6 +128,10 @@ extension AppRouteExtension on AppRoute {
         return 'all-workout-data';
       case AppRoute.workoutDetails:
         return 'workout-details';
+      case AppRoute.tenDaysWorkout:
+        return 'ten-days-workout';
+      case AppRoute.dayWorkoutDetails:
+        return 'day-workout-details';
     }
   }
 
@@ -304,6 +310,10 @@ extension AppRouteExtension on AppRoute {
         return WorkoutDetailsPage(
           params: params,
         );
+      case AppRoute.tenDaysWorkout:
+        return const TenDaysWorkoutPage();
+      case AppRoute.dayWorkoutDetails:
+        return const DayWorkoutDetailsPage();
     }
   }
 

@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routes/app_route.dart';
-import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/duration_extension.dart';
-import '../../../../core/ui/extensions/object_extension.dart';
-import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/states/state_empty_widget.dart';
-import '../../../../core/ui/widget/states/state_error_widget.dart';
-import '../../domain/entities/workout_activity_entity.dart';
-import '../cubit/workout/workout_cubit.dart';
-import '../widgets/activity_item_widget.dart';
-import '../widgets/actvity_item_loading_widget.dart';
+import '../../../../../core/routes/app_route.dart';
+import '../../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../../core/ui/extensions/duration_extension.dart';
+import '../../../../../core/ui/extensions/object_extension.dart';
+import '../../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../../core/ui/widget/states/state_empty_widget.dart';
+import '../../../../../core/ui/widget/states/state_error_widget.dart';
+import '../../../domain/entities/workout_activity_entity.dart';
+import '../../cubit/workout/workout_cubit.dart';
+import '../../widgets/activity_item_widget.dart';
+import '../../widgets/actvity_item_loading_widget.dart';
 import 'workout_details_page.dart';
 
 class AllWorkoutDataPage extends StatefulWidget {

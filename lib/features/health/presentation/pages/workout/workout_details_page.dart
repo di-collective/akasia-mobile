@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../../core/config/asset_path.dart';
-import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/duration_extension.dart';
-import '../../../../core/ui/extensions/string_extension.dart';
-import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../domain/entities/workout_activity_entity.dart';
-import '../widgets/activity_detail_item_widget.dart';
+import '../../../../../core/config/asset_path.dart';
+import '../../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../../core/ui/extensions/duration_extension.dart';
+import '../../../../../core/ui/extensions/string_extension.dart';
+import '../../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../domain/entities/workout_activity_entity.dart';
+import '../../widgets/activity_detail_item_widget.dart';
 
 class WorkoutDetailsPageParams {
   final List<WorkoutActivityEntity> items;
