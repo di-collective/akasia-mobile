@@ -313,7 +313,14 @@ extension AppRouteExtension on AppRoute {
       case AppRoute.tenDaysWorkout:
         return const TenDaysWorkoutPage();
       case AppRoute.dayWorkoutDetails:
-        return const DayWorkoutDetailsPage();
+        DayWorkoutDetailsPageParams? params;
+        if (arguments is DayWorkoutDetailsPageParams) {
+          params = arguments;
+        }
+
+        return DayWorkoutDetailsPage(
+          params: params,
+        );
     }
   }
 

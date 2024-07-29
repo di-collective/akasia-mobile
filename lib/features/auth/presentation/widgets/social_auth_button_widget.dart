@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../core/ui/widget/buttons/outline_button_widget.dart';
 
 class AuthTypeButtonWidget extends StatelessWidget {
   final String label;
@@ -24,13 +24,11 @@ class AuthTypeButtonWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return ButtonWidget(
+    return OutlineButtonWidget(
       width: context.width,
-      backgroundColor: Colors.transparent,
-      borderColor: colorScheme.surfaceDim,
+      colorScheme: colorScheme,
       onTap: onTap,
       isLoading: isLoading,
-      textColor: colorScheme.onSurface,
       padding: const EdgeInsets.symmetric(
         vertical: 13,
       ),

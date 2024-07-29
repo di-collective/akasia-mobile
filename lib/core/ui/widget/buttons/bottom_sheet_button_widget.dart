@@ -48,24 +48,32 @@ class BottomSheetButtonWidget extends StatelessWidget {
         context.paddingHorizontal,
         context.paddingBottom,
       ),
-      child: ButtonWidget(
-        onTap: onTap,
-        textColor: textColor,
-        borderColor: borderColor,
-        backgroundColor: backgroundColor,
-        overlayColor: overlayColor,
-        elevation: elevation,
-        isLoading: isLoading,
-        isDisabled: isDisabled,
-        text: text,
-        height: height,
-        width: width,
-        borderRadius: borderRadius,
-        padding: padding,
-        style: style,
-        isUseShimmerLoading: isUseShimmerLoading,
-        child: child,
-      ),
+      child: _child,
+    );
+  }
+
+  Widget get _child {
+    if (child != null) {
+      return child!;
+    }
+
+    return ButtonWidget(
+      onTap: onTap,
+      textColor: textColor,
+      borderColor: borderColor,
+      backgroundColor: backgroundColor,
+      overlayColor: overlayColor,
+      elevation: elevation,
+      isLoading: isLoading,
+      isDisabled: isDisabled,
+      text: text,
+      height: height,
+      width: width,
+      borderRadius: borderRadius,
+      padding: padding,
+      style: style,
+      isUseShimmerLoading: isUseShimmerLoading,
+      child: child,
     );
   }
 }

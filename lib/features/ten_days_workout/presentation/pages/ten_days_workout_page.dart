@@ -8,6 +8,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../widgets/category_item_widget.dart';
 import '../widgets/workout_day_item_widget.dart';
+import 'day_workout_details_page.dart';
 
 class TenDaysWorkoutPage extends StatefulWidget {
   const TenDaysWorkoutPage({super.key});
@@ -114,6 +115,11 @@ class _TenDaysWorkoutPageState extends State<TenDaysWorkoutPage> {
 
   void _workoutItem(int index) {
     // go to day workout details page
-    context.goNamed(AppRoute.dayWorkoutDetails.name);
+    context.goNamed(
+      AppRoute.dayWorkoutDetails.name,
+      extra: DayWorkoutDetailsPageParams(
+        selectedIndex: index,
+      ),
+    );
   }
 }

@@ -393,5 +393,9 @@
   "advanced": "Advanced",
   "bulking": "Bulking",
   "exercises": "Exercises",
-  "day": "Day"
+  "exercise": "Exercise",
+  "day": "Day",
+  "instructions": "Instructions",
+  "previous": "Previous",
+  "finish": "Finish"
 }

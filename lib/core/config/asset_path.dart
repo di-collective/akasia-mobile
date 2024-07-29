@@ -60,4 +60,5 @@ class AssetIconsPath {
   static String icFitness = 'ic_fitness.svg'.iconAsset;
   static String icBarChart = 'ic_bar_chart.svg'.iconAsset;
   static String icModelTraining = 'ic_model_training.svg'.iconAsset;
+  static String icDirectionRun = 'ic_direction_run.svg'.iconAsset;
 }
