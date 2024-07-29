@@ -50,6 +50,14 @@ class __BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
+    String? newPasswordValidator;
+    if (_newPasswordTextController.text.isNotEmpty) {
+      newPasswordValidator = _newPasswordTextController.validatePassword(
+        context: context,
+        isRequired: true,
+      );
+    }
+
     return GestureDetector(
       onTap: () => context.closeKeyboard,
       child: BlocBuilder<ChangePasswordCubit, ChangePasswordState>(
@@ -105,11 +113,14 @@ class __BodyState extends State<_Body> {
                               controller: _newPasswordTextController,
                               title: context.locale.newPassword,
                               keyboardType: TextInputType.visiblePassword,
+                              description: newPasswordValidator != null
+                                  ? null
+                                  : context.locale
+                                      .passwordsMustBeCharacters(12),
                               validator: (value) {
                                 return _newPasswordTextController
                                     .validatePassword(
                                   context: context,
-                                  isRequired: true,
                                 );
                               },
                               onChanged: (_) {
@@ -130,6 +141,7 @@ class __BodyState extends State<_Body> {
                                   context: context,
                                   anotherPassword:
                                       _newPasswordTextController.text,
+                                  isRequired: true,
                                 );
                               },
                               onChanged: (_) {

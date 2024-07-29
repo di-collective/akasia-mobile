@@ -242,6 +242,7 @@ class __BodyState extends State<_Body> {
                                   .validateConfirmPassword(
                                 context: context,
                                 anotherPassword: _passwordTextController.text,
+                                isRequired: true,
                               );
                             },
                             onChanged: (val) {

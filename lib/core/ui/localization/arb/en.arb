@@ -397,5 +397,6 @@
   "day": "Day",
   "instructions": "Instructions",
   "previous": "Previous",
-  "finish": "Finish"
+  "finish": "Finish",
+  "passwordIsTooWeak": "Password is too weak or there are not enough character in it"
 }
