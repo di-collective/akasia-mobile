@@ -12,7 +12,7 @@ import '../../domain/entities/food_entity.dart';
 class InputFoodQuantityWidget extends StatefulWidget {
   final FoodEntity food;
   final Function() onCancel;
-  final Function(
+  final Future<void> Function(
     String quantity,
     String quantityUnit,
   ) onAdd;
@@ -152,13 +152,13 @@ class _InputFoodQuantityWidgetState extends State<InputFoodQuantityWidget> {
               onTapSuffixText: _onChangeUnit,
               onTap: _onTapForm,
               keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+                decimal: false,
               ),
               validator: (_) {
                 return _quantityTextController.validateOnlyNumber(
                   context: context,
                   isRequired: true,
-                  isAllowComma: true,
+                  minimumAmount: 1,
                 );
               },
             ),

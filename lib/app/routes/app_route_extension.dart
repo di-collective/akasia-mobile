@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/health/presentation/pages/all_nutrition_data_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,12 +29,11 @@ import '../../features/health/presentation/pages/all_sleep_data_page.dart';
 import '../../features/health/presentation/pages/all_steps_data_page.dart';
 import '../../features/health/presentation/pages/heart_rate_details_page.dart';
 import '../../features/health/presentation/pages/heart_rate_page.dart';
+import '../../features/health/presentation/pages/nutrition_page.dart';
 import '../../features/health/presentation/pages/sleep_details_page.dart';
 import '../../features/health/presentation/pages/sleep_page.dart';
 import '../../features/health/presentation/pages/steps_page.dart';
 import '../../features/health/presentation/pages/workout/all_workout_data_page.dart';
-import '../../features/ten_days_workout/presentation/pages/day_workout_details_page.dart';
-import '../../features/ten_days_workout/presentation/pages/ten_days_workout_page.dart';
 import '../../features/health/presentation/pages/workout/workout_details_page.dart';
 import '../../features/health/presentation/pages/workout/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
@@ -44,6 +44,8 @@ import '../../features/personal_information/presentation/pages/fill_personal_inf
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/ratings/presentation/pages/write_review_page.dart';
+import '../../features/ten_days_workout/presentation/pages/day_workout_details_page.dart';
+import '../../features/ten_days_workout/presentation/pages/ten_days_workout_page.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -132,6 +134,10 @@ extension AppRouteExtension on AppRoute {
         return 'ten-days-workout';
       case AppRoute.dayWorkoutDetails:
         return 'day-workout-details';
+      case AppRoute.nutrition:
+        return 'nutrition';
+      case AppRoute.allNutritionData:
+        return 'all-nutrition-data';
     }
   }
 
@@ -321,6 +327,10 @@ extension AppRouteExtension on AppRoute {
         return DayWorkoutDetailsPage(
           params: params,
         );
+      case AppRoute.nutrition:
+        return const NutritionPage();
+      case AppRoute.allNutritionData:
+        return const AllNutritionDataPage();
     }
   }
 

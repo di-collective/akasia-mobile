@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health/health.dart';
 
-import '../../../../../core/ui/extensions/eat_time_extension.dart';
 import '../../../data/models/food_model.dart';
 import '../../../domain/entities/food_entity.dart';
 
@@ -15,7 +15,7 @@ class SearchFoodsCubit extends Cubit<SearchFoodsState> {
   }
 
   Future<void> searchProducts({
-    required EatTime eatTime,
+    required MealType mealType,
     required String searchText,
   }) async {
     try {

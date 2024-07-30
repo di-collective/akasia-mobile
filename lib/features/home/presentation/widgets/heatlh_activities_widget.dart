@@ -13,7 +13,7 @@ import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../health/domain/entities/heart_rate_activity_entity.dart';
 import '../../../health/domain/entities/sleep_activity_entity.dart';
 import '../../../health/domain/entities/steps_activity_entity.dart';
-import '../../../health/presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
+import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
@@ -135,12 +135,23 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         const SizedBox(
           height: 10,
         ),
-        BlocBuilder<DailyNutritionsCubit, DailyNutritionsState>(
+        BlocBuilder<NutritionCubit, NutritionState>(
           builder: (context, state) {
             List<double> data = [];
-            if (state is DailyNutritionsLoaded) {
-              data = state.data;
-            }
+            if (state is NutritionLoaded) {}
+
+            return ActivityWidget(
+              iconPath: AssetIconsPath.icFish,
+              activity: context.locale.nutritions,
+              value: null,
+              unit: "kcal",
+              time: null,
+              isInitial: true,
+              isLoading: false,
+              isError: false,
+              data: data,
+              onTap: _onNutrition,
+            );
 
             return ActivityWidget(
               iconPath: AssetIconsPath.icFish,
@@ -148,9 +159,9 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               value: "800",
               unit: "kcal",
               time: "12:00",
-              isInitial: state is DailyNutritionsInitial,
-              isLoading: state is DailyNutritionsLoading,
-              isError: state is DailyNutritionsError,
+              isInitial: state is NutritionInitial,
+              isLoading: state is NutritionLoading,
+              isError: state is NutritionError,
               data: data,
             );
           },
@@ -335,7 +346,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   //     BlocProvider.of<HeartRateCubit>(context).getHeartRateInOneWeek();
 
   //     // get daily nutritions
-  //     BlocProvider.of<DailyNutritionsCubit>(context).getDailyNutritions();
+  //     BlocProvider.of<NutritionCubit>(context).getDailyNutritions();
 
   //     // get daily workouts
   //     BlocProvider.of<WorkoutCubit>(context).getWorkoutInOneWeek();
@@ -370,5 +381,10 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
   void _onWorkout() {
     // go to workout page
     context.goNamed(AppRoute.workout.name);
+  }
+
+  void _onNutrition() {
+    // go to nutrition page
+    context.goNamed(AppRoute.nutrition.name);
   }
 }

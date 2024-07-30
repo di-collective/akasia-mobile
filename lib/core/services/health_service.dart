@@ -1,7 +1,8 @@
-import 'package:akasia365mc/core/ui/extensions/date_time_extension.dart';
+import 'package:akasia365mc/features/diet_plan/domain/entities/food_entity.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../ui/extensions/date_time_extension.dart';
 import '../utils/logger.dart';
 import '../utils/permission_info.dart';
 
@@ -25,6 +26,17 @@ abstract class HealthService {
   Future<List<HealthDataPoint>> getWorkout({
     required DateTime startTime,
     required DateTime endTime,
+  });
+  Future<List<HealthDataPoint>> getNutrition({
+    required DateTime startTime,
+    required DateTime endTime,
+  });
+  Future<void> addMeal({
+    required MealType mealType,
+    required DateTime startTime,
+    required DateTime endTime,
+    required FoodEntity meal,
+    required int quantity,
   });
 }
 
@@ -205,6 +217,79 @@ class HealthServiceImpl implements HealthService {
       return result;
     } catch (error) {
       Logger.error('getWorkout error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<HealthDataPoint>> getNutrition({
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    try {
+      Logger.info('getNutrition startTime: $startTime, endTime: $endTime');
+
+      final result = await health.getHealthDataFromTypes(
+        types: [
+          HealthDataType.NUTRITION,
+        ],
+        startTime: startTime,
+        endTime: endTime,
+      );
+      Logger.success('getNutrition result: $result');
+
+      // NutritionHealthValue
+
+      return result;
+    } catch (error) {
+      Logger.error('getNutrition error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addMeal({
+    required MealType mealType,
+    required DateTime startTime,
+    required DateTime endTime,
+    required FoodEntity meal,
+    required int quantity,
+  }) async {
+    try {
+      Logger.info(
+          'addMeal startTime: $startTime, endTime: $endTime, meal: $meal, quantity: $quantity');
+
+      double? caffeine = meal.caffeine;
+      double? calories = meal.calories;
+      double? fatTotal = meal.fatTotal;
+      double? protein = meal.protein;
+      double? carbohydrates = meal.carbohydrates;
+      if (quantity > 1) {
+        // multiply the values by quantity
+        caffeine = caffeine! * quantity;
+        calories = calories! * quantity;
+        fatTotal = fatTotal! * quantity;
+        protein = protein! * quantity;
+        carbohydrates = carbohydrates! * quantity;
+      }
+
+      // write meal
+      final result = await health.writeMeal(
+        mealType: mealType,
+        startTime: startTime,
+        endTime: endTime,
+        name: meal.name,
+        caffeine: caffeine,
+        caloriesConsumed: calories,
+        fatTotal: fatTotal,
+        protein: protein,
+        carbohydrates: carbohydrates,
+      );
+      Logger.success('addMeal result: $result');
+    } catch (error) {
+      Logger.error('addMeal error: $error');
 
       rethrow;
     }

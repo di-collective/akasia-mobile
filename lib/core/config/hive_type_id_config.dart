@@ -5,4 +5,5 @@ class HiveTypeIdConfig {
   static const int sleepActivity = 1;
   static const int heartRateActivity = 2;
   static const int workoutActivity = 3;
+  static const int nutritionActivity = 4;
 }

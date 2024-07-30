@@ -73,6 +73,7 @@ extension DateTimeExtension on DateTime {
     return add(Duration(days: days));
   }
 
+  // TODO: Rename this to startOfDay
   DateTime get firstHourOfDay {
     return DateTime(year, month, day, 0, 0, 0, 0, 0);
   }
@@ -115,5 +116,17 @@ extension DateTimeExtension on DateTime {
     final int day = weekday;
 
     return add(Duration(days: 7 - day));
+  }
+
+  static List<DateTime> get daysInWeek {
+    final List<DateTime> result = [];
+    final DateTime currentDate = DateTime.now();
+    final DateTime firstDate = currentDate.firstDayOfTheWeek;
+
+    for (int i = 0; i < DateTime.daysPerWeek; i++) {
+      result.add(firstDate.add(Duration(days: i)));
+    }
+
+    return result;
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/border_radius_config.dart';
@@ -18,7 +19,7 @@ class ActivityWidget extends StatelessWidget {
   final String? value;
   final String? unitIconPath;
   final String? unit;
-  final String time;
+  final String? time;
   final List<double>? data;
   final bool isLoading;
   final bool isError;
@@ -33,7 +34,7 @@ class ActivityWidget extends StatelessWidget {
     this.value,
     this.unitIconPath,
     this.unit,
-    required this.time,
+    this.time,
     required this.data,
     required this.isLoading,
     required this.isError,
@@ -46,14 +47,15 @@ class ActivityWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    if (isInitial) {
-      // TODO: handle initial
-      return const _ContainerWidget(
-        child: SizedBox(
-          height: 100,
-        ),
-      );
-    } else if (isLoading) {
+    // if (isInitial) {
+    //   // TODO: handle initial
+    //   return const _ContainerWidget(
+    //     child: SizedBox(
+    //       height: 100,
+    //     ),
+    //   );
+    // } else
+    if (isLoading) {
       return const _ContainerWidget(
         child: _LoadingWidget(),
       );
@@ -95,7 +97,7 @@ class ActivityWidget extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    time,
+                    _time,
                     style: textTheme.bodyMedium.copyWith(
                       color: colorScheme.onSurfaceBright,
                     ),
@@ -169,7 +171,7 @@ class ActivityWidget extends StatelessWidget {
               const SizedBox(
                 width: 16,
               ),
-              if (data == null) ...[
+              if (data == null || data!.isEmpty) ...[
                 const _EmptyChartWidget(),
               ] else ...[
                 Expanded(
@@ -202,8 +204,6 @@ class ActivityWidget extends StatelessWidget {
                               final y = data![index];
                               final isLast = index == _maxDataLength - 1;
 
-                              // TODO: Handle data if y is 0, show little bar height
-
                               return BarChartGroupData(
                                 x: x,
                                 barRods: [
@@ -232,6 +232,16 @@ class ActivityWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String get _time {
+    if (time != null) {
+      return time!;
+    }
+
+    final dateNow = DateTime.now();
+
+    return dateNow.hourMinute;
   }
 }
 

@@ -7,7 +7,7 @@ import '../domain/usecases/get_heart_rate_usecase.dart';
 import '../domain/usecases/get_sleep_usecase.dart';
 import '../domain/usecases/get_steps_usecase.dart';
 import '../domain/usecases/get_workout_usecase.dart';
-import '../presentation/cubit/daily_nutritions/daily_nutritions_cubit.dart';
+import '../presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../presentation/cubit/sleep/sleep_cubit.dart';
 import '../presentation/cubit/steps/steps_cubit.dart';
@@ -84,8 +84,8 @@ class HealthDI {
         getHeartRateUseCase: sl(),
       );
     });
-    sl.registerFactory<DailyNutritionsCubit>(() {
-      return DailyNutritionsCubit();
+    sl.registerFactory<NutritionCubit>(() {
+      return NutritionCubit();
     });
     sl.registerFactory<WorkoutCubit>(() {
       return WorkoutCubit(

@@ -112,6 +112,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
               ),
             ],
           ),
+          AppRoute.nutrition.route(
+            routes: [
+              AppRoute.allNutritionData.route(),
+            ],
+          ),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

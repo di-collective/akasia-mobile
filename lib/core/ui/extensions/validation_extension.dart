@@ -165,11 +165,17 @@ extension TextEditingControllerExtension on TextEditingController {
     required BuildContext context,
     bool? isRequired,
     bool? isAllowComma,
+    double? minimumAmount,
   }) {
     if (isRequired == true) {
       if (text.isEmpty) {
         return context.locale.cannotBeEmpty;
       }
+    }
+
+    // contains space
+    if (text.isContainsSpace) {
+      return context.locale.onlyNumber;
     }
 
     // validate only number
@@ -178,6 +184,18 @@ extension TextEditingControllerExtension on TextEditingController {
           isWithOutComma: isAllowComma,
         )) {
       return context.locale.onlyNumber;
+    }
+
+    // minimum amount
+    if (minimumAmount != null) {
+      final amount = text.parseToDouble;
+      if (amount != null) {
+        if (amount < minimumAmount) {
+          return context.locale.minimumAmount(
+            minimumAmount.toString(),
+          );
+        }
+      }
     }
 
     return null;

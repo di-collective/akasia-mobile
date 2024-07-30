@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:health/health.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/eat_time_extension.dart';
+import '../../../../core/ui/extensions/meal_type_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
@@ -49,7 +50,7 @@ class _EatWidgetState extends State<EatWidget> {
           height: 12,
         ),
         ListView.separated(
-          itemCount: EatTime.values.length,
+          itemCount: MealTypeExtension.valuesWithoutUnknown.length,
           physics: const NeverScrollableScrollPhysics(),
           primary: false,
           shrinkWrap: true,
@@ -59,13 +60,13 @@ class _EatWidgetState extends State<EatWidget> {
             );
           },
           itemBuilder: (context, index) {
-            final eatTime = EatTime.values[index];
+            final mealType = MealTypeExtension.valuesWithoutUnknown[index];
 
             return _EatItemWidget(
-              eatTime: eatTime,
+              mealType: mealType,
               onAddFood: () {
                 _onAddFood(
-                  eatTime: eatTime,
+                  mealType: mealType,
                 );
               },
             );
@@ -76,12 +77,12 @@ class _EatWidgetState extends State<EatWidget> {
   }
 
   void _onAddFood({
-    required EatTime eatTime,
+    required MealType mealType,
   }) {
     context.goNamed(
       AppRoute.addEat.name,
       extra: AddEatenFoodPageParams(
-        eatTime: eatTime,
+        mealType: mealType,
         date: widget.date,
       ),
     );
@@ -89,11 +90,11 @@ class _EatWidgetState extends State<EatWidget> {
 }
 
 class _EatItemWidget extends StatefulWidget {
-  final EatTime eatTime;
+  final MealType mealType;
   final Function() onAddFood;
 
   const _EatItemWidget({
-    required this.eatTime,
+    required this.mealType,
     required this.onAddFood,
   });
 
@@ -128,7 +129,7 @@ class __EatItemWidgetState extends State<_EatItemWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.eatTime.title(context: context).toUpperCase(),
+                  widget.mealType.title(context: context).toUpperCase(),
                   style: textTheme.bodyLarge.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w700,

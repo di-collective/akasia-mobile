@@ -60,6 +60,14 @@
       }
     }
   },
+  "minimumAmount": "Minumum amount is {length}",
+  "@minimumAmount": {
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
   "maximum": "Maximum is {length}",
   "@maximum": {
     "placeholders": {
@@ -398,5 +406,6 @@
   "instructions": "Instructions",
   "previous": "Previous",
   "finish": "Finish",
-  "passwordIsTooWeak": "Password is too weak or there are not enough character in it"
+  "passwordIsTooWeak": "Password is too weak or there are not enough character in it.",
+  "enterFoodName": "Enter a food name"
 }
