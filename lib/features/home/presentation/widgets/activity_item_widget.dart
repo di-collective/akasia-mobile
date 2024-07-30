@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/config/asset_path.dart';
@@ -47,14 +49,6 @@ class ActivityWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    // if (isInitial) {
-    //   // TODO: handle initial
-    //   return const _ContainerWidget(
-    //     child: SizedBox(
-    //       height: 100,
-    //     ),
-    //   );
-    // } else
     if (isLoading) {
       return const _ContainerWidget(
         child: _LoadingWidget(),
@@ -195,6 +189,8 @@ class ActivityWidget extends StatelessWidget {
                           gridData: const FlGridData(
                             show: false,
                           ),
+                          alignment: BarChartAlignment.end,
+                          groupsSpace: 2,
                           barGroups: List.generate(
                             data!.length > _maxDataLength
                                 ? _maxDataLength
@@ -202,7 +198,7 @@ class ActivityWidget extends StatelessWidget {
                             (index) {
                               final x = index;
                               final y = data![index];
-                              final isLast = index == _maxDataLength - 1;
+                              final isLast = index == data!.length - 1;
 
                               return BarChartGroupData(
                                 x: x,
@@ -309,8 +305,6 @@ class _LoadingWidget extends StatelessWidget {
           height: 55,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
               children: [
