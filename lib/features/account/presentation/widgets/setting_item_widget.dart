@@ -5,12 +5,12 @@ import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 
-class AccountItemWidget extends StatelessWidget {
+class SettingItemWidget extends StatelessWidget {
   final String title;
   final Color? titleColor;
   final Function() onTap;
 
-  const AccountItemWidget({
+  const SettingItemWidget({
     super.key,
     required this.title,
     this.titleColor,
@@ -25,12 +25,7 @@ class AccountItemWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.fromLTRB(
-          context.paddingHorizontal,
-          18,
-          22,
-          18,
-        ),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -43,7 +38,7 @@ class AccountItemWidget extends StatelessWidget {
           children: [
             Text(
               title,
-              style: textTheme.labelMedium.copyWith(
+              style: textTheme.labelLarge.copyWith(
                 color: titleColor ?? colorScheme.onSurfaceDim,
                 fontWeight: FontWeight.w500,
               ),

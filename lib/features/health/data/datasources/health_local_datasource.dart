@@ -161,7 +161,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       Logger.success('getSteps steps: $steps');
 
       // update local database
-      activityBox.put(
+      await activityBox.put(
         'steps',
         ActivityEntity<List<StepsActivityEntity>>(
           updatedAt: currentDate,
@@ -340,7 +340,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      activityBox.put(
+      await activityBox.put(
         'sleep',
         ActivityEntity<List<SleepActivityEntity>>(
           updatedAt: currentDate,
@@ -530,7 +530,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      activityBox.put(
+      await activityBox.put(
         'heart_rate',
         ActivityEntity<List<HeartRateActivityEntity>>(
           updatedAt: currentDate,
@@ -745,7 +745,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      activityBox.put(
+      await activityBox.put(
         'workout',
         ActivityEntity<List<WorkoutActivityEntity>>(
           updatedAt: currentDate,
@@ -934,7 +934,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      activityBox.put(
+      await activityBox.put(
         'nutrition',
         ActivityEntity<List<NutritionActivityEntity>>(
           updatedAt: currentDate,
