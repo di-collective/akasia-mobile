@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,52 +50,55 @@ class _NutritionPageState extends State<NutritionPage> {
                 final List<BarChartGroupData> barGroups = [];
                 int average = 0;
                 if (state is NutritionLoaded) {
-                  // final dataInWeek = state.getCurrentWeekData();
+                  final dataInWeek = state.getCurrentWeekData();
+                  if (dataInWeek.isNotEmpty) {
+                    List<double> allCalories = [];
+                    for (final dayEntry in dataInWeek.entries) {
+                      double calloriesInDay = 0;
 
-                  // if (dataInWeek != null && dataInWeek.isNotEmpty) {
-                  //   List<int> stepsTotal = [];
-                  //   for (final value in dataInWeek) {
-                  //     final date = value.date;
-                  //     final count = value.count;
+                      for (final nutrition in dayEntry.value) {
+                        final value = nutrition.value;
 
-                  //     // add date
-                  //     dates.add(date ?? DateTime.now());
+                        if (value == null) {
+                          continue;
+                        }
 
-                  //     // add data to chart
-                  //     barGroups.add(
-                  //       BarChartGroupData(
-                  //         x: barGroups.length,
-                  //         groupVertically: true,
-                  //         barRods: [
-                  //           BarChartRodData(
-                  //             toY: (count ?? 0).toDouble(),
-                  //             color: colorScheme.primary,
-                  //             borderRadius: const BorderRadius.vertical(
-                  //               top: Radius.circular(3),
-                  //             ),
-                  //             width: 25,
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     );
+                        calloriesInDay += value;
 
-                  //     if (count != null) {
-                  //       // add for counting average
-                  //       stepsTotal.add(count);
-                  //     }
-                  //   }
+                        // add callory
+                        allCalories.add(value);
+                      }
 
-                  //   // calculate average
-                  //   final total = stepsTotal.sum();
-                  //   if (dataInWeek.isNotEmpty) {
-                  //     average = total ~/ stepsTotal.length;
-                  //   }
-                  // }
+                      // add data to chart
+                      barGroups.add(
+                        BarChartGroupData(
+                          x: barGroups.length,
+                          groupVertically: true,
+                          barRods: [
+                            BarChartRodData(
+                              toY: calloriesInDay,
+                              color: colorScheme.primary,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(3),
+                              ),
+                              width: 25,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (allCalories.isNotEmpty) {
+                      // calculate average
+                      final totalCallories = allCalories.sum();
+                      average = totalCallories ~/ allCalories.length;
+                    }
+                  }
                 }
 
                 return WeeklyChartWidget(
                   dates: dates,
-                  unit: context.locale.stepsUnit,
+                  unit: "cal",
                   average: average.formatNumber(
                     locale: AppLocale.id.locale.countryCode,
                   ),
