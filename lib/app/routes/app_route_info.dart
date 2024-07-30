@@ -114,7 +114,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
           ),
           AppRoute.nutrition.route(
             routes: [
-              AppRoute.allNutritionData.route(),
+              AppRoute.allNutritionData.route(
+                routes: [
+                  AppRoute.nutritionDetails.route(),
+                ],
+              ),
             ],
           ),
         ],

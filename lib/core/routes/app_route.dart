@@ -43,4 +43,5 @@ enum AppRoute {
   dayWorkoutDetails,
   nutrition,
   allNutritionData,
+  nutritionDetails,
 }

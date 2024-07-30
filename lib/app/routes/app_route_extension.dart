@@ -1,4 +1,3 @@
-import 'package:akasia365mc/features/health/presentation/pages/all_nutrition_data_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,10 +24,12 @@ import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
 import '../../features/health/presentation/pages/all_heart_rate_data_page.dart';
+import '../../features/health/presentation/pages/all_nutrition_data_page.dart';
 import '../../features/health/presentation/pages/all_sleep_data_page.dart';
 import '../../features/health/presentation/pages/all_steps_data_page.dart';
 import '../../features/health/presentation/pages/heart_rate_details_page.dart';
 import '../../features/health/presentation/pages/heart_rate_page.dart';
+import '../../features/health/presentation/pages/nutrition_details_page.dart';
 import '../../features/health/presentation/pages/nutrition_page.dart';
 import '../../features/health/presentation/pages/sleep_details_page.dart';
 import '../../features/health/presentation/pages/sleep_page.dart';
@@ -138,6 +139,8 @@ extension AppRouteExtension on AppRoute {
         return 'nutrition';
       case AppRoute.allNutritionData:
         return 'all-nutrition-data';
+      case AppRoute.nutritionDetails:
+        return 'nutrition-details';
     }
   }
 
@@ -331,6 +334,15 @@ extension AppRouteExtension on AppRoute {
         return const NutritionPage();
       case AppRoute.allNutritionData:
         return const AllNutritionDataPage();
+      case AppRoute.nutritionDetails:
+        NutritionDetailsPageParams? params;
+        if (arguments is NutritionDetailsPageParams) {
+          params = arguments;
+        }
+
+        return NutritionDetailsPage(
+          params: params,
+        );
     }
   }
 

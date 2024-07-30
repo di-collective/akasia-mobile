@@ -13,7 +13,7 @@ import '../../domain/entities/nutrition_activity_entity.dart';
 import '../cubit/nutrition/nutrition_cubit.dart';
 import '../widgets/activity_item_widget.dart';
 import '../widgets/actvity_item_loading_widget.dart';
-import 'sleep_details_page.dart';
+import 'nutrition_details_page.dart';
 
 class AllNutritionDataPage extends StatefulWidget {
   const AllNutritionDataPage({super.key});
@@ -89,33 +89,34 @@ class _AllNutritionDataPageState extends State<AllNutritionDataPage> {
               itemBuilder: (context, index) {
                 final nutritions = sortedNutritions.entries.toList()[index];
 
-                final date = nutritions.key.formatDate(
+                final date = nutritions.key;
+                final formattedDate = date.formatDate(
                   format: 'dd MMM',
                 );
 
-                double totalNutritionsInDay = 0;
+                double nutritionsInDay = 0;
                 for (final item in nutritions.value) {
                   final value = item.value;
                   if (value == null) {
                     continue;
                   }
 
-                  totalNutritionsInDay += value;
+                  nutritionsInDay += value;
                 }
 
                 return ActivityItemWidget(
                   isFirst: index == 0,
                   isLast: index == sortedNutritions.keys.length - 1,
-                  title: date ?? "",
-                  value: "${totalNutritionsInDay}cal",
+                  title: formattedDate ?? "",
+                  value: "${nutritionsInDay}cal",
                   onTap: () {
-                    // _onNutrition(
-                    //   params: SleepDetailsPageParams(
-                    //     sleeps: sleep.value,
-                    //     formattedDateRange: formattedDateRange,
-                    //     totalDuration: totalDuration,
-                    //   ),
-                    // );
+                    _onNutrition(
+                      params: NutritionDetailsPageParams(
+                        items: nutritions.value,
+                        nutritionsInDay: nutritionsInDay,
+                        date: date,
+                      ),
+                    );
                   },
                 );
               },
@@ -140,10 +141,10 @@ class _AllNutritionDataPageState extends State<AllNutritionDataPage> {
   }
 
   void _onNutrition({
-    required SleepDetailsPageParams params,
+    required NutritionDetailsPageParams params,
   }) {
     context.goNamed(
-      AppRoute.sleepDetails.name,
+      AppRoute.nutritionDetails.name,
       extra: params,
     );
   }
