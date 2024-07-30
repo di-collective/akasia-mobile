@@ -14,8 +14,8 @@ import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
-import '../../../health/presentation/cubit/workout/workout_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
+import '../../../health/presentation/cubit/workout/workout_cubit.dart';
 import '../widgets/heatlh_activities_widget.dart';
 import '../widgets/home_dashboard_item_widget.dart';
 import '../widgets/home_menu_item_widget.dart';
@@ -196,19 +196,19 @@ class _HomePageState extends State<HomePage> {
         // get profile
         BlocProvider.of<ProfileCubit>(context).refreshGetProfile(),
 
-        // get daily steps
+        // get steps
         BlocProvider.of<StepsCubit>(context).refreshStepsInOneWeek(),
 
-        // get daily heart rate
+        // get heart rate
         BlocProvider.of<HeartRateCubit>(context).refreshHeartRateInOneWeek(),
 
-        // get daily nutritions
-        BlocProvider.of<NutritionCubit>(context).refreshDailyNutritions(),
+        // get nutritions
+        BlocProvider.of<NutritionCubit>(context).refreshNutritionInOneWeek(),
 
-        // get daily workouts
+        // get workouts
         BlocProvider.of<WorkoutCubit>(context).refreshWorkoutInOneWeek(),
 
-        // get daily sleep
+        // get sleep
         BlocProvider.of<SleepCubit>(context).refreshSleepInOneWeek(),
       ]);
     } catch (error) {

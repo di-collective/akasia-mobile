@@ -30,7 +30,7 @@ final class StepsLoaded extends StepsState {
     );
   }
 
-  List<StepsActivityEntity>? getLastOneWeekData() {
+  List<StepsActivityEntity>? getLastSevenData() {
     final List<StepsActivityEntity> result = [];
 
     final allData = steps?.data ?? [];

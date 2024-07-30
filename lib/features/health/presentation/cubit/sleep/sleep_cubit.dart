@@ -57,16 +57,18 @@ class SleepCubit extends Cubit<SleepState> {
 
       emit(SleepLoading());
 
+      final currentDate = DateTime.now();
+
       final sleep = await getSleepUseCase.call(
         GetSleepUseCaseParams(
-          startDate: DateTime.now().add(const Duration(days: -6)),
-          endDate: DateTime.now(),
+          startDate: currentDate.add(const Duration(days: -6)),
+          endDate: currentDate,
         ),
       );
 
       emit(SleepLoaded(
         sleep: sleep,
-        checkedAt: DateTime.now(),
+        checkedAt: currentDate,
       ));
     } catch (error) {
       emit(SleepError(

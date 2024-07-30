@@ -7,6 +7,7 @@ import '../../../../core/ui/extensions/dynamic_extension.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/activity_entity.dart';
 import '../../domain/entities/heart_rate_activity_entity.dart';
+import '../../domain/entities/nutrition_activity_entity.dart';
 import '../../domain/entities/sleep_activity_entity.dart';
 import '../../domain/entities/steps_activity_entity.dart';
 import '../../domain/entities/workout_activity_entity.dart';
@@ -25,6 +26,10 @@ abstract class HealthLocalDataSource {
     DateTime? endDate,
   });
   Future<ActivityEntity<List<WorkoutActivityEntity>>?> getWorkout({
+    DateTime? startDate,
+    DateTime? endDate,
+  });
+  Future<ActivityEntity<List<NutritionActivityEntity>>?> getNutrition({
     DateTime? startDate,
     DateTime? endDate,
   });
@@ -787,6 +792,195 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       );
     } catch (error) {
       Logger.error('getWorkout error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ActivityEntity<List<NutritionActivityEntity>>?> getNutrition({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Logger.info('getNutrition startDate: $startDate, endDate: $endDate');
+
+      final currentDate = DateTime.now();
+
+      final ActivityEntity<List<NutritionActivityEntity>>?
+          currentNutritionData = activityBox.get('nutrition');
+      Logger.success(
+          'getNutrition currentNutritionData: $currentNutritionData');
+
+      DateTime? lastUpdatedAtData = currentNutritionData?.updatedAt;
+      DateTime? createdAt = currentNutritionData?.createdAt;
+      List<NutritionActivityEntity>? nutrition = currentNutritionData?.data;
+      if (lastUpdatedAtData == null) {
+        // assume user first time access and nutrition is null
+        // get for 30 days
+        for (int i = _maxRangeDaysQuery; i >= 0; i--) {
+          final nextDate = currentDate.add(Duration(days: -i));
+          final newNutritionData = await healthService.getNutrition(
+            startTime: nextDate.firstHourOfDay,
+            endTime: nextDate.lastHourOfDay,
+          );
+
+          final List<NutritionActivityEntity> newNutritionActivity = [];
+          for (final data in newNutritionData) {
+            newNutritionActivity.add(
+              NutritionActivityEntity(
+                fromDate: data.dateFrom,
+                toDate: data.dateTo,
+                value: data.value.dynamicToDouble,
+              ),
+            );
+          }
+
+          // add new data to last data
+          nutrition = [
+            ...nutrition ?? [],
+            ...newNutritionActivity,
+          ];
+        }
+
+        createdAt = currentDate;
+      } else {
+        final difference = currentDate.difference(lastUpdatedAtData);
+        Logger.info('getNutrition difference: $difference');
+
+        if (difference > healthService.refreshIntervalDuration) {
+          // if last updated is more than refresh interval, get new data from health service
+          // get different in days
+          final diffInDays = currentDate.day - lastUpdatedAtData.day;
+          Logger.info('getNutrition diffInDays: $diffInDays');
+          if (diffInDays > 0) {
+            // if diffInDays is more than 0, get data per day
+            for (int i = 0; i <= diffInDays; i++) {
+              if (i == 0) {
+                // if i is 0, get data from lastUpdatedAtData to last hour of day
+                final newNutritionData = await healthService.getNutrition(
+                  startTime: lastUpdatedAtData,
+                  endTime: lastUpdatedAtData.lastHourOfDay,
+                );
+
+                final List<NutritionActivityEntity> newNutritionActivity = [];
+                for (final data in newNutritionData) {
+                  newNutritionActivity.add(
+                    NutritionActivityEntity(
+                      fromDate: data.dateFrom,
+                      toDate: data.dateTo,
+                      value: data.value.dynamicToDouble,
+                    ),
+                  );
+                }
+
+                // add new data to last data
+                nutrition = [
+                  ...nutrition ?? [],
+                  ...newNutritionActivity,
+                ];
+
+                continue;
+              }
+
+              // get data per day
+              final nextDate = lastUpdatedAtData.add(Duration(days: i));
+              final newNutritionData = await healthService.getNutrition(
+                startTime: nextDate.firstHourOfDay,
+                endTime: nextDate.lastHourOfDay,
+              );
+
+              final List<NutritionActivityEntity> newNutritionActivity = [];
+              for (final data in newNutritionData) {
+                newNutritionActivity.add(
+                  NutritionActivityEntity(
+                    fromDate: data.dateFrom,
+                    toDate: data.dateTo,
+                    value: data.value.dynamicToDouble,
+                  ),
+                );
+              }
+
+              nutrition = [
+                ...nutrition ?? [],
+                ...newNutritionActivity,
+              ];
+            }
+          } else {
+            // if diffInDays is 0, get data from lastUpdatedAtData to currentDate
+            final newNutritionData = await healthService.getNutrition(
+              startTime: lastUpdatedAtData,
+              endTime: currentDate,
+            );
+
+            final List<NutritionActivityEntity> newNutritionActivity = [];
+            for (final data in newNutritionData) {
+              newNutritionActivity.add(
+                NutritionActivityEntity(
+                  fromDate: data.dateFrom,
+                  toDate: data.dateTo,
+                  value: data.value.dynamicToDouble,
+                ),
+              );
+            }
+
+            // add new data to last data
+            nutrition = [
+              ...nutrition ?? [],
+              ...newNutritionActivity,
+            ];
+          }
+        }
+      }
+
+      // update local database
+      activityBox.put(
+        'nutrition',
+        ActivityEntity<List<NutritionActivityEntity>>(
+          updatedAt: currentDate,
+          data: nutrition,
+          createdAt: createdAt,
+        ),
+      );
+
+      List<NutritionActivityEntity>? result = List.from(nutrition ?? []);
+
+      // if startDate is not null, filter data from startDate to currentDate
+      if (startDate != null) {
+        result = nutrition?.where((e) {
+          return e.fromDate?.isAfter(startDate.addDays(-1)) ?? false;
+        }).toList();
+      }
+
+      // if endDate is not null, filter data until endDate
+      if (endDate != null) {
+        List<NutritionActivityEntity>? filtered;
+        if (startDate != null) {
+          filtered = result;
+        } else {
+          filtered = nutrition;
+        }
+
+        result = filtered?.where((e) {
+          return e.fromDate?.isBefore(endDate.addDays(1)) ?? false;
+        }).toList();
+      }
+
+      Logger.success('getNutrition result: $result');
+
+      return ActivityEntity(
+        data: result?.map((e) {
+          return NutritionActivityEntity(
+            fromDate: e.fromDate,
+            toDate: e.toDate,
+            value: e.value,
+          );
+        }).toList(),
+        updatedAt: currentDate,
+        createdAt: createdAt,
+      );
+    } catch (error) {
+      Logger.error('getNutrition error: $error');
 
       rethrow;
     }

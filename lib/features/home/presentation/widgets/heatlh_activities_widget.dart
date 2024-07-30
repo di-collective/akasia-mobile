@@ -11,10 +11,11 @@ import '../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../health/domain/entities/heart_rate_activity_entity.dart';
+import '../../../health/domain/entities/nutrition_activity_entity.dart';
 import '../../../health/domain/entities/sleep_activity_entity.dart';
 import '../../../health/domain/entities/steps_activity_entity.dart';
-import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
+import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import '../../../health/presentation/cubit/workout/workout_cubit.dart';
@@ -63,7 +64,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               checkedAt = state.checkedAt;
 
               // get last seven data
-              data = state.getLastOneWeekData();
+              data = state.getLastSevenData();
 
               // get current steps
               if (data != null && data.isNotEmpty) {
@@ -81,7 +82,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
                 locale: AppLocale.id.locale.countryCode,
               ),
               unit: context.locale.stepsUnit,
-              time: checkedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute,
               isInitial: state is StepsInitial,
               isLoading: state is StepsLoading,
               isError: state is StepsError,
@@ -121,7 +122,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               value: currentHeartRate,
               unit: context.locale.heartRateUnit,
               unitIconPath: AssetIconsPath.icLove,
-              time: checkedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute,
               isInitial: state is HeartRateInitial,
               isLoading: state is HeartRateLoading,
               isError: state is HeartRateError,
@@ -137,32 +138,37 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
         ),
         BlocBuilder<NutritionCubit, NutritionState>(
           builder: (context, state) {
-            List<double> data = [];
-            if (state is NutritionLoaded) {}
+            List<NutritionActivityEntity>? data;
+            DateTime? checkedAt;
+            double currentNutrition = 0;
+            if (state is NutritionLoaded) {
+              checkedAt = state.checkedAt;
+
+              // get last seven data
+              data = state.getLastSevenData();
+
+              // get current steps
+              if (data != null && data.isNotEmpty) {
+                final value = data.last.value;
+                if (value != null) {
+                  currentNutrition = value;
+                }
+              }
+            }
 
             return ActivityWidget(
               iconPath: AssetIconsPath.icFish,
               activity: context.locale.nutritions,
-              value: null,
-              unit: "kcal",
-              time: null,
-              isInitial: true,
-              isLoading: false,
-              isError: false,
-              data: data,
-              onTap: _onNutrition,
-            );
-
-            return ActivityWidget(
-              iconPath: AssetIconsPath.icFish,
-              activity: context.locale.nutritions,
-              value: "800",
-              unit: "kcal",
-              time: "12:00",
+              value: currentNutrition.toString(),
+              unit: "cal",
+              time: checkedAt?.hourMinute,
               isInitial: state is NutritionInitial,
               isLoading: state is NutritionLoading,
               isError: state is NutritionError,
-              data: data,
+              onTap: _onNutrition,
+              data: data?.map((e) {
+                return e.value ?? 0;
+              }).toList(),
             );
           },
         ),
@@ -206,7 +212,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
               activity: context.locale.workouts,
               value: currentWorkoutTime.inMinutes.toString(),
               unit: "min",
-              time: checkedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute,
               isInitial: state is WorkoutInitial,
               isLoading: state is WorkoutLoading,
               isError: state is WorkoutError,
@@ -247,7 +253,7 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
             return ActivityWidget(
               iconPath: AssetIconsPath.icBed,
               activity: context.locale.sleep,
-              time: checkedAt?.hourMinute ?? "",
+              time: checkedAt?.hourMinute,
               isInitial: state is SleepInitial,
               isLoading: state is SleepLoading,
               isError: state is SleepError,

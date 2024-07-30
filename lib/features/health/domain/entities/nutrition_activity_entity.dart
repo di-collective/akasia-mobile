@@ -7,7 +7,7 @@ import 'activity_entity.dart';
 class NutritionActivityEntity extends Equatable {
   final DateTime? fromDate;
   final DateTime? toDate;
-  final int? value;
+  final double? value;
 
   const NutritionActivityEntity({
     this.fromDate,
@@ -39,7 +39,7 @@ class NutritionActivityEntityAdapter
       data.add(NutritionActivityEntity(
         fromDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         toDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
-        value: reader.readInt(),
+        value: reader.readDouble(),
       ));
     }
 
@@ -60,7 +60,7 @@ class NutritionActivityEntityAdapter
     obj.data?.forEach((activity) {
       writer.writeInt(activity.fromDate?.millisecondsSinceEpoch ?? 0);
       writer.writeInt(activity.toDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.value ?? 0);
+      writer.writeDouble(activity.value ?? 0);
     });
   }
 }

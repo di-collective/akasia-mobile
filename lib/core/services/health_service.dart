@@ -239,8 +239,6 @@ class HealthServiceImpl implements HealthService {
       );
       Logger.success('getNutrition result: $result');
 
-      // NutritionHealthValue
-
       return result;
     } catch (error) {
       Logger.error('getNutrition error: $error');

@@ -20,6 +20,8 @@ extension DynamicExtension on dynamic {
         result = (this as int).toDouble();
       } else if (this is double) {
         result = this;
+      } else if (this is NutritionHealthValue) {
+        result = (this as NutritionHealthValue).calories;
       }
 
       Logger.success('dynamicToDouble result $result');

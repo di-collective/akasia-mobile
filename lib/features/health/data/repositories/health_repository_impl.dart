@@ -1,5 +1,6 @@
 import '../../domain/entities/activity_entity.dart';
 import '../../domain/entities/heart_rate_activity_entity.dart';
+import '../../domain/entities/nutrition_activity_entity.dart';
 import '../../domain/entities/sleep_activity_entity.dart';
 import '../../domain/entities/steps_activity_entity.dart';
 import '../../domain/entities/workout_activity_entity.dart';
@@ -63,6 +64,21 @@ class HealthRepositoryImpl implements HealthRepository {
   }) async {
     try {
       return await healthLocalDataSource.getWorkout(
+        startDate: startDate,
+        endDate: endDate,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ActivityEntity<List<NutritionActivityEntity>>?> getNutrition({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      return await healthLocalDataSource.getNutrition(
         startDate: startDate,
         endDate: endDate,
       );
