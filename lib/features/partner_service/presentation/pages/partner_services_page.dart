@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routes/app_route.dart';
+import '../../../../core/services/health_service.dart';
 import '../../../../core/ui/extensions/app_partner_extension.dart';
+import '../../../../core/ui/extensions/app_partner_status_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../widgets/partner_item_widget.dart';
 import 'partner_connect_page.dart';
 
@@ -70,15 +74,41 @@ class _PartnerServicesPageState extends State<PartnerServicesPage> {
     );
   }
 
-  void _onPartner({
+  Future<void> _onPartner({
     required AppPartner partner,
-  }) {
-    // go to partner connect page
-    context.goNamed(
-      AppRoute.partnerConnect.name,
-      extra: PartnerConnectPageParams(
-        partner: partner,
-      ),
-    );
+  }) async {
+    try {
+      // show loading
+      context.showFullScreenLoading();
+
+      AppPartnerStatus? status = AppPartnerStatus.disconnected;
+      switch (partner) {
+        case AppPartner.healthConnect:
+        case AppPartner.healthKit:
+          // check if user has permissions
+          final isAuthorized = await sl<HealthService>().hasPermissions;
+          status = AppPartnerStatusExtension.toAppPartnerStatus(
+            isAuthorized,
+          );
+
+          break;
+      }
+
+      // go to partner connect page
+      context.goNamed(
+        AppRoute.partnerConnect.name,
+        extra: PartnerConnectPageParams(
+          partner: partner,
+          status: status,
+        ),
+      );
+    } catch (error) {
+      context.showErrorToast(
+        message: error.message(context),
+      );
+    } finally {
+      // hide loading
+      context.hideFullScreenLoading;
+    }
   }
 }

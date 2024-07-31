@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-  "appName": "Akasia365mc",
   "home": "Home",
   "myTreatment": "My Treatment",
   "info": "Info",
@@ -414,5 +413,37 @@
   "more": "More",
   "changeProfilePicture": "Change Profile Picture",
   "health": "Health",
-  "watch": "Watch"
+  "watch": "Watch",
+  "connect": "Connect",
+  "connectAppToPartner": "Connect {app} to {partner}",
+  "@connectAppToPartner": {
+      "placeholders": {
+          "app": {
+              "type": "String"
+          },
+          "partner": {
+              "type": "String"
+          }
+      }
+  },
+  "connectHealthPartnerToAppDescription": "When you connect to {app} to {partner} your profile will be kept up to date automatically with the latest data. You can also choose to automatically share your activity data (calories, distances, workouts, etc)",
+  "@connectHealthPartnerToAppDescription": {
+      "placeholders": {
+          "app": {
+              "type": "String"
+          },
+          "partner": {
+              "type": "String"
+          }
+      }
+  },
+  "disconnect": "Disconnect",
+  "successItem": "Success {item}",
+  "@successItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  }
 }

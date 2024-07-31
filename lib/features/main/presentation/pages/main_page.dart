@@ -63,9 +63,9 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> _initHealth() async {
     try {
-      // request health permission
-      final isPermissionGranted = await sl<HealthService>().requestPermission();
-      if (isPermissionGranted != true) {
+      // connect to health services
+      final isSuccess = await sl<HealthService>().connect();
+      if (isSuccess != true) {
         // not allowed access on health application
         return;
       }

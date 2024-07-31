@@ -1,13 +1,22 @@
-import 'package:akasia365mc/features/diet_plan/domain/entities/food_entity.dart';
+import 'dart:io';
+
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../app/routes/app_route_info.dart';
+import '../../features/diet_plan/domain/entities/food_entity.dart';
+import '../ui/extensions/build_context_extension.dart';
 import '../ui/extensions/date_time_extension.dart';
 import '../utils/logger.dart';
 import '../utils/permission_info.dart';
+import '../utils/service_locator.dart';
 
 abstract class HealthService {
-  Future<bool?> requestPermission();
+  Future<bool?> get hasPermissions;
+
+  Future<bool?> connect();
+
+  Future<bool?> disconnect();
 
   Duration get refreshIntervalDuration;
 
@@ -47,7 +56,9 @@ class HealthServiceImpl implements HealthService {
   HealthServiceImpl({
     required this.health,
     required this.permissionInfo,
-  });
+  }) {
+    init();
+  }
 
   final _types = [
     HealthDataType.STEPS,
@@ -71,15 +82,41 @@ class HealthServiceImpl implements HealthService {
     Permission.location,
   ];
 
-  @override
-  Future<bool?> requestPermission() async {
+  Future<void> init() async {
     try {
-      Logger.info('requestPermission');
-
-      // configure health connect
       await health.configure(
         useHealthConnectIfAvailable: true,
       );
+    } catch (error) {
+      Logger.error('init error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool?> get hasPermissions async {
+    try {
+      Logger.info('hasPermissions');
+
+      final hasPermissions = await health.hasPermissions(
+        _types,
+        permissions: _permissions,
+      );
+      Logger.success('hasPermissions: $hasPermissions');
+
+      return hasPermissions;
+    } catch (error) {
+      Logger.error('hasPermissions error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool?> connect() async {
+    try {
+      Logger.info('connect');
 
       // request native permission
       for (final permission in _nativePermissions) {
@@ -91,10 +128,7 @@ class HealthServiceImpl implements HealthService {
         }
       }
 
-      bool? isAuthorized = await health.hasPermissions(
-        _types,
-        permissions: _permissions,
-      );
+      bool? isAuthorized = await hasPermissions;
       if (isAuthorized != true) {
         // request health permission
         isAuthorized = await health.requestAuthorization(
@@ -102,11 +136,41 @@ class HealthServiceImpl implements HealthService {
           permissions: _permissions,
         );
       }
-      Logger.success('requestPermission isAuthorized: $isAuthorized');
+      Logger.success('connect isAuthorized: $isAuthorized');
 
       return isAuthorized;
     } catch (error) {
-      Logger.error('requestPermission error: $error');
+      Logger.error('connect error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool?> disconnect() async {
+    try {
+      Logger.info('disconnect');
+
+      if (Platform.isIOS) {
+        // the health plugin does not support disconnecting on iOS
+        // show warning toast
+        final context = sl<AppRouteInfo>().navigatorKey.currentContext;
+        context?.showWarningToast(
+          message:
+              'This feature is not supported on iOS, please revoke the permissions manually',
+        );
+
+        return null;
+      }
+
+      // revoke permissions
+      await health.revokePermissions();
+
+      Logger.success('disconnect');
+
+      return true;
+    } catch (error) {
+      Logger.error('disconnect error: $error');
 
       rethrow;
     }

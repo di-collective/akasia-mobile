@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
@@ -40,7 +41,7 @@ class ReviewItemBanner extends ReviewItemWidget {
                   const SizedBox(height: 8),
                   Text(
                     locale.shareYourExperienceEveryTimeYouHaveTreatmentAt_ +
-                        locale.appName,
+                        AppConfig.appName,
                     style: textTheme.labelMedium.copyWith(
                       color: colorScheme.onSurface,
                     ),
