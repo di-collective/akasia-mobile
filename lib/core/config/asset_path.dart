@@ -8,6 +8,8 @@ class AssetImagesPath {
   static String dietPlanChart = 'diet_plan_chart.svg'.imageAsset;
   static String placeholder = 'placeholder.jpg'.imageAsset;
   static String mealPlan = 'meal_plan.png'.imageAsset;
+  static String healthConnect = 'health_connect.png'.imageAsset;
+  static String healthKit = 'health_kit.png'.imageAsset;
 }
 
 class AssetIconsPath {

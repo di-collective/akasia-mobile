@@ -44,4 +44,6 @@ enum AppRoute {
   nutrition,
   allNutritionData,
   nutritionDetails,
+  partnerServices,
+  partnerConnect,
 }

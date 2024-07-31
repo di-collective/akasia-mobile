@@ -193,7 +193,7 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                   SettingItemWidget(
                     title: context.locale.partnerServices,
-                    onTap: _onNotificationSettings,
+                    onTap: _onPartnerServices,
                   ),
                   const SizedBox(
                     height: 8,
@@ -400,6 +400,13 @@ class _AccountPageState extends State<AccountPage> {
 
   void _onNotificationSettings() {
     // TODO: Implement this method
+  }
+
+  void _onPartnerServices() {
+    // go to partner services page
+    context.goNamed(
+      AppRoute.partnerServices.name,
+    );
   }
 
   void _onFaq() {

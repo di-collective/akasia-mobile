@@ -41,6 +41,8 @@ import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
+import '../../features/partner_service/presentation/pages/partner_connect_page.dart';
+import '../../features/partner_service/presentation/pages/partner_services_page.dart';
 import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
@@ -141,6 +143,10 @@ extension AppRouteExtension on AppRoute {
         return 'all-nutrition-data';
       case AppRoute.nutritionDetails:
         return 'nutrition-details';
+      case AppRoute.partnerServices:
+        return 'partner-services';
+      case AppRoute.partnerConnect:
+        return 'partner-connect';
     }
   }
 
@@ -341,6 +347,17 @@ extension AppRouteExtension on AppRoute {
         }
 
         return NutritionDetailsPage(
+          params: params,
+        );
+      case AppRoute.partnerServices:
+        return const PartnerServicesPage();
+      case AppRoute.partnerConnect:
+        PartnerConnectPageParams? params;
+        if (arguments is PartnerConnectPageParams) {
+          params = arguments;
+        }
+
+        return PartnerConnectPage(
           params: params,
         );
     }

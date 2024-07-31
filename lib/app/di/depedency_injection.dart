@@ -23,6 +23,7 @@ import '../../features/health/di/depedency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/my_schedule/di/depedency_injection.dart';
 import '../../features/notification/di/depedency_injection.dart';
+import '../../features/partner_service/di/depedency_injection.dart';
 import '../../features/personal_information/di/depedency_injection.dart';
 import '../../features/ratings/di/depedency_injection.dart';
 
@@ -56,6 +57,8 @@ Future<void> init() async {
   DietPlanDI.inject();
 
   HealthDI.inject();
+
+  PartnerServiceDI.inject();
 }
 
 Future<void> _injectPackages() async {

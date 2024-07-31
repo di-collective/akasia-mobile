@@ -121,6 +121,11 @@ class AppRouteInfoImpl implements AppRouteInfo {
               ),
             ],
           ),
+          AppRoute.partnerServices.route(
+            routes: [
+              AppRoute.partnerConnect.route(),
+            ],
+          ),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),
