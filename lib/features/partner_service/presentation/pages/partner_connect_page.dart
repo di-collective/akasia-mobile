@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/config/app_config.dart';
-import '../../../../core/services/health_service.dart';
 import '../../../../core/ui/extensions/app_partner_extension.dart';
 import '../../../../core/ui/extensions/app_partner_status_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
@@ -9,7 +9,7 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/buttons/bottom_sheet_button_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
-import '../../../../core/utils/service_locator.dart';
+import '../../../health/presentation/cubit/health_service/health_service_cubit.dart';
 
 class PartnerConnectPageParams {
   final AppPartner partner;
@@ -227,11 +227,12 @@ class _PartnerConnectPageState extends State<PartnerConnectPage> {
       switch (status!) {
         case AppPartnerStatus.connected:
           // disconnect
-          return await sl<HealthService>().disconnect();
+          return await BlocProvider.of<HealthServiceCubit>(context)
+              .disconnect();
 
         case AppPartnerStatus.disconnected:
           // connect
-          return await sl<HealthService>().connect();
+          return await BlocProvider.of<HealthServiceCubit>(context).connect();
       }
     } catch (_) {
       rethrow;

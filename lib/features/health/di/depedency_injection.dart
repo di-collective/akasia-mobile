@@ -8,6 +8,7 @@ import '../domain/usecases/get_nutrition_usecase.dart';
 import '../domain/usecases/get_sleep_usecase.dart';
 import '../domain/usecases/get_steps_usecase.dart';
 import '../domain/usecases/get_workout_usecase.dart';
+import '../presentation/cubit/health_service/health_service_cubit.dart';
 import '../presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../presentation/cubit/sleep/sleep_cubit.dart';
@@ -78,6 +79,11 @@ class HealthDI {
 
   static void _injectCubits() {
     // cubits
+    sl.registerFactory<HealthServiceCubit>(() {
+      return HealthServiceCubit(
+        healthService: sl(),
+      );
+    });
     sl.registerFactory<StepsCubit>(() {
       return StepsCubit(
         getStepsUseCase: sl(),

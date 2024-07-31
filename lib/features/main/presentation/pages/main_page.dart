@@ -6,18 +6,12 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/config/env_config.dart';
 import '../../../../core/routes/app_route.dart';
-import '../../../../core/services/health_service.dart';
 import '../../../../core/ui/extensions/bottom_navigation_item_parsing.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
-import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
-import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
-import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
-import '../../../health/presentation/cubit/steps/steps_cubit.dart';
-import '../../../health/presentation/cubit/workout/workout_cubit.dart';
 import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../widget/bottom_nav_bar.dart';
 
@@ -56,37 +50,6 @@ class _MainPageState extends State<MainPage> {
     _onChange(
       item: selectedTab,
     );
-
-    // init health
-    _initHealth();
-  }
-
-  Future<void> _initHealth() async {
-    try {
-      // connect to health services
-      final isSuccess = await sl<HealthService>().connect();
-      if (isSuccess != true) {
-        // not allowed access on health application
-        return;
-      }
-
-      // get steps
-      BlocProvider.of<StepsCubit>(context).getStepsInOneWeek();
-
-      // get heart rate
-      BlocProvider.of<HeartRateCubit>(context).getHeartRateInOneWeek();
-
-      // get nutritions
-      BlocProvider.of<NutritionCubit>(context).getNutritionInOneWeek();
-
-      // get workouts
-      BlocProvider.of<WorkoutCubit>(context).getWorkoutInOneWeek();
-
-      // get sleep
-      BlocProvider.of<SleepCubit>(context).getSleepInOneWeek();
-    } catch (_) {
-      rethrow;
-    }
   }
 
   Future<void> _onGetProfile() async {

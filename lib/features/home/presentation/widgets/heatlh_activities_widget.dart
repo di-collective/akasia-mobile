@@ -1,25 +1,17 @@
+import 'package:akasia365mc/features/home/presentation/widgets/health_initial_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../core/config/asset_path.dart';
-import '../../../../core/routes/app_route.dart';
-import '../../../../core/ui/extensions/app_locale_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/duration_extension.dart';
-import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../health/domain/entities/heart_rate_activity_entity.dart';
-import '../../../health/domain/entities/nutrition_activity_entity.dart';
-import '../../../health/domain/entities/sleep_activity_entity.dart';
-import '../../../health/domain/entities/steps_activity_entity.dart';
+import '../../../health/presentation/cubit/health_service/health_service_cubit.dart';
 import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../../../health/presentation/cubit/steps/steps_cubit.dart';
 import '../../../health/presentation/cubit/workout/workout_cubit.dart';
-import 'activity_item_widget.dart';
+import 'health_connected_widget.dart';
+import 'health_disconnected_widget.dart';
 
 class HealthActivitiesWidget extends StatefulWidget {
   const HealthActivitiesWidget({super.key});
@@ -34,363 +26,58 @@ class _HealthActivitiesWidgetState extends State<HealthActivitiesWidget> {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.locale.summary,
-          style: textTheme.titleMedium.copyWith(
-            color: colorScheme.onSurfaceDim,
-            fontWeight: FontWeight.bold,
+    return BlocListener<HealthServiceCubit, HealthServiceState>(
+      listener: (context, state) {
+        if (state is HealthServiceConnected) {
+          // get health data
+          _getHealthData;
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.locale.summary,
+            style: textTheme.titleMedium.copyWith(
+              color: colorScheme.onSurfaceDim,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        // TODO: Handle if permission not granted
-        // StateErrorWidget(
-        //   paddingTop: context.height * 0.05,
-        //   width: context.width,
-        //   description: _errorPermissionMessage,
-        //   buttonText: context.locale.refresh,
-        //   onTapButton: _onRefresh,
-        // ),
-        BlocBuilder<StepsCubit, StepsState>(
-          builder: (context, state) {
-            List<StepsActivityEntity>? data;
-            DateTime? checkedAt;
-            int currentSteps = 0;
-            if (state is StepsLoaded) {
-              checkedAt = state.checkedAt;
-
-              // get last seven data
-              data = state.getLastSevenData();
-
-              // get current steps
-              if (data != null && data.isNotEmpty) {
-                final value = data.last.count;
-                if (value != null) {
-                  currentSteps = value;
-                }
-              }
-            }
-
-            return ActivityWidget(
-              iconPath: AssetIconsPath.icSteps,
-              activity: context.locale.steps,
-              value: currentSteps.formatNumber(
-                locale: AppLocale.id.locale.countryCode,
-              ),
-              unit: context.locale.stepsUnit,
-              time: checkedAt?.hourMinute,
-              isInitial: state is StepsInitial,
-              isLoading: state is StepsLoading,
-              isError: state is StepsError,
-              data: data?.map((e) {
-                return e.count?.toDouble() ?? 0;
-              }).toList(),
-              onTap: _onTapSteps,
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        BlocBuilder<HeartRateCubit, HeartRateState>(
-          builder: (context, state) {
-            List<HeartRateActivityEntity>? data = [];
-            DateTime? checkedAt;
-            String currentHeartRate = "0";
-            if (state is HeartRateLoaded) {
-              checkedAt = state.checkedAt;
-
-              // get last seven data
-              data = state.getLastSevenData();
-
-              // get current heart rate
-              if (data != null && data.isNotEmpty) {
-                final value = data.last.value;
-                if (value != null) {
-                  currentHeartRate = value.toString();
-                }
-              }
-            }
-
-            return ActivityWidget(
-              iconPath: AssetIconsPath.icHeartRate,
-              activity: context.locale.heartRate,
-              value: currentHeartRate,
-              unit: context.locale.heartRateUnit,
-              unitIconPath: AssetIconsPath.icLove,
-              time: checkedAt?.hourMinute,
-              isInitial: state is HeartRateInitial,
-              isLoading: state is HeartRateLoading,
-              isError: state is HeartRateError,
-              data: data?.map((e) {
-                return e.value?.toDouble() ?? 0;
-              }).toList(),
-              onTap: _onHeartRate,
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        BlocBuilder<NutritionCubit, NutritionState>(
-          builder: (context, state) {
-            List<NutritionActivityEntity>? data;
-            DateTime? checkedAt;
-            double currentNutrition = 0;
-            if (state is NutritionLoaded) {
-              checkedAt = state.checkedAt;
-
-              // get last seven data
-              data = state.getLastSevenData();
-
-              // get current steps
-              if (data != null && data.isNotEmpty) {
-                final value = data.last.value;
-                if (value != null) {
-                  currentNutrition = value;
-                }
-              }
-            }
-
-            return ActivityWidget(
-              iconPath: AssetIconsPath.icFish,
-              activity: context.locale.nutritions,
-              value: currentNutrition.toString(),
-              unit: "cal",
-              time: checkedAt?.hourMinute,
-              isInitial: state is NutritionInitial,
-              isLoading: state is NutritionLoading,
-              isError: state is NutritionError,
-              onTap: _onNutrition,
-              data: data?.map((e) {
-                return e.value ?? 0;
-              }).toList(),
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        BlocBuilder<WorkoutCubit, WorkoutState>(
-          builder: (context, state) {
-            List<double> data = [];
-            DateTime? checkedAt;
-            Duration currentWorkoutTime = const Duration();
-            if (state is WorkoutLoaded) {
-              checkedAt = state.checkedAt;
-
-              // get last seven data
-              final lastSevenData = state.getLastSevenData();
-
-              // get current workout time
-              if (lastSevenData.isNotEmpty) {
-                final fromDate = lastSevenData.last.fromDate;
-                final toDate = lastSevenData.last.toDate;
-
-                if (fromDate != null && toDate != null) {
-                  currentWorkoutTime = toDate.difference(fromDate);
-                }
+          const SizedBox(
+            height: 16,
+          ),
+          BlocBuilder<HealthServiceCubit, HealthServiceState>(
+            builder: (context, state) {
+              if (state is HealthServiceLoading) {
+                return const HealthConnectedWidget();
+              } else if (state is HealthServiceDisconnected) {
+                return const HealthDisconnectedWidget();
+              } else if (state is HealthServiceConnected) {
+                return const HealthConnectedWidget();
               }
 
-              // get data for chart
-              for (final item in lastSevenData) {
-                final fromDate = item.fromDate;
-                final toDate = item.toDate;
-
-                if (fromDate != null && toDate != null) {
-                  data.add(toDate.difference(fromDate).inMinutes.toDouble());
-                }
-              }
-            }
-
-            return ActivityWidget(
-              iconPath: AssetIconsPath.icWorkout,
-              activity: context.locale.workouts,
-              value: currentWorkoutTime.inMinutes.toString(),
-              unit: "min",
-              time: checkedAt?.hourMinute,
-              isInitial: state is WorkoutInitial,
-              isLoading: state is WorkoutLoading,
-              isError: state is WorkoutError,
-              data: data,
-              onTap: _onWorkout,
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        BlocBuilder<SleepCubit, SleepState>(
-          builder: (context, state) {
-            List<SleepActivityEntity>? data = [];
-            DateTime? checkedAt;
-            String hours = "0";
-            String minutes = "0";
-            if (state is SleepLoaded) {
-              checkedAt = state.checkedAt;
-
-              // get last seven data
-              data = state.getLastSevenData();
-
-              // get current sleep duration
-              if (data != null && data.isNotEmpty) {
-                final fromDate = data.last.fromDate;
-                final toDate = data.last.toDate;
-
-                if (fromDate != null && toDate != null) {
-                  final lastSleepDuration = toDate.difference(fromDate);
-
-                  hours = lastSleepDuration.inHours.toString();
-                  minutes = lastSleepDuration.remainingMinutes;
-                }
-              }
-            }
-
-            return ActivityWidget(
-              iconPath: AssetIconsPath.icBed,
-              activity: context.locale.sleep,
-              time: checkedAt?.hourMinute,
-              isInitial: state is SleepInitial,
-              isLoading: state is SleepLoading,
-              isError: state is SleepError,
-              onTap: _onTapSleep,
-              data: data?.map((e) {
-                final fromDate = e.fromDate;
-                final toDate = e.toDate;
-
-                if (fromDate != null && toDate != null) {
-                  return toDate.difference(fromDate).inHours.toDouble();
-                }
-
-                return 0.0;
-              }).toList(),
-              valueWidget: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    hours,
-                    style: textTheme.headlineLarge.copyWith(
-                      color: colorScheme.onSurfaceDim,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 2,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 8,
-                    ),
-                    child: Text(
-                      "h",
-                      style: textTheme.bodySmall.copyWith(
-                        color: colorScheme.onSurfaceBright,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    minutes,
-                    style: textTheme.headlineLarge.copyWith(
-                      color: colorScheme.onSurfaceDim,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 2,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 8,
-                    ),
-                    child: Text(
-                      "min",
-                      style: textTheme.bodySmall.copyWith(
-                        color: colorScheme.onSurfaceBright,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
+              return const HealthInitialWidget();
+            },
+          ),
+        ],
+      ),
     );
   }
 
-  // String get _errorPermissionMessage {
-  //   String item = "health";
-  //   if (Platform.isIOS) {
-  //     item = "HealthKit";
-  //   } else if (Platform.isAndroid) {
-  //     item = "Health Connect";
-  //   }
+  void get _getHealthData {
+    // get steps
+    BlocProvider.of<StepsCubit>(context).getStepsInOneWeek();
 
-  //   return context.locale.itemPermissionNotGranted(item);
-  // }
+    // get heart rate
+    BlocProvider.of<HeartRateCubit>(context).getHeartRateInOneWeek();
 
-  // Future<void> _onRefresh() async {
-  //   try {
-  //     // show full screen loading
-  //     context.showFullScreenLoading();
+    // get nutritions
+    BlocProvider.of<NutritionCubit>(context).getNutritionInOneWeek();
 
-  //     // request health permission
-  //     final isPermissionGranted = await sl<HealthService>().requestPermission();
-  //     if (isPermissionGranted != true) {
-  //       // not allowed access on health application
-  //       return;
-  //     }
+    // get workouts
+    BlocProvider.of<WorkoutCubit>(context).getWorkoutInOneWeek();
 
-  //     // get steps
-  //     BlocProvider.of<StepsCubit>(context).getStepsInOneWeek();
-
-  //     // get daily heart rate
-  //     BlocProvider.of<HeartRateCubit>(context).getHeartRateInOneWeek();
-
-  //     // get daily nutritions
-  //     BlocProvider.of<NutritionCubit>(context).getDailyNutritions();
-
-  //     // get daily workouts
-  //     BlocProvider.of<WorkoutCubit>(context).getWorkoutInOneWeek();
-
-  //     // get daily sleep
-  //     BlocProvider.of<SleepCubit>(context).getSleep();
-  //   } catch (error) {
-  //     context.showErrorToast(
-  //       message: context.message(context),
-  //     );
-  //   } finally {
-  //     // hide full screen loading
-  //     context.hideFullScreenLoading;
-  //   }
-  // }
-
-  void _onTapSteps() {
-    // go to steps page
-    context.goNamed(AppRoute.steps.name);
-  }
-
-  void _onTapSleep() {
-    // go to sleep page
-    context.goNamed(AppRoute.sleep.name);
-  }
-
-  void _onHeartRate() {
-    // go to heart rate page
-    context.goNamed(AppRoute.heartRate.name);
-  }
-
-  void _onWorkout() {
-    // go to workout page
-    context.goNamed(AppRoute.workout.name);
-  }
-
-  void _onNutrition() {
-    // go to nutrition page
-    context.goNamed(AppRoute.nutrition.name);
+    // get sleep
+    BlocProvider.of<SleepCubit>(context).getSleepInOneWeek();
   }
 }

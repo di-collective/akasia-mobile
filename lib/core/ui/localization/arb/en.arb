@@ -445,5 +445,16 @@
         "type": "String"
       }
     }
+  },
+  "grantPermission": "Grant Permission",
+  "youWillNeedToGotToYourPhoneSettings": "You'll need to go to your phone's settings to grant this permission",
+  "goToSettings": "Go to Settings",
+  "connectToYourAppTo": "Connect to your {app} to show your summary data",
+  "@connectToYourAppTo": {
+      "placeholders": {
+          "app": {
+              "type": "String"
+          }
+      }
   }
 }

@@ -99,6 +99,9 @@ class HealthServiceImpl implements HealthService {
     try {
       Logger.info('hasPermissions');
 
+      // FIX: Sometimes Error on Android 10:
+      // PlatformException(error, Unsupported dataType: SLEEP_SESSION, null, java.lang.IllegalArgumentException: Unsupported dataType: SLEEP_SESSION
+
       final hasPermissions = await health.hasPermissions(
         _types,
         permissions: _permissions,
@@ -117,6 +120,10 @@ class HealthServiceImpl implements HealthService {
   Future<bool?> connect() async {
     try {
       Logger.info('connect');
+
+      // TODO: Handle this before connect to check if the user has the app installed
+      // final ttt = await health.getHealthConnectSdkStatus();
+      // HealthConnectSdkStatus
 
       // request native permission
       for (final permission in _nativePermissions) {

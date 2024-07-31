@@ -25,7 +25,6 @@ class ActivityWidget extends StatelessWidget {
   final List<double>? data;
   final bool isLoading;
   final bool isError;
-  final bool isInitial;
   final Function()? onTap;
 
   const ActivityWidget({
@@ -40,7 +39,6 @@ class ActivityWidget extends StatelessWidget {
     required this.data,
     required this.isLoading,
     required this.isError,
-    required this.isInitial,
     this.onTap,
   });
 
