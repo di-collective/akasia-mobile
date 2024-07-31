@@ -305,6 +305,7 @@ class _LoadingWidget extends StatelessWidget {
           height: 55,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
@@ -350,26 +351,36 @@ class _EmptyChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
-    return Row(
-      children: List.generate(
-        _maxDataLength,
-        (index) {
-          final isLast = index == 6;
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 8,
+      ),
+      child: SizedBox(
+        height: 58,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: List.generate(
+            _maxDataLength,
+            (index) {
+              final isLast = index == 6;
 
-          return Container(
-            width: 12,
-            height: 2,
-            margin: EdgeInsets.only(
-              right: isLast ? 0 : 2,
-            ),
-            decoration: BoxDecoration(
-              color: isLast ? colorScheme.primary : colorScheme.outlineBright,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(3),
-              ),
-            ),
-          );
-        },
+              return Container(
+                width: 12,
+                height: 2,
+                margin: EdgeInsets.only(
+                  right: isLast ? 0 : 2,
+                ),
+                decoration: BoxDecoration(
+                  color:
+                      isLast ? colorScheme.primary : colorScheme.outlineBright,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(3),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
