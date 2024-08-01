@@ -121,9 +121,23 @@ class HealthServiceImpl implements HealthService {
     try {
       Logger.info('connect');
 
-      // TODO: Handle this before connect to check if the user has the app installed
-      // final ttt = await health.getHealthConnectSdkStatus();
-      // HealthConnectSdkStatus
+      if (Platform.isAndroid) {
+        // check health connect sdk status
+        final healthConnectSdkStatus = await health.getHealthConnectSdkStatus();
+        Logger.success(
+            'connect healthConnectSdkStatus: $healthConnectSdkStatus');
+        if (healthConnectSdkStatus != null) {
+          switch (healthConnectSdkStatus) {
+            case HealthConnectSdkStatus.sdkAvailable:
+              // continue
+              break;
+            case HealthConnectSdkStatus.sdkUnavailableProviderUpdateRequired:
+              throw 'Health Connect SDK is unavailable, provider update required';
+            case HealthConnectSdkStatus.sdkUnavailable:
+              throw 'Health Connect SDK is unavailable, please install the health connect App before connecting';
+          }
+        }
+      }
 
       // request native permission
       for (final permission in _nativePermissions) {

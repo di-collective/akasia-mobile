@@ -119,6 +119,13 @@ class DropdownWidget<T> extends StatelessWidget {
                 isDense: true,
                 filled: true,
                 fillColor: fillColor(colorScheme),
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 0,
+                  minHeight: 0,
+                ),
+                prefixIcon: const SizedBox(
+                  width: 12,
+                ),
                 border: _buildOutlineInputBorder(
                   borderColor: colorScheme.surfaceDim,
                 ),
@@ -129,7 +136,7 @@ class DropdownWidget<T> extends StatelessWidget {
                   borderColor: colorScheme.primaryContainer,
                 ),
                 errorBorder: _buildOutlineInputBorder(
-                  borderColor: colorScheme.error,
+                  borderColor: colorScheme.surfaceDim,
                 ),
                 focusedErrorBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
@@ -138,13 +145,7 @@ class DropdownWidget<T> extends StatelessWidget {
                   color: colorScheme.error,
                 ),
                 errorMaxLines: 5,
-                contentPadding: contentPadding ??
-                    const EdgeInsets.fromLTRB(
-                      12,
-                      10,
-                      12,
-                      14,
-                    ),
+                contentPadding: _contentPadding,
               ),
             ),
             if (isLoading == true) ...[
@@ -228,5 +229,18 @@ class DropdownWidget<T> extends StatelessWidget {
 
   BorderRadius get _borderRadius {
     return borderRadius ?? BorderRadius.circular(8);
+  }
+
+  EdgeInsetsGeometry get _contentPadding {
+    if (contentPadding != null) {
+      return contentPadding!;
+    }
+
+    return const EdgeInsets.fromLTRB(
+      0,
+      13.5,
+      0,
+      8,
+    );
   }
 }

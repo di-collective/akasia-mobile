@@ -143,6 +143,10 @@ class _TextFormWidgetState extends State<TextFormWidget> {
                   colorScheme: colorScheme,
                   textTheme: textTheme,
                 ),
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 0,
+                  minHeight: 0,
+                ),
                 suffixIcon: _buildSuffixIcon(
                   colorScheme: colorScheme,
                   textTheme: textTheme,
@@ -159,9 +163,9 @@ class _TextFormWidgetState extends State<TextFormWidget> {
                 focusedBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
                 ),
-                contentPadding: _buildContentPadding,
+                contentPadding: _contentPadding,
                 errorBorder: _buildOutlineInputBorder(
-                  borderColor: colorScheme.error,
+                  borderColor: colorScheme.surfaceDim,
                 ),
                 focusedErrorBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
@@ -245,7 +249,7 @@ class _TextFormWidgetState extends State<TextFormWidget> {
     return colorScheme.onSurface;
   }
 
-  EdgeInsetsGeometry get _buildContentPadding {
+  EdgeInsetsGeometry get _contentPadding {
     if (widget.contentPadding != null) {
       return widget.contentPadding!;
     }
@@ -255,17 +259,17 @@ class _TextFormWidgetState extends State<TextFormWidget> {
       case ScreenHeightType.small:
       case ScreenHeightType.medium:
         return const EdgeInsets.fromLTRB(
-          12,
+          0,
           10,
-          12,
+          0,
           14,
         );
       case ScreenHeightType.large:
         return const EdgeInsets.fromLTRB(
-          12,
-          14,
-          12,
-          14,
+          0,
+          13,
+          0,
+          13,
         );
     }
   }
@@ -290,6 +294,7 @@ class _TextFormWidgetState extends State<TextFormWidget> {
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: 12,
+            vertical: 13.5,
           ),
           decoration: BoxDecoration(
             color: colorScheme.surface,
@@ -313,7 +318,9 @@ class _TextFormWidgetState extends State<TextFormWidget> {
       );
     }
 
-    return null;
+    return const SizedBox(
+      width: 12,
+    );
   }
 
   Widget? _buildSuffixIcon({
