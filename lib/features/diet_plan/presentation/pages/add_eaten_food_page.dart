@@ -319,6 +319,7 @@ class __BodyState extends State<_Body> {
       final date = params!.date;
 
       // add meal to health service
+      // FIXME: startTime and endTime
       await sl<HealthService>().addMeal(
         startTime: mealType.startTime(
           date: date,

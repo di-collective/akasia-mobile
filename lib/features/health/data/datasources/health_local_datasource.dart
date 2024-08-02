@@ -910,7 +910,7 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
             // if diffInDays is 0, get data from lastUpdatedAtData to currentDate
             final newNutritionData = await healthService.getNutrition(
               startTime: lastUpdatedAtData,
-              endTime: currentDate,
+              endTime: currentDate.lastHourOfDay,
             );
 
             final List<NutritionActivityEntity> newNutritionActivity = [];

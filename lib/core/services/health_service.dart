@@ -56,9 +56,7 @@ class HealthServiceImpl implements HealthService {
   HealthServiceImpl({
     required this.health,
     required this.permissionInfo,
-  }) {
-    init();
-  }
+  });
 
   final _types = [
     HealthDataType.STEPS,
@@ -70,11 +68,11 @@ class HealthServiceImpl implements HealthService {
 
   // the length of this list must be the same as the length of _types
   final _permissions = [
+    HealthDataAccess.READ,
+    HealthDataAccess.READ,
     HealthDataAccess.READ_WRITE,
-    HealthDataAccess.READ_WRITE,
-    HealthDataAccess.READ_WRITE,
-    HealthDataAccess.READ_WRITE,
-    HealthDataAccess.READ_WRITE,
+    HealthDataAccess.READ,
+    HealthDataAccess.READ,
   ];
 
   final _nativePermissions = [
@@ -82,13 +80,13 @@ class HealthServiceImpl implements HealthService {
     Permission.location,
   ];
 
-  Future<void> init() async {
+  Future<void> configure() async {
     try {
       await health.configure(
         useHealthConnectIfAvailable: true,
       );
     } catch (error) {
-      Logger.error('init error: $error');
+      Logger.error('configure error: $error');
 
       rethrow;
     }
@@ -99,9 +97,10 @@ class HealthServiceImpl implements HealthService {
     try {
       Logger.info('hasPermissions');
 
-      // FIX: Sometimes Error on Android 10:
-      // PlatformException(error, Unsupported dataType: SLEEP_SESSION, null, java.lang.IllegalArgumentException: Unsupported dataType: SLEEP_SESSION
+      // configure health
+      await configure();
 
+      // check permissions
       final hasPermissions = await health.hasPermissions(
         _types,
         permissions: _permissions,

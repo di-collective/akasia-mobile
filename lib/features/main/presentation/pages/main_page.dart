@@ -12,6 +12,7 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
+import '../../../health/presentation/cubit/health_service/health_service_cubit.dart';
 import '../cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../widget/bottom_nav_bar.dart';
 
@@ -50,10 +51,17 @@ class _MainPageState extends State<MainPage> {
     _onChange(
       item: selectedTab,
     );
+
+    // check permission health service
+    _onCheckPermissionHealthService();
   }
 
   Future<void> _onGetProfile() async {
     await BlocProvider.of<ProfileCubit>(context).getProfile();
+  }
+
+  Future<void> _onCheckPermissionHealthService() async {
+    await BlocProvider.of<HealthServiceCubit>(context).hasPermissions();
   }
 
   @override

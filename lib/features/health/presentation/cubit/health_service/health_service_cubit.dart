@@ -10,9 +10,7 @@ class HealthServiceCubit extends Cubit<HealthServiceState> {
 
   HealthServiceCubit({
     required this.healthService,
-  }) : super(HealthServiceInitial()) {
-    init();
-  }
+  }) : super(HealthServiceInitial());
 
   Future<void> init() async {
     // check has permissions
