@@ -239,7 +239,7 @@ class DropdownWidget<T> extends StatelessWidget {
     return const EdgeInsets.fromLTRB(
       0,
       13.5,
-      0,
+      12,
       8,
     );
   }
