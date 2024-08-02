@@ -434,7 +434,7 @@ class _AccountPageState extends State<AccountPage> {
   Future<void> _onLogout() async {
     try {
       // show confirmation dialog
-      final isLogout = await showDialog<bool?>(
+      final isConfirm = await showDialog<bool?>(
         context: context,
         builder: (context) {
           return ConfirmationDialogWidget(
@@ -443,8 +443,7 @@ class _AccountPageState extends State<AccountPage> {
           );
         },
       );
-
-      if (isLogout == null || !isLogout) {
+      if (isConfirm != true) {
         return;
       }
 

@@ -10,9 +10,7 @@ import '../../../../core/ui/extensions/meal_type_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
-import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/forms/search_text_form_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
@@ -246,9 +244,7 @@ class __BodyState extends State<_Body> {
       // update state
       setState(() {});
     } catch (error) {
-      sl<ToastInfo>().show(
-        context: context,
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
@@ -295,9 +291,7 @@ class __BodyState extends State<_Body> {
       // close this page
       context.pop();
     } catch (error) {
-      sl<ToastInfo>().show(
-        context: context,
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
@@ -338,17 +332,13 @@ class __BodyState extends State<_Body> {
       );
 
       // show success message
-      sl<ToastInfo>().show(
-        context: context,
-        type: ToastType.success,
+      context.showSuccessToast(
         message: context.locale.successAddFood,
       );
 
       return true;
     } catch (error) {
-      sl<ToastInfo>().show(
-        context: context,
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
 

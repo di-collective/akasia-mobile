@@ -242,6 +242,14 @@
   "next": "Next",
   "submit": "Submit",
   "delete": "Delete",
+  "deleteItem": "Delete {item}",
+  "@deleteItem": {
+        "placeholders": {
+            "item": {
+                "type": "String"
+            }
+        }
+  },
   "writeAReview": "Write a review",
   "howLongHaveYouHadThisTreatment": "How long have you had this treatment?",
   "willYouRecommendThisTreatment": "Will you recommend this treatment?",
@@ -352,6 +360,14 @@
   },
   "quantity": "Quantity",
   "add": "Add",
+  "addItem": "Add {item}",
+  "@addItem": {
+      "placeholders": {
+          "item": {
+              "type": "String"
+          }
+      }
+  },
   "servings": "Servings",
   "grams": "Grams",
   "cup": "Cup",
@@ -456,5 +472,6 @@
               "type": "String"
           }
       }
-  }
+  },
+  "deleteWeightConfirmation": "Are you sure you want to delete this weight? This can’t be undone"
 }
