@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../widgets/emergency_call_widget.dart';
-import '../widgets/procedure_history_widget.dart';
 import '../widgets/weight_chart_widget.dart';
 
 class MyTreatmentPage extends StatefulWidget {
@@ -47,12 +46,6 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
             ),
             WeightChartWidget(
               isDisabled: _isDisabled,
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            const ProcedureHistoryWidget(
-              procedureHistories: [1, 2, 3],
             ),
             SizedBox(
               height: context.paddingBottom,

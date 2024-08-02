@@ -3,15 +3,18 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/dynamic_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 
 class FinishPageWidget extends StatelessWidget {
+  final String startWeight;
   final String weightGoal;
 
   const FinishPageWidget({
     super.key,
+    required this.startWeight,
     required this.weightGoal,
   });
 
@@ -73,7 +76,7 @@ class FinishPageWidget extends StatelessWidget {
           Column(
             children: [
               SvgPicture.asset(
-                AssetImagesPath.dietPlanChart,
+                _chartPath,
                 width: context.width,
                 fit: BoxFit.contain,
               ),
@@ -150,5 +153,20 @@ class FinishPageWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String get _chartPath {
+    final start = startWeight.dynamicToDouble;
+    final goal = weightGoal.dynamicToDouble;
+
+    if (start == null || goal == null) {
+      return AssetImagesPath.dietChartUp;
+    }
+
+    if (start > goal) {
+      return AssetImagesPath.dietChartDown;
+    }
+
+    return AssetImagesPath.dietChartUp;
   }
 }

@@ -293,6 +293,7 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                           FinishPageWidget(
+                            startWeight: _weightTextController.text,
                             weightGoal: _weightGoalTextController.text,
                           ),
                         ],
