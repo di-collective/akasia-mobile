@@ -8,7 +8,6 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 
@@ -116,9 +115,8 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
         );
       }
     } catch (error) {
-      context.showToast(
+      context.showErrorToast(
         message: error.message(context),
-        type: ToastType.error,
       );
     }
   }

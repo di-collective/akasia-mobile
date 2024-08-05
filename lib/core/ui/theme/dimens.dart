@@ -2,7 +2,7 @@ abstract final class AppPaddings {
   static const double small = 8.0;
 }
 
-abstract final class AppCornerRadius {
+abstract final class AppRadius {
   static const double extraSmall = 8.0;
   static const double small = 12.0;
   static const double medium = 16.0;

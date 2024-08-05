@@ -1,12 +1,13 @@
-import 'package:akasia365mc/core/flavors/flavor_name_key.dart';
-import 'package:akasia365mc/core/flavors/flavor_type_extension.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 
+import '../core/flavors/flavor_name_key.dart';
+import '../core/flavors/flavor_type_extension.dart';
 import 'app.dart';
+import 'datasources/hive_info.dart';
 import 'di/depedency_injection.dart' as di;
 import 'observers/bloc_observer_info.dart';
 
@@ -39,6 +40,9 @@ Future<void> init() async {
       FlavorNameKey.type: FlavorType.development,
     },
   );
+
+  // hive
+  await HiveInfo.init();
 
   // Initialize dependency injection
   await di.init();

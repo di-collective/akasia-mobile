@@ -71,20 +71,13 @@ extension TextEditingControllerExtension on TextEditingController {
     }
 
     if (text.length < 12) {
-      return context.locale.passwordsMustBeCharacters(12);
+      // return context.locale.passwordsMustBeCharacters(12);
+      return context.locale.passwordIsTooWeak;
     }
 
     if (text.length > 125) {
       return context.locale.maximumLength(125);
     }
-
-    // if (!text.isContainsLetter) {
-    //   return context.locale.passwordMustContainLetter;
-    // }
-
-    // if (!text.isContainsNumber) {
-    //   return context.locale.passwordMustContainNumber;
-    // }
 
     return null;
   }
@@ -92,9 +85,12 @@ extension TextEditingControllerExtension on TextEditingController {
   String? validateConfirmPassword({
     required BuildContext context,
     required String anotherPassword,
+    bool? isRequired,
   }) {
-    if (text.isEmpty) {
-      return context.locale.cannotBeEmpty;
+    if (isRequired == true) {
+      if (text.isEmpty) {
+        return context.locale.cannotBeEmpty;
+      }
     }
 
     if (text != anotherPassword) {
@@ -169,11 +165,17 @@ extension TextEditingControllerExtension on TextEditingController {
     required BuildContext context,
     bool? isRequired,
     bool? isAllowComma,
+    double? minimumAmount,
   }) {
     if (isRequired == true) {
       if (text.isEmpty) {
         return context.locale.cannotBeEmpty;
       }
+    }
+
+    // contains space
+    if (text.isContainsSpace) {
+      return context.locale.onlyNumber;
     }
 
     // validate only number
@@ -182,6 +184,18 @@ extension TextEditingControllerExtension on TextEditingController {
           isWithOutComma: isAllowComma,
         )) {
       return context.locale.onlyNumber;
+    }
+
+    // minimum amount
+    if (minimumAmount != null) {
+      final amount = text.parseToDouble;
+      if (amount != null) {
+        if (amount < minimumAmount) {
+          return context.locale.minimumAmount(
+            minimumAmount.toString(),
+          );
+        }
+      }
     }
 
     return null;

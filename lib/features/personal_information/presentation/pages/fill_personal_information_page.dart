@@ -9,7 +9,6 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/sex_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
@@ -294,6 +293,7 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                           FinishPageWidget(
+                            startWeight: _weightTextController.text,
                             weightGoal: _weightGoalTextController.text,
                           ),
                         ],
@@ -326,7 +326,7 @@ class __BodyState extends State<_Body> {
 
   bool get _isDisabled {
     if (_currentPage == 0) {
-      return _formKey.currentState?.validate() != true;
+      return _formKey.currentState?.validate() != true || _selectedSex == null;
     }
 
     return false;
@@ -351,7 +351,7 @@ class __BodyState extends State<_Body> {
   Future<void> _onNextPage() async {
     try {
       // validate
-      if (_formKey.currentState?.validate() != true) {
+      if (_formKey.currentState?.validate() != true || _selectedSex == null) {
         return;
       }
 
@@ -368,8 +368,7 @@ class __BodyState extends State<_Body> {
         curve: Curves.easeInOut,
       );
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

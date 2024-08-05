@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:health/health.dart';
 
+import '../../../../core/services/health_service.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
-import '../../../../core/ui/extensions/eat_time_extension.dart';
+import '../../../../core/ui/extensions/meal_type_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
-import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/forms/search_text_form_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
@@ -22,11 +22,11 @@ import '../widgets/food_option_item_widget.dart';
 import '../widgets/input_food_quantity_widget.dart';
 
 class AddEatenFoodPageParams {
-  final EatTime eatTime;
+  final MealType mealType;
   final DateTime date;
 
   const AddEatenFoodPageParams({
-    required this.eatTime,
+    required this.mealType,
     required this.date,
   });
 }
@@ -97,7 +97,7 @@ class __BodyState extends State<_Body> {
           title: Column(
             children: [
               Text(
-                params!.eatTime.name.toCapitalize(),
+                params!.mealType.name.toCapitalize(),
                 style: textTheme.titleMedium.copyWith(
                   color: colorScheme.onSurfaceDim,
                   fontWeight: FontWeight.w700,
@@ -133,6 +133,7 @@ class __BodyState extends State<_Body> {
               SearchTextFormWidget(
                 context: context,
                 controller: _searchTextController,
+                hintText: context.locale.enterFoodName,
                 onClear: _onSearch,
                 onChangedText: _onSearch,
               ),
@@ -175,12 +176,12 @@ class __BodyState extends State<_Body> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    final food = state.foods[index];
+                                    final meal = state.foods[index];
 
                                     return FoodOptionItemWidget(
-                                      food: food,
-                                      onFood: () => _onFood(
-                                        food: food,
+                                      food: meal,
+                                      onFood: () => _onMeal(
+                                        meal: meal,
                                       ),
                                     );
                                   },
@@ -235,7 +236,7 @@ class __BodyState extends State<_Body> {
       } else {
         // search
         await BlocProvider.of<SearchFoodsCubit>(context).searchProducts(
-          eatTime: params!.eatTime,
+          mealType: params!.mealType,
           searchText: _searchTextController.text,
         );
       }
@@ -243,16 +244,14 @@ class __BodyState extends State<_Body> {
       // update state
       setState(() {});
     } catch (error) {
-      sl<ToastInfo>().show(
-        context: context,
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
   }
 
-  Future<void> _onFood({
-    required FoodEntity food,
+  Future<void> _onMeal({
+    required FoodEntity meal,
   }) async {
     try {
       // show confirmation dialog
@@ -264,37 +263,22 @@ class __BodyState extends State<_Body> {
               bottom: context.viewInsetsBottom,
             ),
             child: InputFoodQuantityWidget(
-              food: food,
+              food: meal,
               onCancel: () {
                 Navigator.of(context).pop(false);
               },
-              onAdd: (quantity, quantityUnit) async {
-                try {
-                  // show loading
-                  context.showFullScreenLoading();
-
-                  // TODO: Implement add food
-                  await Future.delayed(const Duration(seconds: 2));
-
-                  // close dialog
-                  Navigator.of(context).pop(true);
-
-                  // show success message
-                  sl<ToastInfo>().show(
-                    context: context,
-                    type: ToastType.success,
-                    message: context.locale.successAddFood,
-                  );
-                } catch (error) {
-                  sl<ToastInfo>().show(
-                    context: context,
-                    type: ToastType.error,
-                    message: error.message(context),
-                  );
-                } finally {
-                  // hide loading
-                  context.hideFullScreenLoading;
+              onAdd: (quanity, unit) async {
+                final isSuccess = await _onAddMeal(
+                  meal: meal,
+                  quantity: quanity,
+                  quantityUnit: unit,
+                );
+                if (isSuccess != true) {
+                  return;
                 }
+
+                // close dialog
+                Navigator.of(context).pop(isSuccess);
               },
             ),
           );
@@ -307,11 +291,62 @@ class __BodyState extends State<_Body> {
       // close this page
       context.pop();
     } catch (error) {
-      sl<ToastInfo>().show(
-        context: context,
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
+    }
+  }
+
+  Future<bool?> _onAddMeal({
+    required FoodEntity meal,
+    required String quantity,
+    required String quantityUnit,
+  }) async {
+    try {
+      if (params == null) {
+        return false;
+      }
+
+      // show loading
+      context.showFullScreenLoading();
+
+      final quantityValue = int.tryParse(quantity);
+      if (quantityValue == null) {
+        throw 'Quantity must be a number';
+      }
+
+      final mealType = params!.mealType;
+      final date = params!.date;
+
+      // add meal to health service
+      // FIXME: startTime and endTime
+      await sl<HealthService>().addMeal(
+        startTime: mealType.startTime(
+          date: date,
+        ),
+        endTime: mealType.endTime(
+          date: date,
+        ),
+        mealType: mealType,
+        meal: meal,
+        quantity: quantityValue,
+      );
+
+      // show success message
+      context.showSuccessToast(
+        message: context.locale.successAddFood,
+      );
+
+      return true;
+    } catch (error) {
+      context.showErrorToast(
+        message: error.message(context),
+      );
+
+      return false;
+    } finally {
+      // hide loading
+      context.hideFullScreenLoading;
     }
   }
 }

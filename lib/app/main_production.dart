@@ -6,6 +6,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import '../core/flavors/flavor_name_key.dart';
 import '../core/flavors/flavor_type_extension.dart';
 import 'app.dart';
+import 'datasources/hive_info.dart';
 import 'di/depedency_injection.dart' as di;
 
 Future<void> main() async {
@@ -27,9 +28,6 @@ Future<void> init() async {
   // firebase init
   await Firebase.initializeApp();
 
-  // Initialize dependency injection
-  await di.init();
-
   // flavor config
   FlavorConfig(
     name: "PRODUCTION",
@@ -37,4 +35,10 @@ Future<void> init() async {
       FlavorNameKey.type: FlavorType.production,
     },
   );
+
+  // hive
+  await HiveInfo.init();
+
+  // Initialize dependency injection
+  await di.init();
 }

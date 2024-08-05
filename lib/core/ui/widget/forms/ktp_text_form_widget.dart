@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../extensions/validation_extension.dart';
-import 'text_form_field_widget.dart';
+import 'text_form_widget.dart';
 
-class KtpTextFormWidget extends TextFormFieldWidget {
+class KtpTextFormWidget extends TextFormWidget {
   final BuildContext context;
 
   KtpTextFormWidget({

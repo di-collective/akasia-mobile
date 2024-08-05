@@ -75,6 +75,57 @@ class AppRouteInfoImpl implements AppRouteInfo {
               AppRoute.dietPlanCalendar.route(),
             ],
           ),
+          AppRoute.steps.route(
+            routes: [
+              AppRoute.allStepsData.route(),
+            ],
+          ),
+          AppRoute.sleep.route(
+            routes: [
+              AppRoute.allSleepData.route(
+                routes: [
+                  AppRoute.sleepDetails.route(),
+                ],
+              ),
+            ],
+          ),
+          AppRoute.heartRate.route(
+            routes: [
+              AppRoute.allHeartRateData.route(
+                routes: [
+                  AppRoute.heartRateDetails.route(),
+                ],
+              ),
+            ],
+          ),
+          AppRoute.workout.route(
+            routes: [
+              AppRoute.allWorkoutData.route(
+                routes: [
+                  AppRoute.workoutDetails.route(),
+                ],
+              ),
+              AppRoute.tenDaysWorkout.route(
+                routes: [
+                  AppRoute.dayWorkoutDetails.route(),
+                ],
+              ),
+            ],
+          ),
+          AppRoute.nutrition.route(
+            routes: [
+              AppRoute.allNutritionData.route(
+                routes: [
+                  AppRoute.nutritionDetails.route(),
+                ],
+              ),
+            ],
+          ),
+          AppRoute.partnerServices.route(
+            routes: [
+              AppRoute.partnerConnect.route(),
+            ],
+          ),
         ],
       ),
       AppRoute.successDeactiveAccount.route(),

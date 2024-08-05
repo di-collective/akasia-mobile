@@ -12,11 +12,10 @@ import '../../../../core/ui/extensions/auth_type_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../cubit/sign_in/sign_in_cubit.dart';
 import '../widgets/social_auth_button_widget.dart';
@@ -97,7 +96,7 @@ class __BodyState extends State<_Body> {
                         const SizedBox(
                           height: 40,
                         ),
-                        TextFormFieldWidget(
+                        TextFormWidget(
                           controller: _emailTextController,
                           title: context.locale.email,
                           keyboardType: TextInputType.emailAddress,
@@ -114,7 +113,7 @@ class __BodyState extends State<_Body> {
                         const SizedBox(
                           height: 20,
                         ),
-                        TextFormFieldWidget(
+                        TextFormWidget(
                           controller: _passwordTextController,
                           title: context.locale.password,
                           keyboardType: TextInputType.visiblePassword,
@@ -296,8 +295,7 @@ class __BodyState extends State<_Body> {
       // go to main page
       context.goNamed(AppRoute.main.name);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

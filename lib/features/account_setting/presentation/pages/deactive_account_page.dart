@@ -10,12 +10,11 @@ import '../../../../core/ui/extensions/deactive_account_reason_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/radios/radio_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
+import '../../../../core/ui/widget/radios/radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../cubit/deactive_account/deactive_account_cubit.dart';
@@ -143,7 +142,7 @@ class __BodyState extends State<_Body> {
                                           right: 16,
                                           left: 48,
                                         ),
-                                        child: TextFormFieldWidget(
+                                        child: TextFormWidget(
                                           controller: _otherTextController,
                                           hintText: context.locale.example,
                                           validator: (value) {
@@ -285,9 +284,8 @@ class __BodyState extends State<_Body> {
         AppRoute.successDeactiveAccount.name,
       );
     } catch (error) {
-      context.showToast(
+      context.showErrorToast(
         message: error.message(context),
-        type: ToastType.error,
       );
     }
   }

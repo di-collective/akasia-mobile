@@ -5,10 +5,9 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../cubit/change_password/change_password_cubit.dart';
 
@@ -51,6 +50,14 @@ class __BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
+    String? newPasswordValidator;
+    if (_newPasswordTextController.text.isNotEmpty) {
+      newPasswordValidator = _newPasswordTextController.validatePassword(
+        context: context,
+        isRequired: true,
+      );
+    }
+
     return GestureDetector(
       onTap: () => context.closeKeyboard,
       child: BlocBuilder<ChangePasswordCubit, ChangePasswordState>(
@@ -78,13 +85,12 @@ class __BodyState extends State<_Body> {
                     child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
                             const SizedBox(
                               height: 16,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _oldPasswordTextController,
                               title: context.locale.oldPassword,
                               keyboardType: TextInputType.visiblePassword,
@@ -103,15 +109,18 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _newPasswordTextController,
                               title: context.locale.newPassword,
                               keyboardType: TextInputType.visiblePassword,
+                              description: newPasswordValidator != null
+                                  ? null
+                                  : context.locale
+                                      .passwordsMustBeCharacters(12),
                               validator: (value) {
                                 return _newPasswordTextController
                                     .validatePassword(
                                   context: context,
-                                  isRequired: true,
                                 );
                               },
                               onChanged: (_) {
@@ -122,7 +131,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _confirmPasswordTextController,
                               title: context.locale.resetPassword,
                               keyboardType: TextInputType.visiblePassword,
@@ -132,6 +141,7 @@ class __BodyState extends State<_Body> {
                                   context: context,
                                   anotherPassword:
                                       _newPasswordTextController.text,
+                                  isRequired: true,
                                 );
                               },
                               onChanged: (_) {
@@ -185,17 +195,15 @@ class __BodyState extends State<_Body> {
       );
 
       // show success message
-      context.showToast(
+      context.showSuccessToast(
         message: context.locale.successChangePassword,
-        type: ToastType.success,
       );
 
       // close page
       Navigator.pop(context);
     } catch (error) {
-      context.showToast(
+      context.showErrorToast(
         message: error.message(context),
-        type: ToastType.error,
       );
     }
   }

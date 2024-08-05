@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
   String get toDateApi {
@@ -18,6 +18,10 @@ extension DateTimeExtension on DateTime {
     try {
       if (locale != null) {
         initializeDateFormatting();
+
+        if (format != null) {
+          return DateFormat(format, locale).format(this);
+        }
 
         // final String dayName = DateFormat('EEEE', locale).format(this);
         late String dayName;
@@ -67,5 +71,62 @@ extension DateTimeExtension on DateTime {
 
   DateTime addDays(int days) {
     return add(Duration(days: days));
+  }
+
+  // TODO: Rename this to startOfDay
+  DateTime get firstHourOfDay {
+    return DateTime(year, month, day, 0, 0, 0, 0, 0);
+  }
+
+  DateTime get lastHourOfDay {
+    return DateTime(year, month, day, 23, 59, 59, 999, 999);
+  }
+
+  String get hourMinute {
+    return DateFormat('HH:mm').format(this);
+  }
+
+  bool isSameDay({
+    required DateTime? other,
+  }) {
+    return year == other?.year && month == other?.month && day == other?.day;
+  }
+
+  String formatDateRange({
+    required DateTime? endDate,
+    String? formatStartDate,
+    String? formatEndDate,
+  }) {
+    final startDate = formatDate(format: formatStartDate ?? 'dd') ?? '';
+    final endDateFormatted =
+        endDate?.formatDate(format: formatEndDate ?? 'dd MMM yyyy') ?? '';
+
+    return '$startDate-$endDateFormatted';
+  }
+
+  DateTime get firstDayOfTheWeek {
+    // first date is monday
+    final int day = weekday;
+
+    return subtract(Duration(days: day - 1));
+  }
+
+  DateTime get lastDayOfTheWeek {
+    // last date is sunday
+    final int day = weekday;
+
+    return add(Duration(days: 7 - day));
+  }
+
+  static List<DateTime> get daysInWeek {
+    final List<DateTime> result = [];
+    final DateTime currentDate = DateTime.now();
+    final DateTime firstDate = currentDate.firstDayOfTheWeek;
+
+    for (int i = 0; i < DateTime.daysPerWeek; i++) {
+      result.add(firstDate.add(Duration(days: i)));
+    }
+
+    return result;
   }
 }

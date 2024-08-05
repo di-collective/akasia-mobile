@@ -6,7 +6,6 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -90,7 +89,6 @@ class __BodyState extends State<_Body> {
                     child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
                             const SizedBox(
@@ -115,10 +113,7 @@ class __BodyState extends State<_Body> {
                               controller: _newPhoneNumberTextController,
                               title: context.locale.newPhoneNumber,
                               isRequired: true,
-                              isCannotSameAs: true,
                               selectedCountry: _selectedCountry,
-                              anotherPhoneNumber:
-                                  _oldPhoneNumberTextController.text,
                               onChanged: (_) {
                                 // reload
                                 setState(() {});
@@ -162,24 +157,30 @@ class __BodyState extends State<_Body> {
         return;
       }
 
+      final oldPhoneNumber = _oldPhoneNumberTextController.text;
+      final newPhoneNumber = _newPhoneNumberTextController.text;
+
+      // validate if same
+      if (oldPhoneNumber.isSame(otherValue: newPhoneNumber)) {
+        throw context.locale.phoneNumberCannotSame;
+      }
+
       // call change phone number
       await BlocProvider.of<ChangePhoneNumberCubit>(context).changePassword(
-        oldPhoneNumber: _oldPhoneNumberTextController.text,
-        newPhoneNumber: _newPhoneNumberTextController.text,
+        oldPhoneNumber: oldPhoneNumber,
+        newPhoneNumber: newPhoneNumber,
       );
 
       // show success message
-      context.showToast(
+      context.showSuccessToast(
         message: context.locale.successChangePhoneNumber,
-        type: ToastType.success,
       );
 
       // close page
       Navigator.pop(context);
     } catch (error) {
-      context.showToast(
+      context.showErrorToast(
         message: error.message(context),
-        type: ToastType.error,
       );
     }
   }

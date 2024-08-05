@@ -1,22 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/common/local_picker_info.dart';
-import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../core/ui/widget/buttons/outline_button_widget.dart';
 import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
 import '../../../../core/ui/widget/dialogs/dialog_widget.dart';
-import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -24,7 +22,8 @@ import '../../../auth/domain/repositories/auth_repository.dart';
 import '../../../auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../../domain/usecases/change_profile_picture_usecase.dart';
 import '../cubit/profile/profile_cubit.dart';
-import '../widgets/account_item_widget.dart';
+import '../widgets/setting_item_widget.dart';
+import '../widgets/setting_label_item_widget.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -66,124 +65,163 @@ class _AccountPageState extends State<AccountPage> {
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 16,
+                    height: 24,
                   ),
-                  BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) {
-                      String? photoUrl;
-                      if (state is ProfileLoaded) {
-                        photoUrl = state.profile.photoUrl;
-                      }
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.paddingHorizontal,
+                    ),
+                    child: BlocBuilder<ProfileCubit, ProfileState>(
+                      builder: (context, state) {
+                        String? photoUrl;
+                        String? name;
+                        String? email;
 
-                      return GestureDetector(
-                        onTap: () => _onProfilePicture(
-                          state: state,
-                        ),
-                        child: Stack(
+                        if (state is ProfileLoaded) {
+                          photoUrl = state.profile.photoUrl;
+                          name = state.profile.name;
+                          email = sl<FirebaseAuth>().currentUser?.email;
+                        }
+
+                        return Row(
                           children: [
                             NetworkImageWidget(
-                              size: const Size(120, 120),
+                              size: const Size(80, 80),
                               shapeBorder: const CircleBorder(),
                               fit: BoxFit.cover,
                               imageUrl: photoUrl,
                               isLoading: state is ProfileLoading,
                             ),
-                            if (state is ProfileLoaded) ...[
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                    color: colorScheme.primary,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: colorScheme.white,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    AssetIconsPath.icCamera,
-                                    height: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) {
-                      if (state is ProfileLoaded) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: context.paddingHorizontal,
-                          ),
-                          child: Text(
-                            state.profile.name ?? '',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: textTheme.titleLarge.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurfaceDim,
+                            const SizedBox(
+                              width: 16,
                             ),
-                          ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (state is ProfileLoaded) ...[
+                                    Text(
+                                      name ?? '',
+                                      maxLines: 3,
+                                      style: textTheme.headlineSmall.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: colorScheme.onSurfaceDim,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      email ?? '',
+                                      maxLines: 2,
+                                      style: textTheme.bodyMedium.copyWith(
+                                        color: colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    OutlineButtonWidget(
+                                      colorScheme: colorScheme,
+                                      height: 32,
+                                      text: context.locale.changeProfilePicture,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                      ),
+                                      style: textTheme.bodyMedium.copyWith(
+                                        color: colorScheme.onSurface,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      onTap: () => _onProfilePicture(
+                                        state: state,
+                                      ),
+                                    ),
+                                  ] else ...[
+                                    ShimmerLoading.rectangular(
+                                      width: context.width * 0.3,
+                                      height: 32,
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    ShimmerLoading.rectangular(
+                                      width: context.width * 0.4,
+                                      height: 16,
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    ShimmerLoading.rectangular(
+                                      width: context.width * 0.5,
+                                      height: 32,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
                         );
-                      }
-
-                      return ShimmerLoading.circular(
-                        width: 150,
-                        height: 31,
-                        shapeBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      );
-                    },
+                      },
+                    ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 32,
                   ),
-                  const TitleDividerWidget(),
-                  const SizedBox(
-                    height: 24,
+                  SettingLabelItemWidget(
+                    title: context.locale.personalSettings,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.informationDetails,
                     onTap: _onInformationDetails,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.accountSettings,
                     onTap: _onAccountSettings,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
+                    title: context.locale.notificationSetting,
+                    onTap: _onNotificationSettings,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  SettingLabelItemWidget(
+                    title: context.locale.appSettings,
+                  ),
+                  SettingItemWidget(
+                    title: context.locale.partnerServices,
+                    onTap: _onPartnerServices,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  SettingLabelItemWidget(
+                    title: context.locale.more,
+                  ),
+                  SettingItemWidget(
                     title: context.locale.faq,
                     onTap: _onFaq,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.helpCenter,
                     onTap: _onHelpCenter,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.termsAndConditions,
                     onTap: _onTermsAndConditions,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.privacyPolicy,
                     onTap: _onPrivacyPolicy,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.ratings,
                     onTap: _onRatings,
                   ),
-                  AccountItemWidget(
+                  SettingItemWidget(
                     title: context.locale.logout,
                     titleColor: colorScheme.error,
                     onTap: _onLogout,
@@ -199,10 +237,12 @@ class _AccountPageState extends State<AccountPage> {
                         version = state.yaml.version;
                       }
 
-                      return Text(
-                        '${context.locale.appVersion} ${version ?? ''}',
-                        style: textTheme.bodySmall.copyWith(
-                          color: colorScheme.onSurface,
+                      return Center(
+                        child: Text(
+                          '${context.locale.appVersion} ${version ?? ''}',
+                          style: textTheme.bodySmall.copyWith(
+                            color: colorScheme.onSurface,
+                          ),
                         ),
                       );
                     },
@@ -225,8 +265,7 @@ class _AccountPageState extends State<AccountPage> {
         BlocProvider.of<ProfileCubit>(context).refreshGetProfile(),
       ]);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
@@ -338,8 +377,7 @@ class _AccountPageState extends State<AccountPage> {
 
       return true;
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
 
@@ -358,6 +396,17 @@ class _AccountPageState extends State<AccountPage> {
   void _onAccountSettings() {
     // go to account setting page
     context.goNamed(AppRoute.accountSetting.name);
+  }
+
+  void _onNotificationSettings() {
+    // TODO: Implement this method
+  }
+
+  void _onPartnerServices() {
+    // go to partner services page
+    context.goNamed(
+      AppRoute.partnerServices.name,
+    );
   }
 
   void _onFaq() {
@@ -385,7 +434,7 @@ class _AccountPageState extends State<AccountPage> {
   Future<void> _onLogout() async {
     try {
       // show confirmation dialog
-      final isLogout = await showDialog<bool?>(
+      final isConfirm = await showDialog<bool?>(
         context: context,
         builder: (context) {
           return ConfirmationDialogWidget(
@@ -394,8 +443,7 @@ class _AccountPageState extends State<AccountPage> {
           );
         },
       );
-
-      if (isLogout == null || !isLogout) {
+      if (isConfirm != true) {
         return;
       }
 
@@ -411,8 +459,7 @@ class _AccountPageState extends State<AccountPage> {
       // go to splash page
       context.goNamed(AppRoute.splash.name);
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     } finally {

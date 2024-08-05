@@ -11,6 +11,8 @@ class NetworkImageWidget extends StatelessWidget {
   final BorderRadius? borderRadius;
   final ShapeBorder? shapeBorder;
   final bool? isLoading;
+  final Widget? child;
+  final double? opcatity;
 
   const NetworkImageWidget({
     super.key,
@@ -20,6 +22,8 @@ class NetworkImageWidget extends StatelessWidget {
     this.borderRadius,
     this.shapeBorder,
     this.isLoading,
+    this.child,
+    this.opcatity,
   });
 
   @override
@@ -36,8 +40,9 @@ class NetworkImageWidget extends StatelessWidget {
       return PlaceholderImageWidget(
         size: size,
         fit: fit,
-        borderRadius: borderRadius,
         shapeBorder: shape,
+        opcatity: opcatity,
+        child: child,
       );
     }
 
@@ -57,22 +62,31 @@ class NetworkImageWidget extends StatelessWidget {
               fit: fit,
             ),
           ),
+          child: Container(
+            decoration: ShapeDecoration(
+              color: _opacityColor,
+              shape: shape,
+            ),
+            child: child,
+          ),
         );
       },
       placeholder: (context, url) {
         return PlaceholderImageWidget(
           size: size,
           fit: fit,
-          borderRadius: borderRadius,
           shapeBorder: shape,
+          opcatity: opcatity,
+          child: child,
         );
       },
       errorWidget: (context, url, error) {
         return PlaceholderImageWidget(
           size: size,
           fit: fit,
-          borderRadius: borderRadius,
           shapeBorder: shape,
+          opcatity: opcatity,
+          child: child,
         );
       },
     );
@@ -91,20 +105,31 @@ class NetworkImageWidget extends StatelessWidget {
 
     return const RoundedRectangleBorder();
   }
+
+  Color? get _opacityColor {
+    if (opcatity != null) {
+      return Colors.black.withOpacity(opcatity!);
+    }
+
+    return null;
+  }
 }
 
 class PlaceholderImageWidget extends StatelessWidget {
   final Size? size;
   final BoxFit? fit;
-  final BorderRadius? borderRadius;
+
   final ShapeBorder shapeBorder;
+  final Widget? child;
+  final double? opcatity;
 
   const PlaceholderImageWidget({
     super.key,
     this.size,
     this.fit,
-    this.borderRadius,
     required this.shapeBorder,
+    this.child,
+    this.opcatity,
   });
 
   @override
@@ -121,6 +146,21 @@ class PlaceholderImageWidget extends StatelessWidget {
           fit: fit,
         ),
       ),
+      child: Container(
+        decoration: ShapeDecoration(
+          color: _opacityColor,
+          shape: shapeBorder,
+        ),
+        child: child,
+      ),
     );
+  }
+
+  Color? get _opacityColor {
+    if (opcatity != null) {
+      return Colors.black.withOpacity(opcatity!);
+    }
+
+    return null;
   }
 }

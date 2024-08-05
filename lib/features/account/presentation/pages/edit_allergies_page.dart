@@ -8,7 +8,6 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dropdowns/dropdown_widget.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -295,8 +294,7 @@ class __BodyState extends State<_Body> {
       );
 
       // sho success message
-      context.showToast(
-        type: ToastType.success,
+      context.showSuccessToast(
         message: context.locale.successEditAllergies,
       );
 
@@ -310,8 +308,7 @@ class __BodyState extends State<_Body> {
         newProfile,
       );
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

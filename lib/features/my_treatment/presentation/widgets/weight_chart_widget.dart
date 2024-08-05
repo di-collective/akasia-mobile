@@ -1,15 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/double_extension.dart';
+import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/theme/color_scheme.dart';
 import '../../../../core/ui/theme/text_theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
+import '../../../../core/utils/service_locator.dart';
+import 'record_weight_body_widget.dart';
 
 class WeightChartWidget extends StatefulWidget {
   final bool? isDisabled;
@@ -414,7 +419,84 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
     // TODO: implement _onEditWeight
   }
 
-  void _onRecordWeight() {
-    // TODO: implement _onRecordWeight
+  Future<void> _onRecordWeight() async {
+    try {
+      // show confirmation dialog
+      final isSuccess = await sl<BottomSheetInfo>().showMaterialModal(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: context.viewInsetsBottom,
+            ),
+            child: RecordWeightBodyWidget(
+              onCancel: () {
+                Navigator.of(context).pop(false);
+              },
+              onSave: (value) async {
+                final isSuccess = await _onSaveWeight(
+                  value: value,
+                );
+                if (isSuccess != true) {
+                  return;
+                }
+
+                // close dialog
+                Navigator.of(context).pop(isSuccess);
+              },
+            ),
+          );
+        },
+      );
+      if (isSuccess != true) {
+        return;
+      }
+
+      // close this page
+      context.pop();
+    } catch (error) {
+      context.showErrorToast(
+        message: error.message(context),
+      );
+    }
+  }
+
+  Future<bool?> _onSaveWeight({
+    required String value,
+  }) async {
+    try {
+      // show loading
+      context.showFullScreenLoading();
+
+      final weight = int.tryParse(value);
+      if (weight == null) {
+        throw 'Weight must be a number';
+      }
+
+      // TODO implement add meal
+      await Future.delayed(
+        const Duration(seconds: 1),
+      );
+
+      // show success message
+      context.showSuccessToast(
+        message: context.locale.successItem(
+          context.locale.addItem(
+            context.locale.weight,
+          ),
+        ),
+      );
+
+      return true;
+    } catch (error) {
+      context.showErrorToast(
+        message: error.message(context),
+      );
+
+      return false;
+    } finally {
+      // hide loading
+      context.hideFullScreenLoading;
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:health/health.dart';
+
 import '../../utils/logger.dart';
 
 extension DynamicExtension on dynamic {
@@ -18,6 +20,8 @@ extension DynamicExtension on dynamic {
         result = (this as int).toDouble();
       } else if (this is double) {
         result = this;
+      } else if (this is NutritionHealthValue) {
+        result = (this as NutritionHealthValue).calories;
       }
 
       Logger.success('dynamicToDouble result $result');
@@ -47,6 +51,32 @@ extension DynamicExtension on dynamic {
       Logger.error('dynamicToDateTime error $e');
 
       return null;
+    }
+  }
+
+  int? get dynamicToInt {
+    try {
+      Logger.info('dynamicToInt $this type $runtimeType');
+
+      int? result;
+
+      if (this is String) {
+        result = int.parse(this);
+      } else if (this is int) {
+        result = this;
+      } else if (this is double) {
+        result = (this as double).toInt();
+      } else if (this is NumericHealthValue) {
+        result = (this as NumericHealthValue).numericValue.toInt();
+      }
+
+      Logger.success('dynamicToInt result $result');
+
+      return result;
+    } catch (e) {
+      Logger.error('dynamicToInt error $e');
+
+      return 0;
     }
   }
 }

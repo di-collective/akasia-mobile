@@ -10,7 +10,6 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/sex_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
@@ -19,7 +18,7 @@ import '../../../../core/ui/widget/forms/date_form_widget.dart';
 import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/ktp_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -182,7 +181,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 24,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _membershipIdTextController,
                               title: context.locale.membershipId,
                               keyboardType: TextInputType.number,
@@ -213,7 +212,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _fullNameTextController,
                               title: context.locale.fullName,
                               isRequired: true,
@@ -246,7 +245,7 @@ class __BodyState extends State<_Body> {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextFormFieldWidget(
+                            TextFormWidget(
                               controller: _ageTextController,
                               title: context.locale.age,
                               suffixText: "yo",
@@ -562,8 +561,7 @@ class __BodyState extends State<_Body> {
       );
 
       // show toast
-      context.showToast(
-        type: ToastType.success,
+      context.showSuccessToast(
         message: context.locale.successEditInformation,
       );
 
@@ -591,8 +589,7 @@ class __BodyState extends State<_Body> {
         );
       }
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

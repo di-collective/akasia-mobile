@@ -5,9 +5,9 @@ import '../../../config/asset_path.dart';
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
 import '../dialogs/debouncer_info.dart';
-import 'text_form_field_widget.dart';
+import 'text_form_widget.dart';
 
-class SearchTextFormWidget extends TextFormFieldWidget {
+class SearchTextFormWidget extends TextFormWidget {
   final BuildContext context;
   final bool? isDisableDebouncer;
   final Function()? onChangedText;

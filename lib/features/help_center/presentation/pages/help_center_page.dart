@@ -7,7 +7,6 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../data/datasources/help_center_config.dart';
@@ -341,8 +340,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
         );
       }
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
@@ -357,8 +355,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
         url: phoneNumber.toTelpUrl,
       );
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }
@@ -373,8 +370,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
         url: email.toEmailUrl,
       );
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

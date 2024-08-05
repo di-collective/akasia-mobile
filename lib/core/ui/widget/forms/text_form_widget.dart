@@ -9,7 +9,7 @@ import '../../extensions/theme_data_extension.dart';
 import '../../theme/color_scheme.dart';
 import '../../theme/text_theme.dart';
 
-class TextFormFieldWidget extends StatefulWidget {
+class TextFormWidget extends StatefulWidget {
   final String? title;
   final String? hintText;
   final TextEditingController? controller;
@@ -36,7 +36,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final Function()? onClear;
   final String? description;
 
-  const TextFormFieldWidget({
+  const TextFormWidget({
     super.key,
     this.title,
     this.hintText,
@@ -70,10 +70,10 @@ class TextFormFieldWidget extends StatefulWidget {
   });
 
   @override
-  State<TextFormFieldWidget> createState() => _TextFormFieldWidgetState();
+  State<TextFormWidget> createState() => _TextFormWidgetState();
 }
 
-class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
+class _TextFormWidgetState extends State<TextFormWidget> {
   bool _obscureText = false;
 
   @override
@@ -114,6 +114,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
         Stack(
           children: [
             TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: widget.controller,
               initialValue: widget.initialValue,
               textAlign: widget.textAlign ?? TextAlign.start,
@@ -142,6 +143,10 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
                   colorScheme: colorScheme,
                   textTheme: textTheme,
                 ),
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 0,
+                  minHeight: 0,
+                ),
                 suffixIcon: _buildSuffixIcon(
                   colorScheme: colorScheme,
                   textTheme: textTheme,
@@ -158,13 +163,17 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
                 focusedBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
                 ),
-                contentPadding: _buildContentPadding,
+                contentPadding: _contentPadding,
                 errorBorder: _buildOutlineInputBorder(
-                  borderColor: colorScheme.error,
+                  borderColor: colorScheme.surfaceDim,
                 ),
                 focusedErrorBorder: _buildOutlineInputBorder(
                   borderColor: colorScheme.primaryContainer,
                 ),
+                errorStyle: textTheme.bodySmall.copyWith(
+                  color: colorScheme.error,
+                ),
+                errorMaxLines: 5,
               ),
               validator: widget.validator,
             ),
@@ -240,7 +249,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
     return colorScheme.onSurface;
   }
 
-  EdgeInsetsGeometry get _buildContentPadding {
+  EdgeInsetsGeometry get _contentPadding {
     if (widget.contentPadding != null) {
       return widget.contentPadding!;
     }
@@ -250,17 +259,17 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       case ScreenHeightType.small:
       case ScreenHeightType.medium:
         return const EdgeInsets.fromLTRB(
-          12,
+          0,
           10,
-          12,
+          0,
           14,
         );
       case ScreenHeightType.large:
         return const EdgeInsets.fromLTRB(
-          12,
-          14,
-          12,
-          14,
+          0,
+          13,
+          0,
+          13,
         );
     }
   }
@@ -285,6 +294,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: 12,
+            vertical: 13.5,
           ),
           decoration: BoxDecoration(
             color: colorScheme.surface,
@@ -308,7 +318,9 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       );
     }
 
-    return null;
+    return const SizedBox(
+      width: 12,
+    );
   }
 
   Widget? _buildSuffixIcon({

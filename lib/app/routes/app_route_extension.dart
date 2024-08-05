@@ -23,14 +23,32 @@ import '../../features/diet_plan/presentation/pages/diet_plan_calendar_page.dart
 import '../../features/diet_plan/presentation/pages/diet_plan_page.dart';
 import '../../features/faq/presentation/pages/faq_details_page.dart';
 import '../../features/faq/presentation/pages/faq_page.dart';
+import '../../features/health/presentation/pages/all_heart_rate_data_page.dart';
+import '../../features/health/presentation/pages/all_nutrition_data_page.dart';
+import '../../features/health/presentation/pages/all_sleep_data_page.dart';
+import '../../features/health/presentation/pages/all_steps_data_page.dart';
+import '../../features/health/presentation/pages/heart_rate_details_page.dart';
+import '../../features/health/presentation/pages/heart_rate_page.dart';
+import '../../features/health/presentation/pages/nutrition_details_page.dart';
+import '../../features/health/presentation/pages/nutrition_page.dart';
+import '../../features/health/presentation/pages/sleep_details_page.dart';
+import '../../features/health/presentation/pages/sleep_page.dart';
+import '../../features/health/presentation/pages/steps_page.dart';
+import '../../features/health/presentation/pages/workout/all_workout_data_page.dart';
+import '../../features/health/presentation/pages/workout/workout_details_page.dart';
+import '../../features/health/presentation/pages/workout/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
 import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
+import '../../features/partner_service/presentation/pages/partner_connect_page.dart';
+import '../../features/partner_service/presentation/pages/partner_services_page.dart';
 import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/ratings/presentation/pages/write_review_page.dart';
+import '../../features/ten_days_workout/presentation/pages/day_workout_details_page.dart';
+import '../../features/ten_days_workout/presentation/pages/ten_days_workout_page.dart';
 
 extension AppRouteExtension on AppRoute {
   String get path {
@@ -93,6 +111,42 @@ extension AppRouteExtension on AppRoute {
         return 'add-eat';
       case AppRoute.dietPlanCalendar:
         return 'diet-plan-calendar';
+      case AppRoute.steps:
+        return 'steps';
+      case AppRoute.allStepsData:
+        return 'all-steps-data';
+      case AppRoute.sleep:
+        return 'sleep';
+      case AppRoute.allSleepData:
+        return 'all-sleep-data';
+      case AppRoute.sleepDetails:
+        return 'sleep-details';
+      case AppRoute.heartRate:
+        return 'heart-rate';
+      case AppRoute.allHeartRateData:
+        return 'all-heart-rate-data';
+      case AppRoute.heartRateDetails:
+        return 'heart-rate-details';
+      case AppRoute.workout:
+        return 'workout';
+      case AppRoute.allWorkoutData:
+        return 'all-workout-data';
+      case AppRoute.workoutDetails:
+        return 'workout-details';
+      case AppRoute.tenDaysWorkout:
+        return 'ten-days-workout';
+      case AppRoute.dayWorkoutDetails:
+        return 'day-workout-details';
+      case AppRoute.nutrition:
+        return 'nutrition';
+      case AppRoute.allNutritionData:
+        return 'all-nutrition-data';
+      case AppRoute.nutritionDetails:
+        return 'nutrition-details';
+      case AppRoute.partnerServices:
+        return 'partner-services';
+      case AppRoute.partnerConnect:
+        return 'partner-connect';
     }
   }
 
@@ -226,6 +280,84 @@ extension AppRouteExtension on AppRoute {
         }
 
         return DietPlanCalendarPage(
+          params: params,
+        );
+      case AppRoute.steps:
+        return const StepsPage();
+      case AppRoute.allStepsData:
+        return const AllStepsDataPage();
+      case AppRoute.sleep:
+        return const SleepPage();
+      case AppRoute.allSleepData:
+        return const AllSleepDataPage();
+      case AppRoute.sleepDetails:
+        SleepDetailsPageParams? params;
+        if (arguments is SleepDetailsPageParams) {
+          params = arguments;
+        }
+
+        return SleepDetailsPage(
+          params: params,
+        );
+      case AppRoute.heartRate:
+        return const HeartRatePage();
+      case AppRoute.allHeartRateData:
+        return const AllHeartRateDataPage();
+      case AppRoute.heartRateDetails:
+        HeartRateDetailsPageParams? params;
+        if (arguments is HeartRateDetailsPageParams) {
+          params = arguments;
+        }
+
+        return HeartRateDetailsPage(
+          params: params,
+        );
+      case AppRoute.workout:
+        return const WorkoutPage();
+      case AppRoute.allWorkoutData:
+        return const AllWorkoutDataPage();
+      case AppRoute.workoutDetails:
+        WorkoutDetailsPageParams? params;
+        if (arguments is WorkoutDetailsPageParams) {
+          params = arguments;
+        }
+
+        return WorkoutDetailsPage(
+          params: params,
+        );
+      case AppRoute.tenDaysWorkout:
+        return const TenDaysWorkoutPage();
+      case AppRoute.dayWorkoutDetails:
+        DayWorkoutDetailsPageParams? params;
+        if (arguments is DayWorkoutDetailsPageParams) {
+          params = arguments;
+        }
+
+        return DayWorkoutDetailsPage(
+          params: params,
+        );
+      case AppRoute.nutrition:
+        return const NutritionPage();
+      case AppRoute.allNutritionData:
+        return const AllNutritionDataPage();
+      case AppRoute.nutritionDetails:
+        NutritionDetailsPageParams? params;
+        if (arguments is NutritionDetailsPageParams) {
+          params = arguments;
+        }
+
+        return NutritionDetailsPage(
+          params: params,
+        );
+      case AppRoute.partnerServices:
+        return const PartnerServicesPage();
+      case AppRoute.partnerConnect:
+        PartnerConnectPageParams? params;
+        if (arguments is PartnerConnectPageParams) {
+          params = arguments;
+        }
+
+        return PartnerConnectPage(
           params: params,
         );
     }

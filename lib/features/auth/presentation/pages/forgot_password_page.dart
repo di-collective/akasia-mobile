@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/utils/service_locator.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_field_widget.dart';
+import '../../../../core/ui/widget/forms/text_form_widget.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../cubit/forgot_password/forgot_password_cubit.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
@@ -91,7 +90,7 @@ class __BodyState extends State<_Body> {
                   Form(
                     key: _formKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: TextFormFieldWidget(
+                    child: TextFormWidget(
                       controller: _emailTextController,
                       title: context.locale.emailAddress,
                       keyboardType: TextInputType.emailAddress,
@@ -151,13 +150,11 @@ class __BodyState extends State<_Body> {
       );
 
       // show success message
-      context.showToast(
-        type: ToastType.success,
+      context.showSuccessToast(
         message: context.locale.emailSent,
       );
     } catch (error) {
-      context.showToast(
-        type: ToastType.error,
+      context.showErrorToast(
         message: error.message(context),
       );
     }

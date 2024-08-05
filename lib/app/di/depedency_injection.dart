@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:health/health.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,9 +19,11 @@ import '../../features/auth/di/depedency_injection.dart';
 import '../../features/country/di/depedency_injection.dart';
 import '../../features/diet_plan/di/depedency_injection.dart';
 import '../../features/faq/di/depdency_injection.dart';
+import '../../features/health/di/depedency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/my_schedule/di/depedency_injection.dart';
 import '../../features/notification/di/depedency_injection.dart';
+import '../../features/partner_service/di/depedency_injection.dart';
 import '../../features/personal_information/di/depedency_injection.dart';
 import '../../features/ratings/di/depedency_injection.dart';
 
@@ -52,6 +55,10 @@ Future<void> init() async {
   MyScheduleDI.inject();
 
   DietPlanDI.inject();
+
+  HealthDI.inject();
+
+  PartnerServiceDI.inject();
 }
 
 Future<void> _injectPackages() async {
@@ -99,9 +106,14 @@ Future<void> _injectPackages() async {
     return AppLinks();
   });
 
-  // // flutter downloader
+  // flutter downloader
   await FlutterDownloader.initialize(
     debug: kDebugMode,
     ignoreSsl: true,
   );
+
+  // health
+  sl.registerLazySingleton<Health>(() {
+    return Health();
+  });
 }

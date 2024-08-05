@@ -17,6 +17,7 @@ class ButtonWidget extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
   final EdgeInsetsGeometry? padding;
   final TextStyle? style;
+  final TextAlign? textAlign;
 
   const ButtonWidget({
     super.key,
@@ -36,6 +37,7 @@ class ButtonWidget extends StatelessWidget {
     this.borderRadius,
     this.padding,
     this.style,
+    this.textAlign,
   });
 
   @override
@@ -136,6 +138,7 @@ class ButtonWidget extends StatelessWidget {
         text!,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
+        textAlign: textAlign,
         style: style ??
             textTheme.bodyLarge.copyWith(
               color: buttonTextColor(

@@ -23,6 +23,10 @@ extension StringExtension on String {
     return RegExp(r'[a-z]').hasMatch(this);
   }
 
+  bool get isContainsSpace {
+    return contains(' ');
+  }
+
   bool isContainsSpecialCharacter({
     bool? isWithOutComma,
   }) {
