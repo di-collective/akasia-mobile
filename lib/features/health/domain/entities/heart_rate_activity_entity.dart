@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/config/hive_type_id_config.dart';
-import 'activity_entity.dart';
+import '../../../../core/utils/logger.dart';
 
 class HeartRateActivityEntity extends Equatable {
   final DateTime? fromDate;
@@ -24,43 +24,29 @@ class HeartRateActivityEntity extends Equatable {
 }
 
 class HeartRateActivityEntityAdapter
-    extends TypeAdapter<ActivityEntity<List<HeartRateActivityEntity>>> {
+    extends TypeAdapter<HeartRateActivityEntity> {
   @override
   final int typeId = HiveTypeIdConfig.heartRateActivity;
 
   @override
-  ActivityEntity<List<HeartRateActivityEntity>> read(BinaryReader reader) {
-    final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final updatedAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final dataLength = reader.readInt();
-    final data = <HeartRateActivityEntity>[];
-
-    for (var i = 0; i < dataLength; i++) {
-      data.add(HeartRateActivityEntity(
+  HeartRateActivityEntity read(BinaryReader reader) {
+    try {
+      return HeartRateActivityEntity(
         fromDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         toDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         value: reader.readInt(),
-      ));
-    }
+      );
+    } catch (error) {
+      Logger.error('HeartRateActivityEntityAdapter error: $error');
 
-    return ActivityEntity<List<HeartRateActivityEntity>>(
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      data: data,
-    );
+      rethrow;
+    }
   }
 
   @override
-  void write(
-      BinaryWriter writer, ActivityEntity<List<HeartRateActivityEntity>> obj) {
-    writer.writeInt(obj.createdAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.updatedAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.data?.length ?? 0);
-
-    obj.data?.forEach((activity) {
-      writer.writeInt(activity.fromDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.toDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.value ?? 0);
-    });
+  void write(BinaryWriter writer, HeartRateActivityEntity obj) {
+    writer.writeInt(obj.fromDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeInt(obj.toDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeInt(obj.value ?? 0);
   }
 }

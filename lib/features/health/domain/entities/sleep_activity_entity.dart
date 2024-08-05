@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/config/hive_type_id_config.dart';
-import 'activity_entity.dart';
+import '../../../../core/utils/logger.dart';
 
 class SleepActivityEntity extends Equatable {
   final DateTime? fromDate;
@@ -17,42 +17,27 @@ class SleepActivityEntity extends Equatable {
   List<Object?> get props => [fromDate, toDate];
 }
 
-class SleepActivityEntityAdapter
-    extends TypeAdapter<ActivityEntity<List<SleepActivityEntity>>> {
+class SleepActivityEntityAdapter extends TypeAdapter<SleepActivityEntity> {
   @override
   final int typeId = HiveTypeIdConfig.sleepActivity;
 
   @override
-  ActivityEntity<List<SleepActivityEntity>> read(BinaryReader reader) {
-    final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final updatedAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final dataLength = reader.readInt();
-    final data = <SleepActivityEntity>[];
-
-    for (var i = 0; i < dataLength; i++) {
-      data.add(SleepActivityEntity(
+  SleepActivityEntity read(BinaryReader reader) {
+    try {
+      return SleepActivityEntity(
         fromDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         toDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
-      ));
-    }
+      );
+    } catch (error) {
+      Logger.error('SleepActivityEntityAdapter error: $error');
 
-    return ActivityEntity<List<SleepActivityEntity>>(
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      data: data,
-    );
+      rethrow;
+    }
   }
 
   @override
-  void write(
-      BinaryWriter writer, ActivityEntity<List<SleepActivityEntity>> obj) {
-    writer.writeInt(obj.createdAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.updatedAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.data?.length ?? 0);
-
-    obj.data?.forEach((activity) {
-      writer.writeInt(activity.fromDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.toDate?.millisecondsSinceEpoch ?? 0);
-    });
+  void write(BinaryWriter writer, SleepActivityEntity obj) {
+    writer.writeInt(obj.fromDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeInt(obj.toDate?.millisecondsSinceEpoch ?? 0);
   }
 }

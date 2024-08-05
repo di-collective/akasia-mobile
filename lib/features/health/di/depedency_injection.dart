@@ -36,7 +36,11 @@ class HealthDI {
     sl.registerLazySingleton<HealthLocalDataSource>(() {
       return HealthLocalDataSourceImpl(
         healthService: sl(),
-        activityBox: HiveBox.activity.box(),
+        stepsBox: HiveBox.steps.box(),
+        sleepBox: HiveBox.sleep.box(),
+        heartRateBox: HiveBox.heartRate.box(),
+        workoutBox: HiveBox.workout.box(),
+        nutritionBox: HiveBox.nutrition.box(),
       );
     });
   }

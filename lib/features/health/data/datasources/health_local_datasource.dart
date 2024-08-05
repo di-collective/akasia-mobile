@@ -37,14 +37,118 @@ abstract class HealthLocalDataSource {
 
 class HealthLocalDataSourceImpl implements HealthLocalDataSource {
   final HealthService healthService;
-  final Box activityBox;
+  final Box stepsBox;
+  final Box sleepBox;
+  final Box heartRateBox;
+  final Box workoutBox;
+  final Box nutritionBox;
 
   HealthLocalDataSourceImpl({
     required this.healthService,
-    required this.activityBox,
+    required this.stepsBox,
+    required this.sleepBox,
+    required this.heartRateBox,
+    required this.workoutBox,
+    required this.nutritionBox,
   });
 
   final _maxRangeDaysQuery = 30;
+  final String _updatedAtKey = "updated_at";
+  final String _createdAtKey = "created_at";
+  final String _dataKey = "data";
+
+  Future<void> _updateLocalData<T>({
+    required Box box,
+    required T? data,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+  }) async {
+    try {
+      Logger.info(
+          '_updateLocalData box: $box, data: $data, updatedAt: $updatedAt, createdAt: $createdAt');
+
+      if (updatedAt != null) {
+        // update updatedAt
+        await box.put(
+          _updatedAtKey,
+          updatedAt,
+        );
+      }
+
+      if (createdAt != null) {
+        // update createdAt
+        await box.put(
+          _createdAtKey,
+          createdAt,
+        );
+      }
+
+      if (data != null) {
+        // update data
+        await box.put(
+          _dataKey,
+          data,
+        );
+      }
+
+      Logger.success('_updateLocalData');
+    } catch (error) {
+      Logger.error('_updateLocalData error: $error');
+
+      rethrow;
+    }
+  }
+
+  DateTime? _getLastUpdatedAt({
+    required Box box,
+  }) {
+    try {
+      Logger.info('_getLastUpdatedAt box: $box');
+
+      final DateTime? result = box.get(_updatedAtKey);
+      Logger.success('_getLastUpdatedAt result: $result');
+
+      return result;
+    } catch (error) {
+      Logger.error('_getLastUpdatedAt error: $error');
+
+      rethrow;
+    }
+  }
+
+  DateTime? _getCreatedAt({
+    required Box box,
+  }) {
+    try {
+      Logger.info('_getCreatedAt box: $box');
+
+      final DateTime? result = box.get(_createdAtKey);
+      Logger.success('_getCreatedAt result: $result');
+
+      return result;
+    } catch (error) {
+      Logger.error('_getCreatedAt error: $error');
+
+      rethrow;
+    }
+  }
+
+  List<T>? _getData<T>({
+    required Box box,
+  }) {
+    try {
+      Logger.info('_getData box: $box');
+
+      final List? result = box.get(_dataKey);
+      Logger.success('_getData result: $result');
+
+      return result?.cast<T>();
+    } catch (error) {
+      Logger.error('_getData error: $error');
+
+      rethrow;
+    }
+  }
 
   @override
   Future<ActivityEntity<List<StepsActivityEntity>>?> getSteps({
@@ -56,13 +160,16 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
-      final ActivityEntity<List<StepsActivityEntity>>? currentStepsData =
-          activityBox.get('steps');
-      Logger.success('getSteps currentStepsData: $currentStepsData');
+      DateTime? lastUpdatedAtData = _getLastUpdatedAt(
+        box: stepsBox,
+      );
+      DateTime? createdAt = _getCreatedAt(
+        box: stepsBox,
+      );
+      List<StepsActivityEntity>? steps = _getData<StepsActivityEntity>(
+        box: stepsBox,
+      );
 
-      DateTime? lastUpdatedAtData = currentStepsData?.updatedAt;
-      DateTime? createdAt = currentStepsData?.createdAt;
-      List<StepsActivityEntity>? steps = currentStepsData?.data;
       if (lastUpdatedAtData == null) {
         // assume user first time access and steps is null
         // get for 30 days
@@ -161,13 +268,11 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       Logger.success('getSteps steps: $steps');
 
       // update local database
-      await activityBox.put(
-        'steps',
-        ActivityEntity<List<StepsActivityEntity>>(
-          updatedAt: currentDate,
-          data: steps,
-          createdAt: createdAt,
-        ),
+      await _updateLocalData<List<StepsActivityEntity>?>(
+        box: stepsBox,
+        data: steps,
+        updatedAt: currentDate,
+        createdAt: createdAt,
       );
 
       List<StepsActivityEntity>? result = List.from(steps ?? []);
@@ -220,13 +325,15 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
-      final ActivityEntity<List<SleepActivityEntity>>? currentSleepData =
-          activityBox.get('sleep');
-      Logger.success('getSleep currentSleepData: $currentSleepData');
-
-      DateTime? lastUpdatedAtData = currentSleepData?.updatedAt;
-      DateTime? createdAt = currentSleepData?.createdAt;
-      List<SleepActivityEntity>? sleep = currentSleepData?.data;
+      DateTime? lastUpdatedAtData = _getLastUpdatedAt(
+        box: sleepBox,
+      );
+      DateTime? createdAt = _getCreatedAt(
+        box: sleepBox,
+      );
+      List<SleepActivityEntity>? sleep = _getData<SleepActivityEntity>(
+        box: sleepBox,
+      );
       if (lastUpdatedAtData == null) {
         // assume user first time access and sleep is null
         // get for 30 days
@@ -340,13 +447,11 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      await activityBox.put(
-        'sleep',
-        ActivityEntity<List<SleepActivityEntity>>(
-          updatedAt: currentDate,
-          data: sleep,
-          createdAt: createdAt,
-        ),
+      await _updateLocalData<List<SleepActivityEntity>?>(
+        box: sleepBox,
+        data: sleep,
+        updatedAt: currentDate,
+        createdAt: createdAt,
       );
 
       List<SleepActivityEntity>? result = List.from(sleep ?? []);
@@ -400,17 +505,16 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
-      // clear all data
-      // await activityBox.delete('heart_rate');
-
-      final ActivityEntity<List<HeartRateActivityEntity>>?
-          currentHeartRateData = activityBox.get('heart_rate');
-      Logger.success(
-          'getHeartRate currentHeartRateData: $currentHeartRateData');
-
-      DateTime? lastUpdatedAtData = currentHeartRateData?.updatedAt;
-      DateTime? createdAt = currentHeartRateData?.createdAt;
-      List<HeartRateActivityEntity>? heartRates = currentHeartRateData?.data;
+      DateTime? lastUpdatedAtData = _getLastUpdatedAt(
+        box: heartRateBox,
+      );
+      DateTime? createdAt = _getCreatedAt(
+        box: heartRateBox,
+      );
+      List<HeartRateActivityEntity>? heartRates =
+          _getData<HeartRateActivityEntity>(
+        box: heartRateBox,
+      );
       if (lastUpdatedAtData == null) {
         // assume user first time access and heartRates is null
         // get for 30 days
@@ -530,13 +634,11 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      await activityBox.put(
-        'heart_rate',
-        ActivityEntity<List<HeartRateActivityEntity>>(
-          updatedAt: currentDate,
-          data: heartRates,
-          createdAt: createdAt,
-        ),
+      await _updateLocalData<List<HeartRateActivityEntity>?>(
+        box: heartRateBox,
+        data: heartRates,
+        updatedAt: currentDate,
+        createdAt: createdAt,
       );
 
       List<HeartRateActivityEntity>? result = List.from(heartRates ?? []);
@@ -591,13 +693,15 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
-      final ActivityEntity<List<WorkoutActivityEntity>>? currentWorkoutData =
-          activityBox.get('workout');
-      Logger.success('getWorkout currentWorkoutData: $currentWorkoutData');
-
-      DateTime? lastUpdatedAtData = currentWorkoutData?.updatedAt;
-      DateTime? createdAt = currentWorkoutData?.createdAt;
-      List<WorkoutActivityEntity>? workouts = currentWorkoutData?.data;
+      DateTime? lastUpdatedAtData = _getLastUpdatedAt(
+        box: workoutBox,
+      );
+      DateTime? createdAt = _getCreatedAt(
+        box: workoutBox,
+      );
+      List<WorkoutActivityEntity>? workouts = _getData<WorkoutActivityEntity>(
+        box: workoutBox,
+      );
       if (lastUpdatedAtData == null) {
         // assume user first time access and workouts is null
         // get for 30 days
@@ -745,13 +849,11 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      await activityBox.put(
-        'workout',
-        ActivityEntity<List<WorkoutActivityEntity>>(
-          updatedAt: currentDate,
-          data: workouts,
-          createdAt: createdAt,
-        ),
+      await _updateLocalData<List<WorkoutActivityEntity>?>(
+        box: workoutBox,
+        data: workouts,
+        updatedAt: currentDate,
+        createdAt: createdAt,
       );
 
       List<WorkoutActivityEntity>? result = List.from(workouts ?? []);
@@ -807,14 +909,16 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
 
       final currentDate = DateTime.now();
 
-      final ActivityEntity<List<NutritionActivityEntity>>?
-          currentNutritionData = activityBox.get('nutrition');
-      Logger.success(
-          'getNutrition currentNutritionData: $currentNutritionData');
-
-      DateTime? lastUpdatedAtData = currentNutritionData?.updatedAt;
-      DateTime? createdAt = currentNutritionData?.createdAt;
-      List<NutritionActivityEntity>? nutrition = currentNutritionData?.data;
+      DateTime? lastUpdatedAtData = _getLastUpdatedAt(
+        box: nutritionBox,
+      );
+      DateTime? createdAt = _getCreatedAt(
+        box: nutritionBox,
+      );
+      List<NutritionActivityEntity>? nutrition =
+          _getData<NutritionActivityEntity>(
+        box: nutritionBox,
+      );
       if (lastUpdatedAtData == null) {
         // assume user first time access and nutrition is null
         // get for 30 days
@@ -934,13 +1038,11 @@ class HealthLocalDataSourceImpl implements HealthLocalDataSource {
       }
 
       // update local database
-      await activityBox.put(
-        'nutrition',
-        ActivityEntity<List<NutritionActivityEntity>>(
-          updatedAt: currentDate,
-          data: nutrition,
-          createdAt: createdAt,
-        ),
+      await _updateLocalData<List<NutritionActivityEntity>?>(
+        box: nutritionBox,
+        data: nutrition,
+        updatedAt: currentDate,
+        createdAt: createdAt,
       );
 
       List<NutritionActivityEntity>? result = List.from(nutrition ?? []);
