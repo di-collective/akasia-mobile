@@ -91,7 +91,7 @@ class HealthServiceImpl implements HealthService {
     if (Platform.isAndroid) {
       return HealthDataType.SLEEP_SESSION;
     } else {
-      return HealthDataType.SLEEP_ASLEEP;
+      return HealthDataType.SLEEP_IN_BED;
     }
   }
 
