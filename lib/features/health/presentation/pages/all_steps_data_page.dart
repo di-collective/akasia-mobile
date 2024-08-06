@@ -50,7 +50,9 @@ class _AllStepsDataPageState extends State<AllStepsDataPage> {
           if (state is StepsLoaded) {
             final steps = state.steps?.data?.reversed.toList();
             if (steps == null || steps.isEmpty) {
-              return const StateEmptyWidget();
+              return StateEmptyWidget(
+                width: context.width,
+              );
             }
 
             return ListView.separated(

@@ -54,7 +54,9 @@ class _AllHeartRateDataPageState extends State<AllHeartRateDataPage> {
           if (state is HeartRateLoaded) {
             final items = state.heartRate?.data;
             if (items == null || items.isEmpty) {
-              return const StateEmptyWidget();
+              return StateEmptyWidget(
+                width: context.width,
+              );
             }
 
             Map<DateTime, List<HeartRateActivityEntity>> tempSortedItems = {};

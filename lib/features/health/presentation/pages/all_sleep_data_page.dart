@@ -55,25 +55,26 @@ class _AllSleepDataPageState extends State<AllSleepDataPage> {
           if (state is SleepLoaded) {
             final sleeps = state.sleep?.data;
             if (sleeps == null || sleeps.isEmpty) {
-              return const StateEmptyWidget();
+              return StateEmptyWidget(
+                width: context.width,
+              );
             }
 
             Map<DateTime, List<SleepActivityEntity>> sortedSleeps = {};
-            for (int i = sleeps.length - 1; i > 0; i--) {
+            for (int i = sleeps.length - 1; i >= 0; i--) {
               final sleep = sleeps[i];
-
               final fromDate = sleep.fromDate;
+
               if (fromDate == null) {
                 continue;
               }
 
-              final data = sleeps.where((element) {
-                return element.fromDate?.isSameDay(other: fromDate) ?? false;
-              });
-
-              sortedSleeps.addAll({
-                fromDate.firstHourOfDay: data.toList(),
-              });
+              final key = fromDate.firstHourOfDay;
+              if (sortedSleeps.containsKey(key)) {
+                sortedSleeps[key]!.add(sleep);
+              } else {
+                sortedSleeps[key] = [sleep];
+              }
             }
 
             return ListView.separated(

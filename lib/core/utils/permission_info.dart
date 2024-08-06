@@ -14,7 +14,7 @@ class PermissionInfoImpl implements PermissionInfo {
     required Permission permission,
   }) async {
     try {
-      Logger.info('requestPermission');
+      Logger.info('requestPermission params: permission: $permission');
 
       PermissionStatus permissionStatus = await permission.status;
       Logger.success('requestPermission permissionStatus: $permissionStatus');

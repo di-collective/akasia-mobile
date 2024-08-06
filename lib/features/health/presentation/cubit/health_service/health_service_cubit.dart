@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +23,15 @@ class HealthServiceCubit extends Cubit<HealthServiceState> {
     try {
       emit(HealthServiceLoading());
 
-      final hasPermissions = await healthService.hasPermissions;
+      bool? hasPermissions;
+      if (Platform.isAndroid) {
+        // check has permissions
+        hasPermissions = await healthService.hasPermissions;
+      } else {
+        // connect
+        hasPermissions = await healthService.connect();
+      }
+
       if (hasPermissions == true) {
         emit(HealthServiceConnected());
       } else {

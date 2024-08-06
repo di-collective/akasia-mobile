@@ -54,25 +54,26 @@ class _AllNutritionDataPageState extends State<AllNutritionDataPage> {
           if (state is NutritionLoaded) {
             final nutritions = state.nutritions?.data;
             if (nutritions == null || nutritions.isEmpty) {
-              return const StateEmptyWidget();
+              return StateEmptyWidget(
+                width: context.width,
+              );
             }
 
             Map<DateTime, List<NutritionActivityEntity>> sortedNutritions = {};
-            for (int i = nutritions.length - 1; i > 0; i--) {
-              final sleep = nutritions[i];
+            for (int i = nutritions.length - 1; i >= 0; i--) {
+              final nutrition = nutritions[i];
+              final fromDate = nutrition.fromDate;
 
-              final fromDate = sleep.fromDate;
               if (fromDate == null) {
                 continue;
               }
 
-              final data = nutritions.where((element) {
-                return element.fromDate?.isSameDay(other: fromDate) ?? false;
-              });
-
-              sortedNutritions.addAll({
-                fromDate.firstHourOfDay: data.toList(),
-              });
+              final key = fromDate.firstHourOfDay;
+              if (sortedNutritions.containsKey(key)) {
+                sortedNutritions[key]!.add(nutrition);
+              } else {
+                sortedNutritions[key] = [nutrition];
+              }
             }
 
             return ListView.separated(

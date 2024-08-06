@@ -27,6 +27,7 @@ class _HealthDisconnectedWidgetState extends State<HealthDisconnectedWidget> {
 
     return Container(
       padding: const EdgeInsets.all(16),
+      width: context.width,
       decoration: BoxDecoration(
         border: Border.all(
           color: colorScheme.outlineBright,
