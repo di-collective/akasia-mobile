@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-
 import '../../../../core/config/env_config.dart';
 import '../../../../core/network/http/app_http_client.dart';
 import '../../../../core/utils/logger.dart';
@@ -15,6 +13,8 @@ abstract class ClinicRemoteDataSource {
   Future<List<ClinicLocationModel>> getClinicLocations({
     required String accessToken,
     required String? clinicId,
+    int? page,
+    int? limit,
   });
 }
 
@@ -64,20 +64,22 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
   Future<List<ClinicLocationModel>> getClinicLocations({
     required String accessToken,
     required String? clinicId,
+    int? page,
+    int? limit,
   }) async {
     try {
       Logger.info(
           'getClinicLocations accessToken: $accessToken, clinicId: $clinicId');
 
-      // TODO: Implement getClinicLocations
-      final response = await Future.delayed(
-        const Duration(seconds: 2),
-        () => Response(
-          requestOptions: RequestOptions(path: ''),
-          data: {
-            'data': mockClinicLocations,
-          },
-        ),
+      final response = await appHttpClient.get(
+        url: "${EnvConfig.akasiaClinicApiUrl}/clinic/$clinicId/location",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        queryParameters: {
+          'page': page,
+          'limit': limit,
+        },
       );
       Logger.success('getClinicLocations response: $response');
 

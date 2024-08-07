@@ -15,14 +15,20 @@ class GetClinicLocationsUseCase extends UseCase<List<ClinicLocationEntity>,
       GetClinicLocationsUseCaseParams params) async {
     return await clinicRepository.getClinicLocations(
       clinicId: params.clinicId,
+      page: params.page,
+      limit: params.limit,
     );
   }
 }
 
 class GetClinicLocationsUseCaseParams {
   final String? clinicId;
+  final int? page;
+  final int? limit;
 
   GetClinicLocationsUseCaseParams({
     required this.clinicId,
+    this.page,
+    this.limit,
   });
 }

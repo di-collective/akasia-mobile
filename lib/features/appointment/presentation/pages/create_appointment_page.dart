@@ -1,10 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
@@ -14,6 +12,7 @@ import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/bottom_sheet_button_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
+import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../../core/utils/service_locator.dart';
@@ -221,9 +220,9 @@ class __BodyState extends State<_Body> {
                                       const SizedBox(
                                         height: 24,
                                       ),
-                                      SvgPicture.asset(
-                                        AssetImagesPath.logoTextColored,
-                                        height: 24,
+                                      NetworkImageWidget(
+                                        imageUrl: _selectedClinic?.logo,
+                                        size: Size(context.width, 50),
                                       ),
                                       const SizedBox(
                                         height: 24,

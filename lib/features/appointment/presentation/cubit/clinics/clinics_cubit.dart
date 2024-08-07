@@ -22,7 +22,7 @@ class ClinicsCubit extends Cubit<ClinicsState> {
     try {
       emit(ClinicsLoading());
 
-      // TODO: use pagination
+      // TODO: implement pagination
       final clinics = await getClinicsUseCase(GetClinicsUseCaseParams());
 
       emit(ClinicsLoaded(

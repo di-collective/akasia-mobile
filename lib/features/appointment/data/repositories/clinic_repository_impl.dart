@@ -55,6 +55,8 @@ class ClinicRepositoryImpl implements ClinicRepository {
   @override
   Future<List<ClinicLocationEntity>> getClinicLocations({
     required String? clinicId,
+    int? page,
+    int? limit,
   }) async {
     if (await networkInfo.isConnected) {
       try {
@@ -68,6 +70,8 @@ class ClinicRepositoryImpl implements ClinicRepository {
         return await clinicRemoteDataSource.getClinicLocations(
           accessToken: accessToken,
           clinicId: clinicId,
+          page: page,
+          limit: limit,
         );
       } on AuthException catch (error) {
         throw AuthException(

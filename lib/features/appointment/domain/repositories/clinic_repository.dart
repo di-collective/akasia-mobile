@@ -8,5 +8,7 @@ abstract class ClinicRepository {
   });
   Future<List<ClinicLocationEntity>> getClinicLocations({
     required String? clinicId,
+    int? page,
+    int? limit,
   });
 }
