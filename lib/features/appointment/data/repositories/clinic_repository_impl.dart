@@ -19,7 +19,10 @@ class ClinicRepositoryImpl implements ClinicRepository {
   });
 
   @override
-  Future<List<ClinicEntity>> getClinics() async {
+  Future<List<ClinicEntity>> getClinics({
+    int? page,
+    int? limit,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final accessToken = authLocalDataSource.getAccessToken();
@@ -31,6 +34,8 @@ class ClinicRepositoryImpl implements ClinicRepository {
 
         return clinicRemoteDataSource.getClinics(
           accessToken: accessToken,
+          page: page,
+          limit: limit,
         );
       } on AuthException catch (error) {
         throw AuthException(

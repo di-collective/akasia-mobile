@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/usecases/usecase.dart';
+import '../../../../../core/config/env_config.dart';
 import '../../../domain/entities/clinic_entity.dart';
 import '../../../domain/usecases/get_clinics_usecase.dart';
 
@@ -12,15 +12,22 @@ class ClinicsCubit extends Cubit<ClinicsState> {
 
   ClinicsCubit({
     required this.getClinicsUseCase,
-  }) : super(ClinicsInitial());
+  }) : super(ClinicsInitial()) {
+    limit = EnvConfig.getDataLimit;
+  }
+
+  late int limit;
 
   Future<void> getClinics() async {
     try {
       emit(ClinicsLoading());
 
-      final clinics = await getClinicsUseCase(NoParams());
+      // TODO: use pagination
+      final clinics = await getClinicsUseCase(GetClinicsUseCaseParams());
 
-      emit(ClinicsLoaded(clinics: clinics));
+      emit(ClinicsLoaded(
+        clinics: clinics,
+      ));
     } catch (error) {
       emit(ClinicsError(error: error));
 
