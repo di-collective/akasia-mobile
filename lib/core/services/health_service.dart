@@ -255,7 +255,6 @@ class HealthServiceImpl implements HealthService {
     try {
       Logger.info('getSleepSessions startTime: $startTime, endTime: $endTime');
 
-      // FIXME: return empty list on iOS
       final result = await health.getHealthDataFromTypes(
         types: [
           _sleepHealthDataType,
