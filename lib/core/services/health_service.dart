@@ -89,6 +89,8 @@ class HealthServiceImpl implements HealthService {
 
   static HealthDataType get _sleepHealthDataType {
     if (Platform.isAndroid) {
+      // return HealthDataType.SLEEP_SESSION; & SLEEP_IN_BED // Not found in Android < 13
+      // FIXME: When user not installed Health Connect showing error "Data type not found"
       return HealthDataType.SLEEP_SESSION;
     } else {
       return HealthDataType.SLEEP_IN_BED;
