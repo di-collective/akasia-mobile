@@ -40,35 +40,45 @@ class _PartnerServicesPageState extends State<PartnerServicesPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 16,
-            ),
-            if (Platform.isIOS) ...[
-              PartnerItemWidget(
-                imagePath: AppPartner.healthKit.logoPath,
-                title: AppPartner.healthKit.title,
-                description: AppPartner.healthKit.types(
-                  context: context,
+        child: BlocBuilder<HealthServiceCubit, HealthServiceState>(
+          builder: (context, state) {
+            final isConnected = state is HealthServiceConnected;
+
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 16,
                 ),
-                onTap: () => _onPartner(
-                  partner: AppPartner.healthKit,
-                ),
-              ),
-            ] else if (Platform.isAndroid) ...[
-              PartnerItemWidget(
-                imagePath: AppPartner.healthConnect.logoPath,
-                title: AppPartner.healthConnect.title,
-                description: AppPartner.healthConnect.types(
-                  context: context,
-                ),
-                onTap: () => _onPartner(
-                  partner: AppPartner.healthConnect,
-                ),
-              ),
-            ],
-          ],
+                if (Platform.isIOS) ...[
+                  PartnerItemWidget(
+                    imagePath: AppPartner.healthKit.logoPath,
+                    title: AppPartner.healthKit.title,
+                    description: AppPartner.healthKit.types(
+                      context: context,
+                    ),
+                    isConnected: isConnected,
+                    onTap: () => _onPartner(
+                      partner: AppPartner.healthKit,
+                      isConnected: isConnected,
+                    ),
+                  ),
+                ] else if (Platform.isAndroid) ...[
+                  PartnerItemWidget(
+                    imagePath: AppPartner.healthConnect.logoPath,
+                    title: AppPartner.healthConnect.title,
+                    description: AppPartner.healthConnect.types(
+                      context: context,
+                    ),
+                    isConnected: isConnected,
+                    onTap: () => _onPartner(
+                      partner: AppPartner.healthConnect,
+                      isConnected: isConnected,
+                    ),
+                  ),
+                ],
+              ],
+            );
+          },
         ),
       ),
     );
@@ -76,15 +86,20 @@ class _PartnerServicesPageState extends State<PartnerServicesPage> {
 
   Future<void> _onPartner({
     required AppPartner partner,
+    bool? isConnected,
   }) async {
     try {
-      // show loading
-      context.showFullScreenLoading();
+      if (isConnected == true) {
+        return;
+      }
 
       AppPartnerStatus? status = AppPartnerStatus.disconnected;
       switch (partner) {
         case AppPartner.healthConnect:
         case AppPartner.healthKit:
+          // show loading
+          context.showFullScreenLoading();
+
           // check if user has permissions
           final isAuthorized =
               await BlocProvider.of<HealthServiceCubit>(context)

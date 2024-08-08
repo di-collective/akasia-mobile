@@ -21,6 +21,15 @@ abstract class HealthService {
   /// - Only works on Android, returns `null` on iOS
   Future<bool?> get hasPermissions;
 
+  /// Check the status of the Health Connect SDK
+  ///
+  /// Returns `true` if the Health Connect SDK is available, `false` if the Health Connect SDK is unavailable, and throws an error if the Health Connect SDK is unavailable and a provider update is required
+  ///
+  /// Note:
+  /// - This method should be called before calling [connect]
+  /// - Only works on Android, throws an error on iOS
+  Future<bool?> getHealthConnectSdkStatus();
+
   Future<bool?> connect();
 
   Future<bool?> disconnect();
@@ -89,8 +98,6 @@ class HealthServiceImpl implements HealthService {
 
   static HealthDataType get _sleepHealthDataType {
     if (Platform.isAndroid) {
-      // return HealthDataType.SLEEP_SESSION; & SLEEP_IN_BED // Not found in Android < 13
-      // FIXME: When user not installed Health Connect showing error "Data type not found"
       return HealthDataType.SLEEP_SESSION;
     } else {
       return HealthDataType.SLEEP_IN_BED;
@@ -119,17 +126,51 @@ class HealthServiceImpl implements HealthService {
         // configure health
         await configure();
 
-        // check permissions
-        hasPermissions = await health.hasPermissions(
-          _types,
-          permissions: _permissions,
-        );
+        // get health connect sdk status
+        final healthConnectSdkStatus = await getHealthConnectSdkStatus();
+        if (healthConnectSdkStatus == true) {
+          // check permissions
+          hasPermissions = await health.hasPermissions(
+            _types,
+            permissions: _permissions,
+          );
+        }
       }
       Logger.success('hasPermissions: $hasPermissions');
 
       return hasPermissions;
     } catch (error) {
       Logger.error('hasPermissions error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool?> getHealthConnectSdkStatus() async {
+    try {
+      Logger.info('healthConnectSdkStatus');
+
+      if (Platform.isAndroid) {
+        final healthConnectSdkStatus = await health.getHealthConnectSdkStatus();
+        Logger.success('healthConnectSdkStatus: $healthConnectSdkStatus');
+
+        if (healthConnectSdkStatus != null) {
+          switch (healthConnectSdkStatus) {
+            case HealthConnectSdkStatus.sdkAvailable:
+              // continue
+              break;
+            case HealthConnectSdkStatus.sdkUnavailableProviderUpdateRequired:
+              throw 'Health Connect SDK is unavailable, provider update required';
+            case HealthConnectSdkStatus.sdkUnavailable:
+              throw 'Health Connect SDK is unavailable, please install the health connect App before connecting';
+          }
+        }
+      }
+
+      return true;
+    } catch (error) {
+      Logger.error('healthConnectSdkStatus error: $error');
 
       rethrow;
     }
@@ -143,33 +184,23 @@ class HealthServiceImpl implements HealthService {
       bool? isAuthorized;
       if (Platform.isAndroid) {
         // check health connect sdk status
-        final healthConnectSdkStatus = await health.getHealthConnectSdkStatus();
+        final healthConnectSdkStatus = await getHealthConnectSdkStatus();
         Logger.success(
             'connect healthConnectSdkStatus: $healthConnectSdkStatus');
-        if (healthConnectSdkStatus != null) {
-          switch (healthConnectSdkStatus) {
-            case HealthConnectSdkStatus.sdkAvailable:
-              // continue
-              break;
-            case HealthConnectSdkStatus.sdkUnavailableProviderUpdateRequired:
-              throw 'Health Connect SDK is unavailable, provider update required';
-            case HealthConnectSdkStatus.sdkUnavailable:
-              throw 'Health Connect SDK is unavailable, please install the health connect App before connecting';
+        if (healthConnectSdkStatus == true) {
+          // request native permission
+          for (final permission in _nativePermissions) {
+            final isGranted = await permissionInfo.requestPermission(
+              permission: permission,
+            );
+            if (!isGranted) {
+              return false;
+            }
           }
-        }
 
-        // request native permission
-        for (final permission in _nativePermissions) {
-          final isGranted = await permissionInfo.requestPermission(
-            permission: permission,
-          );
-          if (!isGranted) {
-            return false;
-          }
+          // check has permissions
+          isAuthorized = await hasPermissions;
         }
-
-        // check has permissions
-        isAuthorized = await hasPermissions;
       }
 
       if (isAuthorized != true) {
