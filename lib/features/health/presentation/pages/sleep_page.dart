@@ -94,7 +94,7 @@ class _SleepPageState extends State<SleepPage> {
                       );
                     }
 
-                    if (dataInWeek.isNotEmpty) {
+                    if (sleepDurationInMinutes.isNotEmpty) {
                       // calculate average sleep duration
                       final sleepDurationTotalInMinutes =
                           sleepDurationInMinutes.sum();

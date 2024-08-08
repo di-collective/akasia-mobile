@@ -52,10 +52,10 @@ class ActivityWidget extends StatelessWidget {
         child: _LoadingWidget(),
       );
     } else if (isError) {
-      // TODO: handle error
-      return const _ContainerWidget(
-        child: _LoadingWidget(),
-      );
+      // // TODO: handle error
+      // return const _ContainerWidget(
+      //   child: _LoadingWidget(),
+      // );
     }
 
     return _ContainerWidget(

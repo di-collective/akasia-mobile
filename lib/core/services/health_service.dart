@@ -12,6 +12,13 @@ import '../utils/permission_info.dart';
 import '../utils/service_locator.dart';
 
 abstract class HealthService {
+  /// Check if the user has the required permissions
+  ///
+  /// Returns `true` if the user has the required permissions, `false` if the user does not have the required permissions, and `null` if the user has not yet granted or denied the permissions
+  ///
+  /// Note:
+  /// - This method should be called before calling [connect]
+  /// - Only works on Android, returns `null` on iOS
   Future<bool?> get hasPermissions;
 
   Future<bool?> connect();
@@ -63,7 +70,7 @@ class HealthServiceImpl implements HealthService {
     HealthDataType.HEART_RATE,
     HealthDataType.NUTRITION,
     HealthDataType.WORKOUT,
-    HealthDataType.SLEEP_SESSION,
+    _sleepHealthDataType,
   ];
 
   // the length of this list must be the same as the length of _types
@@ -79,6 +86,14 @@ class HealthServiceImpl implements HealthService {
     Permission.activityRecognition,
     Permission.location,
   ];
+
+  static HealthDataType get _sleepHealthDataType {
+    if (Platform.isAndroid) {
+      return HealthDataType.SLEEP_SESSION;
+    } else {
+      return HealthDataType.SLEEP_IN_BED;
+    }
+  }
 
   Future<void> configure() async {
     try {
@@ -97,14 +112,17 @@ class HealthServiceImpl implements HealthService {
     try {
       Logger.info('hasPermissions');
 
-      // configure health
-      await configure();
+      bool? hasPermissions;
+      if (Platform.isAndroid) {
+        // configure health
+        await configure();
 
-      // check permissions
-      final hasPermissions = await health.hasPermissions(
-        _types,
-        permissions: _permissions,
-      );
+        // check permissions
+        hasPermissions = await health.hasPermissions(
+          _types,
+          permissions: _permissions,
+        );
+      }
       Logger.success('hasPermissions: $hasPermissions');
 
       return hasPermissions;
@@ -120,6 +138,7 @@ class HealthServiceImpl implements HealthService {
     try {
       Logger.info('connect');
 
+      bool? isAuthorized;
       if (Platform.isAndroid) {
         // check health connect sdk status
         final healthConnectSdkStatus = await health.getHealthConnectSdkStatus();
@@ -136,19 +155,21 @@ class HealthServiceImpl implements HealthService {
               throw 'Health Connect SDK is unavailable, please install the health connect App before connecting';
           }
         }
-      }
 
-      // request native permission
-      for (final permission in _nativePermissions) {
-        final isGranted = await permissionInfo.requestPermission(
-          permission: permission,
-        );
-        if (!isGranted) {
-          return false;
+        // request native permission
+        for (final permission in _nativePermissions) {
+          final isGranted = await permissionInfo.requestPermission(
+            permission: permission,
+          );
+          if (!isGranted) {
+            return false;
+          }
         }
+
+        // check has permissions
+        isAuthorized = await hasPermissions;
       }
 
-      bool? isAuthorized = await hasPermissions;
       if (isAuthorized != true) {
         // request health permission
         isAuthorized = await health.requestAuthorization(
@@ -236,7 +257,7 @@ class HealthServiceImpl implements HealthService {
 
       final result = await health.getHealthDataFromTypes(
         types: [
-          HealthDataType.SLEEP_SESSION,
+          _sleepHealthDataType,
         ],
         startTime: startTime,
         endTime: endTime,

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/config/hive_type_id_config.dart';
-import 'activity_entity.dart';
+import '../../../../core/utils/logger.dart';
 
 class NutritionActivityEntity extends Equatable {
   final DateTime? fromDate;
@@ -24,43 +24,29 @@ class NutritionActivityEntity extends Equatable {
 }
 
 class NutritionActivityEntityAdapter
-    extends TypeAdapter<ActivityEntity<List<NutritionActivityEntity>>> {
+    extends TypeAdapter<NutritionActivityEntity> {
   @override
   final int typeId = HiveTypeIdConfig.nutritionActivity;
 
   @override
-  ActivityEntity<List<NutritionActivityEntity>> read(BinaryReader reader) {
-    final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final updatedAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final dataLength = reader.readInt();
-    final data = <NutritionActivityEntity>[];
-
-    for (var i = 0; i < dataLength; i++) {
-      data.add(NutritionActivityEntity(
+  NutritionActivityEntity read(BinaryReader reader) {
+    try {
+      return NutritionActivityEntity(
         fromDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         toDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         value: reader.readDouble(),
-      ));
-    }
+      );
+    } catch (error) {
+      Logger.error('NutritionActivityEntityAdapter error: $error');
 
-    return ActivityEntity<List<NutritionActivityEntity>>(
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      data: data,
-    );
+      rethrow;
+    }
   }
 
   @override
-  void write(
-      BinaryWriter writer, ActivityEntity<List<NutritionActivityEntity>> obj) {
-    writer.writeInt(obj.createdAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.updatedAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.data?.length ?? 0);
-
-    obj.data?.forEach((activity) {
-      writer.writeInt(activity.fromDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.toDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeDouble(activity.value ?? 0);
-    });
+  void write(BinaryWriter writer, NutritionActivityEntity obj) {
+    writer.writeInt(obj.fromDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeInt(obj.toDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeDouble(obj.value ?? 0);
   }
 }

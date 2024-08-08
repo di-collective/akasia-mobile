@@ -24,6 +24,7 @@ class _HealthInitialWidgetState extends State<HealthInitialWidget> {
 
     return Container(
       padding: const EdgeInsets.all(16),
+      width: context.width,
       decoration: BoxDecoration(
         border: Border.all(
           color: colorScheme.outlineBright,

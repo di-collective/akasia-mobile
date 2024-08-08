@@ -92,7 +92,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       );
                     }
 
-                    if (dataInWeek.isNotEmpty) {
+                    if (workoutDurationInMinutes.isNotEmpty) {
                       // calculate average duration
                       final total = workoutDurationInMinutes.sum();
                       final totalDuration = Duration(

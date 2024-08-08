@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/config/hive_type_id_config.dart';
-import 'activity_entity.dart';
+import '../../../../core/utils/logger.dart';
 
 class StepsActivityEntity extends Equatable {
   final DateTime? date;
@@ -17,42 +17,27 @@ class StepsActivityEntity extends Equatable {
   List<Object?> get props => [date, count];
 }
 
-class StepsActivityEntityAdapter
-    extends TypeAdapter<ActivityEntity<List<StepsActivityEntity>>> {
+class StepsActivityEntityAdapter extends TypeAdapter<StepsActivityEntity> {
   @override
   final int typeId = HiveTypeIdConfig.stepsActivity;
 
   @override
-  ActivityEntity<List<StepsActivityEntity>> read(BinaryReader reader) {
-    final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final updatedAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final dataLength = reader.readInt();
-    final data = <StepsActivityEntity>[];
-
-    for (var i = 0; i < dataLength; i++) {
-      data.add(StepsActivityEntity(
+  StepsActivityEntity read(BinaryReader reader) {
+    try {
+      return StepsActivityEntity(
         date: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         count: reader.readInt(),
-      ));
-    }
+      );
+    } catch (error) {
+      Logger.error('StepsActivityEntityAdapter error: $error');
 
-    return ActivityEntity<List<StepsActivityEntity>>(
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      data: data,
-    );
+      rethrow;
+    }
   }
 
   @override
-  void write(
-      BinaryWriter writer, ActivityEntity<List<StepsActivityEntity>> obj) {
-    writer.writeInt(obj.createdAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.updatedAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.data?.length ?? 0);
-
-    obj.data?.forEach((activity) {
-      writer.writeInt(activity.date?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.count ?? 0);
-    });
+  void write(BinaryWriter writer, StepsActivityEntity obj) {
+    writer.writeInt(obj.date?.millisecondsSinceEpoch ?? 0);
+    writer.writeInt(obj.count ?? 0);
   }
 }

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/config/hive_type_id_config.dart';
-import 'activity_entity.dart';
+import '../../../../core/utils/logger.dart';
 
 class WorkoutActivityEntity extends Equatable {
   final DateTime? fromDate;
@@ -23,44 +23,29 @@ class WorkoutActivityEntity extends Equatable {
       ];
 }
 
-class WorkoutActivityEntityAdapter
-    extends TypeAdapter<ActivityEntity<List<WorkoutActivityEntity>>> {
+class WorkoutActivityEntityAdapter extends TypeAdapter<WorkoutActivityEntity> {
   @override
   final int typeId = HiveTypeIdConfig.workoutActivity;
 
   @override
-  ActivityEntity<List<WorkoutActivityEntity>> read(BinaryReader reader) {
-    final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final updatedAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
-    final dataLength = reader.readInt();
-    final data = <WorkoutActivityEntity>[];
-
-    for (var i = 0; i < dataLength; i++) {
-      data.add(WorkoutActivityEntity(
+  WorkoutActivityEntity read(BinaryReader reader) {
+    try {
+      return WorkoutActivityEntity(
         fromDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         toDate: DateTime.fromMillisecondsSinceEpoch(reader.readInt()),
         type: reader.readString(),
-      ));
-    }
+      );
+    } catch (error) {
+      Logger.error('WorkoutActivityEntityAdapter error: $error');
 
-    return ActivityEntity<List<WorkoutActivityEntity>>(
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      data: data,
-    );
+      rethrow;
+    }
   }
 
   @override
-  void write(
-      BinaryWriter writer, ActivityEntity<List<WorkoutActivityEntity>> obj) {
-    writer.writeInt(obj.createdAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.updatedAt?.millisecondsSinceEpoch ?? 0);
-    writer.writeInt(obj.data?.length ?? 0);
-
-    obj.data?.forEach((activity) {
-      writer.writeInt(activity.fromDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeInt(activity.toDate?.millisecondsSinceEpoch ?? 0);
-      writer.writeString(activity.type ?? '');
-    });
+  void write(BinaryWriter writer, WorkoutActivityEntity obj) {
+    writer.writeInt(obj.fromDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeInt(obj.toDate?.millisecondsSinceEpoch ?? 0);
+    writer.writeString(obj.type ?? '');
   }
 }
