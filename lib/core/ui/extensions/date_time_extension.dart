@@ -1,10 +1,42 @@
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/logger.dart';
+
 extension DateTimeExtension on DateTime {
-  String get toDateApi {
-    // expected date format on string 2006-01-02T15:04:05Z
-    return DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(this);
+  /// Converts a `DateTime` object to a string using the format `yyyy-MM-dd'T'HH:mm:ssZ07:00`.
+  ///
+  /// Returns:
+  /// - A string representing the `DateTime` in the specified format, including the timezone offset.
+  /// - `null`: If an error occurs during the conversion.
+  ///
+  /// Note:
+  /// - The resulting string will follow this pattern: `2006-01-02T15:04:05Z07:00`.
+  String? get toDateApi {
+    try {
+      final date = this;
+
+      // Get the formatted date string without timezone
+      String formattedDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date);
+
+      // Get the timezone offset in hours and minutes
+      String timeZoneOffset = date.timeZoneOffset.isNegative ? '-' : '+';
+      timeZoneOffset +=
+          '${date.timeZoneOffset.inHours.abs().toString().padLeft(2, '0')}:';
+      timeZoneOffset +=
+          (date.timeZoneOffset.inMinutes.abs() % 60).toString().padLeft(2, '0');
+
+      // Combine the formatted date with the timezone offset
+      final formattedString = formattedDate + timeZoneOffset;
+
+      Logger.success('toDateApi formattedString: $formattedString');
+
+      return formattedString;
+    } catch (error) {
+      Logger.error('toDateApi error: $error');
+
+      return null;
+    }
   }
 
   String? formatDate({
@@ -73,6 +105,10 @@ extension DateTimeExtension on DateTime {
     return add(Duration(days: days));
   }
 
+  DateTime addYears(int year) {
+    return add(Duration(days: year * 365));
+  }
+
   // TODO: Rename this to startOfDay
   DateTime get firstHourOfDay {
     return DateTime(year, month, day, 0, 0, 0, 0, 0);
@@ -86,10 +122,57 @@ extension DateTimeExtension on DateTime {
     return DateFormat('HH:mm').format(this);
   }
 
+  // FIXME: Migrate to use isSame
   bool isSameDay({
     required DateTime? other,
   }) {
     return year == other?.year && month == other?.month && day == other?.day;
+  }
+
+  bool isSame({
+    required DateTime? other,
+    bool? withoutYear,
+    bool? withoutMonth,
+    bool? withoutDay,
+    bool? withoutHour,
+    bool? withoutMinute,
+    bool? withoutSecond,
+  }) {
+    if (withoutYear == true) {
+      if (withoutMonth == true) {
+        if (withoutDay == true) {
+          if (withoutHour == true) {
+            if (withoutMinute == true) {
+              return second == other?.second;
+            }
+
+            return minute == other?.minute && second == other?.second;
+          }
+
+          return hour == other?.hour &&
+              minute == other?.minute &&
+              second == other?.second;
+        }
+
+        return day == other?.day &&
+            hour == other?.hour &&
+            minute == other?.minute &&
+            second == other?.second;
+      }
+
+      return month == other?.month &&
+          day == other?.day &&
+          hour == other?.hour &&
+          minute == other?.minute &&
+          second == other?.second;
+    }
+
+    return year == other?.year &&
+        month == other?.month &&
+        day == other?.day &&
+        hour == other?.hour &&
+        minute == other?.minute &&
+        second == other?.second;
   }
 
   String formatDateRange({
@@ -116,6 +199,10 @@ extension DateTimeExtension on DateTime {
     final int day = weekday;
 
     return add(Duration(days: 7 - day));
+  }
+
+  DateTime get onlyYearMonth {
+    return DateTime(year, month);
   }
 
   static List<DateTime> get daysInWeek {

@@ -119,7 +119,7 @@ class _HealthConnectedWidgetState extends State<HealthConnectedWidget> {
           builder: (context, state) {
             List<NutritionActivityEntity>? data;
             DateTime? checkedAt;
-            double currentNutrition = 0;
+            int currentNutrition = 0;
             if (state is NutritionLoaded) {
               checkedAt = state.checkedAt;
 
@@ -130,7 +130,7 @@ class _HealthConnectedWidgetState extends State<HealthConnectedWidget> {
               if (data != null && data.isNotEmpty) {
                 final value = data.last.value;
                 if (value != null) {
-                  currentNutrition = value;
+                  currentNutrition = value.toInt();
                 }
               }
             }

@@ -7,18 +7,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
-import '../../../../core/ui/extensions/color_swatch_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
-import '../../domain/entities/appointment_date_entity.dart';
 
 const Duration _monthScrollDuration = Duration(milliseconds: 200);
 
-const double _dayPickerRowHeight = 60;
+const double _dayPickerHeight = 40;
+const double _dayPickerWidth = 40;
 const int _maxDayPickerRowCount = 6; // A 31 day month that starts on Saturday.
 // One extra row for the day-of-week header.
-const double _maxDayPickerHeight =
-    _dayPickerRowHeight * (_maxDayPickerRowCount + 1);
+// TODO: This should be calculated based on the number of rows in the month.
+const _maxDayPickerHeight = _dayPickerHeight * (_maxDayPickerRowCount + 2);
 
 const double _monthPickerHorizontalPadding = 8.0;
 
@@ -85,12 +84,10 @@ class CalendarDatePickerWidget extends StatefulWidget {
     this.onDisplayedMonthChanged,
     this.initialCalendarMode = DatePickerMode.day,
     this.selectableDayPredicate,
-    this.notOpenedDays,
-    this.fullBookedDays,
+    this.unavailableDays,
     this.availableDays,
     this.onMonthChanged,
     required this.isLoading,
-    this.loadedDays,
   })  : initialDate =
             initialDate == null ? null : DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
@@ -150,17 +147,13 @@ class CalendarDatePickerWidget extends StatefulWidget {
   /// Function to provide full control over which dates in the calendar can be selected.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  final List<DateTime?>? notOpenedDays;
-
-  final List<DateTime?>? fullBookedDays;
+  final List<DateTime?>? unavailableDays;
 
   final List<DateTime?>? availableDays;
 
   final Function(DateTime month)? onMonthChanged;
 
   final bool isLoading;
-
-  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   State<CalendarDatePickerWidget> createState() =>
@@ -291,16 +284,16 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
           onChanged: _handleDayChanged,
           onDisplayedMonthChanged: _handleMonthChanged,
           selectableDayPredicate: widget.selectableDayPredicate,
-          notOpenedDays: widget.notOpenedDays,
-          fullBookedDays: widget.fullBookedDays,
+          unavailableDays: widget.unavailableDays,
           availableDays: widget.availableDays,
           onMonthChanged: widget.onMonthChanged,
           isLoading: widget.isLoading,
-          loadedDays: widget.loadedDays,
         );
       case DatePickerMode.year:
         return Padding(
-          padding: const EdgeInsets.only(top: _subHeaderHeight),
+          padding: const EdgeInsets.only(
+            top: _subHeaderHeight,
+          ),
           child: YearPicker(
             key: _yearPickerKey,
             currentDate: widget.currentDate,
@@ -327,16 +320,20 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
         // Put the mode toggle button on top so that it won't be covered up by the _MonthPicker
         _DatePickerModeToggleButton(
           mode: _mode,
-          title: _localizations.formatMonthYear(_currentDisplayedMonthDate),
+          title: _localizations.formatMonthYear(
+            _currentDisplayedMonthDate,
+          ),
           onTitlePressed: () {
             if (widget.isLoading) {
               return;
             }
 
             // Toggle the day/year mode.
-            _handleModeChanged(_mode == DatePickerMode.day
-                ? DatePickerMode.year
-                : DatePickerMode.day);
+            _handleModeChanged(
+              _mode == DatePickerMode.day
+                  ? DatePickerMode.year
+                  : DatePickerMode.day,
+            );
           },
         ),
       ],
@@ -406,7 +403,10 @@ class _DatePickerModeToggleButtonState
     final Color controlColor = colorScheme.onSurface.withOpacity(0.60);
 
     return Container(
-      padding: const EdgeInsetsDirectional.only(start: 16, end: 4),
+      padding: const EdgeInsetsDirectional.only(
+        start: 16,
+        end: 4,
+      ),
       height: _subHeaderHeight,
       child: Row(
         children: <Widget>[
@@ -448,7 +448,9 @@ class _DatePickerModeToggleButtonState
           ),
           if (widget.mode == DatePickerMode.day)
             // Give space for the prev/next month buttons that are underneath this row
-            const SizedBox(width: _monthNavButtonsWidth),
+            const SizedBox(
+              width: _monthNavButtonsWidth,
+            ),
         ],
       ),
     );
@@ -473,12 +475,10 @@ class _MonthPicker extends StatefulWidget {
     required this.onChanged,
     required this.onDisplayedMonthChanged,
     this.selectableDayPredicate,
-    this.notOpenedDays,
-    this.fullBookedDays,
+    this.unavailableDays,
     this.availableDays,
     this.onMonthChanged,
     required this.isLoading,
-    this.loadedDays,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
         assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -520,16 +520,13 @@ class _MonthPicker extends StatefulWidget {
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  final List<DateTime?>? notOpenedDays;
-
-  final List<DateTime?>? fullBookedDays;
+  final List<DateTime?>? unavailableDays;
 
   final List<DateTime?>? availableDays;
 
   final Function(DateTime month)? onMonthChanged;
 
   final bool isLoading;
-  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   _MonthPickerState createState() => _MonthPickerState();
@@ -799,8 +796,7 @@ class _MonthPickerState extends State<_MonthPicker> {
   }
 
   Widget _buildItems(BuildContext context, int index) {
-    final DateTime month =
-        DateUtils.addMonthsToMonthDate(widget.firstDate, index);
+    final month = DateUtils.addMonthsToMonthDate(widget.firstDate, index);
     return _DayPicker(
       key: ValueKey<DateTime>(month),
       selectedDate: widget.selectedDate,
@@ -810,17 +806,15 @@ class _MonthPickerState extends State<_MonthPicker> {
       lastDate: widget.lastDate,
       displayedMonth: month,
       selectableDayPredicate: widget.selectableDayPredicate,
-      notOpenedDays: widget.notOpenedDays,
-      fullBookedDays: widget.fullBookedDays,
+      unavailableDays: widget.unavailableDays,
       availableDays: widget.availableDays,
       isLoading: widget.isLoading,
-      loadedDays: widget.loadedDays,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final Color controlColor =
+    final controlColor =
         Theme.of(context).colorScheme.onSurface.withOpacity(0.60);
 
     return Semantics(
@@ -927,11 +921,9 @@ class _DayPicker extends StatefulWidget {
     required this.selectedDate,
     required this.onChanged,
     this.selectableDayPredicate,
-    this.notOpenedDays,
-    this.fullBookedDays,
+    this.unavailableDays,
     this.availableDays,
     required this.isLoading,
-    this.loadedDays,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
         assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -963,14 +955,11 @@ class _DayPicker extends StatefulWidget {
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  final List<DateTime?>? notOpenedDays;
-
-  final List<DateTime?>? fullBookedDays;
+  final List<DateTime?>? unavailableDays;
 
   final List<DateTime?>? availableDays;
 
   final bool isLoading;
-  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   _DayPickerState createState() => _DayPickerState();
@@ -1066,26 +1055,19 @@ class _DayPickerState extends State<_DayPicker> {
       if (day < 1) {
         dayItems.add(Container());
       } else {
-        final DateTime dayToBuild = DateTime(year, month, day);
-        final bool isDisabled = dayToBuild.isAfter(widget.lastDate) ||
+        final dayToBuild = DateTime(year, month, day);
+        final isDisabled = dayToBuild.isAfter(widget.lastDate) ||
             dayToBuild.isBefore(widget.firstDate) ||
             (widget.selectableDayPredicate != null &&
                 !widget.selectableDayPredicate!(dayToBuild)) ||
-            widget.notOpenedDays?.firstOrNullWhere((element) {
+            widget.unavailableDays?.firstOrNullWhere((element) {
                   return DateUtils.isSameDay(element, dayToBuild);
                 }) !=
                 null;
-        final bool isSelectedDay = DateUtils.isSameDay(
+        final isSelectedDay = DateUtils.isSameDay(
           widget.selectedDate,
           dayToBuild,
         );
-        final isFullDay = widget.fullBookedDays?.firstOrNullWhere((element) {
-              return DateUtils.isSameDay(
-                element,
-                dayToBuild,
-              );
-            }) !=
-            null;
         final isAvailableDay = widget.availableDays?.firstOrNullWhere(
               (element) {
                 return DateUtils.isSameDay(
@@ -1095,14 +1077,6 @@ class _DayPickerState extends State<_DayPicker> {
               },
             ) !=
             null;
-        final availableSlot = widget.loadedDays?.firstOrNullWhere(
-          (element) {
-            return DateUtils.isSameDay(
-              element.date,
-              dayToBuild,
-            );
-          },
-        );
 
         dayItems.add(
           _Day(
@@ -1112,10 +1086,8 @@ class _DayPickerState extends State<_DayPicker> {
             isSelectedDay: isSelectedDay,
             onChanged: widget.onChanged,
             focusNode: _dayFocusNodes[day - 1],
-            isFullDay: isFullDay,
             isAvailableDay: isAvailableDay,
             isLoading: widget.isLoading,
-            availableSlot: availableSlot?.availableSlots,
           ),
         );
       }
@@ -1143,23 +1115,19 @@ class _Day extends StatefulWidget {
     super.key,
     required this.isDisabled,
     required this.isSelectedDay,
-    required this.isFullDay,
     required this.isAvailableDay,
     required this.onChanged,
     required this.focusNode,
     required this.isLoading,
-    this.availableSlot,
   });
 
   final DateTime day;
   final bool isDisabled;
   final bool isSelectedDay;
-  final bool isFullDay;
   final bool isAvailableDay;
   final ValueChanged<DateTime> onChanged;
   final FocusNode? focusNode;
   final bool isLoading;
-  final int? availableSlot;
 
   @override
   State<_Day> createState() => _DayState();
@@ -1170,104 +1138,68 @@ class _DayState extends State<_Day> {
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
     final textTheme = context.theme.appTextTheme;
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
-    Color? dayForegroundColor;
-    Color? dayBackgroundColor;
-    Color? dayBorderColor;
+    final localizations = MaterialLocalizations.of(context);
+
+    Color? textColor;
+    Color? backgroundColor;
+    Color? borderColor;
     if (widget.isDisabled) {
-      dayForegroundColor = colorScheme.onSurfaceBright;
+      textColor = colorScheme.onSurfaceBright;
+      backgroundColor = colorScheme.surface;
     } else if (widget.isSelectedDay) {
-      dayForegroundColor = colorScheme.primary;
-      dayBackgroundColor = colorScheme.vividTangelo.tint30;
-      dayBorderColor = colorScheme.primary;
-    } else if (widget.isAvailableDay) {
-      dayForegroundColor = colorScheme.white;
-      dayBackgroundColor = colorScheme.success;
-    } else if (widget.isFullDay) {
-      dayForegroundColor = colorScheme.white;
-      dayBackgroundColor = colorScheme.error;
+      textColor = colorScheme.white;
+      backgroundColor = colorScheme.primary;
+    } else {
+      textColor = colorScheme.primary;
+      backgroundColor = colorScheme.white;
+      borderColor = colorScheme.outline;
     }
 
-    Widget dayWidget = Container(
-      height: _dayPickerRowHeight * 0.65,
+    final dayWidget = Container(
+      height: _dayPickerHeight,
+      width: _dayPickerWidth,
       decoration: BoxDecoration(
-        color: dayBackgroundColor,
+        color: backgroundColor,
         shape: BoxShape.circle,
         border: Border.all(
-          color: dayBorderColor ?? Colors.transparent,
+          color: borderColor ?? Colors.transparent,
           width: 1,
         ),
       ),
       child: Center(
         child: Text(
-          localizations.formatDecimal(widget.day.day),
+          localizations.formatDecimal(
+            widget.day.day,
+          ),
           style: textTheme.bodyLarge.copyWith(
-            color: dayForegroundColor,
+            color: textColor,
           ),
         ),
       ),
     );
 
-    if (widget.isDisabled || widget.isFullDay) {
-      dayWidget = ExcludeSemantics(
+    if (widget.isLoading) {
+      return const ShimmerLoading.circular(
+        width: _dayPickerWidth,
+        height: _dayPickerHeight,
+      );
+    } else if (widget.isDisabled) {
+      return ExcludeSemantics(
         child: dayWidget,
       );
     } else {
-      dayWidget = InkResponse(
+      return InkResponse(
         focusNode: widget.focusNode,
         onTap: () => widget.onChanged(widget.day),
-        // radius: _dayPickerRowHeight / 2 + 4,
-        radius: _dayPickerRowHeight / 2.5,
-        // statesController: _statesController,
-        // overlayColor: dayOverlayColor,
+        radius: _dayPickerWidth / 3,
         child: Semantics(
-          // We want the day of month to be spoken first irrespective of the
-          // locale-specific preferences or TextDirection. This is because
-          // an accessibility user is more likely to be interested in the
-          // day of month before the rest of the date, as they are looking
-          // for the day of month. To do that we prepend day of month to the
-          // formatted full date.
-          label:
-              '${localizations.formatDecimal(widget.day.day)}, ${localizations.formatFullDate(widget.day)}',
-          // Set button to true to make the date selectable.
           button: true,
-          selected: widget.isSelectedDay,
           excludeSemantics: true,
+          selected: widget.isSelectedDay,
           child: dayWidget,
         ),
       );
-      // dayWidget = InkWell(
-      //   onTap: () => widget.onChanged(widget.day),
-      //   child: dayWidget,
-      // );
     }
-
-    return Column(
-      children: [
-        if (widget.isLoading) ...[
-          ShimmerLoading.circular(
-            width: 20,
-            height: 14,
-            shapeBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-        ] else ...[
-          Text(
-            "${widget.availableSlot ?? 0}",
-            style: textTheme.bodySmall.copyWith(
-              fontWeight: FontWeight.w700,
-              color: colorScheme.onSurfaceDim,
-            ),
-          ),
-        ],
-        const SizedBox(
-          height: 4,
-        ),
-        dayWidget,
-      ],
-    );
   }
 }
 
@@ -1276,18 +1208,19 @@ class _DayPickerGridDelegate extends SliverGridDelegate {
 
   @override
   SliverGridLayout getLayout(SliverConstraints constraints) {
-    const int columnCount = DateTime.daysPerWeek;
-    final double tileWidth = constraints.crossAxisExtent / columnCount;
-    final double tileHeight = math.min(
-      _dayPickerRowHeight,
+    const columnCount = DateTime.daysPerWeek;
+    final tileWidth = constraints.crossAxisExtent / columnCount;
+    final tileHeight = math.min(
+      _dayPickerHeight,
       constraints.viewportMainAxisExtent / (_maxDayPickerRowCount + 1),
     );
+
     return SliverGridRegularTileLayout(
       childCrossAxisExtent: tileWidth,
       childMainAxisExtent: tileHeight,
       crossAxisCount: columnCount,
       crossAxisStride: tileWidth,
-      mainAxisStride: tileHeight,
+      mainAxisStride: tileHeight + 4,
       reverseCrossAxis: axisDirectionIsReversed(constraints.crossAxisDirection),
     );
   }

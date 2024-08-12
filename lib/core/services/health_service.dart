@@ -12,22 +12,30 @@ import '../utils/permission_info.dart';
 import '../utils/service_locator.dart';
 
 abstract class HealthService {
-  /// Check if the user has the required permissions
+  /// Checks if the user has the required permissions.
   ///
-  /// Returns `true` if the user has the required permissions, `false` if the user does not have the required permissions, and `null` if the user has not yet granted or denied the permissions
+  /// Returns:
+  /// - `true`: If the user has granted the required permissions.
+  /// - `false`: If the user has explicitly denied the required permissions.
+  /// - `null`: If the user has not yet granted or denied the permissions.
   ///
   /// Note:
-  /// - This method should be called before calling [connect]
-  /// - Only works on Android, returns `null` on iOS
+  /// - This method should be called before invoking the [connect] method.
+  /// - **Platform-specific behavior:** Only works on Android. On iOS, this method always returns `null`.
   Future<bool?> get hasPermissions;
 
-  /// Check the status of the Health Connect SDK
+  /// Retrieves the Health Connect SDK status on Android devices.
   ///
-  /// Returns `true` if the Health Connect SDK is available, `false` if the Health Connect SDK is unavailable, and throws an error if the Health Connect SDK is unavailable and a provider update is required
+  /// Returns:
+  /// - `true`: If the Health Connect SDK is available and no issues were encountered.
+  /// - `null`: If the platform is not Android or the SDK status is not determined.
+  ///
+  /// Throws:
+  /// - A descriptive error if the Health Connect SDK is unavailable or requires a provider update.
   ///
   /// Note:
-  /// - This method should be called before calling [connect]
-  /// - Only works on Android, throws an error on iOS
+  /// - This method logs the SDK status for debugging purposes.
+  /// - **Platform-specific behavior:** Only works on Android. Throws an error if the Health Connect SDK is unavailable or requires a provider update. On other platforms, this method returns `null`.
   Future<bool?> getHealthConnectSdkStatus();
 
   Future<bool?> connect();

@@ -1,257 +1,122 @@
+import 'package:akasia365mc/core/ui/extensions/date_time_extension.dart';
+import 'package:dartx/dartx.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/appointment_date_entity.dart';
-import '../../../domain/entities/appointment_month_entity.dart';
+import '../../../domain/entities/calendar_appointment_entity.dart';
+import '../../../domain/usecases/get_events_usecase.dart';
 
 part 'calendars_state.dart';
 
 class CalendarsCubit extends Cubit<CalendarsState> {
-  CalendarsCubit() : super(CalendarsInitial());
+  final GetEventsUseCase getEventsUseCase;
+
+  CalendarsCubit({
+    required this.getEventsUseCase,
+  }) : super(const CalendarsInitial());
 
   void init() {
-    emit(CalendarsInitial());
+    emit(const CalendarsInitial());
   }
 
   Future<void> initGetCalendars({
-    required DateTime month,
+    required DateTime startTime,
+    required String? locationId,
   }) async {
-    emit(CalendarsLoading());
+    emit(CalendarsLoading(
+      locationId: locationId,
+    ));
 
     try {
-      // TODO: Implement getCalendars
-      final result = await Future.delayed(const Duration(seconds: 3)).then(
-        (value) => mockMonth(
-          month: month,
+      final result = await getEventsUseCase(
+        GetEventsUseCaseParams(
+          locationId: locationId,
+          startTime: startTime,
+          endTime: startTime.lastDayOfMonth,
         ),
       );
 
+      final monthYear = startTime.onlyYearMonth;
+
       emit(CalendarsLoaded(
-        calendars: [
-          result,
-        ],
+        calendars: {
+          monthYear: result,
+        },
+        locationId: locationId,
       ));
     } catch (error) {
       emit(CalendarsError(
         error: error,
+        locationId: locationId,
       ));
 
       rethrow;
     }
   }
 
-  Future<AppointmentMonthEntity?> onChangedMonth({
+  Future<void> onChangedMonth({
     required DateTime month,
   }) async {
+    final currentState = state;
+    final locationId = currentState.locationId;
+
     try {
-      final state = this.state;
-      if (state is! CalendarsLoaded) {
-        return null;
+      final currentMonthYear = month.onlyYearMonth;
+
+      if (currentState is CalendarsLoaded) {
+        // check month already loaded or not
+        final currentCalendars = currentState.calendars;
+        final isMonthAlreadyLoaded = currentCalendars.containsKey(
+          currentMonthYear,
+        );
+        if (isMonthAlreadyLoaded) {
+          // if month already loaded, stop the function
+          return;
+        }
+      } else {
+        // emit loading state
+        emit(CalendarsLoading(
+          locationId: locationId,
+        ));
       }
 
-      // check month already loaded or not
-      final currentMonth = month.month;
-      final isMonthAlreadyLoaded = state.calendars.any((element) {
-        return element.month?.month == currentMonth;
-      });
-      if (isMonthAlreadyLoaded) {
-        return null;
-      }
-
-      // TODO: Implement getCalendars
-      final result = await Future.delayed(const Duration(seconds: 2)).then(
-        (value) => mockMonth(
-          month: month,
+      // get calendars
+      final result = await getEventsUseCase(
+        GetEventsUseCaseParams(
+          locationId: locationId,
+          startTime: month.firstDayOfMonth,
+          endTime: month.lastDayOfMonth,
         ),
       );
 
-      return result;
+      // add new month to current calendars
+      if (currentState is CalendarsLoaded) {
+        final newCalendars = currentState.calendars;
+        newCalendars.addAll({
+          currentMonthYear: result,
+        });
+
+        emit(currentState.copyWith(
+          calendars: newCalendars,
+        ));
+      } else {
+        emit(CalendarsLoaded(
+          calendars: {
+            currentMonthYear: result,
+          },
+          locationId: locationId,
+        ));
+      }
     } catch (error) {
       if (state is! CalendarsLoaded) {
         // if the state is not CalendarsLoaded, emit CalendarsError
         emit(CalendarsError(
           error: error,
+          locationId: locationId,
         ));
       }
 
       rethrow;
     }
   }
-
-  void addLoadedCalendar({
-    required AppointmentMonthEntity calendar,
-  }) {
-    final state = this.state;
-    if (state is! CalendarsLoaded) {
-      return;
-    }
-
-    emit(
-      CalendarsLoaded(
-        calendars: [
-          ...state.calendars,
-          calendar,
-        ],
-      ),
-    );
-  }
-}
-
-AppointmentMonthEntity mockMonth({
-  required DateTime month,
-}) {
-  return AppointmentMonthEntity(
-    month: month,
-    status: LoadStatus.loaded,
-    dates: [
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 1),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 2),
-        status: AppointmentDateStatus.booked,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 3),
-        status: AppointmentDateStatus.unavailable,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 4),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 5),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 6),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 7),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 8),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 9),
-        status: AppointmentDateStatus.booked,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 10),
-        status: AppointmentDateStatus.booked,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 11),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 12),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 13),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 14),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 15),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 16),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 17),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 18),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 19),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 20),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 21),
-        status: AppointmentDateStatus.booked,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 22),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 23),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 24),
-        status: AppointmentDateStatus.booked,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 25),
-        status: AppointmentDateStatus.booked,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 26),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 27),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 28),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 29),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 30),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-      AppointmentDateEntity(
-        date: DateTime(month.year, month.month, 31),
-        status: AppointmentDateStatus.available,
-        availableSlots: 16,
-      ),
-    ],
-  );
 }
