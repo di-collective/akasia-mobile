@@ -20,10 +20,10 @@ import '../../../../core/utils/service_locator.dart';
 import '../../domain/entities/calendar_appointment_entity.dart';
 import '../../domain/entities/clinic_entity.dart';
 import '../../domain/entities/clinic_location_entity.dart';
+import '../cubit/appointments/appointments_cubit.dart';
 import '../cubit/calendars/calendars_cubit.dart';
 import '../cubit/clinic_locations/clinic_locations_cubit.dart';
 import '../cubit/clinics/clinics_cubit.dart';
-import '../cubit/create_appointment/create_appointment_cubit.dart';
 import '../widgets/calendar_information_widget.dart';
 import '../widgets/clinic_location_item_widget.dart';
 import '../widgets/clinic_locations_loading_widget.dart';
@@ -42,9 +42,6 @@ class CreateAppointmentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => sl<CreateAppointmentCubit>(),
-        ),
         BlocProvider(
           create: (context) => sl<ClinicsCubit>(),
         ),
@@ -372,16 +369,11 @@ class __BodyState extends State<_Body> {
                   ],
                 ),
               ),
-              BlocBuilder<CreateAppointmentCubit, CreateAppointmentState>(
-                builder: (context, state) {
-                  return BottomSheetButtonWidget(
-                    text: _buttonText,
-                    isDisabled: _isDisabled,
-                    width: context.width,
-                    isLoading: state is CreateAppointmentLoading,
-                    onTap: _onNext,
-                  );
-                },
+              BottomSheetButtonWidget(
+                text: _buttonText,
+                isDisabled: _isDisabled,
+                width: context.width,
+                onTap: _onNext,
               ),
             ],
           ),
@@ -564,12 +556,13 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onSave() async {
     try {
+      // show full screen loading
+      context.showFullScreenLoading();
+
       // create appointment
-      await BlocProvider.of<CreateAppointmentCubit>(context).createAppointment(
-        clinicId: _selectedClinic?.id,
-        clinicLocationId: _selectedClinicLocation?.id,
-        date: _selectedDate,
-        time: _selectedTime,
+      await BlocProvider.of<AppointmentsCubit>(context).createEvent(
+        locationId: _selectedClinicLocation?.id,
+        startTime: _selectedDate,
       );
 
       // show toast
@@ -589,6 +582,9 @@ class __BodyState extends State<_Body> {
         message: error.message(context),
         context: context,
       );
+    } finally {
+      // hide full screen loading
+      context.hideFullScreenLoading;
     }
   }
 }

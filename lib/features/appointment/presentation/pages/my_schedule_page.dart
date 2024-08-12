@@ -15,7 +15,7 @@ import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
-import '../cubit/my_schedules/my_schedules_cubit.dart';
+import '../cubit/appointments/appointments_cubit.dart';
 import '../widgets/schedule_item_widget.dart';
 import '../widgets/schedule_loading_item_widget.dart';
 
@@ -35,14 +35,14 @@ class _MySchedulePageState extends State<MySchedulePage> {
   }
 
   void _init() {
-    final mySchedulesState = BlocProvider.of<MySchedulesCubit>(context).state;
-    if (mySchedulesState is! MySchedulesLoaded) {
+    final mySchedulesState = BlocProvider.of<AppointmentsCubit>(context).state;
+    if (mySchedulesState is! AppointmentsLoaded) {
       _onGetMaySchedules();
     }
   }
 
   Future<void> _onGetMaySchedules() async {
-    await BlocProvider.of<MySchedulesCubit>(context).getMySchedules();
+    await BlocProvider.of<AppointmentsCubit>(context).getMySchedules();
   }
 
   @override
@@ -65,11 +65,11 @@ class _MySchedulePageState extends State<MySchedulePage> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
-                    BlocBuilder<MySchedulesCubit, MySchedulesState>(
+                    BlocBuilder<AppointmentsCubit, AppointmentsState>(
                       builder: (context, state) {
-                        if (state is MySchedulesError) {
+                        if (state is AppointmentsError) {
                           return const SizedBox.shrink();
-                        } else if (state is MySchedulesLoaded) {
+                        } else if (state is AppointmentsLoaded) {
                           if (state.schedules.isEmpty) {
                             return const SizedBox.shrink();
                           }
@@ -194,9 +194,9 @@ class _MySchedulePageState extends State<MySchedulePage> {
                         );
                       },
                     ),
-                    BlocBuilder<MySchedulesCubit, MySchedulesState>(
+                    BlocBuilder<AppointmentsCubit, AppointmentsState>(
                       builder: (context, state) {
-                        if (state is MySchedulesLoaded) {
+                        if (state is AppointmentsLoaded) {
                           if (state.schedules.isEmpty) {
                             return Padding(
                               padding: EdgeInsets.only(
@@ -248,7 +248,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                               );
                             },
                           );
-                        } else if (state is MySchedulesError) {
+                        } else if (state is AppointmentsError) {
                           return Padding(
                             padding: EdgeInsets.only(
                               top: context.height * 0.3,
@@ -288,11 +288,11 @@ class _MySchedulePageState extends State<MySchedulePage> {
                 ),
               ),
             ),
-            BlocBuilder<MySchedulesCubit, MySchedulesState>(
+            BlocBuilder<AppointmentsCubit, AppointmentsState>(
               builder: (context, state) {
-                if (state is MySchedulesError) {
+                if (state is AppointmentsError) {
                   return const SizedBox.shrink();
-                } else if (state is MySchedulesLoaded) {
+                } else if (state is AppointmentsLoaded) {
                   if (state.schedules.isEmpty) {
                     return const SizedBox.shrink();
                   }
@@ -303,7 +303,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                     context.locale.appointment,
                   ),
                   width: context.width,
-                  isLoading: state is MySchedulesLoading,
+                  isLoading: state is AppointmentsLoading,
                   isUseShimmerLoading: true,
                   onTap: _onCreateAppointment,
                 );
@@ -324,7 +324,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
       }
 
       futures
-          .add(BlocProvider.of<MySchedulesCubit>(context).refreshSchedules());
+          .add(BlocProvider.of<AppointmentsCubit>(context).refreshSchedules());
 
       await Future.wait(
         futures,

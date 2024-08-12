@@ -5,13 +5,14 @@ import '../data/repositories/appointment_repository_impl.dart';
 import '../data/repositories/clinic_repository_impl.dart';
 import '../domain/repositories/appointment_repository.dart';
 import '../domain/repositories/clinic_repository.dart';
+import '../domain/usecases/create_event_usecase.dart';
 import '../domain/usecases/get_clinic_locations_usecase.dart';
 import '../domain/usecases/get_clinics_usecase.dart';
 import '../domain/usecases/get_events_usecase.dart';
+import '../presentation/cubit/appointments/appointments_cubit.dart';
 import '../presentation/cubit/calendars/calendars_cubit.dart';
 import '../presentation/cubit/clinic_locations/clinic_locations_cubit.dart';
 import '../presentation/cubit/clinics/clinics_cubit.dart';
-import '../presentation/cubit/create_appointment/create_appointment_cubit.dart';
 
 class AppointmentDI {
   static void inject() {
@@ -74,6 +75,11 @@ class AppointmentDI {
         appointmentRepository: sl(),
       );
     });
+    sl.registerLazySingleton<CreateEventUseCase>(() {
+      return CreateEventUseCase(
+        appointmentRepository: sl(),
+      );
+    });
   }
 
   static void _injectCubits() {
@@ -87,12 +93,14 @@ class AppointmentDI {
         getClinicLocationsUseCase: sl(),
       );
     });
-    sl.registerFactory<CreateAppointmentCubit>(() {
-      return CreateAppointmentCubit();
-    });
     sl.registerFactory<CalendarsCubit>(() {
       return CalendarsCubit(
         getEventsUseCase: sl(),
+      );
+    });
+    sl.registerFactory<AppointmentsCubit>(() {
+      return AppointmentsCubit(
+        createEventUseCase: sl(),
       );
     });
   }
