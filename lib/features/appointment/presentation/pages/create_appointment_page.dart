@@ -561,8 +561,14 @@ class __BodyState extends State<_Body> {
 
       // create appointment
       await BlocProvider.of<AppointmentsCubit>(context).createEvent(
-        locationId: _selectedClinicLocation?.id,
-        startTime: _selectedDate,
+        clinic: _selectedClinic,
+        location: _selectedClinicLocation,
+        startTime: _selectedDate?.add(
+          Duration(
+            hours: _selectedTime?.hour ?? 0,
+            minutes: _selectedTime?.minute ?? 0,
+          ),
+        ),
       );
 
       // show toast

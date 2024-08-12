@@ -4,6 +4,8 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../../core/utils/logger.dart';
+import '../../domain/entities/clinic_entity.dart';
+import '../../domain/entities/clinic_location_entity.dart';
 import '../models/appointment_model.dart';
 import '../models/calendar_appointment_model.dart';
 
@@ -16,9 +18,10 @@ abstract class AppointmentRemoteDataSource {
     int? page,
     int? limit,
   });
-  Future<void> createEvent({
+  Future<AppointmentModel> createEvent({
     required String? accessToken,
-    required String? locationId,
+    required ClinicEntity? clinic,
+    required ClinicLocationEntity? location,
     required DateTime? startTime,
     required EventStatus? eventStatus,
     required EventType? eventType,
@@ -74,9 +77,10 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
   }
 
   @override
-  Future<void> createEvent({
+  Future<AppointmentModel> createEvent({
     required String? accessToken,
-    required String? locationId,
+    required ClinicEntity? clinic,
+    required ClinicLocationEntity? location,
     required DateTime? startTime,
     required EventStatus? eventStatus,
     required EventType? eventType,
@@ -90,13 +94,26 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
           'Authorization': 'Bearer $accessToken',
         },
         data: {
-          'location_id': locationId,
+          'location_id': location?.id,
           'start_time': startTime?.toDateApi,
           'status': eventStatus?.name,
           'type': eventType?.name,
         },
       );
       Logger.success('createEvent response: $response');
+
+      final data = (response.data['data'] is List)
+          ? (response.data['data'] as List).first
+          : {};
+
+      return AppointmentModel(
+        clinic: clinic?.name,
+        location: location?.name,
+        type: eventType,
+        status: eventStatus,
+        startTime: data['start_time'],
+        endTime: data['end_time'],
+      );
     } catch (error) {
       Logger.error('createEvent error: $error');
 

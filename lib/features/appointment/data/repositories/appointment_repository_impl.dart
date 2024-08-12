@@ -6,6 +6,8 @@ import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../auth/data/datasources/local/auth_local_datasource.dart';
 import '../../domain/entities/appointment_entity.dart';
 import '../../domain/entities/calendar_appointment_entity.dart';
+import '../../domain/entities/clinic_entity.dart';
+import '../../domain/entities/clinic_location_entity.dart';
 import '../../domain/repositories/appointment_repository.dart';
 import '../datasources/appointment_remote_datasource.dart';
 
@@ -61,8 +63,9 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  Future<void> createEvent({
-    required String? locationId,
+  Future<AppointmentEntity> createEvent({
+    required ClinicEntity? clinic,
+    required ClinicLocationEntity? location,
     required DateTime? startTime,
     required EventStatus? eventStatus,
     required EventType? eventType,
@@ -76,9 +79,10 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
           );
         }
 
-        return appointmentRemoteDataSource.createEvent(
+        return await appointmentRemoteDataSource.createEvent(
           accessToken: accessToken,
-          locationId: locationId,
+          clinic: clinic,
+          location: location,
           eventStatus: eventStatus,
           startTime: startTime,
           eventType: eventType,

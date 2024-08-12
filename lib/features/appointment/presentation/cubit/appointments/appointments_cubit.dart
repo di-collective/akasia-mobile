@@ -5,6 +5,8 @@ import '../../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../domain/entities/appointment_entity.dart';
+import '../../../domain/entities/clinic_entity.dart';
+import '../../../domain/entities/clinic_location_entity.dart';
 import '../../../domain/usecases/create_event_usecase.dart';
 import '../../../domain/usecases/get_appointments_usecase.dart';
 
@@ -64,18 +66,35 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   }
 
   Future<void> createEvent({
-    required String? locationId,
+    required ClinicEntity? clinic,
+    required ClinicLocationEntity? location,
     required DateTime? startTime,
   }) async {
     try {
-      await createEventUseCase(
+      final result = await createEventUseCase(
         CreateEventUseCaseParams(
-          locationId: locationId,
+          clinic: clinic,
+          location: location,
           startTime: startTime,
           eventType: EventType.appointment,
           eventStatus: EventStatus.scheduled,
         ),
       );
+
+      final currentState = state;
+
+      if (currentState is AppointmentsLoaded) {
+        emit(currentState.copyWith(
+          appointments: [
+            ...currentState.appointments,
+            result,
+          ],
+        ));
+      } else {
+        emit(AppointmentsLoaded(
+          appointments: [result],
+        ));
+      }
     } catch (_) {
       rethrow;
     }

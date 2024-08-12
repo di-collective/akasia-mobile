@@ -226,6 +226,8 @@ class _MySchedulePageState extends State<MySchedulePage> {
                             );
                           }
 
+                          // TODO: short by status and last start time
+
                           return ListView.separated(
                             itemCount: state.appointments.length,
                             primary: false,
