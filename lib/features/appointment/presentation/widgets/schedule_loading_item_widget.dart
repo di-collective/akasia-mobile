@@ -19,7 +19,7 @@ class ScheduleLoadingItemWidget extends StatelessWidget {
     final colorScheme = context.theme.appColorScheme;
 
     return SizedBox(
-      height: 68,
+      height: 74,
       child: Row(
         children: [
           Container(

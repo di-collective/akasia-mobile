@@ -12,14 +12,22 @@ final class AppointmentsInitial extends AppointmentsState {}
 final class AppointmentsLoading extends AppointmentsState {}
 
 final class AppointmentsLoaded extends AppointmentsState {
-  final List schedules;
+  final List<AppointmentEntity> appointments;
 
   const AppointmentsLoaded({
-    required this.schedules,
+    required this.appointments,
   });
 
+  AppointmentsLoaded copyWith({
+    List<AppointmentEntity>? appointments,
+  }) {
+    return AppointmentsLoaded(
+      appointments: appointments ?? this.appointments,
+    );
+  }
+
   @override
-  List<Object> get props => [schedules];
+  List<Object> get props => [appointments];
 }
 
 final class AppointmentsError extends AppointmentsState {

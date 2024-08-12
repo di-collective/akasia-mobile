@@ -1,5 +1,6 @@
 import '../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../core/ui/extensions/event_type_extension.dart';
+import '../entities/appointment_entity.dart';
 import '../entities/calendar_appointment_entity.dart';
 
 abstract class AppointmentRepository {
@@ -16,4 +17,5 @@ abstract class AppointmentRepository {
     required EventStatus? eventStatus,
     required EventType? eventType,
   });
+  Future<List<AppointmentEntity>> getAppointments();
 }

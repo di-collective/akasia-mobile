@@ -4,6 +4,7 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../../core/utils/logger.dart';
+import '../models/appointment_model.dart';
 import '../models/calendar_appointment_model.dart';
 
 abstract class AppointmentRemoteDataSource {
@@ -21,6 +22,9 @@ abstract class AppointmentRemoteDataSource {
     required DateTime? startTime,
     required EventStatus? eventStatus,
     required EventType? eventType,
+  });
+  Future<List<AppointmentModel>> getAppointments({
+    required String? accessToken,
   });
 }
 
@@ -95,6 +99,34 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
       Logger.success('createEvent response: $response');
     } catch (error) {
       Logger.error('createEvent error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<AppointmentModel>> getAppointments({
+    required String? accessToken,
+  }) async {
+    try {
+      Logger.info('getAppointments accessToken: $accessToken');
+
+      final response = await appHttpClient.get(
+        url: "${EnvConfig.akasiaCalendarApiUrl}/appointments",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      Logger.success('getAppointments response: $response');
+
+      final List data =
+          (response.data['data'] is List) ? response.data['data'] : [];
+
+      return data.map((e) {
+        return AppointmentModel.fromJson(e);
+      }).toList();
+    } catch (error) {
+      Logger.error('getAppointments error: $error');
 
       rethrow;
     }

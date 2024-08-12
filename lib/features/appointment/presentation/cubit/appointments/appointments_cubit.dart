@@ -3,14 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../../core/ui/extensions/event_type_extension.dart';
+import '../../../../../core/usecases/usecase.dart';
+import '../../../domain/entities/appointment_entity.dart';
 import '../../../domain/usecases/create_event_usecase.dart';
+import '../../../domain/usecases/get_appointments_usecase.dart';
 
 part 'appointments_state.dart';
 
 class AppointmentsCubit extends Cubit<AppointmentsState> {
+  final GetAppointmentsUseCase getAppointmentsUseCase;
   final CreateEventUseCase createEventUseCase;
 
   AppointmentsCubit({
+    required this.getAppointmentsUseCase,
     required this.createEventUseCase,
   }) : super(AppointmentsInitial());
 
@@ -18,14 +23,10 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     try {
       emit(AppointmentsLoading());
 
-      // TODO: implement getSchedules
-      final result = await Future.delayed(
-        const Duration(seconds: 3),
-        () => [],
-      );
+      final result = await getAppointmentsUseCase(NoParams());
 
       emit(AppointmentsLoaded(
-        schedules: result,
+        appointments: result,
       ));
     } catch (error) {
       emit(AppointmentsError(
@@ -35,30 +36,24 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   }
 
   Future<void> refreshSchedules() async {
+    final currentState = state;
+
     try {
-      if (state is AppointmentsLoading) {
+      if (currentState is AppointmentsLoading) {
         return;
-      } else if (state is! AppointmentsLoaded) {
+      }
+
+      if (currentState is! AppointmentsLoaded) {
         emit(AppointmentsLoading());
       }
 
-      // TODO: implement getSchedules
-      final result = await Future.delayed(
-        const Duration(seconds: 3),
-        () => [
-          1,
-          2,
-          3,
-          4,
-          5,
-        ],
-      );
+      final result = await getAppointmentsUseCase(NoParams());
 
       emit(AppointmentsLoaded(
-        schedules: result,
+        appointments: result,
       ));
     } catch (error) {
-      if (state is! AppointmentsLoaded) {
+      if (currentState is! AppointmentsLoaded) {
         emit(AppointmentsError(
           error: error,
         ));
