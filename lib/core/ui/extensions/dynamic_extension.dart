@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
 import '../../utils/logger.dart';
@@ -77,6 +78,42 @@ extension DynamicExtension on dynamic {
       Logger.error('dynamicToInt error $e');
 
       return 0;
+    }
+  }
+
+  TimeOfDay? get dynamicToTimeOfDay {
+    try {
+      Logger.info('dynamicToTimeOfDay $this type $runtimeType');
+
+      TimeOfDay? result;
+
+      final time = this;
+      if (this is String) {
+        final parts = (this as String).split(':');
+        if (parts.isNotEmpty) {
+          final hour = int.parse(parts[0]);
+          int? minute;
+
+          if (parts.length > 1) {
+            minute = int.parse(parts[1]);
+          }
+
+          result = TimeOfDay(
+            hour: hour,
+            minute: minute ?? 0,
+          );
+        }
+      } else if (this is TimeOfDay) {
+        result = time;
+      }
+
+      Logger.success('dynamicToTimeOfDay result $result');
+
+      return result;
+    } catch (e) {
+      Logger.error('dynamicToTimeOfDay error $e');
+
+      return null;
     }
   }
 }

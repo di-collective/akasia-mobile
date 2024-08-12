@@ -216,4 +216,10 @@ extension DateTimeExtension on DateTime {
 
     return result;
   }
+
+  bool get isToday {
+    final now = DateTime.now();
+
+    return isSameDay(other: now);
+  }
 }
