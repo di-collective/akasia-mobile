@@ -18,7 +18,7 @@ import '../features/health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../features/health/presentation/cubit/steps/steps_cubit.dart';
 import '../features/health/presentation/cubit/workout/workout_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
-import '../features/my_schedule/presentation/cubit/my_schedules/my_schedules_cubit.dart';
+import '../features/appointment/presentation/cubit/appointments/appointments_cubit.dart';
 import '../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
 import 'routes/app_route_info.dart';
 
@@ -45,7 +45,7 @@ class App extends StatelessWidget {
           create: (context) => sl<BottomNavigationCubit>(),
         ),
         BlocProvider(
-          create: (context) => sl<MySchedulesCubit>(),
+          create: (context) => sl<AppointmentsCubit>(),
         ),
         BlocProvider(
           create: (context) => sl<EatCalendarCubit>(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 
 class DateInformationItemWidget extends StatelessWidget {
@@ -41,8 +42,9 @@ class DateInformationItemWidget extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              title,
-              style: textTheme.bodySmall.copyWith(
+              title.toCapitalizes(),
+              maxLines: 2,
+              style: textTheme.bodyMedium.copyWith(
                 color: colorScheme.onSurface,
               ),
             ),

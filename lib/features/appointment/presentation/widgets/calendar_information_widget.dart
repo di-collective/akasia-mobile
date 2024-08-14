@@ -38,37 +38,19 @@ class _CalendarInformationWidgetState extends State<CalendarInformationWidget> {
           Row(
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DateInformationItemWidget(
-                      title: context.locale.quotasAvailable,
-                      dotBackgroundColor: colorScheme.success,
-                    ),
-                    DateInformationItemWidget(
-                      title: context.locale.selectedDate,
-                      dotBackgroundColor: colorScheme.surfaceContainer,
-                      dotBorderColor: colorScheme.primary,
-                    ),
-                  ],
+                child: DateInformationItemWidget(
+                  title: context.locale.avaibale,
+                  dotBackgroundColor: colorScheme.white,
+                  dotBorderColor: colorScheme.outline,
                 ),
               ),
               const SizedBox(
                 width: 8,
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DateInformationItemWidget(
-                      title: context.locale.fullQuota,
-                      dotBackgroundColor: colorScheme.error,
-                    ),
-                    DateInformationItemWidget(
-                      title: context.locale.quotasNotOpened,
-                      dotBorderColor: colorScheme.onSurfaceBright,
-                    ),
-                  ],
+                child: DateInformationItemWidget(
+                  title: context.locale.notAvailable,
+                  dotBackgroundColor: colorScheme.surface,
                 ),
               ),
             ],

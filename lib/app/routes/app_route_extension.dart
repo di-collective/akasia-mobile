@@ -39,7 +39,7 @@ import '../../features/health/presentation/pages/workout/workout_details_page.da
 import '../../features/health/presentation/pages/workout/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
-import '../../features/my_schedule/presentation/pages/my_schedule_page.dart';
+import '../../features/appointment/presentation/pages/my_schedule_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/partner_service/presentation/pages/partner_connect_page.dart';
 import '../../features/partner_service/presentation/pages/partner_services_page.dart';

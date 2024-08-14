@@ -12,14 +12,31 @@ import '../utils/permission_info.dart';
 import '../utils/service_locator.dart';
 
 abstract class HealthService {
-  /// Check if the user has the required permissions
+  /// Checks if the user has the required permissions.
   ///
-  /// Returns `true` if the user has the required permissions, `false` if the user does not have the required permissions, and `null` if the user has not yet granted or denied the permissions
+  /// Returns:
+  /// - `true`: If the user has granted the required permissions.
+  /// - `false`: If the user has explicitly denied the required permissions.
+  /// - `null`: If the user has not yet granted or denied the permissions.
   ///
   /// Note:
-  /// - This method should be called before calling [connect]
-  /// - Only works on Android, returns `null` on iOS
+  /// - This method should be called before invoking the [connect] method.
+  /// - **Platform-specific behavior:** Only works on Android. On iOS, this method always returns `null`.
   Future<bool?> get hasPermissions;
+
+  /// Retrieves the Health Connect SDK status on Android devices.
+  ///
+  /// Returns:
+  /// - `true`: If the Health Connect SDK is available and no issues were encountered.
+  /// - `null`: If the platform is not Android or the SDK status is not determined.
+  ///
+  /// Throws:
+  /// - A descriptive error if the Health Connect SDK is unavailable or requires a provider update.
+  ///
+  /// Note:
+  /// - This method logs the SDK status for debugging purposes.
+  /// - **Platform-specific behavior:** Only works on Android. Throws an error if the Health Connect SDK is unavailable or requires a provider update. On other platforms, this method returns `null`.
+  Future<bool?> getHealthConnectSdkStatus();
 
   Future<bool?> connect();
 
@@ -117,17 +134,51 @@ class HealthServiceImpl implements HealthService {
         // configure health
         await configure();
 
-        // check permissions
-        hasPermissions = await health.hasPermissions(
-          _types,
-          permissions: _permissions,
-        );
+        // get health connect sdk status
+        final healthConnectSdkStatus = await getHealthConnectSdkStatus();
+        if (healthConnectSdkStatus == true) {
+          // check permissions
+          hasPermissions = await health.hasPermissions(
+            _types,
+            permissions: _permissions,
+          );
+        }
       }
       Logger.success('hasPermissions: $hasPermissions');
 
       return hasPermissions;
     } catch (error) {
       Logger.error('hasPermissions error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool?> getHealthConnectSdkStatus() async {
+    try {
+      Logger.info('healthConnectSdkStatus');
+
+      if (Platform.isAndroid) {
+        final healthConnectSdkStatus = await health.getHealthConnectSdkStatus();
+        Logger.success('healthConnectSdkStatus: $healthConnectSdkStatus');
+
+        if (healthConnectSdkStatus != null) {
+          switch (healthConnectSdkStatus) {
+            case HealthConnectSdkStatus.sdkAvailable:
+              // continue
+              break;
+            case HealthConnectSdkStatus.sdkUnavailableProviderUpdateRequired:
+              throw 'Health Connect SDK is unavailable, provider update required';
+            case HealthConnectSdkStatus.sdkUnavailable:
+              throw 'Health Connect SDK is unavailable, please install the health connect App before connecting';
+          }
+        }
+      }
+
+      return true;
+    } catch (error) {
+      Logger.error('healthConnectSdkStatus error: $error');
 
       rethrow;
     }
@@ -141,33 +192,23 @@ class HealthServiceImpl implements HealthService {
       bool? isAuthorized;
       if (Platform.isAndroid) {
         // check health connect sdk status
-        final healthConnectSdkStatus = await health.getHealthConnectSdkStatus();
+        final healthConnectSdkStatus = await getHealthConnectSdkStatus();
         Logger.success(
             'connect healthConnectSdkStatus: $healthConnectSdkStatus');
-        if (healthConnectSdkStatus != null) {
-          switch (healthConnectSdkStatus) {
-            case HealthConnectSdkStatus.sdkAvailable:
-              // continue
-              break;
-            case HealthConnectSdkStatus.sdkUnavailableProviderUpdateRequired:
-              throw 'Health Connect SDK is unavailable, provider update required';
-            case HealthConnectSdkStatus.sdkUnavailable:
-              throw 'Health Connect SDK is unavailable, please install the health connect App before connecting';
+        if (healthConnectSdkStatus == true) {
+          // request native permission
+          for (final permission in _nativePermissions) {
+            final isGranted = await permissionInfo.requestPermission(
+              permission: permission,
+            );
+            if (!isGranted) {
+              return false;
+            }
           }
-        }
 
-        // request native permission
-        for (final permission in _nativePermissions) {
-          final isGranted = await permissionInfo.requestPermission(
-            permission: permission,
-          );
-          if (!isGranted) {
-            return false;
-          }
+          // check has permissions
+          isAuthorized = await hasPermissions;
         }
-
-        // check has permissions
-        isAuthorized = await hasPermissions;
       }
 
       if (isAuthorized != true) {

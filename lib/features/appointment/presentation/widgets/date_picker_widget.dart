@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/color_swatch_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../domain/entities/appointment_date_entity.dart';
 import 'calendar_date_picker_widget.dart';
 
 // The M3 sizes are coming from the tokens, but are hand coded,
@@ -44,13 +43,11 @@ class DatePickerWidget extends StatefulWidget {
     this.switchToInputEntryModeIcon,
     this.switchToCalendarEntryModeIcon,
     this.onDateSelected,
-    this.notOpenedDays,
-    this.fullBookedDays,
+    this.unavailableDays,
     this.availableDays,
     this.onMonthChanged,
     this.currentMonth,
     required this.isLoading,
-    this.loadedDays,
   })  : initialDate =
             initialDate == null ? null : DateUtils.dateOnly(initialDate),
         firstDate = DateUtils.dateOnly(firstDate),
@@ -161,9 +158,7 @@ class DatePickerWidget extends StatefulWidget {
 
   final Function(DateTime)? onDateSelected;
 
-  final List<DateTime?>? notOpenedDays;
-
-  final List<DateTime?>? fullBookedDays;
+  final List<DateTime?>? unavailableDays;
 
   final List<DateTime?>? availableDays;
 
@@ -172,7 +167,6 @@ class DatePickerWidget extends StatefulWidget {
   final DateTime? currentMonth;
 
   final bool isLoading;
-  final List<AppointmentDateEntity>? loadedDays;
 
   @override
   State<DatePickerWidget> createState() => _DatePickerWidgetState();
@@ -221,22 +215,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
-
     final localizations = MaterialLocalizations.of(context);
-
-    final datePickerTheme = DatePickerTheme.of(context);
-    final defaults = DatePickerTheme.defaults(context);
-    // final TextTheme textTheme = theme.textTheme;
-
-    // There's no M3 spec for a landscape layout input (not calendar)
-    // date picker. To ensure that the date displayed in the input
-    // date picker's header fits in landscape mode, we override the M3
-    // default here.
-    TextStyle? headlineStyle =
-        datePickerTheme.headerHeadlineStyle ?? defaults.headerHeadlineStyle;
-    final Color? headerForegroundColor =
-        datePickerTheme.headerForegroundColor ?? defaults.headerForegroundColor;
-    headlineStyle = headlineStyle?.copyWith(color: headerForegroundColor);
 
     return AnimatedContainer(
       duration: _dialogSizeAnimationDuration,
@@ -277,24 +256,16 @@ class _DatePickerWidgetState extends State<DatePickerWidget>
           ),
           CalendarDatePickerWidget(
             key: _calendarPickerKey,
-            // initialDate: _selectedDate.value,
-            // initialDate: widget.currentDate,
             initialDate: null,
             firstDate: widget.firstDate,
             lastDate: widget.lastDate,
-            // currentDate: DateTime.now(),
             selectableDayPredicate: widget.selectableDayPredicate,
             initialCalendarMode: widget.initialCalendarMode,
             onDateChanged: _handleDateChanged,
-            notOpenedDays: widget.notOpenedDays,
-            fullBookedDays: widget.fullBookedDays,
+            unavailableDays: widget.unavailableDays,
             availableDays: widget.availableDays,
             onMonthChanged: widget.onMonthChanged,
             isLoading: widget.isLoading,
-            loadedDays: widget.loadedDays,
-          ),
-          const SizedBox(
-            height: 10,
           ),
         ],
       ),

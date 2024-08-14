@@ -1,5 +1,4 @@
-import 'package:dio/dio.dart';
-
+import '../../../../core/config/env_config.dart';
 import '../../../../core/network/http/app_http_client.dart';
 import '../../../../core/utils/logger.dart';
 import '../models/clinic_location_model.dart';
@@ -8,10 +7,14 @@ import '../models/clinic_model.dart';
 abstract class ClinicRemoteDataSource {
   Future<List<ClinicModel>> getClinics({
     required String accessToken,
+    int? page,
+    int? limit,
   });
   Future<List<ClinicLocationModel>> getClinicLocations({
     required String accessToken,
     required String? clinicId,
+    int? page,
+    int? limit,
   });
 }
 
@@ -25,25 +28,21 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
   @override
   Future<List<ClinicModel>> getClinics({
     required String accessToken,
+    int? page,
+    int? limit,
   }) async {
     try {
       Logger.info('getClinics accessToken: $accessToken');
 
-      // TODO: Implement getClinics
-      // final response = await appHttpClient.get(
-      //   url: "${EnvConfig.akasiaUserApiUrl}/clinics",
-      //   headers: {
-      //     'Authorization': 'Bearer $accessToken',
-      //   },
-      // );
-      final response = await Future.delayed(
-        const Duration(seconds: 2),
-        () => Response(
-          requestOptions: RequestOptions(path: ''),
-          data: {
-            'data': mockClinics,
-          },
-        ),
+      final response = await appHttpClient.get(
+        url: "${EnvConfig.akasiaClinicApiUrl}/clinic",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        queryParameters: {
+          'page': page,
+          'limit': limit,
+        },
       );
       Logger.success('getClinics response: $response');
 
@@ -65,20 +64,22 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
   Future<List<ClinicLocationModel>> getClinicLocations({
     required String accessToken,
     required String? clinicId,
+    int? page,
+    int? limit,
   }) async {
     try {
       Logger.info(
           'getClinicLocations accessToken: $accessToken, clinicId: $clinicId');
 
-      // TODO: Implement getClinicLocations
-      final response = await Future.delayed(
-        const Duration(seconds: 2),
-        () => Response(
-          requestOptions: RequestOptions(path: ''),
-          data: {
-            'data': mockClinicLocations,
-          },
-        ),
+      final response = await appHttpClient.get(
+        url: "${EnvConfig.akasiaClinicApiUrl}/clinic/$clinicId/location",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        queryParameters: {
+          'page': page,
+          'limit': limit,
+        },
       );
       Logger.success('getClinicLocations response: $response');
 

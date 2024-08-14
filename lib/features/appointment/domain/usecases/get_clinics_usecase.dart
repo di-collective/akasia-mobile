@@ -2,7 +2,8 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/clinic_entity.dart';
 import '../repositories/clinic_repository.dart';
 
-class GetClinicsUseCase extends UseCase<List<ClinicEntity>, NoParams> {
+class GetClinicsUseCase
+    extends UseCase<List<ClinicEntity>, GetClinicsUseCaseParams> {
   final ClinicRepository clinicRepository;
 
   GetClinicsUseCase({
@@ -10,7 +11,20 @@ class GetClinicsUseCase extends UseCase<List<ClinicEntity>, NoParams> {
   });
 
   @override
-  Future<List<ClinicEntity>> call(NoParams params) async {
-    return await clinicRepository.getClinics();
+  Future<List<ClinicEntity>> call(GetClinicsUseCaseParams params) async {
+    return await clinicRepository.getClinics(
+      page: params.page,
+      limit: params.limit,
+    );
   }
+}
+
+class GetClinicsUseCaseParams {
+  final int? page;
+  final int? limit;
+
+  GetClinicsUseCaseParams({
+    this.page,
+    this.limit,
+  });
 }

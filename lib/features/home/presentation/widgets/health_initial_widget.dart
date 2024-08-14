@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/app_config.dart';
-import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 
-class HealthInitialWidget extends StatefulWidget {
-  const HealthInitialWidget({super.key});
+class HealthInitialWidget extends StatelessWidget {
+  final Function() onConnect;
 
-  @override
-  State<HealthInitialWidget> createState() => _HealthInitialWidgetState();
-}
+  const HealthInitialWidget({
+    super.key,
+    required this.onConnect,
+  });
 
-class _HealthInitialWidgetState extends State<HealthInitialWidget> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
@@ -61,15 +59,10 @@ class _HealthInitialWidgetState extends State<HealthInitialWidget> {
             padding: const EdgeInsets.symmetric(
               horizontal: 16,
             ),
-            onTap: _onConnect,
+            onTap: onConnect,
           ),
         ],
       ),
     );
-  }
-
-  void _onConnect() {
-    // go to partner services
-    context.goNamed(AppRoute.partnerServices.name);
   }
 }

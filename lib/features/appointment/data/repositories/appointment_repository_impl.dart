@@ -1,25 +1,29 @@
 import '../../../../core/common/exception.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/ui/extensions/app_exception_extension.dart';
+import '../../../../core/ui/extensions/event_status_extension.dart';
+import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../auth/data/datasources/local/auth_local_datasource.dart';
-import '../../domain/entities/clinic_entity.dart';
-import '../../domain/entities/clinic_location_entity.dart';
-import '../../domain/repositories/clinic_repository.dart';
-import '../datasources/clinic_remote_datasource.dart';
+import '../../domain/entities/calendar_appointment_entity.dart';
+import '../../domain/repositories/appointment_repository.dart';
+import '../datasources/appointment_remote_datasource.dart';
 
-class ClinicRepositoryImpl implements ClinicRepository {
+class AppointmentRepositoryImpl extends AppointmentRepository {
   final NetworkInfo networkInfo;
   final AuthLocalDataSource authLocalDataSource;
-  final ClinicRemoteDataSource clinicRemoteDataSource;
+  final AppointmentRemoteDataSource appointmentRemoteDataSource;
 
-  ClinicRepositoryImpl({
+  AppointmentRepositoryImpl({
     required this.networkInfo,
     required this.authLocalDataSource,
-    required this.clinicRemoteDataSource,
+    required this.appointmentRemoteDataSource,
   });
 
   @override
-  Future<List<ClinicEntity>> getClinics({
+  Future<CalendarAppointmentEntity> getEvents({
+    required String? locationId,
+    required DateTime? startTime,
+    required DateTime? endTime,
     int? page,
     int? limit,
   }) async {
@@ -32,8 +36,11 @@ class ClinicRepositoryImpl implements ClinicRepository {
           );
         }
 
-        return clinicRemoteDataSource.getClinics(
+        return appointmentRemoteDataSource.getEvents(
           accessToken: accessToken,
+          locationId: locationId,
+          startTime: startTime,
+          endTime: endTime,
           page: page,
           limit: limit,
         );
@@ -53,10 +60,11 @@ class ClinicRepositoryImpl implements ClinicRepository {
   }
 
   @override
-  Future<List<ClinicLocationEntity>> getClinicLocations({
-    required String? clinicId,
-    int? page,
-    int? limit,
+  Future<void> createEvent({
+    required String? locationId,
+    required DateTime? startTime,
+    required EventStatus? eventStatus,
+    required EventType? eventType,
   }) async {
     if (await networkInfo.isConnected) {
       try {
@@ -67,11 +75,12 @@ class ClinicRepositoryImpl implements ClinicRepository {
           );
         }
 
-        return await clinicRemoteDataSource.getClinicLocations(
+        return appointmentRemoteDataSource.createEvent(
           accessToken: accessToken,
-          clinicId: clinicId,
-          page: page,
-          limit: limit,
+          locationId: locationId,
+          eventStatus: eventStatus,
+          startTime: startTime,
+          eventType: eventType,
         );
       } on AuthException catch (error) {
         throw AuthException(

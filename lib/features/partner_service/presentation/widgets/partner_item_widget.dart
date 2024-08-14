@@ -4,11 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/theme/color_scheme.dart';
 
 class PartnerItemWidget extends StatelessWidget {
   final String imagePath;
   final String title;
   final String description;
+  final bool? isConnected;
   final Function() onTap;
 
   const PartnerItemWidget({
@@ -16,6 +18,7 @@ class PartnerItemWidget extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.description,
+    this.isConnected,
     required this.onTap,
   });
 
@@ -73,9 +76,11 @@ class PartnerItemWidget extends StatelessWidget {
               width: 16,
             ),
             SvgPicture.asset(
-              AssetIconsPath.icChevronRight,
+              _iconPath,
               colorFilter: ColorFilter.mode(
-                colorScheme.onSurfaceBright,
+                _iconColor(
+                  colorScheme: colorScheme,
+                ),
                 BlendMode.srcIn,
               ),
             ),
@@ -86,5 +91,23 @@ class PartnerItemWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String get _iconPath {
+    if (isConnected == true) {
+      return AssetIconsPath.icCheck;
+    } else {
+      return AssetIconsPath.icChevronRight;
+    }
+  }
+
+  Color _iconColor({
+    required AppColorScheme colorScheme,
+  }) {
+    if (isConnected == true) {
+      return colorScheme.primary;
+    } else {
+      return colorScheme.onSurfaceBright;
+    }
   }
 }

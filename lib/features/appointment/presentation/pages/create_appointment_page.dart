@@ -1,30 +1,29 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/widget/buttons/bottom_sheet_button_widget.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
+import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../../../core/ui/widget/states/state_empty_widget.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../domain/entities/appointment_date_entity.dart';
-import '../../domain/entities/appointment_month_entity.dart';
+import '../../domain/entities/calendar_appointment_entity.dart';
 import '../../domain/entities/clinic_entity.dart';
 import '../../domain/entities/clinic_location_entity.dart';
+import '../cubit/appointments/appointments_cubit.dart';
 import '../cubit/calendars/calendars_cubit.dart';
 import '../cubit/clinic_locations/clinic_locations_cubit.dart';
 import '../cubit/clinics/clinics_cubit.dart';
-import '../cubit/create_appointment/create_appointment_cubit.dart';
 import '../widgets/calendar_information_widget.dart';
 import '../widgets/clinic_location_item_widget.dart';
 import '../widgets/clinic_locations_loading_widget.dart';
@@ -43,9 +42,6 @@ class CreateAppointmentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => sl<CreateAppointmentCubit>(),
-        ),
         BlocProvider(
           create: (context) => sl<ClinicsCubit>(),
         ),
@@ -122,7 +118,8 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onInitGetCalendars() async {
     await BlocProvider.of<CalendarsCubit>(context).initGetCalendars(
-      month: _selectedMonth,
+      startTime: _selectedMonth,
+      locationId: _selectedClinicLocation?.id,
     );
   }
 
@@ -221,9 +218,9 @@ class __BodyState extends State<_Body> {
                                       const SizedBox(
                                         height: 24,
                                       ),
-                                      SvgPicture.asset(
-                                        AssetImagesPath.logoTextColored,
-                                        height: 24,
+                                      NetworkImageWidget(
+                                        imageUrl: _selectedClinic?.logo,
+                                        size: Size(context.width, 50),
                                       ),
                                       const SizedBox(
                                         height: 24,
@@ -291,55 +288,49 @@ class __BodyState extends State<_Body> {
                             ),
                             child: BlocBuilder<CalendarsCubit, CalendarsState>(
                               builder: (context, state) {
-                                AppointmentMonthEntity? appointmentMonthData;
+                                CalendarAppointmentEntity? calendar;
                                 if (state is CalendarsLoaded) {
-                                  appointmentMonthData = state.calendars
+                                  final calendars = state.calendars;
+
+                                  final currentMonthYear =
+                                      _selectedMonth.onlyYearMonth;
+
+                                  calendar = calendars.entries
                                       .firstWhereOrNull((element) {
-                                    return element.month?.month ==
-                                        _selectedMonth.month;
-                                  });
+                                    return element.key == currentMonthYear;
+                                  })?.value;
                                 }
 
-                                List<DateTime?>? unavailableDays;
-                                List<DateTime?>? bookedDays;
-                                List<DateTime?>? availableDays;
-                                if (appointmentMonthData != null) {
-                                  unavailableDays = appointmentMonthData.dates
-                                      ?.where((element) {
-                                    return element.status ==
-                                        AppointmentDateStatus.unavailable;
-                                  }).map((e) {
-                                    return e.date;
-                                  }).toList();
+                                List<DateTime?> unavailableDays = [];
+                                List<DateTime?> availableDays = [];
 
-                                  bookedDays = appointmentMonthData.dates
-                                      ?.where((element) {
-                                    return element.status ==
-                                        AppointmentDateStatus.booked;
-                                  }).map((e) {
-                                    return e.date;
-                                  }).toList();
+                                final events = calendar?.events;
+                                if (events != null) {
+                                  for (final event in events) {
+                                    final eventType = event.eventType;
+                                    if (eventType == null) {
+                                      continue;
+                                    }
 
-                                  availableDays = appointmentMonthData.dates
-                                      ?.where((element) {
-                                    return element.status ==
-                                        AppointmentDateStatus.available;
-                                  }).map((e) {
-                                    return e.date;
-                                  }).toList();
+                                    switch (eventType) {
+                                      case EventType.holiday:
+                                        unavailableDays.add(event.startTime);
+                                        break;
+                                      case EventType.appointment:
+                                        availableDays.add(event.startTime);
+                                        break;
+                                    }
+                                  }
                                 }
 
                                 return DatePickerWidget(
                                   firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().addDays(300),
-                                  // initialDate: DateTime.now(),
+                                  lastDate: DateTime.now().addYears(100),
                                   currentDate: _selectedDate,
                                   currentMonth: _selectedMonth,
-                                  isLoading: appointmentMonthData == null,
-                                  loadedDays: appointmentMonthData?.dates,
-                                  notOpenedDays: unavailableDays,
-                                  fullBookedDays: bookedDays,
+                                  isLoading: calendar == null,
                                   availableDays: availableDays,
+                                  unavailableDays: unavailableDays,
                                   onDateSelected: (value) {
                                     _onDateChanged(
                                       value: value,
@@ -378,16 +369,11 @@ class __BodyState extends State<_Body> {
                   ],
                 ),
               ),
-              BlocBuilder<CreateAppointmentCubit, CreateAppointmentState>(
-                builder: (context, state) {
-                  return BottomSheetButtonWidget(
-                    text: _buttonText,
-                    isDisabled: _isDisabled,
-                    width: context.width,
-                    isLoading: state is CreateAppointmentLoading,
-                    onTap: _onNext,
-                  );
-                },
+              BottomSheetButtonWidget(
+                text: _buttonText,
+                isDisabled: _isDisabled,
+                width: context.width,
+                onTap: _onNext,
               ),
             ],
           ),
@@ -501,31 +487,33 @@ class __BodyState extends State<_Body> {
     }
   }
 
-  Future<void> _onMonthChanged({
+  void _onMonthChanged({
+    required DateTime value,
+  }) {
+    if (_selectedMonth == value) {
+      return;
+    }
+
+    _onGetCalendar(
+      value: value,
+    );
+  }
+
+  Future<void> _onGetCalendar({
     required DateTime value,
   }) async {
     try {
-      if (_selectedMonth == value) {
-        return;
-      }
-
       setState(() {
         _selectedMonth = value;
       });
 
-      final result =
-          await BlocProvider.of<CalendarsCubit>(context).onChangedMonth(
+      // get calendars
+      await BlocProvider.of<CalendarsCubit>(context).onChangedMonth(
         month: value,
       );
 
-      if (result == null) {
-        return;
-      }
-
-      // update state
-      BlocProvider.of<CalendarsCubit>(context).addLoadedCalendar(
-        calendar: result,
-      );
+      // reload
+      setState(() {});
     } catch (error) {
       sl<ToastInfo>().show(
         type: ToastType.error,
@@ -537,9 +525,16 @@ class __BodyState extends State<_Body> {
 
   void _onDateChanged({
     required DateTime? value,
-  }) {
-    if (_selectedDate == value) {
+  }) async {
+    if (value == null || _selectedDate == value) {
       return;
+    }
+
+    if (value.year != _selectedDate?.year) {
+      // if selected yea not same with current month year, get calendar
+      _onGetCalendar(
+        value: value,
+      );
     }
 
     setState(() {
@@ -561,12 +556,13 @@ class __BodyState extends State<_Body> {
 
   Future<void> _onSave() async {
     try {
+      // show full screen loading
+      context.showFullScreenLoading();
+
       // create appointment
-      await BlocProvider.of<CreateAppointmentCubit>(context).createAppointment(
-        clinicId: _selectedClinic?.id,
-        clinicLocationId: _selectedClinicLocation?.id,
-        date: _selectedDate,
-        time: _selectedTime,
+      await BlocProvider.of<AppointmentsCubit>(context).createEvent(
+        locationId: _selectedClinicLocation?.id,
+        startTime: _selectedDate,
       );
 
       // show toast
@@ -586,6 +582,9 @@ class __BodyState extends State<_Body> {
         message: error.message(context),
         context: context,
       );
+    } finally {
+      // hide full screen loading
+      context.hideFullScreenLoading;
     }
   }
 }

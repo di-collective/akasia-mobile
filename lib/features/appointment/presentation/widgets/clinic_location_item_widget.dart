@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../domain/entities/clinic_location_entity.dart';
@@ -22,14 +23,18 @@ class ClinicLocationItemWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
+    final borderColor =
+        isSelected ? colorScheme.primaryTonal : colorScheme.surfaceDim;
+    final backgroundColor =
+        isSelected ? colorScheme.primaryTonal : colorScheme.white;
+    final textColor = isSelected ? colorScheme.primary : colorScheme.onSurface;
+
     return ButtonWidget(
-      text: clinicLocation.name ?? '',
-      borderColor:
-          isSelected ? colorScheme.primaryTonal : colorScheme.surfaceDim,
-      backgroundColor:
-          isSelected ? colorScheme.primaryTonal : colorScheme.white,
+      text: clinicLocation.name?.toCapitalize() ?? '',
+      borderColor: borderColor,
+      backgroundColor: backgroundColor,
       style: textTheme.bodyLarge.copyWith(
-        color: isSelected ? colorScheme.primary : colorScheme.onSurface,
+        color: textColor,
         fontWeight: FontWeight.w600,
       ),
       onTap: onTap,
