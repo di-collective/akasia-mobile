@@ -13,8 +13,6 @@ extension EventTypeExtension on EventType {
       return null;
     }
 
-    // TODO: validate date is more then working hour
-
     switch (value) {
       case 'holiday':
         return EventType.holiday;

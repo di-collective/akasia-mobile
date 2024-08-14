@@ -474,7 +474,7 @@
       }
   },
   "deleteWeightConfirmation": "Are you sure you want to delete this weight? This can’t be undone",
-  "avaibale": "avaibale",
+  "available": "available",
   "notAvailable": "not available",
   "consultation": "consultation"
 }

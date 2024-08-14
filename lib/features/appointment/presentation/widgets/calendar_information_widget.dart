@@ -39,7 +39,7 @@ class _CalendarInformationWidgetState extends State<CalendarInformationWidget> {
             children: [
               Expanded(
                 child: DateInformationItemWidget(
-                  title: context.locale.avaibale,
+                  title: context.locale.available,
                   dotBackgroundColor: colorScheme.white,
                   dotBorderColor: colorScheme.outline,
                 ),

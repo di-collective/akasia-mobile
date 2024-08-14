@@ -8,7 +8,7 @@ import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../domain/entities/appointment_entity.dart';
 
-class ScheduleItemWidget extends StatefulWidget {
+class ScheduleItemWidget extends StatelessWidget {
   final AppointmentEntity appointment;
 
   const ScheduleItemWidget({
@@ -17,31 +17,14 @@ class ScheduleItemWidget extends StatefulWidget {
   });
 
   @override
-  State<ScheduleItemWidget> createState() => _ScheduleItemWidgetState();
-}
-
-class _ScheduleItemWidgetState extends State<ScheduleItemWidget> {
-  bool? isDisabled;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _init();
-  }
-
-  void _init() {
-    isDisabled = widget.appointment.status != EventStatus.scheduled;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    final clinic = widget.appointment.clinic;
-    final location = widget.appointment.location;
-    final startTime = widget.appointment.startTime;
+    final isDisabled = appointment.status != EventStatus.scheduled;
+    final clinic = appointment.clinic;
+    final location = appointment.location;
+    final startTime = appointment.startTime;
     String? formattedStartHour;
     String? formattedStartDate;
     if (startTime != null) {

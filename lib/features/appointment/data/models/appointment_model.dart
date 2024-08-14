@@ -1,3 +1,5 @@
+import '../../../../core/ui/extensions/dynamic_extension.dart';
+
 import '../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../domain/entities/appointment_entity.dart';
@@ -23,6 +25,7 @@ class AppointmentModel extends AppointmentEntity {
       ),
       status: EventStatusExtension.fromString(
         status: json['status'],
+        startTime: DynamicExtension(json['start_time']).dynamicToDateTime,
       ),
     );
   }
