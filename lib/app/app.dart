@@ -9,6 +9,7 @@ import '../core/ui/widget/loadings/cubit/full_screen_loading/full_screen_loading
 import '../core/ui/widget/loadings/full_screen_loading_widget.dart';
 import '../core/utils/service_locator.dart';
 import '../features/account/presentation/cubit/profile/profile_cubit.dart';
+import '../features/appointment/presentation/cubit/appointments/appointments_cubit.dart';
 import '../features/auth/presentation/cubit/yaml/yaml_cubit.dart';
 import '../features/diet_plan/presentation/cubit/eat_calendar/eat_calendar_cubit.dart';
 import '../features/health/presentation/cubit/health_service/health_service_cubit.dart';
@@ -18,7 +19,7 @@ import '../features/health/presentation/cubit/sleep/sleep_cubit.dart';
 import '../features/health/presentation/cubit/steps/steps_cubit.dart';
 import '../features/health/presentation/cubit/workout/workout_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
-import '../features/appointment/presentation/cubit/appointments/appointments_cubit.dart';
+import '../features/my_treatment/presentation/cubit/weight_goal/weight_goal_cubit.dart';
 import '../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
 import 'routes/app_route_info.dart';
 
@@ -67,6 +68,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<SleepCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<WeightGoalCubit>(),
         ),
       ],
       child: MaterialApp.router(

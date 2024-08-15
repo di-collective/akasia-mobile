@@ -473,7 +473,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
         throw 'Weight must be a number';
       }
 
-      // TODO implement add meal
+      // TODO implement save edit weight
       await Future.delayed(
         const Duration(seconds: 1),
       );

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 
+import '../../ui/extensions/string_extension.dart';
 import '../../utils/logger.dart';
+import '../error_code.dart';
 
 class DioInterceptor extends Interceptor {
   @override
@@ -32,11 +34,13 @@ class DioInterceptor extends Interceptor {
         'ERROR[${err.response?.statusCode}] || TYPE[${err.type}] => PATH: ${err.requestOptions.path} => DATA: ${err.response?.data}');
 
     String? message;
+    String? error;
 
     if (err.response?.data is String) {
       message = err.response?.data;
     } else if (err.response?.data is Map) {
-      // get message from message
+      // get data
+      error = err.response?.data['error'];
       message = err.response?.data['message'];
 
       // if message is null, get error
@@ -51,6 +55,13 @@ class DioInterceptor extends Interceptor {
       case DioExceptionType.badResponse:
         switch (err.response?.statusCode) {
           case 400:
+            if (error?.isSame(otherValue: ErrorCode.dataNotFound) == true) {
+              throw NotFoundException(
+                err.requestOptions,
+                message: message,
+              );
+            }
+
             throw BadRequestException(
               err.requestOptions,
               message: message,

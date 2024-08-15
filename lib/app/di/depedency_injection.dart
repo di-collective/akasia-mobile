@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/my_treatment/di/depedency_injection.dart';
 import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -56,6 +57,8 @@ Future<void> init() async {
   HealthDI.inject();
 
   PartnerServiceDI.inject();
+
+  MyTreatmentDI.inject();
 }
 
 Future<void> _injectPackages() async {
