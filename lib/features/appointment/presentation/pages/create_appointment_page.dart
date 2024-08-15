@@ -352,8 +352,10 @@ class __BodyState extends State<_Body> {
                           const SizedBox(
                             height: 24,
                           ),
-                          HourWidget(
+                          ArrivalWidget(
+                            isToday: _selectedDate?.isToday == true,
                             selectedHour: _selectedTime,
+                            clinicLocation: _selectedClinicLocation,
                             onHourSelected: (value) {
                               _onHourSelected(
                                 value: value,
@@ -538,7 +540,8 @@ class __BodyState extends State<_Body> {
     }
 
     setState(() {
-      _selectedDate = value;
+      _selectedDate = value; // set new value
+      _selectedTime = null; // reset time
     });
   }
 
@@ -561,8 +564,14 @@ class __BodyState extends State<_Body> {
 
       // create appointment
       await BlocProvider.of<AppointmentsCubit>(context).createEvent(
-        locationId: _selectedClinicLocation?.id,
-        startTime: _selectedDate,
+        clinic: _selectedClinic,
+        location: _selectedClinicLocation,
+        startTime: _selectedDate?.add(
+          Duration(
+            hours: _selectedTime?.hour ?? 0,
+            minutes: _selectedTime?.minute ?? 0,
+          ),
+        ),
       );
 
       // show toast

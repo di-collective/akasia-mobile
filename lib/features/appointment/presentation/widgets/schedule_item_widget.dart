@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/color_swatch_extension.dart';
+import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/event_status_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../domain/entities/appointment_entity.dart';
 
 class ScheduleItemWidget extends StatelessWidget {
-  final int index;
-  final bool isDisabled;
-  final Function() onTap;
+  final AppointmentEntity appointment;
 
   const ScheduleItemWidget({
     super.key,
-    required this.index,
-    required this.isDisabled,
-    required this.onTap,
+    required this.appointment,
   });
 
   @override
@@ -21,95 +21,107 @@ class ScheduleItemWidget extends StatelessWidget {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 6,
-                height: 68,
-                decoration: BoxDecoration(
-                  color: index % 2 == 0
-                      ? colorScheme.primary
-                      : colorScheme.vividTangelo.tint90,
-                  borderRadius: BorderRadius.circular(99),
-                ),
+    final isDisabled = appointment.status != EventStatus.scheduled;
+    final clinic = appointment.clinic;
+    final location = appointment.location;
+    final startTime = appointment.startTime;
+    String? formattedStartHour;
+    String? formattedStartDate;
+    if (startTime != null) {
+      final startDate = startTime.toDateTime();
+
+      formattedStartHour = startDate?.hourMinute;
+      formattedStartDate = startDate?.formatDate(
+        format: 'dd MMM yyyy',
+      );
+    }
+
+    return Stack(
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 6,
+              height: 74,
+              decoration: BoxDecoration(
+                color: isDisabled == true
+                    ? colorScheme.vividTangelo.tint90
+                    : colorScheme.primary,
+                borderRadius: BorderRadius.circular(99),
               ),
-              const SizedBox(
-                width: 8,
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                    bottom: 10,
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.locale.consultation.toCapitalize(),
+                    style: textTheme.labelLarge.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: colorScheme.onSurfaceDim,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: colorScheme.outlineBright,
-                        width: 0.5,
-                      ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    clinic?.toCapitalize() ?? '',
+                    maxLines: 3,
+                    style: textTheme.bodyMedium.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    location?.toCapitalize() ?? '',
+                    maxLines: 3,
+                    style: textTheme.bodyMedium.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Row(
                     children: [
                       Text(
-                        "Description (ex: After Care, LAMS, Consultation)",
-                        style: textTheme.labelLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: colorScheme.onSurfaceDim,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        "dr. Kuswan Ambar Pamungkas, Sp.B.P.R.E, Subsp.K.M.(K)",
-                        style: textTheme.bodyMedium.copyWith(
-                          color: colorScheme.onSurface,
-                        ),
+                        "${formattedStartHour ?? ''} • ",
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.bodyMedium.copyWith(
+                          color: colorScheme.onSurfaceBright,
+                        ),
                       ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "7-Feb-2024",
-                            style: textTheme.bodyMedium.copyWith(
-                              color: colorScheme.onSurfaceBright,
-                            ),
+                      Expanded(
+                        child: Text(
+                          formattedStartDate ?? '',
+                          maxLines: 2,
+                          style: textTheme.bodyMedium.copyWith(
+                            color: colorScheme.onSurfaceBright,
                           ),
-                          Text(
-                            "09:41",
-                            style: textTheme.bodyMedium.copyWith(
-                              color: colorScheme.onSurfaceBright,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          if (isDisabled)
-            Positioned.fill(
-              child: Container(
-                color: colorScheme.white.withOpacity(0.4),
+                ],
               ),
             ),
-        ],
-      ),
+          ],
+        ),
+        if (isDisabled == true)
+          Positioned.fill(
+            child: Container(
+              color: colorScheme.white.withOpacity(0.4),
+            ),
+          ),
+      ],
     );
   }
 }

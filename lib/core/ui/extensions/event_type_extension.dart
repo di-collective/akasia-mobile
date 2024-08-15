@@ -5,14 +5,15 @@ enum EventType {
 
 extension EventTypeExtension on EventType {
   static EventType? fromString({
-    required String? eventType,
+    required String? type,
+    DateTime? date,
   }) {
-    if (eventType == null) {
+    final value = type?.toLowerCase();
+    if (value == null) {
       return null;
     }
 
-    final type = eventType.toLowerCase();
-    switch (type) {
+    switch (value) {
       case 'holiday':
         return EventType.holiday;
       case 'appointment':

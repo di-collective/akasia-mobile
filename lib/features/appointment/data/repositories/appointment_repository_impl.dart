@@ -4,7 +4,10 @@ import '../../../../core/ui/extensions/app_exception_extension.dart';
 import '../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../core/ui/extensions/event_type_extension.dart';
 import '../../../auth/data/datasources/local/auth_local_datasource.dart';
+import '../../domain/entities/appointment_entity.dart';
 import '../../domain/entities/calendar_appointment_entity.dart';
+import '../../domain/entities/clinic_entity.dart';
+import '../../domain/entities/clinic_location_entity.dart';
 import '../../domain/repositories/appointment_repository.dart';
 import '../datasources/appointment_remote_datasource.dart';
 
@@ -60,8 +63,9 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
   }
 
   @override
-  Future<void> createEvent({
-    required String? locationId,
+  Future<AppointmentEntity> createEvent({
+    required ClinicEntity? clinic,
+    required ClinicLocationEntity? location,
     required DateTime? startTime,
     required EventStatus? eventStatus,
     required EventType? eventType,
@@ -75,12 +79,42 @@ class AppointmentRepositoryImpl extends AppointmentRepository {
           );
         }
 
-        return appointmentRemoteDataSource.createEvent(
+        return await appointmentRemoteDataSource.createEvent(
           accessToken: accessToken,
-          locationId: locationId,
+          clinic: clinic,
+          location: location,
           eventStatus: eventStatus,
           startTime: startTime,
           eventType: eventType,
+        );
+      } on AuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
+  Future<List<AppointmentEntity>> getAppointments() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final accessToken = authLocalDataSource.getAccessToken();
+        if (accessToken == null) {
+          throw const AuthException(
+            code: AppExceptionType.accessTokenNotFound,
+          );
+        }
+
+        return appointmentRemoteDataSource.getAppointments(
+          accessToken: accessToken,
         );
       } on AuthException catch (error) {
         throw AuthException(

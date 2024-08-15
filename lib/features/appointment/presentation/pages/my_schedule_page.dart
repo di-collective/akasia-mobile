@@ -70,7 +70,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                         if (state is AppointmentsError) {
                           return const SizedBox.shrink();
                         } else if (state is AppointmentsLoaded) {
-                          if (state.schedules.isEmpty) {
+                          if (state.appointments.isEmpty) {
                             return const SizedBox.shrink();
                           }
                         }
@@ -197,7 +197,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                     BlocBuilder<AppointmentsCubit, AppointmentsState>(
                       builder: (context, state) {
                         if (state is AppointmentsLoaded) {
-                          if (state.schedules.isEmpty) {
+                          if (state.appointments.isEmpty) {
                             return Padding(
                               padding: EdgeInsets.only(
                                 top: context.height * 0.3,
@@ -227,7 +227,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                           }
 
                           return ListView.separated(
-                            itemCount: state.schedules.length,
+                            itemCount: state.appointments.length,
                             primary: false,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -236,15 +236,15 @@ class _MySchedulePageState extends State<MySchedulePage> {
                               horizontal: context.paddingHorizontal,
                             ),
                             separatorBuilder: (context, index) {
-                              return const SizedBox(
-                                height: 16,
+                              return const Divider(
+                                height: 24,
                               );
                             },
                             itemBuilder: (context, index) {
+                              final appointment = state.appointments[index];
+
                               return ScheduleItemWidget(
-                                index: index,
-                                isDisabled: false,
-                                onTap: _onSchedule,
+                                appointment: appointment,
                               );
                             },
                           );
@@ -293,7 +293,7 @@ class _MySchedulePageState extends State<MySchedulePage> {
                 if (state is AppointmentsError) {
                   return const SizedBox.shrink();
                 } else if (state is AppointmentsLoaded) {
-                  if (state.schedules.isEmpty) {
+                  if (state.appointments.isEmpty) {
                     return const SizedBox.shrink();
                   }
                 }
@@ -336,10 +336,6 @@ class _MySchedulePageState extends State<MySchedulePage> {
         message: error.message(context),
       );
     }
-  }
-
-  void _onSchedule() {
-    // TODO: implement onSchedule
   }
 
   void _onCreateAppointment() {

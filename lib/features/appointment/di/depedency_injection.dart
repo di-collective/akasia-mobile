@@ -6,6 +6,7 @@ import '../data/repositories/clinic_repository_impl.dart';
 import '../domain/repositories/appointment_repository.dart';
 import '../domain/repositories/clinic_repository.dart';
 import '../domain/usecases/create_event_usecase.dart';
+import '../domain/usecases/get_appointments_usecase.dart';
 import '../domain/usecases/get_clinic_locations_usecase.dart';
 import '../domain/usecases/get_clinics_usecase.dart';
 import '../domain/usecases/get_events_usecase.dart';
@@ -80,6 +81,11 @@ class AppointmentDI {
         appointmentRepository: sl(),
       );
     });
+    sl.registerLazySingleton<GetAppointmentsUseCase>(() {
+      return GetAppointmentsUseCase(
+        appointmentRepository: sl(),
+      );
+    });
   }
 
   static void _injectCubits() {
@@ -100,6 +106,7 @@ class AppointmentDI {
     });
     sl.registerFactory<AppointmentsCubit>(() {
       return AppointmentsCubit(
+        getAppointmentsUseCase: sl(),
         createEventUseCase: sl(),
       );
     });

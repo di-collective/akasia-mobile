@@ -25,7 +25,8 @@ class EventModel extends EventEntity {
       type: json['type'],
       status: json['status'],
       eventType: EventTypeExtension.fromString(
-        eventType: json['type'],
+        type: json['type'],
+        date: DateTime.now(),
       ),
     );
   }
