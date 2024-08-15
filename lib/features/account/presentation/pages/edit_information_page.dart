@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +11,6 @@ import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_widget.dart';
 import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
@@ -22,8 +20,6 @@ import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
 import '../../../../core/utils/service_locator.dart';
-import '../../../activity_level/data/datasources/local/activity_level_config.dart';
-import '../../../activity_level/domain/entities/activity_level_entity.dart';
 import '../../../country/domain/entities/country_entity.dart';
 import '../../data/datasources/local/blood_type_config.dart';
 import '../../domain/entities/profile_entity.dart';
@@ -83,7 +79,7 @@ class __BodyState extends State<_Body> {
   final _bloodTypeTextController = TextEditingController();
   final _weightTextController = TextEditingController();
   final _heightTextController = TextEditingController();
-  ActivityLevelEntity? _selectedActivityLevel;
+  // ActivityLevelEntity? _selectedActivityLevel;
 
   ProfileEntity? _activeProfile;
 
@@ -116,12 +112,12 @@ class __BodyState extends State<_Body> {
       _bloodTypeTextController.text = _activeProfile?.bloodType ?? '';
       _weightTextController.text = _activeProfile?.weight?.toString() ?? '';
       _heightTextController.text = _activeProfile?.height?.toString() ?? '';
-      _selectedActivityLevel =
-          ActivityLevelLocalConfig.allActivityLevels.firstWhereOrNull(
-        (element) => (element.activity ?? '').isSame(
-          otherValue: _activeProfile?.activityLevel,
-        ),
-      );
+      // _selectedActivityLevel =
+      //     ActivityLevelLocalConfig.allActivityLevels.firstWhereOrNull(
+      //   (element) => (element.activity ?? '').isSame(
+      //     otherValue: _activeProfile?.activityLevel,
+      //   ),
+      // );
     }
   }
 
@@ -347,23 +343,23 @@ class __BodyState extends State<_Body> {
                                 setState(() {});
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ActivityLevelDropdownWidget(
-                              context: context,
-                              title: context.locale.activityLevel,
-                              hintText: context.locale.choose,
-                              selectedValue: _selectedActivityLevel,
-                              onChanged: (option) {
-                                if (option != null &&
-                                    option != _selectedActivityLevel) {
-                                  setState(() {
-                                    _selectedActivityLevel = option;
-                                  });
-                                }
-                              },
-                            ),
+                            // const SizedBox(
+                            //   height: 20,
+                            // ),
+                            // ActivityLevelDropdownWidget(
+                            //   context: context,
+                            //   title: context.locale.activityLevel,
+                            //   hintText: context.locale.choose,
+                            //   selectedValue: _selectedActivityLevel,
+                            //   onChanged: (option) {
+                            //     if (option != null &&
+                            //         option != _selectedActivityLevel) {
+                            //       setState(() {
+                            //         _selectedActivityLevel = option;
+                            //       });
+                            //     }
+                            //   },
+                            // ),
                             const SizedBox(
                               height: 20,
                             ),
@@ -452,10 +448,10 @@ class __BodyState extends State<_Body> {
       return false;
     }
 
-    if (!(_selectedActivityLevel?.activity ?? '')
-        .isSame(otherValue: _activeProfile?.activityLevel ?? '')) {
-      return false;
-    }
+    // if (!(_selectedActivityLevel?.activity ?? '')
+    //     .isSame(otherValue: _activeProfile?.activityLevel ?? '')) {
+    //   return false;
+    // }
 
     return true;
   }
@@ -547,13 +543,13 @@ class __BodyState extends State<_Body> {
         );
       }
 
-      // activity level
-      if (!(_activeProfile?.activityLevel ?? '')
-          .isSame(otherValue: _selectedActivityLevel?.activity ?? '')) {
-        profile = profile.copyWith(
-          activityLevel: _selectedActivityLevel?.activity ?? '',
-        );
-      }
+      // // activity level
+      // if (!(_activeProfile?.activityLevel ?? '')
+      //     .isSame(otherValue: _selectedActivityLevel?.activity ?? '')) {
+      //   profile = profile.copyWith(
+      //     activityLevel: _selectedActivityLevel?.activity ?? '',
+      //   );
+      // }
 
       // save to API
       await BlocProvider.of<EditInformationCubit>(context).saveEditInformation(

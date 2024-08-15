@@ -45,4 +45,42 @@ class WeightGoalRepositoryImpl extends WeightGoalRepository {
       throw const AppNetworkException();
     }
   }
+
+  @override
+  Future<WeightGoalEntity> createWeightGoal({
+    required double? startingWeight,
+    required double? targetWeight,
+    required String? activityLevel,
+    required String? pace,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final accessToken = authLocalDataSource.getAccessToken();
+        if (accessToken == null) {
+          throw const AuthException(
+            code: AppExceptionType.accessTokenNotFound,
+          );
+        }
+
+        return weightGoalRemoteDataSource.createWeightGoal(
+          accessToken: accessToken,
+          startingWeight: startingWeight,
+          targetWeight: targetWeight,
+          activityLevel: activityLevel,
+          pace: pace,
+        );
+      } on AuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
 }

@@ -22,7 +22,7 @@ enum AppRoute {
   notifications,
   giveRating,
   writeReview,
-  fillPersonalInformation,
+  createWeightGoal,
   createAppointment,
   mySchedule,
   dietPlan,

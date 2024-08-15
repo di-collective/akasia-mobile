@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../features/activity_level/data/datasources/local/activity_level_config.dart';
-import '../../../../features/activity_level/domain/entities/activity_level_entity.dart';
 import '../../extensions/build_context_extension.dart';
 import '../../extensions/theme_data_extension.dart';
+import '../../extensions/weight_goal_activity_level_extension.dart';
 import '../images/network_image_widget.dart';
 import 'dropdown_widget.dart';
 
-class ActivityLevelDropdownWidget extends DropdownWidget<ActivityLevelEntity> {
+class ActivityLevelDropdownWidget
+    extends DropdownWidget<WeightGoalActivityLevel> {
   final BuildContext context;
 
   ActivityLevelDropdownWidget({
@@ -15,7 +15,7 @@ class ActivityLevelDropdownWidget extends DropdownWidget<ActivityLevelEntity> {
     required this.context,
     super.hintText,
     super.title,
-    Function(ActivityLevelEntity? option)? onChanged,
+    Function(WeightGoalActivityLevel? option)? onChanged,
     String? Function(dynamic value)? validator,
     super.selectedValue,
     super.borderRadius,
@@ -41,13 +41,14 @@ class ActivityLevelDropdownWidget extends DropdownWidget<ActivityLevelEntity> {
           borderRadiusMenu: BorderRadius.circular(20),
         );
 
-  static List<DropdownMenuItem<ActivityLevelEntity>> _generateDropdownMenuItem({
+  static List<DropdownMenuItem<WeightGoalActivityLevel>>
+      _generateDropdownMenuItem({
     required BuildContext context,
   }) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return ActivityLevelLocalConfig.allActivityLevels.map(
+    return WeightGoalActivityLevel.values.map(
       (activityLevel) {
         return DropdownMenuItem(
           value: activityLevel,
@@ -71,7 +72,7 @@ class ActivityLevelDropdownWidget extends DropdownWidget<ActivityLevelEntity> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        activityLevel.activity ?? '',
+                        activityLevel.title,
                         style: textTheme.labelLarge.copyWith(
                           color: colorScheme.onSurfaceDim,
                           fontWeight: FontWeight.w700,
@@ -81,7 +82,7 @@ class ActivityLevelDropdownWidget extends DropdownWidget<ActivityLevelEntity> {
                         height: 4,
                       ),
                       Text(
-                        activityLevel.description ?? '',
+                        activityLevel.description,
                         style: textTheme.labelMedium.copyWith(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.w500,
@@ -106,9 +107,9 @@ class ActivityLevelDropdownWidget extends DropdownWidget<ActivityLevelEntity> {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
-    return ActivityLevelLocalConfig.allActivityLevels.map((activityLevel) {
+    return WeightGoalActivityLevel.values.map((activityLevel) {
       return Text(
-        activityLevel.activity ?? '',
+        activityLevel.title,
         style: textTheme.bodyLarge.copyWith(
           color: colorScheme.onSurface,
         ),

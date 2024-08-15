@@ -24,7 +24,6 @@ import '../../features/health/di/depedency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/notification/di/depedency_injection.dart';
 import '../../features/partner_service/di/depedency_injection.dart';
-import '../../features/personal_information/di/depedency_injection.dart';
 import '../../features/ratings/di/depedency_injection.dart';
 
 Future<void> init() async {
@@ -47,8 +46,6 @@ Future<void> init() async {
   FaqDI.inject();
 
   NotificationDI.inject();
-
-  PersonalInformationDI.inject();
 
   AppointmentDI.inject();
 

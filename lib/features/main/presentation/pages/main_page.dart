@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> {
     if (weightGoal == null) {
       // if weight goal is null, navigate to create weight goal
       final isContinue = await context.pushNamed(
-        AppRoute.fillPersonalInformation.name,
+        AppRoute.createWeightGoal.name,
       );
       if (isContinue != true) {
         return;

@@ -476,5 +476,8 @@
   "deleteWeightConfirmation": "Are you sure you want to delete this weight? This can’t be undone",
   "available": "available",
   "notAvailable": "not available",
-  "consultation": "consultation"
+  "consultation": "consultation",
+  "selectAWeightLossPlan": "select a weight loss plan",
+  "recommendForYou": "recommended for you",
+  "notRecomended": "not recommended"
 }

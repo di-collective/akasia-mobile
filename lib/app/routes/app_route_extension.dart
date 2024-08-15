@@ -43,7 +43,7 @@ import '../../features/appointment/presentation/pages/my_schedule_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/partner_service/presentation/pages/partner_connect_page.dart';
 import '../../features/partner_service/presentation/pages/partner_services_page.dart';
-import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
+import '../../features/my_treatment/presentation/pages/create_weight_goal/create_weight_goal_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/ratings/presentation/pages/write_review_page.dart';
@@ -99,8 +99,8 @@ extension AppRouteExtension on AppRoute {
         return 'give-ratings';
       case AppRoute.writeReview:
         return 'write-review';
-      case AppRoute.fillPersonalInformation:
-        return 'fill-personal-information';
+      case AppRoute.createWeightGoal:
+        return 'create-weight-goal';
       case AppRoute.createAppointment:
         return 'create-appointment';
       case AppRoute.mySchedule:
@@ -256,8 +256,8 @@ extension AppRouteExtension on AppRoute {
         return WriteReviewPage(
           args: params,
         );
-      case AppRoute.fillPersonalInformation:
-        return const FillPersonalInformationPage();
+      case AppRoute.createWeightGoal:
+        return const CreateWeightGoalPage();
       case AppRoute.createAppointment:
         return const CreateAppointmentPage();
       case AppRoute.mySchedule:
