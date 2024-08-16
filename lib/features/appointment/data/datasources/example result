@@ -1,0 +1,38 @@
+{
+    "data": {
+        "id": "01HY9YEWQWR2B9E695RPPNJBGW",
+        "user_id": "01HY9YEWPMW6KMFERK0PECCYCD",
+        "role": "user",
+        "medical_id": "01HY9YEWQWR2B9E695RQK9XFGM",
+        "name": "Hutomo Dev 3",
+        "country_code": "62",
+        "phone": "12312324234",
+        "age": "9",
+        "dob": "2011-02-08T00:00:00Z",
+        "sex": "Female",
+        "blood_type": "O",
+        "weight": 100,
+        "height": 10,
+        "activity_level": "Moderately Active",
+        "ec_relation": "Grandmother",
+        "ec_name": "Emergencyyy",
+        "ec_country_code": "62",
+        "ec_phone": "888888888910",
+        "photo_url": "https://akasia-storage.oss-ap-southeast-5.aliyuncs.com/PP-01HY9YEWPMW6KMFERK0PECCYCD-20240730171314.jpg"
+    },
+    "message": "OK"
+}
+{
+    "data": {
+        "starting_weight": 100,
+        "starting_date": "2024-08-16",
+        "target_weight": 60,
+        "target_date": "2026-02-27",
+        "activity_level": "Moderately Active",
+        "daily_calories_budget": 1633.25,
+        "calories_to_maintain": 2183.25,
+        "flag": "loss",
+        "pace": "Normal"
+    },
+    "message": "OK"
+}

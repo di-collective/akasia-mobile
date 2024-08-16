@@ -115,7 +115,18 @@ extension StringExtension on String {
         return null;
       }
 
-      return DateFormat(format ?? 'yyyy-MM-ddTHH:mm:ssZ').parse(this);
+      String? selectedFormat = format;
+      if (selectedFormat == null) {
+        if (contains('T') && contains('Z')) {
+          // iso format
+          selectedFormat = 'yyyy-MM-ddTHH:mm:ssZ';
+        } else if (!contains(":")) {
+          // only date
+          selectedFormat = 'yyyy-MM-dd';
+        }
+      }
+
+      return DateFormat(selectedFormat).parse(this);
     } catch (error) {
       Logger.error('toDateTime error: $error');
 

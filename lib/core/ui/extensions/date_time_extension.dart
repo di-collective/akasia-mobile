@@ -84,14 +84,6 @@ extension DateTimeExtension on DateTime {
           result += '$day $monthName';
         }
 
-        // if (isHideDayName == true) {
-        //   return '$day $monthName $year';
-        // } else if (isShortMonth == true) {
-        //   return '$day $monthName $year';
-        // } else {
-        //   return '$dayName, $day $monthName $year';
-        // }
-
         return result;
       }
 
@@ -221,5 +213,17 @@ extension DateTimeExtension on DateTime {
     final now = DateTime.now();
 
     return isSameDay(other: now);
+  }
+
+  int? dateRangeInWeeks({
+    required DateTime? startDate,
+  }) {
+    if (startDate == null) {
+      return null;
+    }
+
+    final difference = this.difference(startDate);
+
+    return (difference.inDays / 7).ceil();
   }
 }

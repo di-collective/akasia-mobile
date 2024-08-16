@@ -1,19 +1,25 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../../../core/config/asset_path.dart';
 import '../../../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../../../core/ui/extensions/string_extension.dart';
 import '../../../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../../../core/ui/theme/dimens.dart';
 import '../../../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../../../core/ui/widget/dividers/title_divider_widget.dart';
+import '../../../../../../core/ui/widget/states/state_empty_widget.dart';
+import '../../../../domain/entities/weight_goal_pacing_entity.dart';
+import '../../../cubit/simulation/simulation_cubit.dart';
 
 class SelectPaceStepWidget extends StatefulWidget {
   final WeightGoalPace? selectedPace;
-  final Function(WeightGoalPace?) onSelectedPace;
+  final Function(WeightGoalPacingEntity) onSelectedPace;
   final Function() onCreateWeightGoal;
 
   const SelectPaceStepWidget({
@@ -76,31 +82,46 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
           height: 80,
         ),
         SizedBox(
-          height: 300,
-          child: PageView.builder(
-            controller: _pageController,
-            padEnds: false,
-            scrollDirection: Axis.horizontal,
-            itemCount: WeightGoalPace.values.length,
-            itemBuilder: (context, index) {
-              final pace = WeightGoalPace.values[index];
-              final isFirst = index == 0;
-              final isLast = index == WeightGoalPace.values.length - 1;
-              final isRecommended = pace.isRecommended;
+          height: 284,
+          child: BlocBuilder<SimulationCubit, SimulationState>(
+            builder: (context, state) {
+              List<WeightGoalPacingEntity> pacings = [];
+              if (state is SimulationLoaded) {
+                pacings = state.simulation.pacing ?? [];
+              }
 
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: isFirst ? 16 : 8,
-                  right: isLast ? 16 : 0,
-                ),
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Container(
+              if (pacings.isEmpty) {
+                return const StateEmptyWidget();
+              }
+
+              return PageView.builder(
+                controller: _pageController,
+                padEnds: false,
+                scrollDirection: Axis.horizontal,
+                itemCount: pacings.length,
+                itemBuilder: (context, index) {
+                  final pacing = pacings[index];
+                  final pace =
+                      WeightGoalPace.values.firstOrNullWhere((element) {
+                    return element == pacing.pace;
+                  });
+
+                  final isFirst = index == 0;
+                  final isLast = index == WeightGoalPace.values.length - 1;
+                  final loosPerWeek = pace?.losePerWeek;
+                  final dailyCaloriesBudget = pacing.dailyCaloriesBudget;
+                  final targetDate = pacing.targetDate?.toDateTime();
+                  final rangeInWeeks = targetDate?.dateRangeInWeeks(
+                    startDate: DateTime.now(),
+                  );
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      left: isFirst ? 16 : 8,
+                      right: isLast ? 16 : 0,
+                    ),
+                    child: Container(
                       height: 284,
-                      margin: const EdgeInsets.only(
-                        top: 16,
-                      ),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -113,12 +134,9 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
                           Center(
                             child: Text(
-                              pace.title,
+                              pacing.pace?.title ?? "",
                               style: textTheme.titleLarge.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: colorScheme.onSurfaceDim,
@@ -130,7 +148,7 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                           ),
                           Center(
                             child: Text(
-                              pace.description,
+                              pacing.pace?.description ?? "",
                               maxLines: 3,
                               style: textTheme.bodyMedium.copyWith(
                                 color: colorScheme.onSurface,
@@ -140,23 +158,21 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                           const Spacer(),
                           _DetailItemWidget(
                             iconPath: AssetIconsPath.icArrowCircleDown,
-                            text: "Lose ${pace.losePerWeek} per week",
+                            text: "Loss ${loosPerWeek ?? ""} per week",
                           ),
                           const SizedBox(
                             height: 12,
                           ),
                           _DetailItemWidget(
                             iconPath: AssetIconsPath.icTakeoutDining,
-                            text:
-                                "Eat ${pace.eatCaloriesPerDay} calories per day",
+                            text: "Eat $dailyCaloriesBudget calories per day",
                           ),
                           const SizedBox(
                             height: 12,
                           ),
                           _DetailItemWidget(
                             iconPath: AssetIconsPath.icCalendarToday,
-                            text:
-                                "About ${pace.weeksToReachGoal} weeks to reach goal",
+                            text: "About $rangeInWeeks weeks to reach goal",
                           ),
                           const Spacer(),
                           ButtonWidget(
@@ -164,46 +180,15 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                             width: context.width,
                             onTap: () {
                               _onSelect(
-                                pace: pace,
+                                pacing: pacing,
                               );
                             },
                           ),
                         ],
                       ),
                     ),
-                    Positioned(
-                      top: 0,
-                      child: Container(
-                        height: 36,
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(99),
-                          color: isRecommended
-                              ? colorScheme.success
-                              : colorScheme.error,
-                        ),
-                        child: Text(
-                          isRecommended
-                              ? context.locale.recommendForYou.toUpperCase()
-                              : context.locale.notRecomended.toUpperCase(),
-                          style: textTheme.labelLarge.copyWith(
-                            color: colorScheme.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            onPageChanged: (index) {
-              // set selected pace
-              widget.onSelectedPace(
-                WeightGoalPace.values[index],
+                  );
+                },
               );
             },
           ),
@@ -213,10 +198,10 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
   }
 
   void _onSelect({
-    required WeightGoalPace pace,
+    required WeightGoalPacingEntity pacing,
   }) {
-    // set selected pace
-    widget.onSelectedPace(pace);
+    // set selected pacing
+    widget.onSelectedPace(pacing);
 
     // create weight goal
     widget.onCreateWeightGoal();

@@ -3,6 +3,7 @@ import '../../../../core/network/network_info.dart';
 import '../../../../core/ui/extensions/app_exception_extension.dart';
 import '../../../auth/data/datasources/local/auth_local_datasource.dart';
 import '../../domain/entities/weight_goal_entity.dart';
+import '../../domain/entities/weight_goal_simulation_entity.dart';
 import '../../domain/repositories/weight_goal_repository.dart';
 import '../datasources/weight_goal_remote_datasource.dart';
 
@@ -68,6 +69,42 @@ class WeightGoalRepositoryImpl extends WeightGoalRepository {
           targetWeight: targetWeight,
           activityLevel: activityLevel,
           pace: pace,
+        );
+      } on AuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
+
+  @override
+  Future<WeightGoalSimulationEntity> getSimulation({
+    required double? startingWeight,
+    required double? targetWeight,
+    required String? activityLevel,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final accessToken = authLocalDataSource.getAccessToken();
+        if (accessToken == null) {
+          throw const AuthException(
+            code: AppExceptionType.accessTokenNotFound,
+          );
+        }
+
+        return weightGoalRemoteDataSource.getSimulation(
+          accessToken: accessToken,
+          startingWeight: startingWeight,
+          targetWeight: targetWeight,
+          activityLevel: activityLevel,
         );
       } on AuthException catch (error) {
         throw AuthException(

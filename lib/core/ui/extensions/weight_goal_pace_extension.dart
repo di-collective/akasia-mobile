@@ -42,28 +42,6 @@ extension WeightGoalPaceExtension on WeightGoalPace {
     }
   }
 
-  String get eatCaloriesPerDay {
-    switch (this) {
-      case WeightGoalPace.relaxed:
-        return "1.4876";
-      case WeightGoalPace.normal:
-        return "1.4876";
-      case WeightGoalPace.strict:
-        return "1.4876";
-    }
-  }
-
-  String get weeksToReachGoal {
-    switch (this) {
-      case WeightGoalPace.relaxed:
-        return "20-22";
-      case WeightGoalPace.normal:
-        return "20-22";
-      case WeightGoalPace.strict:
-        return "20-22";
-    }
-  }
-
   bool get isRecommended {
     switch (this) {
       case WeightGoalPace.relaxed:
