@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import '../../utils/logger.dart';
 import '../../common/exception.dart';
+import '../../utils/logger.dart';
 
 class AppHttpClient {
   final Dio dio;
@@ -50,19 +50,8 @@ class AppHttpClient {
       );
 
       return response;
-    } on DioException catch (e) {
-      final response = e.response;
-      final message = e.message;
-
-      if (response != null) {
-        throw AppHttpException(
-          code: response.statusCode,
-        );
-      } else {
-        throw AppUnexpectedException(
-          message: message,
-        );
-      }
+    } on DioException catch (_) {
+      rethrow;
     } catch (e) {
       throw const AppUnexpectedException();
     }
@@ -106,20 +95,8 @@ class AppHttpClient {
       );
 
       return response;
-    } on DioException catch (e) {
-      final response = e.response;
-      final message = e.message;
-
-      if (response != null) {
-        throw AppHttpException(
-          code: response.statusCode,
-          message: message,
-        );
-      } else {
-        throw AppUnexpectedException(
-          message: message,
-        );
-      }
+    } on DioException catch (_) {
+      rethrow;
     } catch (e) {
       throw const AppUnexpectedException();
     }
@@ -164,19 +141,8 @@ class AppHttpClient {
       );
 
       return response;
-    } on DioException catch (e) {
-      final response = e.response;
-      final message = e.message;
-      if (response != null) {
-        throw AppHttpException(
-          code: response.statusCode,
-          message: message,
-        );
-      } else {
-        throw AppUnexpectedException(
-          message: message,
-        );
-      }
+    } on DioException catch (_) {
+      rethrow;
     } catch (e) {
       throw const AppUnexpectedException();
     }

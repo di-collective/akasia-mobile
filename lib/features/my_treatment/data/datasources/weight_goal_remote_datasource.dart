@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../../../../core/config/env_config.dart';
 import '../../../../core/network/http/app_http_client.dart';
 import '../../../../core/utils/logger.dart';
@@ -41,7 +39,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
       Logger.success('getWeightGoal response: $response');
 
       return WeightGoalModel.fromJson(
-        jsonDecode(response.data), // FIXME: why is response.data a string?
+        response.data,
       );
     } catch (error) {
       Logger.error('getWeightGoal error: $error');
@@ -77,7 +75,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
       Logger.success('createWeightGoal response: $response');
 
       return WeightGoalModel.fromJson(
-        jsonDecode(response.data), // FIXME: why is response.data a string?
+        response.data,
       );
     } catch (error) {
       Logger.error('createWeightGoal error: $error');
