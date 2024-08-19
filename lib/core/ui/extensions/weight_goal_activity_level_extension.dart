@@ -42,7 +42,7 @@ extension WeightGoalActivityLevelExtension on WeightGoalActivityLevel {
     }
 
     return WeightGoalActivityLevel.values.firstWhereOrNull(
-      (element) => element.name.isSame(
+      (element) => element.title.isSame(
         otherValue: value,
       ),
     );

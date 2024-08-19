@@ -1,7 +1,7 @@
-import 'package:akasia365mc/core/ui/extensions/double_extension.dart';
 import 'package:flutter/material.dart';
 
 import 'build_context_extension.dart';
+import 'double_extension.dart';
 import 'string_extension.dart';
 
 extension TextEditingControllerExtension on TextEditingController {
@@ -241,6 +241,7 @@ extension TextEditingControllerExtension on TextEditingController {
 
   String? validateHeight({
     required BuildContext context,
+    required int maximum,
     bool? isRequired,
     double? minimum,
   }) {
@@ -261,10 +262,11 @@ extension TextEditingControllerExtension on TextEditingController {
     final amount = text.parseToDouble;
     if (amount != null) {
       // validate maximum amount
-      if (amount > 999) {
-        return context.locale.maximum(999);
+      if (amount > maximum) {
+        return context.locale.maximum(maximum);
       }
 
+      // validate minimum amount
       if (minimum != null) {
         if (amount < minimum) {
           return context.locale.minimumAmount(minimum.parseToString);

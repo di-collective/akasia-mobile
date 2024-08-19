@@ -2,7 +2,7 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/profile_entity.dart';
 import '../repositories/account_repository.dart';
 
-class UpdateProfileUseCase extends UseCase<void, UpdateProfileParams> {
+class UpdateProfileUseCase extends UseCase<ProfileEntity, UpdateProfileParams> {
   final AccountRepository accountRepository;
 
   UpdateProfileUseCase({
@@ -10,7 +10,7 @@ class UpdateProfileUseCase extends UseCase<void, UpdateProfileParams> {
   });
 
   @override
-  Future<void> call(UpdateProfileParams params) async {
+  Future<ProfileEntity> call(UpdateProfileParams params) async {
     return await accountRepository.updateProfile(
       profile: params.profile,
     );

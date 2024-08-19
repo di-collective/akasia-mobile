@@ -8,7 +8,7 @@ abstract class AccountRepository {
     required File image,
     required String? userId,
   });
-  Future<void> updateProfile({
+  Future<ProfileEntity> updateProfile({
     required ProfileEntity profile,
   });
 }

@@ -17,6 +17,7 @@ import '../../../../core/ui/theme/theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../cubit/sign_in/sign_in_cubit.dart';
 import '../widgets/social_auth_button_widget.dart';
 
@@ -291,6 +292,9 @@ class __BodyState extends State<_Body> {
         // user canceled sign in process
         return;
       }
+
+      // get profile
+      await BlocProvider.of<ProfileCubit>(context).getProfile();
 
       // go to main page
       context.goNamed(AppRoute.main.name);

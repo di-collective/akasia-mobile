@@ -7,7 +7,6 @@ import '../domain/usecases/get_profile_usecase.dart';
 import '../domain/usecases/update_profile_usecase.dart';
 import '../presentation/cubit/edit_allergies/edit_allergies_cubit.dart';
 import '../presentation/cubit/edit_emergency_contact/edit_emergency_contact_cubit.dart';
-import '../presentation/cubit/edit_information/edit_information_cubit.dart';
 import '../presentation/cubit/profile/profile_cubit.dart';
 
 final class AccountDI {
@@ -65,11 +64,6 @@ final class AccountDI {
   }
 
   static void _injectCubits() {
-    sl.registerFactory<EditInformationCubit>(() {
-      return EditInformationCubit(
-        updateProfileUseCase: sl(),
-      );
-    });
     sl.registerFactory<EditAllergiesCubit>(() {
       return EditAllergiesCubit(
         updateProfileUseCase: sl(),
@@ -83,6 +77,7 @@ final class AccountDI {
     sl.registerFactory<ProfileCubit>(() {
       return ProfileCubit(
         getProfileUseCase: sl(),
+        updateProfileUseCase: sl(),
       );
     });
   }

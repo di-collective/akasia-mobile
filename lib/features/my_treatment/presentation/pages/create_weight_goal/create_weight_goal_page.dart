@@ -5,14 +5,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../../core/ui/extensions/double_extension.dart';
 import '../../../../../core/ui/extensions/object_extension.dart';
 import '../../../../../core/ui/extensions/sex_extension.dart';
+import '../../../../../core/ui/extensions/string_extension.dart';
 import '../../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
 import '../../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../../core/ui/theme/theme.dart';
 import '../../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../../core/utils/service_locator.dart';
+import '../../../../account/domain/entities/profile_entity.dart';
+import '../../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../../domain/entities/weight_goal_pacing_entity.dart';
 import '../../cubit/simulation/simulation_cubit.dart';
 import '../../cubit/weight_goal/weight_goal_cubit.dart';
@@ -55,6 +59,8 @@ class __BodyState extends State<_Body> {
   WeightGoalActivityLevel? _selectedActivityLevel;
   WeightGoalPace? _selectedPace;
 
+  ProfileEntity? _activeProfile;
+
   @override
   void initState() {
     super.initState();
@@ -74,7 +80,8 @@ class __BodyState extends State<_Body> {
       });
     });
 
-    // TODO: set default value from profile cubit
+    //  set default value
+    _initDefaultValue();
   }
 
   @override
@@ -176,6 +183,27 @@ class __BodyState extends State<_Body> {
         isDisabled: _isDisabled,
         onTap: _onNext,
       ),
+    );
+  }
+
+  void _initDefaultValue() {
+    final profileState = BlocProvider.of<ProfileCubit>(context).state;
+    if (profileState is! ProfileLoaded) {
+      return;
+    }
+
+    _activeProfile = profileState.profile;
+    if (_activeProfile == null) {
+      return;
+    }
+
+    _weightTextController.text = _activeProfile?.weight?.parseToString ?? "";
+    _selectedDateOfBirth = _activeProfile?.dob?.toDateTime();
+    _dateOfBirthTextController.text = _selectedDateOfBirth?.formatDate() ?? "";
+    _selectedSex = SexTypeExtension.fromString(_activeProfile?.sex);
+    _heightTextController.text = _activeProfile?.height?.parseToString ?? "";
+    _selectedActivityLevel = WeightGoalActivityLevelExtension.fromString(
+      _activeProfile?.activityLevel,
     );
   }
 
@@ -310,7 +338,14 @@ class __BodyState extends State<_Body> {
         targetWeight: _weightGoalTextController.text,
       );
 
-      // TODO: if profile data is changed, update profile data
+      // update profile
+      try {
+        await _onUpdateProfile();
+      } catch (error) {
+        context.showErrorToast(
+          message: error.message(context),
+        );
+      }
 
       // go to success page
       _pageController.nextPage(
@@ -324,6 +359,74 @@ class __BodyState extends State<_Body> {
     } finally {
       // hide full screen loading
       context.hideFullScreenLoading;
+    }
+  }
+
+  Future<void> _onUpdateProfile() async {
+    try {
+      ProfileEntity newProfile = const ProfileEntity();
+
+      // new weight
+      final newWeight = _weightTextController.text.parseToDouble;
+      if (newWeight?.isSame(otherValue: _activeProfile?.weight) != true) {
+        newProfile = newProfile.copyWith(
+          weight: newWeight,
+        );
+      }
+
+      // new dob
+      final newDob = _selectedDateOfBirth?.formatDate(
+        format: "yyyy-MM-dd",
+      );
+      final activeDob = _activeProfile?.dob?.formatDate(
+        format: "yyyy-MM-dd",
+      );
+      if (newDob?.isSame(otherValue: activeDob) != true) {
+        newProfile = newProfile.copyWith(
+          dob: _selectedDateOfBirth?.toDateApi,
+        );
+      }
+
+      // new gender
+      final newSex = _selectedSex?.title(context: context);
+      final activeSex = _activeProfile?.sex;
+      if (newSex?.isSame(otherValue: activeSex) != true) {
+        newProfile = newProfile.copyWith(
+          sex: newSex,
+        );
+      }
+
+      // new height
+      final newHeight = _heightTextController.text.parseToDouble;
+      if (newHeight?.isSame(otherValue: _activeProfile?.height) != true) {
+        newProfile = newProfile.copyWith(
+          height: newHeight,
+        );
+      }
+
+      // new activity level
+      final newActivityLevel = _selectedActivityLevel?.title;
+      if (newActivityLevel?.isSame(otherValue: _activeProfile?.activityLevel) !=
+          true) {
+        newProfile = newProfile.copyWith(
+          activityLevel: newActivityLevel,
+        );
+      }
+      if (newProfile.isNull) {
+        return;
+      }
+
+      // set user id
+      newProfile = newProfile.copyWith(
+        userId: _activeProfile?.userId,
+      );
+
+      // if profile data is changed, update profile data
+      await BlocProvider.of<ProfileCubit>(context).updateProfile(
+        newProfile: newProfile,
+      );
+    } catch (_) {
+      rethrow;
     }
   }
 
