@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/config/asset_path.dart';
-import '../../../../core/config/env_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
@@ -13,10 +12,12 @@ import '../../../../core/utils/service_locator.dart';
 
 class EmergencyCallWidget extends StatefulWidget {
   final bool isDisabled;
+  final String? phoneNumber;
 
   const EmergencyCallWidget({
     super.key,
     required this.isDisabled,
+    required this.phoneNumber,
   });
 
   @override
@@ -103,7 +104,11 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
         return;
       }
 
-      final phoneNumber = EnvConfig.chatUsNumber.toString();
+      final phoneNumber = widget.phoneNumber;
+      if (phoneNumber == null) {
+        return;
+      }
+
       try {
         // open whatsapp
         await sl<OpenAppInfo>().openLink(

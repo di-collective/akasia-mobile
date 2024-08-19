@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../widgets/emergency_call_widget.dart';
 import '../widgets/weight_chart_widget.dart';
 
@@ -13,13 +15,9 @@ class MyTreatmentPage extends StatefulWidget {
 }
 
 class _MyTreatmentPageState extends State<MyTreatmentPage> {
-  bool _isDisabled = true;
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
-
-    _isDisabled = false;
 
     return Scaffold(
       appBar: AppBar(
@@ -38,15 +36,27 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
             SizedBox(
               height: context.paddingTop,
             ),
-            EmergencyCallWidget(
-              isDisabled: _isDisabled,
+            BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+                String? phoneNumber;
+                if (state is ProfileLoaded) {
+                  final ecPhone = state.profile.ecPhone;
+                  final ecCountryCode = state.profile.ecCountryCode;
+                  if (ecCountryCode != null && ecPhone != null) {
+                    phoneNumber = "$ecCountryCode$ecPhone";
+                  }
+                }
+
+                return EmergencyCallWidget(
+                  isDisabled: phoneNumber == null,
+                  phoneNumber: phoneNumber,
+                );
+              },
             ),
             const SizedBox(
               height: 32,
             ),
-            WeightChartWidget(
-              isDisabled: _isDisabled,
-            ),
+            const WeightChartWidget(),
             SizedBox(
               height: context.paddingBottom,
             ),
