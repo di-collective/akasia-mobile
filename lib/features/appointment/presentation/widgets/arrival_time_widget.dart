@@ -7,6 +7,8 @@ import '../../../../core/ui/extensions/time_of_day_extension.dart';
 import '../../../../core/ui/theme/color_scheme.dart';
 import '../../domain/entities/clinic_location_entity.dart';
 
+const _itemsPerRow = 4; // Fixed number of items per row
+
 class ArrivalTimeWidget extends StatefulWidget {
   final bool isToday;
   final ClinicLocationEntity? clinicLocation;
@@ -50,9 +52,9 @@ class _ArrivalTimeWidgetState extends State<ArrivalTimeWidget> {
       return;
     }
 
-    for (var hour = openingTime!.hour; hour < closingTime!.hour; hour++) {
+    for (int hour = openingTime!.hour; hour < closingTime!.hour; hour++) {
       // if hour is 12 AM, skip it
-      if (hour == 0) {
+      if (hour == 12) {
         continue;
       }
 
@@ -69,6 +71,12 @@ class _ArrivalTimeWidgetState extends State<ArrivalTimeWidget> {
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
+
+    final screenWidth = context.width;
+
+    final itemWidth = ((screenWidth - 2 * context.paddingHorizontal) -
+            (_itemsPerRow - 1) * 8) /
+        _itemsPerRow; // Calculate item width dynamically
 
     if (widget.isToday) {
       // update the available hours based on the current time
@@ -115,63 +123,147 @@ class _ArrivalTimeWidgetState extends State<ArrivalTimeWidget> {
           ),
           SizedBox(
             width: context.width,
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 16,
-              alignment: WrapAlignment.spaceBetween,
-              children: _hours.entries.map(
-                (entry) {
-                  final hour = entry.key;
-                  final isSelected = widget.selectedHour == hour;
-                  final isDisabled = !entry.value;
-
-                  return InkWell(
-                    onTap: () {
-                      _onTap(
-                        hour: hour,
-                        isDisabled: isDisabled,
-                        isSelected: isSelected,
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: backgroundColor(
-                          colorScheme: colorScheme,
-                          isSelected: isSelected,
-                          isDisabled: isDisabled,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: borderColor(
-                            colorScheme: colorScheme,
-                            isSelected: isSelected,
-                            isDisabled: isDisabled,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        hour.formatTime(),
-                        style: textTheme.bodyMedium.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: textColor(
-                            colorScheme: colorScheme,
-                            isSelected: isSelected,
-                            isDisabled: isDisabled,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ).toList(),
+            child: Column(
+              children: _buildRows(
+                itemWidth,
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  List<Widget> _buildRows(double itemWidth) {
+    final rows = <Widget>[];
+    final entries = _hours.entries.toList();
+
+    for (int i = 0; i < entries.length; i += _itemsPerRow) {
+      final rowChildren = <Widget>[];
+
+      for (int j = 0; j < _itemsPerRow; j++) {
+        if (i + j < entries.length) {
+          final entry = entries[i + j];
+          final hour = entry.key;
+          final isSelected = widget.selectedHour == hour;
+          final isDisabled = !entry.value;
+
+          rowChildren.add(
+            _ItemWidget(
+              hour: hour,
+              isDisabled: isDisabled,
+              isSelected: isSelected,
+              onTap: _onTap,
+              width: itemWidth,
+            ),
+          );
+        } else {
+          rowChildren.add(
+            SizedBox(
+              width: itemWidth, // Add empty space for alignment
+            ),
+          );
+        }
+      }
+
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 16,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: rowChildren,
+          ),
+        ),
+      );
+    }
+
+    return rows;
+  }
+
+  void _onTap({
+    required TimeOfDay hour,
+    required bool isDisabled,
+    required bool isSelected,
+  }) {
+    if (isDisabled) {
+      return;
+    }
+
+    if (isSelected) {
+      return;
+    }
+
+    widget.onHourSelected(hour);
+  }
+}
+
+class _ItemWidget extends StatelessWidget {
+  final double width;
+  final TimeOfDay hour;
+  final bool isDisabled;
+  final bool isSelected;
+  final Function({
+    required TimeOfDay hour,
+    required bool isDisabled,
+    required bool isSelected,
+  }) onTap;
+
+  const _ItemWidget({
+    required this.width,
+    required this.hour,
+    required this.isDisabled,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = context.theme.appTextTheme;
+    final colorScheme = context.theme.appColorScheme;
+
+    return InkWell(
+      onTap: () {
+        onTap(
+          hour: hour,
+          isDisabled: isDisabled,
+          isSelected: isSelected,
+        );
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 16,
+        ),
+        width: width,
+        decoration: BoxDecoration(
+          color: backgroundColor(
+            colorScheme: colorScheme,
+            isSelected: isSelected,
+            isDisabled: isDisabled,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: borderColor(
+              colorScheme: colorScheme,
+              isSelected: isSelected,
+              isDisabled: isDisabled,
+            ),
+          ),
+        ),
+        child: Text(
+          hour.formatTime(),
+          style: textTheme.bodyMedium.copyWith(
+            fontWeight: FontWeight.w600,
+            color: textColor(
+              colorScheme: colorScheme,
+              isSelected: isSelected,
+              isDisabled: isDisabled,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -222,21 +314,5 @@ class _ArrivalTimeWidgetState extends State<ArrivalTimeWidget> {
     }
 
     return colorScheme.onSurface;
-  }
-
-  void _onTap({
-    required TimeOfDay hour,
-    required bool isDisabled,
-    required bool isSelected,
-  }) {
-    if (isDisabled) {
-      return;
-    }
-
-    if (isSelected) {
-      return;
-    }
-
-    widget.onHourSelected(hour);
   }
 }

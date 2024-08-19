@@ -1,3 +1,5 @@
+import 'package:akasia365mc/core/ui/extensions/color_swatch_extension.dart';
+import 'package:akasia365mc/core/ui/extensions/theme_data_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -60,6 +62,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.theme.appColorScheme;
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _onRefresh,
@@ -124,6 +128,7 @@ class _HomePageState extends State<HomePage> {
                             height: 50,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               HomeDashboardItemWidget(
                                 iconSvgPath: AssetIconsPath.icPoint,
@@ -132,14 +137,14 @@ class _HomePageState extends State<HomePage> {
                                 isLoading: false,
                                 onTap: _onMyRewardPoints,
                               ),
-                              const Spacer(),
-                              const SizedBox(
+                              SizedBox(
                                 height: 35,
                                 child: VerticalDivider(
-                                  color: Color(0xFFF69459),
+                                  color: colorScheme.vividTangelo.tint90,
+                                  width: 18,
+                                  thickness: 0.5,
                                 ),
                               ),
-                              const Spacer(),
                               BlocBuilder<AppointmentsCubit, AppointmentsState>(
                                 builder: (context, state) {
                                   String? nextAppointment;
@@ -158,8 +163,9 @@ class _HomePageState extends State<HomePage> {
                                     }
                                   }
 
-                                  nextAppointment ??=
-                                      context.locale.noUpcomingSchedule;
+                                  nextAppointment ??= context
+                                      .locale.noUpcomingSchedule
+                                      .toCapitalize();
 
                                   return HomeDashboardItemWidget(
                                     iconSvgPath: AssetIconsPath.icCalendar,
