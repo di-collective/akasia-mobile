@@ -1,9 +1,9 @@
-import 'package:akasia365mc/core/ui/extensions/string_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/ui/extensions/event_status_extension.dart';
 import '../../../../../core/ui/extensions/event_type_extension.dart';
+import '../../../../../core/ui/extensions/string_extension.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../domain/entities/appointment_entity.dart';
 import '../../../domain/entities/clinic_entity.dart';
@@ -58,6 +58,10 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
 
   Future<void> getMySchedules() async {
     try {
+      if (state is AppointmentsLoading) {
+        return;
+      }
+
       emit(AppointmentsLoading());
 
       final result = await getAppointmentsUseCase(NoParams());
@@ -69,10 +73,6 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
 
       emit(AppointmentsLoaded(
         appointments: sortedAppointments,
-      ));
-
-      emit(AppointmentsLoaded(
-        appointments: result,
       ));
     } catch (error) {
       emit(AppointmentsError(

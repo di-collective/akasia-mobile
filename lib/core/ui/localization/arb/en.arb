@@ -479,5 +479,6 @@
   "consultation": "consultation",
   "selectAWeightLossPlan": "select a weight loss plan",
   "recommendForYou": "recommended for you",
-  "notRecomended": "not recommended"
+  "notRecomended": "not recommended",
+  "noUpcomingSchedule": "no upcoming schedule"
 }

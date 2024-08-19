@@ -6,12 +6,15 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/asset_path.dart';
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
+import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/toast_type_extension.dart';
 import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/dialogs/toast_info.dart';
 import '../../../../core/utils/service_locator.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
+import '../../../appointment/presentation/cubit/appointments/appointments_cubit.dart';
 import '../../../health/presentation/cubit/heart_rate/heart_rate_cubit.dart';
 import '../../../health/presentation/cubit/nutrition/nutrition_cubit.dart';
 import '../../../health/presentation/cubit/sleep/sleep_cubit.dart';
@@ -32,6 +35,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    // init get my schedules
+    _initGetMySchedules();
+  }
+
+  void _initGetMySchedules() {
+    final appointmentsState = BlocProvider.of<AppointmentsCubit>(context).state;
+    if (appointmentsState is! AppointmentsLoaded) {
+      _onGetMySchedules();
+    }
+  }
+
+  Future<void> _onGetMySchedules() async {
+    await BlocProvider.of<AppointmentsCubit>(context).getMySchedules();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                                 iconSvgPath: AssetIconsPath.icPoint,
                                 title: context.locale.myRewardPoints,
                                 description: "0 pts",
+                                isLoading: false,
                                 onTap: _onMyRewardPoints,
                               ),
                               const Spacer(),
@@ -113,11 +140,35 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               const Spacer(),
-                              HomeDashboardItemWidget(
-                                iconSvgPath: AssetIconsPath.icCalendar,
-                                title: context.locale.nextSchedule,
-                                description: null,
-                                onTap: _onNextSchedule,
+                              BlocBuilder<AppointmentsCubit, AppointmentsState>(
+                                builder: (context, state) {
+                                  String? nextAppointment;
+                                  if (state is AppointmentsLoaded) {
+                                    final appointment = state.nextAppointment;
+                                    if (appointment != null) {
+                                      final startDate =
+                                          appointment.startTime?.toDateTime();
+
+                                      if (startDate != null) {
+                                        // format 7 Feb 2024 - 19:00
+                                        nextAppointment = startDate.formatDate(
+                                          format: 'd MMM y - HH:mm',
+                                        );
+                                      }
+                                    }
+                                  }
+
+                                  nextAppointment ??=
+                                      context.locale.noUpcomingSchedule;
+
+                                  return HomeDashboardItemWidget(
+                                    iconSvgPath: AssetIconsPath.icCalendar,
+                                    title: context.locale.nextSchedule,
+                                    description: nextAppointment,
+                                    isLoading: state is AppointmentsLoading,
+                                    onTap: _onNextSchedule,
+                                  );
+                                },
                               ),
                             ],
                           ),

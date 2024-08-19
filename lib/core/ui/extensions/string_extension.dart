@@ -123,6 +123,8 @@ extension StringExtension on String {
         } else if (!contains(":")) {
           // only date
           selectedFormat = 'yyyy-MM-dd';
+        } else if (contains('+') || contains('-')) {
+          selectedFormat = 'yyyy-MM-ddTHH:mm:ssZ';
         }
       }
 

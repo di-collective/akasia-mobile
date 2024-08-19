@@ -9,6 +9,7 @@ class HomeDashboardItemWidget extends StatelessWidget {
   final String iconSvgPath;
   final String title;
   final String? description;
+  final bool isLoading;
   final Function() onTap;
 
   const HomeDashboardItemWidget({
@@ -16,6 +17,7 @@ class HomeDashboardItemWidget extends StatelessWidget {
     required this.iconSvgPath,
     required this.title,
     this.description,
+    required this.isLoading,
     required this.onTap,
   });
 

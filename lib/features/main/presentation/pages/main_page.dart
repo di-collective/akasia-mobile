@@ -49,20 +49,19 @@ class _MainPageState extends State<MainPage> {
   void _init() {
     // init selected bottom navigation
     final selectedTab = widget.params?.selectedTab;
-
     _onChange(
       item: selectedTab,
     );
 
     // check permission health service
-    _onCheckPermissionHealthService();
+    _initCheckPermissionHealthService();
   }
 
   Future<void> _onGetProfile() async {
     await BlocProvider.of<ProfileCubit>(context).getProfile();
   }
 
-  Future<void> _onCheckPermissionHealthService() async {
+  Future<void> _initCheckPermissionHealthService() async {
     await BlocProvider.of<HealthServiceCubit>(context).hasPermissions();
   }
 
