@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
+import '../cubit/weight_history/weight_history_cubit.dart';
 import '../widgets/emergency_call_widget.dart';
 import '../widgets/weight_chart_widget.dart';
 
@@ -56,7 +57,11 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
             const SizedBox(
               height: 32,
             ),
-            const WeightChartWidget(),
+            BlocBuilder<WeightHistoryCubit, WeightHistoryState>(
+              builder: (context, state) {
+                return const WeightChartWidget();
+              },
+            ),
             SizedBox(
               height: context.paddingBottom,
             ),

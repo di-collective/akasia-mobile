@@ -5,8 +5,10 @@ import '../domain/repositories/weight_goal_repository.dart';
 import '../domain/usecases/create_weight_goal_usecase.dart';
 import '../domain/usecases/get_simulation_usecase.dart';
 import '../domain/usecases/get_weight_goal_usecase.dart';
+import '../domain/usecases/update_weight_usecase.dart';
 import '../presentation/cubit/simulation/simulation_cubit.dart';
 import '../presentation/cubit/weight_goal/weight_goal_cubit.dart';
+import '../presentation/cubit/weight_history/weight_history_cubit.dart';
 
 class MyTreatmentDI {
   static void inject() {
@@ -57,6 +59,11 @@ class MyTreatmentDI {
         weightGoalRepository: sl(),
       );
     });
+    sl.registerLazySingleton<UpdateWeightUseCase>(() {
+      return UpdateWeightUseCase(
+        weightGoalRepository: sl(),
+      );
+    });
   }
 
   static void _injectCubits() {
@@ -69,6 +76,11 @@ class MyTreatmentDI {
     sl.registerFactory<SimulationCubit>(() {
       return SimulationCubit(
         getSimulationUseCase: sl(),
+      );
+    });
+    sl.registerFactory<WeightHistoryCubit>(() {
+      return WeightHistoryCubit(
+        updateWeightUseCase: sl(),
       );
     });
   }

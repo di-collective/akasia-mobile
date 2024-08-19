@@ -15,6 +15,8 @@ class WeightTextFormWidget extends TextFormWidget {
     super.isRequired,
     super.onChanged,
     super.onTap,
+    super.autofocus,
+    super.onEditingComplete,
   }) : super(
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,

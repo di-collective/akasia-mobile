@@ -1,5 +1,7 @@
+import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,6 +16,7 @@ import '../../../../core/ui/theme/text_theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../cubit/weight_history/weight_history_cubit.dart';
 import 'record_weight_body_widget.dart';
 
 class WeightChartWidget extends StatefulWidget {
@@ -433,9 +436,10 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
               onCancel: () {
                 Navigator.of(context).pop(false);
               },
-              onSave: (value) async {
+              onSave: (value, date) async {
                 final isSuccess = await _onSaveWeight(
                   value: value,
+                  date: date,
                 );
                 if (isSuccess != true) {
                   return;
@@ -463,19 +467,17 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
 
   Future<bool?> _onSaveWeight({
     required String value,
+    required DateTime date,
   }) async {
     try {
       // show loading
       context.showFullScreenLoading();
 
-      final weight = int.tryParse(value);
-      if (weight == null) {
-        throw 'Weight must be a number';
-      }
-
-      // TODO implement save edit weight
-      await Future.delayed(
-        const Duration(seconds: 1),
+      // update weight
+      final weight = value.toDouble();
+      await BlocProvider.of<WeightHistoryCubit>(context).updateWeight(
+        weight: weight,
+        date: date,
       );
 
       // show success message

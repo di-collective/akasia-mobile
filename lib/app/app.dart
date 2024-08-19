@@ -20,6 +20,7 @@ import '../features/health/presentation/cubit/steps/steps_cubit.dart';
 import '../features/health/presentation/cubit/workout/workout_cubit.dart';
 import '../features/main/presentation/cubit/bottom_navigation/bottom_navigation_cubit.dart';
 import '../features/my_treatment/presentation/cubit/weight_goal/weight_goal_cubit.dart';
+import '../features/my_treatment/presentation/cubit/weight_history/weight_history_cubit.dart';
 import '../features/notification/presentation/cubit/notifications/notifications_cubit.dart';
 import 'routes/app_route_info.dart';
 
@@ -71,6 +72,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<WeightGoalCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<WeightHistoryCubit>(),
         ),
       ],
       child: MaterialApp.router(

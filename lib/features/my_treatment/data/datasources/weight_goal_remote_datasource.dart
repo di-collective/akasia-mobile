@@ -1,6 +1,8 @@
 import '../../../../core/config/env_config.dart';
 import '../../../../core/network/http/app_http_client.dart';
+import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/utils/logger.dart';
+import '../models/weight_history_model.dart';
 import '../models/weight_goal_model.dart';
 import '../models/weight_goal_simulation_model.dart';
 
@@ -20,6 +22,11 @@ abstract class WeightGoalRemoteDataSource {
     required double? startingWeight,
     required double? targetWeight,
     required String? activityLevel,
+  });
+  Future<WeightHistoryModel> updateWeight({
+    required String accessToken,
+    required double? weight,
+    required DateTime? date,
   });
 }
 
@@ -120,6 +127,40 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
       );
     } catch (error) {
       Logger.error('getSimulation error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<WeightHistoryModel> updateWeight({
+    required String accessToken,
+    required double? weight,
+    required DateTime? date,
+  }) async {
+    try {
+      Logger.info(
+          'updateWeight params: accessToken $accessToken, weight $weight, date $date');
+
+      final response = await appHttpClient.put(
+        url: "${EnvConfig.akasiaFitnessApiUrl}/weight-history",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        data: {
+          "weight": weight,
+          "date": date?.formatDate(
+            format: 'yyyy-MM-dd',
+          ),
+        },
+      );
+      Logger.success('updateWeight response: $response');
+
+      return WeightHistoryModel.fromJson(
+        response.data?['data'],
+      );
+    } catch (error) {
+      Logger.error('updateWeight error: $error');
 
       rethrow;
     }
