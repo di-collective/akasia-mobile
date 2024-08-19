@@ -1,4 +1,6 @@
 import '../../../../core/ui/extensions/dynamic_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_flag_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../domain/entities/weight_goal_entity.dart';
 
 class WeightGoalModel extends WeightGoalEntity {
@@ -25,8 +27,12 @@ class WeightGoalModel extends WeightGoalEntity {
           DynamicExtension(json['daily_calories_budget']).dynamicToDouble,
       caloriesToMaintain:
           DynamicExtension(json['calories_to_maintain']).dynamicToDouble,
-      flag: json['flag'],
-      pace: json['pace'],
+      flag: WeightGoalFlagExtension.fromString(
+        json['flag'],
+      ),
+      pace: WeightGoalPaceExtension.fromString(
+        json['pace'],
+      ),
     );
   }
 

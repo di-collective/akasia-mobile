@@ -24,6 +24,7 @@ class HeightTextFormWidget extends TextFormWidget {
             return controller?.validateHeight(
               context: context,
               isRequired: isRequired,
+              minimum: 1,
             );
           },
         );

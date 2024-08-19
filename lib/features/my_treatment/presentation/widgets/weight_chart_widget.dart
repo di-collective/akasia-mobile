@@ -181,7 +181,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
                             return lineBarsSpot.map(
                               (lineBarSpot) {
                                 return LineTooltipItem(
-                                  lineBarSpot.y.parseToString ?? '',
+                                  lineBarSpot.y.parseToString,
                                   textTheme.bodySmall.copyWith(
                                     color: colorScheme.onPrimary,
                                     fontSize: 8,
@@ -207,7 +207,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
                               return SideTitleWidget(
                                 axisSide: AxisSide.right,
                                 child: Text(
-                                  value.parseToString ?? '',
+                                  value.parseToString,
                                   style: textTheme.labelSmall.copyWith(
                                     fontWeight: FontWeight.w500,
                                     color: colorScheme.onSurfaceBright,

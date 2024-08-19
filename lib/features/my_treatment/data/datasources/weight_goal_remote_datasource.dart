@@ -116,7 +116,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
       Logger.success('getSimulation response: $response');
 
       return WeightGoalSimulationModel.fromJson(
-        response.data,
+        response.data?['data'],
       );
     } catch (error) {
       Logger.error('getSimulation error: $error');

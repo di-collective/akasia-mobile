@@ -9,6 +9,7 @@ import '../../../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../../../core/ui/extensions/string_extension.dart';
 import '../../../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../../../core/ui/extensions/weight_goal_flag_extension.dart';
 import '../../../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../../../core/ui/theme/dimens.dart';
 import '../../../../../../core/ui/widget/buttons/button_widget.dart';
@@ -86,9 +87,17 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
           child: BlocBuilder<SimulationCubit, SimulationState>(
             builder: (context, state) {
               List<WeightGoalPacingEntity> pacings = [];
+              WeightGoalFlag? flag;
+              String? flagIconPath;
+
               if (state is SimulationLoaded) {
+                final simulation = state.simulation;
                 pacings = state.simulation.pacing ?? [];
+                flag = simulation.flag;
               }
+
+              flag ??= WeightGoalFlag.loss;
+              flagIconPath ??= flag.iconPath;
 
               if (pacings.isEmpty) {
                 return const StateEmptyWidget();
@@ -150,6 +159,7 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                             child: Text(
                               pacing.pace?.description ?? "",
                               maxLines: 3,
+                              textAlign: TextAlign.center,
                               style: textTheme.bodyMedium.copyWith(
                                 color: colorScheme.onSurface,
                               ),
@@ -157,8 +167,10 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                           ),
                           const Spacer(),
                           _DetailItemWidget(
-                            iconPath: AssetIconsPath.icArrowCircleDown,
-                            text: "Loss ${loosPerWeek ?? ""} per week",
+                            iconPath: flagIconPath!,
+                            text:
+                                "${flag?.title ?? ""} ${loosPerWeek ?? ""} per week"
+                                    .toCapitalize(),
                           ),
                           const SizedBox(
                             height: 12,

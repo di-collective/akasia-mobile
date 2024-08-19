@@ -93,47 +93,57 @@ class __BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     final colorScheme = context.theme.appColorScheme;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppTheme.overlayStyleLight,
-      child: GestureDetector(
-        onTap: () => context.closeKeyboard,
-        child: Scaffold(
-          backgroundColor: colorScheme.surfaceContainerBright,
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      FillInformationStepWidget(
-                        formKey: _formKey,
-                        weightTextController: _weightTextController,
-                        weightGoalTextController: _weightGoalTextController,
-                        dateOfBirthTextController: _dateOfBirthTextController,
-                        selectedDateOfBirth: _selectedDateOfBirth,
-                        selectedSex: _selectedSex,
-                        heightTextController: _heightTextController,
-                        activityLevelTextController:
-                            _activityLevelTextController,
-                        selectedActivityLevel: _selectedActivityLevel,
-                        selectedPace: _selectedPace,
-                        onSelectedDateOfBirth: _onChangeDateOfBirth,
-                        onSelectedSexType: _onSelectedGender,
-                        onSelectedActivityLevel: _onSelectedActivityLevel,
-                      ),
-                      SelectPaceStepWidget(
-                        selectedPace: _selectedPace,
-                        onSelectedPace: _onSelectedPace,
-                        onCreateWeightGoal: _onCreateWeightGoal,
-                      ),
-                      const FinishStepWidget(),
-                    ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+
+        _onBack();
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: AppTheme.overlayStyleLight,
+        child: GestureDetector(
+          onTap: () => context.closeKeyboard,
+          child: Scaffold(
+            backgroundColor: colorScheme.surfaceContainerBright,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        FillInformationStepWidget(
+                          formKey: _formKey,
+                          weightTextController: _weightTextController,
+                          weightGoalTextController: _weightGoalTextController,
+                          dateOfBirthTextController: _dateOfBirthTextController,
+                          selectedDateOfBirth: _selectedDateOfBirth,
+                          selectedSex: _selectedSex,
+                          heightTextController: _heightTextController,
+                          activityLevelTextController:
+                              _activityLevelTextController,
+                          selectedActivityLevel: _selectedActivityLevel,
+                          selectedPace: _selectedPace,
+                          onSelectedDateOfBirth: _onChangeDateOfBirth,
+                          onSelectedSexType: _onSelectedGender,
+                          onSelectedActivityLevel: _onSelectedActivityLevel,
+                        ),
+                        SelectPaceStepWidget(
+                          selectedPace: _selectedPace,
+                          onSelectedPace: _onSelectedPace,
+                          onCreateWeightGoal: _onCreateWeightGoal,
+                        ),
+                        const FinishStepWidget(),
+                      ],
+                    ),
                   ),
-                ),
-                _buildNextButton,
-              ],
+                  _buildNextButton,
+                ],
+              ),
             ),
           ),
         ),
@@ -167,6 +177,26 @@ class __BodyState extends State<_Body> {
         onTap: _onNext,
       ),
     );
+  }
+
+  void _onBack() {
+    switch (_currentPage) {
+      case 0:
+        context.pop(false);
+
+        break;
+      case 1:
+        _pageController.previousPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        break;
+      case 2:
+        // close page
+        context.pop(true);
+
+        break;
+    }
   }
 
   void _onChangeDateOfBirth(DateTime? value) {
@@ -243,7 +273,7 @@ class __BodyState extends State<_Body> {
       context.closeKeyboard;
 
       // show full screen loading
-      context.showFullScreenLoading;
+      context.showFullScreenLoading();
 
       // get simulation
       await BlocProvider.of<SimulationCubit>(context).getSimulation(

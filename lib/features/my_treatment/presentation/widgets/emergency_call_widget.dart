@@ -75,7 +75,8 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
           ),
           ButtonWidget(
             onTap: _onCall,
-            padding: const EdgeInsets.all(25),
+            width: 62,
+            height: 62,
             backgroundColor: widget.isDisabled
                 ? colorScheme.onSurfaceBright
                 : colorScheme.primary,

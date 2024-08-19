@@ -24,6 +24,7 @@ class WeightTextFormWidget extends TextFormWidget {
             return controller?.validateWeight(
               context: context,
               isRequired: isRequired,
+              minimum: 1,
             );
           },
         );

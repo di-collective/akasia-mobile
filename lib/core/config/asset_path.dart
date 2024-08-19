@@ -67,4 +67,5 @@ class AssetIconsPath {
   static String icCalendarToday = 'ic_calendar_today.svg'.iconAsset;
   static String icTakeoutDining = 'ic_takeout_dining.svg'.iconAsset;
   static String icArrowCircleDown = 'ic_arrow_circle_down.svg'.iconAsset;
+  static String icArrowCircleUp = 'ic_arrow_circle_up.svg'.iconAsset;
 }

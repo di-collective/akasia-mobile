@@ -4,8 +4,11 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../../../core/config/asset_path.dart';
 import '../../../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../../../core/ui/extensions/double_extension.dart';
 import '../../../../../../core/ui/extensions/string_extension.dart';
 import '../../../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../../../core/ui/extensions/weight_goal_flag_extension.dart';
 import '../../../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../cubit/weight_goal/weight_goal_cubit.dart';
 
@@ -19,15 +22,34 @@ class FinishStepWidget extends StatelessWidget {
 
     return BlocBuilder<WeightGoalCubit, WeightGoalState>(
       builder: (context, state) {
-        double? startWeight;
-        double? weightGoal;
-        if (state is WeightGoalLoaded) {
-          startWeight = state.weightGoal?.startingWeight;
-          weightGoal = state.weightGoal?.targetWeight;
-        }
+        String formmatedWeightGoal = "0";
+        String formmatedTargetDate = "";
+        WeightGoalFlag formmatedFlag = WeightGoalFlag.loss;
+        String formattedCaloriesToMaintain = "0";
 
-        startWeight ??= 0;
-        weightGoal ??= 0;
+        if (state is WeightGoalLoaded) {
+          final weightGoal = state.weightGoal?.targetWeight;
+          if (weightGoal != null) {
+            formmatedWeightGoal = weightGoal.parseToString;
+          }
+
+          final flag = state.weightGoal?.flag;
+          if (flag != null) {
+            formmatedFlag = flag;
+          }
+
+          final targetDate = state.weightGoal?.targetDate?.toDateTime();
+          if (targetDate != null) {
+            formmatedTargetDate = targetDate.formatDate(
+                  format: "dd MMMM yyyy",
+                ) ??
+                "";
+          }
+          final caloriesToMaintain = state.weightGoal?.caloriesToMaintain;
+          if (caloriesToMaintain != null) {
+            formattedCaloriesToMaintain = caloriesToMaintain.parseToString;
+          }
+        }
 
         return SingleChildScrollView(
           child: Column(
@@ -48,14 +70,14 @@ class FinishStepWidget extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: "${weightGoal}kg",
+                      text: "${formmatedWeightGoal}kg",
                       style: TextStyle(
                         color: colorScheme.primary,
                       ),
                     ),
                     const TextSpan(text: " by "),
                     TextSpan(
-                      text: "April 9",
+                      text: formmatedTargetDate,
                       style: TextStyle(
                         color: colorScheme.primary,
                       ),
@@ -83,8 +105,7 @@ class FinishStepWidget extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     _chartPath(
-                      startWeight: startWeight,
-                      weightGoal: weightGoal,
+                      flag: formmatedFlag,
                     ),
                     width: context.width,
                     fit: BoxFit.contain,
@@ -107,7 +128,7 @@ class FinishStepWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "April 9",
+                          formmatedTargetDate,
                           style: textTheme.bodyLarge.copyWith(
                             color: colorScheme.primary,
                             fontWeight: FontWeight.w700,
@@ -139,12 +160,15 @@ class FinishStepWidget extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: context.locale.yourBudgetCalories("1.478"),
+                        text: context.locale.yourBudgetCalories(
+                          formattedCaloriesToMaintain,
+                        ),
                       ),
                       const TextSpan(text: ". "),
                       TextSpan(
-                        text: context.locale
-                            .ifYourConsistenlyEatAnAverage("1.478"),
+                        text: context.locale.ifYourConsistenlyEatAnAverage(
+                          formattedCaloriesToMaintain,
+                        ),
                       ),
                       const TextSpan(text: "."),
                     ],
@@ -168,13 +192,15 @@ class FinishStepWidget extends StatelessWidget {
   }
 
   String _chartPath({
-    required double startWeight,
-    required double weightGoal,
+    required WeightGoalFlag flag,
   }) {
-    if (startWeight > weightGoal) {
-      return AssetImagesPath.dietChartDown;
+    switch (flag) {
+      case WeightGoalFlag.maintain:
+        return AssetImagesPath.dietChartDown;
+      case WeightGoalFlag.loss:
+        return AssetImagesPath.dietChartDown;
+      case WeightGoalFlag.gain:
+        return AssetImagesPath.dietChartUp;
     }
-
-    return AssetImagesPath.dietChartUp;
   }
 }

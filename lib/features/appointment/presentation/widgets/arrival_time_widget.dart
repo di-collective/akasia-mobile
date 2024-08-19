@@ -7,13 +7,13 @@ import '../../../../core/ui/extensions/time_of_day_extension.dart';
 import '../../../../core/ui/theme/color_scheme.dart';
 import '../../domain/entities/clinic_location_entity.dart';
 
-class ArrivalWidget extends StatefulWidget {
+class ArrivalTimeWidget extends StatefulWidget {
   final bool isToday;
   final ClinicLocationEntity? clinicLocation;
   final TimeOfDay? selectedHour;
   final Function(TimeOfDay) onHourSelected;
 
-  const ArrivalWidget({
+  const ArrivalTimeWidget({
     super.key,
     required this.isToday,
     required this.clinicLocation,
@@ -22,10 +22,10 @@ class ArrivalWidget extends StatefulWidget {
   });
 
   @override
-  State<ArrivalWidget> createState() => _ArrivalWidgetState();
+  State<ArrivalTimeWidget> createState() => _ArrivalTimeWidgetState();
 }
 
-class _ArrivalWidgetState extends State<ArrivalWidget> {
+class _ArrivalTimeWidgetState extends State<ArrivalTimeWidget> {
   final Map<TimeOfDay, bool> _hours = {};
 
   TimeOfDay? openingTime;
@@ -51,6 +51,11 @@ class _ArrivalWidgetState extends State<ArrivalWidget> {
     }
 
     for (var hour = openingTime!.hour; hour < closingTime!.hour; hour++) {
+      // if hour is 12 AM, skip it
+      if (hour == 0) {
+        continue;
+      }
+
       final newHour = TimeOfDay(
         hour: hour,
         minute: 0,
