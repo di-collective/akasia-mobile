@@ -130,41 +130,16 @@ extension DateTimeExtension on DateTime {
     bool? withoutMinute,
     bool? withoutSecond,
   }) {
-    if (withoutYear == true) {
-      if (withoutMonth == true) {
-        if (withoutDay == true) {
-          if (withoutHour == true) {
-            if (withoutMinute == true) {
-              return second == other?.second;
-            }
+    if (other == null) return false;
 
-            return minute == other?.minute && second == other?.second;
-          }
+    if (withoutYear != true && year != other.year) return false;
+    if (withoutMonth != true && month != other.month) return false;
+    if (withoutDay != true && day != other.day) return false;
+    if (withoutHour != true && hour != other.hour) return false;
+    if (withoutMinute == true && minute != other.minute) return false;
+    if (withoutSecond != true && second != other.second) return false;
 
-          return hour == other?.hour &&
-              minute == other?.minute &&
-              second == other?.second;
-        }
-
-        return day == other?.day &&
-            hour == other?.hour &&
-            minute == other?.minute &&
-            second == other?.second;
-      }
-
-      return month == other?.month &&
-          day == other?.day &&
-          hour == other?.hour &&
-          minute == other?.minute &&
-          second == other?.second;
-    }
-
-    return year == other?.year &&
-        month == other?.month &&
-        day == other?.day &&
-        hour == other?.hour &&
-        minute == other?.minute &&
-        second == other?.second;
+    return true;
   }
 
   String formatDateRange({

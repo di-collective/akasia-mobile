@@ -26,6 +26,8 @@ class WeightGoalEntity extends Equatable {
     this.pace,
   });
 
+  bool get isNull => this == const WeightGoalEntity();
+
   @override
   List<Object?> get props => [
         startingWeight,

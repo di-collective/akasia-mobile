@@ -10,7 +10,7 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/buttons/option_button_item_widget.dart';
+import '../../../../core/ui/widget/buttons/options_button_widget.dart';
 import '../cubit/nutrition/nutrition_cubit.dart';
 import '../widgets/weekly_chart_widget.dart';
 

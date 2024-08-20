@@ -9,16 +9,19 @@ import '../../../../../core/usecases/usecase.dart';
 import '../../../domain/entities/weight_goal_entity.dart';
 import '../../../domain/usecases/create_weight_goal_usecase.dart';
 import '../../../domain/usecases/get_weight_goal_usecase.dart';
+import '../../../domain/usecases/update_weight_goal_usecase.dart';
 
 part 'weight_goal_state.dart';
 
 class WeightGoalCubit extends Cubit<WeightGoalState> {
   final GetWeightGoalUseCase getWeightGoalUseCase;
   final CreateWeightGoalUseCase createWeightGoalUseCase;
+  final UpdateWeightGoalUseCase updateWeightGoalUseCase;
 
   WeightGoalCubit({
     required this.getWeightGoalUseCase,
     required this.createWeightGoalUseCase,
+    required this.updateWeightGoalUseCase,
   }) : super(WeightGoalInitial());
 
   Future<WeightGoalEntity?> getWeightGoal() async {
@@ -69,6 +72,30 @@ class WeightGoalCubit extends Cubit<WeightGoalState> {
       ));
 
       return weightGoal;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<WeightGoalEntity> updateWeightGoal({
+    required WeightGoalEntity newWeightGoal,
+  }) async {
+    try {
+      final result = await updateWeightGoalUseCase.call(
+        UpdateWeightGoalUseCaseParams(
+          startingDate: newWeightGoal.startingDate,
+          startingWeight: newWeightGoal.startingWeight,
+          targetWeight: newWeightGoal.targetWeight,
+          activityLevel: newWeightGoal.activityLevel,
+          pace: newWeightGoal.pace,
+        ),
+      );
+
+      emit(WeightGoalLoaded(
+        weightGoal: result,
+      ));
+
+      return result;
     } catch (_) {
       rethrow;
     }

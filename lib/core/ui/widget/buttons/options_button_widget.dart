@@ -13,12 +13,14 @@ class OptionButtonItem {
   final String? description;
   final bool? isHideArrowIcon;
   final Function() onTap;
+  final bool? isDisabled;
 
   OptionButtonItem({
     required this.label,
     this.description,
     this.isHideArrowIcon,
     required this.onTap,
+    this.isDisabled,
   });
 }
 
@@ -59,6 +61,7 @@ class OptionsButtonWidget extends StatelessWidget {
           description: item.description,
           isHideArrowIcon: item.isHideArrowIcon,
           onTap: item.onTap,
+          isDisabled: item.isDisabled,
         );
       },
     );
@@ -71,6 +74,7 @@ class _ItemWidget extends StatefulWidget {
   final String label;
   final String? description;
   final bool? isHideArrowIcon;
+  final bool? isDisabled;
 
   final Function() onTap;
 
@@ -81,6 +85,7 @@ class _ItemWidget extends StatefulWidget {
     this.description,
     this.isHideArrowIcon,
     required this.onTap,
+    required this.isDisabled,
   });
 
   @override
@@ -94,10 +99,12 @@ class _ItemWidgetState extends State<_ItemWidget> {
     final colorScheme = context.theme.appColorScheme;
 
     return Material(
-      color: colorScheme.white,
+      color: (widget.isDisabled == true)
+          ? colorScheme.surfaceDim
+          : colorScheme.white,
       borderRadius: widget.borderRadius,
       child: InkWell(
-        onTap: widget.onTap,
+        onTap: widget.isDisabled == true ? null : widget.onTap,
         borderRadius: widget.borderRadius,
         child: Container(
           padding: const EdgeInsets.all(16),

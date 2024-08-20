@@ -1,3 +1,5 @@
+import 'package:akasia365mc/core/ui/extensions/weight_goal_pace_extension.dart';
+
 import '../../../../core/config/env_config.dart';
 import '../../../../core/network/http/app_http_client.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
@@ -27,6 +29,14 @@ abstract class WeightGoalRemoteDataSource {
     required String accessToken,
     required double? weight,
     required DateTime? date,
+  });
+  Future<WeightGoalModel> updateWeightGoal({
+    required String accessToken,
+    required String? startingDate,
+    required double? startingWeight,
+    required double? targetWeight,
+    required String? activityLevel,
+    required WeightGoalPace? pace,
   });
 }
 
@@ -161,6 +171,44 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
       );
     } catch (error) {
       Logger.error('updateWeight error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<WeightGoalModel> updateWeightGoal({
+    required String accessToken,
+    required String? startingDate,
+    required double? startingWeight,
+    required double? targetWeight,
+    required String? activityLevel,
+    required WeightGoalPace? pace,
+  }) async {
+    try {
+      Logger.info(
+          'updateWeightGoal params: accessToken $accessToken, startingDate $startingDate, startingWeight $startingWeight, targetWeight $targetWeight, activityLevel $activityLevel, pace $pace');
+
+      final response = await appHttpClient.patch(
+        url: "${EnvConfig.akasiaFitnessApiUrl}/weight-goal",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        data: {
+          "starting_date": startingDate,
+          "starting_weight": startingWeight,
+          "target_weight": targetWeight,
+          "activity_level": activityLevel,
+          "pace": pace?.title,
+        },
+      );
+      Logger.success('updateWeightGoal response: $response');
+
+      return WeightGoalModel.fromJson(
+        response.data?['data'],
+      );
+    } catch (error) {
+      Logger.error('updateWeightGoal error: $error');
 
       rethrow;
     }

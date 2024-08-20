@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../common/local_picker_info.dart';
 import '../../utils/service_locator.dart';
 import '../widget/dialogs/toast_info.dart';
 import '../widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
@@ -149,6 +150,23 @@ extension BuildContextExtension on BuildContext {
       return ScreenHeightType.medium;
     } else {
       return ScreenHeightType.large;
+    }
+  }
+
+  Future<DateTime?> selectDate({
+    DateTime? initialDate,
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) async {
+    try {
+      return await sl<LocalPickerInfo>().selectDate(
+        context: this,
+        initialDate: initialDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+      );
+    } catch (_) {
+      rethrow;
     }
   }
 }
