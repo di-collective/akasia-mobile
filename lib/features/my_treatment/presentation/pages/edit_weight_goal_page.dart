@@ -6,14 +6,18 @@ import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/double_extension.dart';
+import '../../../../core/ui/extensions/dynamic_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/buttons/options_button_widget.dart';
+import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
+import '../../../../core/utils/service_locator.dart';
 import '../../domain/entities/weight_goal_entity.dart';
 import '../cubit/weight_goal/weight_goal_cubit.dart';
+import '../widgets/edit_start_weight_body_widget.dart';
 
 class EditWeightGoalPage extends StatefulWidget {
   const EditWeightGoalPage({super.key});
@@ -87,7 +91,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
             final targetDate = state.weightGoal?.targetDate?.toDateTime();
             if (targetDate != null) {
               formmatedTargetDate = targetDate.formatDate(
-                    format: "dd MMMM yyyy",
+                    format: "MMMM dd, yyyy",
                   ) ??
                   "";
             }
@@ -266,17 +270,59 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
         return;
       }
 
-      // update weight goal
-      await _onUpdateWeightGoal(
-        startingDate: selectedDate,
+      // TODO: if weight on selected date is null, show _onStartWeight to fill it
+      context.showWarningToast(
+        message:
+            "Your weight on this date is not available. Please fill weight on selected date.",
       );
+      final isSuccess = await _onStartWeight(
+        newStartingDate: selectedDate, // also update starting date
+      );
+      if (isSuccess != true) {
+        return;
+      }
+
+      // // update weight goal
+      // await _onUpdateWeightGoal(
+      //   startingDate: selectedDate,
+      // );
     } catch (_) {
       rethrow;
     }
   }
 
-  Future<void> _onStartWeight() async {
-    // TODO: Implement _onStartWeight
+  Future<bool?> _onStartWeight({
+    DateTime? newStartingDate,
+  }) async {
+    try {
+      // show confirmation dialog
+      return await sl<BottomSheetInfo>().showMaterialModal(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: context.viewInsetsBottom,
+            ),
+            child: EditStartWeightBodyWidget(
+              onSave: (value) async {
+                final isSuccess = await _onUpdateWeightGoal(
+                  startingWeight: value.dynamicToDouble,
+                  startingDate: newStartingDate,
+                );
+                if (isSuccess != true) {
+                  return;
+                }
+
+                // close dialog
+                Navigator.of(context).pop(isSuccess);
+              },
+            ),
+          );
+        },
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<void> _onCurrentWeight() async {

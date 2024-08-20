@@ -1,3 +1,4 @@
+import 'package:akasia365mc/core/ui/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -94,7 +95,7 @@ class _TextFormWidgetState extends State<TextFormWidget> {
         if (widget.title != null) ...[
           Text.rich(
             TextSpan(
-              text: widget.title,
+              text: widget.title?.toCapitalizes(),
               children: [
                 if (widget.isRequired == true)
                   TextSpan(

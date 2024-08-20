@@ -516,5 +516,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "value": "value"
 }
