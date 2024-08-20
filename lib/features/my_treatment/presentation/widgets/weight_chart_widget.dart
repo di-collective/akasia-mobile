@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/asset_path.dart';
+import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/double_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
@@ -419,7 +420,10 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
   }
 
   void _onEditWeight() {
-    // TODO: implement _onEditWeight
+    // go to edit weight goal
+    context.goNamed(
+      AppRoute.editWeightGoal.name,
+    );
   }
 
   Future<void> _onRecordWeight() async {

@@ -1,7 +1,6 @@
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,9 +10,9 @@ import '../../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../../core/ui/extensions/duration_extension.dart';
 import '../../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../../core/ui/theme/dimens.dart';
+import '../../../../../core/ui/widget/buttons/option_button_item_widget.dart';
 import '../../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../cubit/workout/workout_cubit.dart';
-import '../../widgets/option_button_item_widget.dart';
 import '../../widgets/weekly_chart_widget.dart';
 
 class WorkoutPage extends StatefulWidget {
@@ -212,20 +211,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
             const SizedBox(
               height: 8,
             ),
-            OptionButtonItemWidget(
-              title: context.locale.showAllData,
-              onTap: _onShowAllData,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            const Divider(),
-            OptionButtonItemWidget(
-              title: context.locale.dataSourceAndAccess,
-              onTap: _onDataSourceAndAccess,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
+            OptionsButtonWidget(
+              items: [
+                OptionButtonItem(
+                  label: context.locale.showAllData,
+                  onTap: _onShowAllData,
+                ),
+                OptionButtonItem(
+                  label: context.locale.dataSourceAndAccess,
+                  onTap: _onDataSourceAndAccess,
+                ),
+              ],
             ),
             SizedBox(
               height: context.paddingBottom,

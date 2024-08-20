@@ -9,8 +9,8 @@ import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/buttons/option_button_item_widget.dart';
 import '../cubit/heart_rate/heart_rate_cubit.dart';
-import '../widgets/option_button_item_widget.dart';
 import '../widgets/weekly_chart_widget.dart';
 
 class HeartRatePage extends StatefulWidget {
@@ -47,8 +47,8 @@ class _HeartRatePageState extends State<HeartRatePage> {
               builder: (context, state) {
                 final List<DateTime> dates = [];
                 final List<BarChartGroupData> barGroups = [];
-                int? minHeartRate;
-                int? maxHeartRate;
+                int minHeartRate = 0;
+                int maxHeartRate = 0;
                 if (state is HeartRateLoaded) {
                   final dataInWeek = state.getCurrentWeekData();
                   if (dataInWeek.isNotEmpty) {
@@ -82,15 +82,11 @@ class _HeartRatePageState extends State<HeartRatePage> {
                       }
 
                       // set min and max heart rate for the week
-                      if (minHeartRate == null) {
-                        minHeartRate = currentMinHeartRate;
-                      } else if (currentMinHeartRate != null &&
+                      if (currentMinHeartRate != null &&
                           currentMinHeartRate < minHeartRate) {
                         minHeartRate = currentMinHeartRate;
                       }
-                      if (maxHeartRate == null) {
-                        maxHeartRate = currentMaxHeartRate;
-                      } else if (currentMaxHeartRate != null &&
+                      if (currentMaxHeartRate != null &&
                           currentMaxHeartRate > maxHeartRate) {
                         maxHeartRate = currentMaxHeartRate;
                       }
@@ -204,20 +200,17 @@ class _HeartRatePageState extends State<HeartRatePage> {
             const SizedBox(
               height: 8,
             ),
-            OptionButtonItemWidget(
-              title: context.locale.showAllData,
-              onTap: _onShowAllData,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            const Divider(),
-            OptionButtonItemWidget(
-              title: context.locale.dataSourceAndAccess,
-              onTap: _onDataSourceAndAccess,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
+            OptionsButtonWidget(
+              items: [
+                OptionButtonItem(
+                  label: context.locale.showAllData,
+                  onTap: _onShowAllData,
+                ),
+                OptionButtonItem(
+                  label: context.locale.dataSourceAndAccess,
+                  onTap: _onDataSourceAndAccess,
+                ),
+              ],
             ),
             SizedBox(
               height: context.paddingBottom,

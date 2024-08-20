@@ -46,13 +46,21 @@ class ButtonWidget extends StatelessWidget {
     final colorScheme = context.theme.appColorScheme;
 
     return SizedBox(
-      height: height,
+      height: _height,
       width: width,
       child: buttonWidget(
         textTheme: textTheme,
         colorScheme: colorScheme,
       ),
     );
+  }
+
+  double? get _height {
+    if (height != null) {
+      return height;
+    }
+
+    return 48;
   }
 
   Widget buttonWidget({
@@ -96,9 +104,7 @@ class ButtonWidget extends StatelessWidget {
         overlayColor: MaterialStateProperty.all(
           overlayColor,
         ),
-        padding: MaterialStateProperty.all(
-          padding ?? const EdgeInsets.all(13),
-        ),
+        padding: _padding,
         elevation: MaterialStateProperty.all(elevation ?? 0),
         backgroundColor: MaterialStateProperty.all(
           buttonBackgroundColor(colorScheme: colorScheme),
@@ -196,5 +202,13 @@ class ButtonWidget extends StatelessWidget {
     }
 
     return BorderSide.none;
+  }
+
+  MaterialStateProperty<EdgeInsetsGeometry?>? get _padding {
+    if (padding != null) {
+      return MaterialStateProperty.all(padding);
+    }
+
+    return null;
   }
 }

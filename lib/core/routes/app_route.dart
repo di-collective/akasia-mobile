@@ -23,6 +23,7 @@ enum AppRoute {
   giveRating,
   writeReview,
   createWeightGoal,
+  editWeightGoal,
   createAppointment,
   mySchedule,
   dietPlan,

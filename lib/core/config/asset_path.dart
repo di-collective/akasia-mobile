@@ -68,4 +68,5 @@ class AssetIconsPath {
   static String icTakeoutDining = 'ic_takeout_dining.svg'.iconAsset;
   static String icArrowCircleDown = 'ic_arrow_circle_down.svg'.iconAsset;
   static String icArrowCircleUp = 'ic_arrow_circle_up.svg'.iconAsset;
+  static String icWarningCircle = 'ic_warning_circle.svg'.iconAsset;
 }

@@ -119,6 +119,14 @@
   "photoLibrary": "Photo Library",
   "information": "Information",
   "edit": "Edit",
+  "editItem": "edit {item}",
+  "@editItem": {
+      "placeholders": {
+          "item": {
+              "type": "String"
+          }
+      }
+  },
   "membershipId": "Membership ID",
   "age": "Age",
   "dob": "DOB",
@@ -480,5 +488,33 @@
   "selectAWeightLossPlan": "select a weight loss plan",
   "recommendForYou": "recommended for you",
   "notRecomended": "not recommended",
-  "noUpcomingSchedule": "no upcoming schedule"
+  "noUpcomingSchedule": "no upcoming schedule",
+  "start": "start",
+  "startItem": "start {item}",
+  "@startItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "current": "current",
+  "currentItem": "current {item}",
+  "@currentItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "pacing": "pacing",
+  "goal": "goal",
+  "goalItem": "goal {item}",
+  "@goalItem": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  }
 }
