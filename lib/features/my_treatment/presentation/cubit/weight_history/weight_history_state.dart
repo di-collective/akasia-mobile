@@ -26,6 +26,14 @@ final class WeightHistoryLoaded extends WeightHistoryState {
     );
   }
 
+  WeightHistoryEntity? get latestHistory {
+    if (histories.isEmpty) {
+      return null;
+    }
+
+    return histories.first;
+  }
+
   @override
   List<Object> get props => [histories];
 }
