@@ -129,6 +129,7 @@ class _ItemWidget extends StatelessWidget {
       onTap: () {
         onTap(activityLevel);
       },
+      overlayColor: MaterialStateProperty.all(colorScheme.primaryTonal),
       borderRadius: BorderRadius.circular(
         AppRadius.medium,
       ),

@@ -21,6 +21,7 @@ import '../cubit/weight_goal/weight_goal_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
 import '../widgets/edit_activity_level_body_widget.dart';
 import '../widgets/edit_current_weight_body_widget.dart';
+import '../widgets/edit_pacing_body_widget.dart';
 import '../widgets/edit_start_weight_body_widget.dart';
 import '../widgets/edit_target_weight_body_widget.dart';
 
@@ -224,7 +225,16 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                     OptionButtonItem(
                       label: context.locale.pacing.toCapitalizes(),
                       description: formmatedPacing,
-                      onTap: _onPacing,
+                      onTap: () {
+                        _onPacing(
+                          currentStartingWeight:
+                              currentWeightGoal?.startingWeight,
+                          currentTargetWeight: currentWeightGoal?.targetWeight,
+                          currentPacing: currentWeightGoal?.pace,
+                          currentActivityLevel:
+                              currentWeightGoal?.activityLevel,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -476,8 +486,44 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
     }
   }
 
-  Future<void> _onPacing() async {
-    // TODO: Implement _onPacing
+  Future<void> _onPacing({
+    required double? currentStartingWeight,
+    required double? currentTargetWeight,
+    required WeightGoalPace? currentPacing,
+    required WeightGoalActivityLevel? currentActivityLevel,
+  }) async {
+    try {
+      // show confirmation dialog
+      return await sl<BottomSheetInfo>().showMaterialModal(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: context.viewInsetsBottom,
+            ),
+            child: EditPacingBodyWidget(
+              currentStartingWeight: currentStartingWeight,
+              currentTargetWeight: currentTargetWeight,
+              currentPacing: currentPacing,
+              currentActivityLevel: currentActivityLevel,
+              onSave: (value) async {
+                final isSuccess = await _onUpdateWeightGoal(
+                  pace: value,
+                );
+                if (isSuccess != true) {
+                  return;
+                }
+
+                // close dialog
+                Navigator.of(context).pop(isSuccess);
+              },
+            ),
+          );
+        },
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<bool?> _onUpdateWeightGoal({
