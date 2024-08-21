@@ -21,7 +21,7 @@ class WeightTextFormWidget extends TextFormWidget {
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,
           ),
-          suffixText: "kg",
+          suffixText: "kgs",
           validator: (val) {
             return controller?.validateWeight(
               context: context,

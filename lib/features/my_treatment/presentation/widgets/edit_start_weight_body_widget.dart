@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/double_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import 'edit_weight_body_widget.dart';
 
 class EditStartWeightBodyWidget extends StatefulWidget {
+  final double? currentStartWeight;
   final Function(String value) onSave;
 
   const EditStartWeightBodyWidget({
     super.key,
+    required this.currentStartWeight,
     required this.onSave,
   });
 
@@ -21,6 +24,18 @@ class EditStartWeightBodyWidget extends StatefulWidget {
 class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _startWeightTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  void _init() {
+    _startWeightTextController.text =
+        widget.currentStartWeight?.parseToString ?? "";
+  }
 
   @override
   void dispose() {

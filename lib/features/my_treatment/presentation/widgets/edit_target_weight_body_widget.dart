@@ -6,26 +6,25 @@ import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import 'edit_weight_body_widget.dart';
 
-class EditCurrentWeightBodyWidget extends StatefulWidget {
-  final double? currentWeight;
-
+class EditTargetWeightBodyWidget extends StatefulWidget {
+  final double? currentTargetWeight;
   final Function(String value) onSave;
 
-  const EditCurrentWeightBodyWidget({
+  const EditTargetWeightBodyWidget({
     super.key,
-    required this.currentWeight,
+    required this.currentTargetWeight,
     required this.onSave,
   });
 
   @override
-  State<EditCurrentWeightBodyWidget> createState() =>
-      _EditCurrentWeightBodyWidgetState();
+  State<EditTargetWeightBodyWidget> createState() =>
+      _EditTargetWeightBodyWidgetState();
 }
 
-class _EditCurrentWeightBodyWidgetState
-    extends State<EditCurrentWeightBodyWidget> {
+class _EditTargetWeightBodyWidgetState
+    extends State<EditTargetWeightBodyWidget> {
   final _formKey = GlobalKey<FormState>();
-  final _currentWeightTextController = TextEditingController();
+  final _targetWeightTextController = TextEditingController();
 
   @override
   void initState() {
@@ -35,17 +34,15 @@ class _EditCurrentWeightBodyWidgetState
   }
 
   void _init() {
-    if (widget.currentWeight != null) {
-      _currentWeightTextController.text =
-          widget.currentWeight?.parseToString ?? "";
-    }
+    _targetWeightTextController.text =
+        widget.currentTargetWeight?.parseToString ?? "";
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    _currentWeightTextController.dispose();
+    _targetWeightTextController.dispose();
   }
 
   @override
@@ -66,8 +63,8 @@ class _EditCurrentWeightBodyWidgetState
           children: [
             WeightTextFormWidget(
               context: context,
-              controller: _currentWeightTextController,
-              title: context.locale.currentItem(
+              controller: _targetWeightTextController,
+              title: context.locale.goalItem(
                 context.locale.weight,
               ),
               isRequired: true,
@@ -85,6 +82,6 @@ class _EditCurrentWeightBodyWidgetState
       return;
     }
 
-    widget.onSave(_currentWeightTextController.text);
+    widget.onSave(_targetWeightTextController.text);
   }
 }

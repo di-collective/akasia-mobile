@@ -20,6 +20,7 @@ import '../cubit/weight_goal/weight_goal_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
 import '../widgets/edit_current_weight_body_widget.dart';
 import '../widgets/edit_start_weight_body_widget.dart';
+import '../widgets/edit_target_weight_body_widget.dart';
 
 class EditWeightGoalPage extends StatefulWidget {
   const EditWeightGoalPage({super.key});
@@ -43,19 +44,22 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
       backgroundColor: colorScheme.surfaceBright,
       body: BlocBuilder<WeightGoalCubit, WeightGoalState>(
         builder: (context, state) {
+          WeightGoalEntity? currentWeightGoal;
+
           DateTime? startDate;
           String formmatedStartDate = "";
           String formmatedStartWeight = "0";
           bool isStartDateSameAsToday = false;
 
-          String formmatedGoalWeight = "0";
+          String formmatedTargetWeight = "0";
           String formmatedActivityLevel = "";
           String formmatedPacing = "";
           String formmatedTargetDate = "";
           String formattedCaloriesToMaintain = "0";
 
           if (state is WeightGoalLoaded) {
-            startDate = state.weightGoal?.startingDate?.toDateTime();
+            currentWeightGoal = state.weightGoal;
+            startDate = currentWeightGoal?.startingDate?.toDateTime();
             if (startDate != null) {
               formmatedStartDate = startDate.formatDate(
                     format: "dd MMM yyyy",
@@ -69,27 +73,27 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
               );
             }
 
-            final startWeight = state.weightGoal?.startingWeight;
+            final startWeight = currentWeightGoal?.startingWeight;
             if (startWeight != null) {
               formmatedStartWeight = startWeight.parseToString;
             }
 
-            final goalWeight = state.weightGoal?.targetWeight;
+            final goalWeight = currentWeightGoal?.targetWeight;
             if (goalWeight != null) {
-              formmatedGoalWeight = goalWeight.parseToString;
+              formmatedTargetWeight = goalWeight.parseToString;
             }
 
-            final activityLevel = state.weightGoal?.activityLevel;
+            final activityLevel = currentWeightGoal?.activityLevel;
             if (activityLevel != null) {
               formmatedActivityLevel = activityLevel.toCapitalizes();
             }
 
-            final pacing = state.weightGoal?.pace;
+            final pacing = currentWeightGoal?.pace;
             if (pacing != null) {
               formmatedPacing = pacing.title;
             }
 
-            final targetDate = state.weightGoal?.targetDate?.toDateTime();
+            final targetDate = currentWeightGoal?.targetDate?.toDateTime();
             if (targetDate != null) {
               formmatedTargetDate = targetDate.formatDate(
                     format: "MMMM dd, yyyy",
@@ -97,7 +101,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                   "";
             }
 
-            final caloriesToMaintain = state.weightGoal?.caloriesToMaintain;
+            final caloriesToMaintain = currentWeightGoal?.caloriesToMaintain;
             if (caloriesToMaintain != null) {
               formattedCaloriesToMaintain = caloriesToMaintain.parseToString;
             }
@@ -121,9 +125,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                           )
                           .toCapitalizes(),
                       description: formmatedStartDate,
-                      onTap: () => _onStartDate(
-                        currentStartDate: startDate,
-                      ),
+                      onTap: () {
+                        _onStartDate(
+                          currentStartDate: startDate,
+                          currentStartWeight: currentWeightGoal?.startingWeight,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -154,7 +161,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                               .toCapitalizes(),
                           description: "$formmatedStartWeight kgs",
                           isDisabled: isStartDateSameAsToday,
-                          onTap: _onStartWeight,
+                          onTap: () {
+                            _onStartWeight(
+                              currentStartWeight:
+                                  currentWeightGoal?.startingWeight,
+                            );
+                          },
                         ),
                         OptionButtonItem(
                           label: context.locale
@@ -183,8 +195,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                             context.locale.weight,
                           )
                           .toCapitalizes(),
-                      description: "$formmatedGoalWeight kgs",
-                      onTap: _onGoalWeight,
+                      description: "$formmatedTargetWeight kgs",
+                      onTap: () {
+                        _onGoalWeight(
+                          currentTargetWeight: currentWeightGoal?.targetWeight,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -271,6 +287,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
   }
 
   Future<void> _onStartDate({
+    required double? currentStartWeight,
     required DateTime? currentStartDate,
   }) async {
     try {
@@ -296,6 +313,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
             "Your weight on this date is not available. Please fill weight on selected date.",
       );
       final isSuccess = await _onStartWeight(
+        currentStartWeight: currentStartWeight,
         newStartingDate: selectedDate, // also update starting date
       );
       if (isSuccess != true) {
@@ -312,6 +330,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
   }
 
   Future<bool?> _onStartWeight({
+    required double? currentStartWeight,
     DateTime? newStartingDate,
   }) async {
     try {
@@ -324,6 +343,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
               bottom: context.viewInsetsBottom,
             ),
             child: EditStartWeightBodyWidget(
+              currentStartWeight: currentStartWeight,
               onSave: (value) async {
                 final isSuccess = await _onUpdateWeightGoal(
                   startingWeight: value.parseToDouble,
@@ -359,7 +379,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
               bottom: context.viewInsetsBottom,
             ),
             child: EditCurrentWeightBodyWidget(
-              defaultValue: currentWeight,
+              currentWeight: currentWeight,
               onSave: (value) async {
                 final isSuccess = await _onUpdateCurrentWeight(
                   currentWeightDate: currentWeightDate,
@@ -381,8 +401,38 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
     }
   }
 
-  Future<void> _onGoalWeight() async {
-    // TODO: Implement _onGoalWeight
+  Future<void> _onGoalWeight({
+    required double? currentTargetWeight,
+  }) async {
+    try {
+      // show confirmation dialog
+      return await sl<BottomSheetInfo>().showMaterialModal(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: context.viewInsetsBottom,
+            ),
+            child: EditTargetWeightBodyWidget(
+              currentTargetWeight: currentTargetWeight,
+              onSave: (value) async {
+                final isSuccess = await _onUpdateWeightGoal(
+                  targetWeight: value.parseToDouble,
+                );
+                if (isSuccess != true) {
+                  return;
+                }
+
+                // close dialog
+                Navigator.of(context).pop(isSuccess);
+              },
+            ),
+          );
+        },
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<void> _onActivityLevel() async {
