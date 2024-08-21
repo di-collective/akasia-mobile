@@ -1,6 +1,7 @@
 import '../../../../core/common/exception.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/ui/extensions/app_exception_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../auth/data/datasources/local/auth_local_datasource.dart';
 import '../../domain/entities/weight_goal_entity.dart';
@@ -162,7 +163,7 @@ class WeightGoalRepositoryImpl extends WeightGoalRepository {
     required String? startingDate,
     required double? startingWeight,
     required double? targetWeight,
-    required String? activityLevel,
+    required WeightGoalActivityLevel? activityLevel,
     required WeightGoalPace? pace,
   }) async {
     if (await networkInfo.isConnected) {

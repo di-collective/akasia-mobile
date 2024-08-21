@@ -1,3 +1,4 @@
+import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../entities/weight_goal_entity.dart';
@@ -27,7 +28,7 @@ class UpdateWeightGoalUseCaseParams {
   final String? startingDate;
   final double? startingWeight;
   final double? targetWeight;
-  final String? activityLevel;
+  final WeightGoalActivityLevel? activityLevel;
   final WeightGoalPace? pace;
 
   UpdateWeightGoalUseCaseParams({

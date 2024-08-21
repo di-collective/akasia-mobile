@@ -1,3 +1,4 @@
+import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../entities/weight_goal_entity.dart';
 import '../entities/weight_goal_simulation_entity.dart';
@@ -24,7 +25,7 @@ abstract class WeightGoalRepository {
     required String? startingDate,
     required double? startingWeight,
     required double? targetWeight,
-    required String? activityLevel,
+    required WeightGoalActivityLevel? activityLevel,
     required WeightGoalPace? pace,
   });
 }

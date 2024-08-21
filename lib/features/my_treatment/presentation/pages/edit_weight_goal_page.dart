@@ -9,6 +9,7 @@ import '../../../../core/ui/extensions/double_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/buttons/options_button_widget.dart';
@@ -18,6 +19,7 @@ import '../../domain/entities/weight_goal_entity.dart';
 import '../../domain/entities/weight_history_entity.dart';
 import '../cubit/weight_goal/weight_goal_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
+import '../widgets/edit_activity_level_body_widget.dart';
 import '../widgets/edit_current_weight_body_widget.dart';
 import '../widgets/edit_start_weight_body_widget.dart';
 import '../widgets/edit_target_weight_body_widget.dart';
@@ -85,7 +87,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
 
             final activityLevel = currentWeightGoal?.activityLevel;
             if (activityLevel != null) {
-              formmatedActivityLevel = activityLevel.toCapitalizes();
+              formmatedActivityLevel = activityLevel.title.toCapitalizes();
             }
 
             final pacing = currentWeightGoal?.pace;
@@ -212,7 +214,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                     OptionButtonItem(
                       label: context.locale.activityLevel,
                       description: formmatedActivityLevel,
-                      onTap: _onActivityLevel,
+                      onTap: () {
+                        _onActivityLevel(
+                          currentActivityLevel:
+                              currentWeightGoal?.activityLevel,
+                        );
+                      },
                     ),
                     OptionButtonItem(
                       label: context.locale.pacing.toCapitalizes(),
@@ -435,8 +442,38 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
     }
   }
 
-  Future<void> _onActivityLevel() async {
-    // TODO: Implement _onActivityLevel
+  Future<void> _onActivityLevel({
+    required WeightGoalActivityLevel? currentActivityLevel,
+  }) async {
+    try {
+      // show confirmation dialog
+      return await sl<BottomSheetInfo>().showMaterialModal(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: context.viewInsetsBottom,
+            ),
+            child: EditActivityLevelBodyWidget(
+              currentActivityLevel: currentActivityLevel,
+              onSave: (value) async {
+                final isSuccess = await _onUpdateWeightGoal(
+                  activityLevel: value,
+                );
+                if (isSuccess != true) {
+                  return;
+                }
+
+                // close dialog
+                Navigator.of(context).pop(isSuccess);
+              },
+            ),
+          );
+        },
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<void> _onPacing() async {
@@ -447,7 +484,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
     DateTime? startingDate,
     double? startingWeight,
     double? targetWeight,
-    String? activityLevel,
+    WeightGoalActivityLevel? activityLevel,
     WeightGoalPace? pace,
   }) async {
     try {

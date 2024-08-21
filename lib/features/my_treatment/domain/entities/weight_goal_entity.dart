@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_flag_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 
@@ -8,7 +9,7 @@ class WeightGoalEntity extends Equatable {
   final String? startingDate;
   final double? targetWeight;
   final String? targetDate;
-  final String? activityLevel;
+  final WeightGoalActivityLevel? activityLevel;
   final double? dailyCaloriesBudget;
   final double? caloriesToMaintain;
   final WeightGoalFlag? flag;

@@ -1,12 +1,12 @@
-import 'package:akasia365mc/core/ui/extensions/weight_goal_pace_extension.dart';
-
 import '../../../../core/config/env_config.dart';
 import '../../../../core/network/http/app_http_client.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../core/utils/logger.dart';
-import '../models/weight_history_model.dart';
 import '../models/weight_goal_model.dart';
 import '../models/weight_goal_simulation_model.dart';
+import '../models/weight_history_model.dart';
 
 abstract class WeightGoalRemoteDataSource {
   Future<WeightGoalModel> getWeightGoal({
@@ -35,7 +35,7 @@ abstract class WeightGoalRemoteDataSource {
     required String? startingDate,
     required double? startingWeight,
     required double? targetWeight,
-    required String? activityLevel,
+    required WeightGoalActivityLevel? activityLevel,
     required WeightGoalPace? pace,
   });
 }
@@ -182,7 +182,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
     required String? startingDate,
     required double? startingWeight,
     required double? targetWeight,
-    required String? activityLevel,
+    required WeightGoalActivityLevel? activityLevel,
     required WeightGoalPace? pace,
   }) async {
     try {
@@ -198,7 +198,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
           "starting_date": startingDate,
           "starting_weight": startingWeight,
           "target_weight": targetWeight,
-          "activity_level": activityLevel,
+          "activity_level": activityLevel?.title,
           "pace": pace?.title,
         },
       );

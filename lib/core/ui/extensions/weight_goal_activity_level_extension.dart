@@ -36,6 +36,20 @@ extension WeightGoalActivityLevelExtension on WeightGoalActivityLevel {
     }
   }
 
+  // TODO: Implement icon path
+  String get iconPath {
+    switch (this) {
+      case WeightGoalActivityLevel.sedentary:
+        return "";
+      case WeightGoalActivityLevel.lightlyActive:
+        return "";
+      case WeightGoalActivityLevel.moderatelyActive:
+        return "";
+      case WeightGoalActivityLevel.veryActive:
+        return "";
+    }
+  }
+
   static WeightGoalActivityLevel? fromString(String? value) {
     if (value == null) {
       return null;
