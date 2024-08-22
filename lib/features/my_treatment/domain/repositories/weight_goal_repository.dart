@@ -28,4 +28,10 @@ abstract class WeightGoalRepository {
     required WeightGoalActivityLevel? activityLevel,
     required WeightGoalPace? pace,
   });
+  Future<List<WeightHistoryEntity>> getWeightHistory({
+    int? page,
+    int? limit,
+    DateTime? fromDate,
+    DateTime? toDate,
+  });
 }

@@ -17,6 +17,8 @@ import '../../../../core/ui/theme/text_theme.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
 import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../../../account/domain/entities/profile_entity.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
 import 'record_weight_body_widget.dart';
 
@@ -429,7 +431,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
   Future<void> _onRecordWeight() async {
     try {
       // show confirmation dialog
-      final isSuccess = await sl<BottomSheetInfo>().showMaterialModal(
+      await sl<BottomSheetInfo>().showMaterialModal(
         context: context,
         builder: (context) {
           return Padding(
@@ -456,12 +458,6 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
           );
         },
       );
-      if (isSuccess != true) {
-        return;
-      }
-
-      // close this page
-      context.pop();
     } catch (error) {
       context.showErrorToast(
         message: error.message(context),
@@ -478,11 +474,22 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
       context.showFullScreenLoading();
 
       // update weight
-      final weight = value.toDouble();
+      final newWeight = value.toDouble();
       await BlocProvider.of<WeightHistoryCubit>(context).updateWeight(
-        weight: weight,
+        weight: newWeight,
         date: date,
       );
+
+      final profileState = BlocProvider.of<ProfileCubit>(context).state;
+      if (profileState is ProfileLoaded) {
+        // update weight on profile
+        await BlocProvider.of<ProfileCubit>(context).updateProfile(
+          newProfile: ProfileEntity(
+            userId: profileState.profile.userId,
+            weight: newWeight,
+          ),
+        );
+      }
 
       // show success message
       context.showSuccessToast(

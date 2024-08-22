@@ -38,6 +38,13 @@ abstract class WeightGoalRemoteDataSource {
     required WeightGoalActivityLevel? activityLevel,
     required WeightGoalPace? pace,
   });
+  Future<List<WeightHistoryModel>> getWeightHistory({
+    required String accessToken,
+    int? page,
+    int? limit,
+    DateTime? fromDate,
+    DateTime? toDate,
+  });
 }
 
 class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
@@ -209,6 +216,50 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
       );
     } catch (error) {
       Logger.error('updateWeightGoal error: $error');
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<WeightHistoryModel>> getWeightHistory({
+    required String accessToken,
+    int? page,
+    int? limit,
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) async {
+    try {
+      Logger.info(
+          'getWeightHistory params: accessToken $accessToken, page $page, limit $limit, fromDate $fromDate, toDate $toDate');
+
+      final response = await appHttpClient.get(
+        url: "${EnvConfig.akasiaFitnessApiUrl}/weight-history",
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        queryParameters: {
+          "page": page,
+          "limit": limit,
+          "from": fromDate?.formatDate(
+            format: 'yyyy-MM-dd',
+          ),
+          "to": toDate?.formatDate(
+            format: 'yyyy-MM-dd',
+          ),
+        },
+      );
+      Logger.success('getWeightHistory response: $response');
+
+      final data = (response.data?['data'] is List)
+          ? (response.data?['data'] as List)
+          : [];
+
+      return data.map((e) {
+        return WeightHistoryModel.fromJson(e);
+      }).toList();
+    } catch (error) {
+      Logger.error('getWeightHistory error: $error');
 
       rethrow;
     }

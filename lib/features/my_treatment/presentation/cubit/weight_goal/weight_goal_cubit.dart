@@ -25,6 +25,11 @@ class WeightGoalCubit extends Cubit<WeightGoalState> {
   }) : super(WeightGoalInitial());
 
   Future<WeightGoalEntity?> getWeightGoal() async {
+    final currentState = state;
+    if (currentState is WeightGoalLoading) {
+      return null;
+    }
+
     try {
       emit(WeightGoalLoading());
 
@@ -46,6 +51,29 @@ class WeightGoalCubit extends Cubit<WeightGoalState> {
       emit(WeightGoalError(
         error: error,
       ));
+
+      rethrow;
+    }
+  }
+
+  Future<void> refreshWeightGoal() async {
+    final currentState = state;
+    if (currentState is WeightGoalLoading) {
+      return;
+    }
+
+    try {
+      final result = await getWeightGoalUseCase.call(NoParams());
+
+      emit(WeightGoalLoaded(
+        weightGoal: result,
+      ));
+    } catch (error) {
+      if (currentState is! WeightGoalLoaded) {
+        emit(WeightGoalError(
+          error: error,
+        ));
+      }
 
       rethrow;
     }

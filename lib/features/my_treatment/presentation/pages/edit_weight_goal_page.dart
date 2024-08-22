@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,6 +16,8 @@ import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/buttons/options_button_widget.dart';
 import '../../../../core/ui/widget/dialogs/bottom_sheet_info.dart';
 import '../../../../core/utils/service_locator.dart';
+import '../../../account/domain/entities/profile_entity.dart';
+import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../domain/entities/weight_goal_entity.dart';
 import '../../domain/entities/weight_history_entity.dart';
 import '../cubit/weight_goal/weight_goal_cubit.dart';
@@ -119,23 +122,32 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                OptionsButtonWidget(
-                  items: [
-                    OptionButtonItem(
-                      label: context.locale
-                          .startItem(
-                            context.locale.date,
-                          )
-                          .toCapitalizes(),
-                      description: formmatedStartDate,
-                      onTap: () {
-                        _onStartDate(
-                          currentStartDate: startDate,
-                          currentStartWeight: currentWeightGoal?.startingWeight,
-                        );
-                      },
-                    ),
-                  ],
+                BlocBuilder<WeightHistoryCubit, WeightHistoryState>(
+                  builder: (context, state) {
+                    List<WeightHistoryEntity> weightHistories = [];
+                    if (state is WeightHistoryLoaded) {
+                      weightHistories = state.histories;
+                    }
+
+                    return OptionsButtonWidget(
+                      items: [
+                        OptionButtonItem(
+                          label: context.locale
+                              .startItem(
+                                context.locale.date,
+                              )
+                              .toCapitalizes(),
+                          description: formmatedStartDate,
+                          onTap: () {
+                            _onStartDate(
+                              weightHistories: weightHistories,
+                              currentStartDate: startDate,
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -166,6 +178,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                           isDisabled: isStartDateSameAsToday,
                           onTap: () {
                             _onStartWeight(
+                              currentStartingDate: startDate,
                               currentStartWeight:
                                   currentWeightGoal?.startingWeight,
                             );
@@ -304,7 +317,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
   }
 
   Future<void> _onStartDate({
-    required double? currentStartWeight,
+    required List<WeightHistoryEntity> weightHistories,
     required DateTime? currentStartDate,
   }) async {
     try {
@@ -324,23 +337,39 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
         return;
       }
 
-      // TODO: if weight on selected date is null, show _onStartWeight to fill it
-      context.showWarningToast(
-        message:
-            "Your weight on this date is not available. Please fill weight on selected date.",
-      );
-      final isSuccess = await _onStartWeight(
-        currentStartWeight: currentStartWeight,
-        newStartingDate: selectedDate, // also update starting date
-      );
-      if (isSuccess != true) {
+      // if weight on selected starting date is null, need to update start weight too
+      final weightOnSelectedDate = weightHistories.firstWhereOrNull((element) {
+        if (element.date == null) {
+          return false;
+        }
+
+        return element.date!.isSame(
+          other: selectedDate,
+          withoutHour: true,
+          withoutSecond: true,
+        );
+      });
+
+      if (weightOnSelectedDate != null) {
+        // only update starting date
+        await _onUpdateWeightGoal(
+          startingDate: selectedDate,
+        );
         return;
       }
 
-      // // update weight goal
-      // await _onUpdateWeightGoal(
-      //   startingDate: selectedDate,
-      // );
+      // show warning toast
+      context.showWarningToast(
+        message:
+            "Your weight on this date is not available. Please fill weight on selected date.",
+        timeInSecForIosWeb: 5,
+      );
+
+      // update starting date and starting weight
+      await _onStartWeight(
+        currentStartWeight: null,
+        currentStartingDate: selectedDate,
+      );
     } catch (_) {
       rethrow;
     }
@@ -348,7 +377,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
 
   Future<bool?> _onStartWeight({
     required double? currentStartWeight,
-    DateTime? newStartingDate,
+    required DateTime? currentStartingDate,
   }) async {
     try {
       // show confirmation dialog
@@ -364,11 +393,20 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
               onSave: (value) async {
                 final isSuccess = await _onUpdateWeightGoal(
                   startingWeight: value.parseToDouble,
-                  startingDate: newStartingDate,
+                  startingDate: currentStartingDate,
                 );
                 if (isSuccess != true) {
                   return;
                 }
+
+                // emit weight history loaded
+                BlocProvider.of<WeightHistoryCubit>(context)
+                    .emitUpdateLoadedData(
+                  newWeight: WeightHistoryEntity(
+                    date: currentStartingDate,
+                    weight: value.parseToDouble,
+                  ),
+                );
 
                 // close dialog
                 Navigator.of(context).pop(isSuccess);
@@ -583,6 +621,17 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
         weight: newCurrentWeight,
         date: weightDate,
       );
+
+      final profileState = BlocProvider.of<ProfileCubit>(context).state;
+      if (profileState is ProfileLoaded) {
+        // update weight on profile
+        await BlocProvider.of<ProfileCubit>(context).updateProfile(
+          newProfile: ProfileEntity(
+            userId: profileState.profile.userId,
+            weight: newCurrentWeight,
+          ),
+        );
+      }
 
       return true;
     } catch (error) {

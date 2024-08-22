@@ -197,4 +197,42 @@ class WeightGoalRepositoryImpl extends WeightGoalRepository {
       throw const AppNetworkException();
     }
   }
+
+  @override
+  Future<List<WeightHistoryEntity>> getWeightHistory({
+    int? page,
+    int? limit,
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final accessToken = authLocalDataSource.getAccessToken();
+        if (accessToken == null) {
+          throw const AuthException(
+            code: AppExceptionType.accessTokenNotFound,
+          );
+        }
+
+        return await weightGoalRemoteDataSource.getWeightHistory(
+          accessToken: accessToken,
+          page: page,
+          limit: limit,
+          fromDate: fromDate,
+          toDate: toDate,
+        );
+      } on AuthException catch (error) {
+        throw AuthException(
+          code: error.code,
+          message: error.message,
+        );
+      } catch (error) {
+        throw AppHttpException(
+          code: error,
+        );
+      }
+    } else {
+      throw const AppNetworkException();
+    }
+  }
 }

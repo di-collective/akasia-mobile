@@ -50,11 +50,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showErrorToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.error,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -63,11 +65,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showSuccessToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.success,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -76,11 +80,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showWarningToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.warning,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -89,11 +95,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showInfoToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.info,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -103,12 +111,14 @@ extension BuildContextExtension on BuildContext {
   Future<bool?> _showToast({
     required ToastType type,
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await sl<ToastInfo>().show(
         context: this,
         type: type,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
