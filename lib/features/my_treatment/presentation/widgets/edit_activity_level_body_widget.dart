@@ -57,13 +57,14 @@ class _EditActivityLevelBodyWidgetState
             ),
           ),
           const SizedBox(
-            height: 8,
+            height: 20,
           ),
           ListView.builder(
             itemCount: WeightGoalActivityLevel.values.length,
             primary: false,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               final activityLevel = WeightGoalActivityLevel.values[index];
               final isSelected = activityLevel == _selectedActivityLevel;

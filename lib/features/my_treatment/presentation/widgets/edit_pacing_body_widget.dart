@@ -11,6 +11,7 @@ import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_activity_level_extension.dart';
+import '../../../../core/ui/extensions/weight_goal_flag_extension.dart';
 import '../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
@@ -82,6 +83,7 @@ class __BodyState extends State<_Body> {
   }
 
   void _init() {
+    // TODO: Check if last fecthed simulation is still valid with current data or not
     // get simulation
     _onGetSimulation();
   }
@@ -130,7 +132,7 @@ class __BodyState extends State<_Body> {
               ),
             ),
             const SizedBox(
-              height: 8,
+              height: 20,
             ),
             BlocBuilder<SimulationCubit, SimulationState>(
               builder: (context, state) {
@@ -145,12 +147,14 @@ class __BodyState extends State<_Body> {
                     primary: false,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
                       final pacing = pacings[index];
                       final isSelected = pacing == _selectedPacing;
 
                       return _ItemWidget(
                         pacing: pacing,
+                        flag: state.simulation.flag,
                         isSelected: isSelected,
                         onTap: _onTap,
                       );
@@ -232,11 +236,13 @@ class __BodyState extends State<_Body> {
 
 class _ItemWidget extends StatelessWidget {
   final WeightGoalPacingEntity pacing;
+  final WeightGoalFlag? flag;
   final bool isSelected;
   final Function(WeightGoalPacingEntity value) onTap;
 
   const _ItemWidget({
     required this.pacing,
+    required this.flag,
     required this.isSelected,
     required this.onTap,
   });
@@ -261,6 +267,10 @@ class _ItemWidget extends StatelessWidget {
           "";
     }
 
+    final formattedPacingTitle = pacing.pace?.title(
+      flag: flag,
+    );
+
     return InkWell(
       onTap: () {
         onTap(pacing);
@@ -281,7 +291,7 @@ class _ItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              pacing.pace?.title ?? "",
+              formattedPacingTitle?.toCapitalizes() ?? "",
               style: textTheme.labelLarge.copyWith(
                 fontWeight: FontWeight.w700,
                 color: colorScheme.onSurfaceDim,

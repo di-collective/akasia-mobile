@@ -117,11 +117,19 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
 
                   final isFirst = index == 0;
                   final isLast = index == WeightGoalPace.values.length - 1;
-                  final loosPerWeek = pace?.losePerWeek;
+                  final loosPerWeek = pace?.losePerWeek(
+                    flag: flag,
+                  );
                   final dailyCaloriesBudget = pacing.dailyCaloriesBudget;
                   final targetDate = pacing.targetDate?.toDateTime();
                   final rangeInWeeks = targetDate?.dateRangeInWeeks(
                     startDate: DateTime.now(),
+                  );
+                  final formattedPaceTitle = pacing.pace?.title(
+                    flag: flag,
+                  );
+                  final formattedPaceDescription = pacing.pace?.description(
+                    flag: flag,
                   );
 
                   return Padding(
@@ -145,7 +153,7 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                         children: [
                           Center(
                             child: Text(
-                              pacing.pace?.title ?? "",
+                              formattedPaceTitle?.toCapitalizes() ?? "",
                               style: textTheme.titleLarge.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: colorScheme.onSurfaceDim,
@@ -157,7 +165,7 @@ class _SelectPaceStepWidgetState extends State<SelectPaceStepWidget> {
                           ),
                           Center(
                             child: Text(
-                              pacing.pace?.description ?? "",
+                              formattedPaceDescription?.toCapitalize() ?? "",
                               maxLines: 3,
                               textAlign: TextAlign.center,
                               style: textTheme.bodyMedium.copyWith(
@@ -239,7 +247,6 @@ class _DetailItemWidget extends StatelessWidget {
         SvgPicture.asset(
           iconPath,
           width: 16,
-          height: 16,
         ),
         const SizedBox(
           width: 8,

@@ -78,6 +78,7 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
             onTap: _onCall,
             width: 62,
             height: 62,
+            padding: const EdgeInsets.all(16),
             backgroundColor: widget.isDisabled
                 ? colorScheme.onSurfaceBright
                 : colorScheme.primary,
@@ -87,6 +88,9 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
             borderRadius: BorderRadius.circular(99),
             child: SvgPicture.asset(
               AssetIconsPath.icCall,
+              height: 30,
+              width: 30,
+              fit: BoxFit.contain,
               colorFilter: ColorFilter.mode(
                 colorScheme.onPrimary,
                 BlendMode.srcIn,
@@ -109,17 +113,10 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
         return;
       }
 
-      try {
-        // open whatsapp
-        await sl<OpenAppInfo>().openLink(
-          url: phoneNumber.toWhatsappUrl,
-        );
-      } catch (error) {
-        // if whatsapp error, try open phone telphone
-        await sl<OpenAppInfo>().openLink(
-          url: phoneNumber.toTelpUrl,
-        );
-      }
+      // open phone telphone
+      await sl<OpenAppInfo>().openLink(
+        url: phoneNumber.toTelpUrl,
+      );
     } catch (error) {
       context.showErrorToast(
         message: error.message(context),

@@ -91,7 +91,7 @@ class WeightGoalCubit extends Cubit<WeightGoalState> {
           startingWeight: startingWeight?.parseToDouble,
           targetWeight: targetWeight?.parseToDouble,
           activityLevel: activityLevel?.title,
-          pace: pace?.title,
+          pace: pace,
         ),
       );
 

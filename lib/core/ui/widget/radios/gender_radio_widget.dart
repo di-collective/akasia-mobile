@@ -47,17 +47,31 @@ class GenderRadioWidget extends StatelessWidget {
             height: 8,
           ),
         ],
-        Row(
-          children: SexType.values.map(
-            (sexType) {
+        SizedBox(
+          height: 20,
+          width: context.width,
+          child: ListView.separated(
+            itemCount: SexType.values.length,
+            shrinkWrap: true,
+            primary: false,
+            scrollDirection: Axis.horizontal,
+            separatorBuilder: (context, index) {
+              return const SizedBox(
+                width: 8,
+              );
+            },
+            itemBuilder: (context, index) {
+              final sexType = SexType.values[index];
+
               return RadioWidget<SexType>(
                 title: sexType.title(context: context),
                 value: sexType,
                 groupValue: groupValue,
                 onChanged: onChanged,
+                maxLines: 1,
               );
             },
-          ).toList(),
+          ),
         ),
         if (isRequired == true && groupValue == null) ...[
           const SizedBox(

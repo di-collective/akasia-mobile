@@ -195,8 +195,6 @@ class FinishStepWidget extends StatelessWidget {
     required WeightGoalFlag flag,
   }) {
     switch (flag) {
-      case WeightGoalFlag.maintain:
-        return AssetImagesPath.dietChartDown;
       case WeightGoalFlag.loss:
         return AssetImagesPath.dietChartDown;
       case WeightGoalFlag.gain:

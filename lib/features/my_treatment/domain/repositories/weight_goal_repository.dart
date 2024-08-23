@@ -10,7 +10,7 @@ abstract class WeightGoalRepository {
     required double? startingWeight,
     required double? targetWeight,
     required String? activityLevel,
-    required String? pace,
+    required WeightGoalPace? pace,
   });
   Future<WeightGoalSimulationEntity> getSimulation({
     required double? startingWeight,

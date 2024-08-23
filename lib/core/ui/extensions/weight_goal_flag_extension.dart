@@ -1,7 +1,6 @@
-import 'package:akasia365mc/core/config/asset_path.dart';
+import '../../config/asset_path.dart';
 
 enum WeightGoalFlag {
-  maintain,
   loss,
   gain,
 }
@@ -9,8 +8,6 @@ enum WeightGoalFlag {
 extension WeightGoalFlagExtension on WeightGoalFlag {
   String get title {
     switch (this) {
-      case WeightGoalFlag.maintain:
-        return "Maintain";
       case WeightGoalFlag.loss:
         return "Loss";
       case WeightGoalFlag.gain:
@@ -20,8 +17,6 @@ extension WeightGoalFlagExtension on WeightGoalFlag {
 
   String get iconPath {
     switch (this) {
-      case WeightGoalFlag.maintain:
-        return AssetIconsPath.icArrowCircleDown;
       case WeightGoalFlag.loss:
         return AssetIconsPath.icArrowCircleDown;
       case WeightGoalFlag.gain:
@@ -36,8 +31,6 @@ extension WeightGoalFlagExtension on WeightGoalFlag {
 
     final flag = value.toLowerCase();
     switch (flag) {
-      case "maintain":
-        return WeightGoalFlag.maintain;
       case "loss":
         return WeightGoalFlag.loss;
       case "gain":

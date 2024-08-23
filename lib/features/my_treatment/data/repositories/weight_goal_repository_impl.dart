@@ -55,7 +55,7 @@ class WeightGoalRepositoryImpl extends WeightGoalRepository {
     required double? startingWeight,
     required double? targetWeight,
     required String? activityLevel,
-    required String? pace,
+    required WeightGoalPace? pace,
   }) async {
     if (await networkInfo.isConnected) {
       try {

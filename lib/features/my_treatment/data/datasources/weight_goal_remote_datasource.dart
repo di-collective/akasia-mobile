@@ -17,7 +17,7 @@ abstract class WeightGoalRemoteDataSource {
     required double? startingWeight,
     required double? targetWeight,
     required String? activityLevel,
-    required String? pace,
+    required WeightGoalPace? pace,
   });
   Future<WeightGoalSimulationModel> getSimulation({
     required String accessToken,
@@ -85,7 +85,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
     required double? startingWeight,
     required double? targetWeight,
     required String? activityLevel,
-    required String? pace,
+    required WeightGoalPace? pace,
   }) async {
     try {
       Logger.info(
@@ -100,7 +100,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
           "starting_weight": startingWeight,
           "target_weight": targetWeight,
           "activity_level": activityLevel,
-          "pace": pace,
+          "pace": pace?.titleApi,
         },
       );
       Logger.success('createWeightGoal response: $response');
@@ -206,7 +206,7 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
           "starting_weight": startingWeight,
           "target_weight": targetWeight,
           "activity_level": activityLevel?.title,
-          "pace": pace?.title,
+          "pace": pace?.titleApi,
         },
       );
       Logger.success('updateWeightGoal response: $response');

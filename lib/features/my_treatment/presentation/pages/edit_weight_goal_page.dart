@@ -96,7 +96,9 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
 
             final pacing = currentWeightGoal?.pace;
             if (pacing != null) {
-              formmatedPacing = pacing.title;
+              formmatedPacing = pacing.title(
+                flag: currentWeightGoal?.flag,
+              );
             }
 
             final targetDate = currentWeightGoal?.targetDate?.toDateTime();
