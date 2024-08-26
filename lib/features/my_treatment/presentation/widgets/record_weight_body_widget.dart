@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../../core/config/asset_path.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
@@ -9,6 +12,8 @@ import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 
 class RecordWeightBodyWidget extends StatefulWidget {
   final Function() onCancel;
+  final DateTime startDate;
+  final DateTime endDate;
   final Future<void> Function(
     String value,
     DateTime date,
@@ -17,6 +22,8 @@ class RecordWeightBodyWidget extends StatefulWidget {
   const RecordWeightBodyWidget({
     super.key,
     required this.onCancel,
+    required this.startDate,
+    required this.endDate,
     required this.onSave,
   });
 
@@ -28,6 +35,7 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _weightTextController = TextEditingController();
 
+  late DateTime _nowDate;
   late DateTime _selectedDate;
 
   @override
@@ -38,7 +46,8 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
   }
 
   void _init() {
-    _selectedDate = DateTime.now();
+    _nowDate = DateTime.now();
+    _selectedDate = _nowDate;
   }
 
   @override
@@ -86,22 +95,50 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
               Expanded(
-                child: Text(
-                  _formattedDate,
-                  maxLines: 1,
-                  style: textTheme.titleMedium.copyWith(
-                    color: colorScheme.onPrimary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: _onDecreaseDate,
+                      icon: SvgPicture.asset(
+                        AssetIconsPath.icChevronLeft,
+                        height: 14,
+                        colorFilter: ColorFilter.mode(
+                          _isDisabledDecreaseDate
+                              ? colorScheme.onPrimary.withOpacity(0.4)
+                              : colorScheme.onPrimary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: _onDate,
+                      child: Text(
+                        _formattedDate,
+                        maxLines: 1,
+                        style: textTheme.titleMedium.copyWith(
+                          color: colorScheme.onPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: _onIncreaseDate,
+                      icon: SvgPicture.asset(
+                        AssetIconsPath.icChevronRight,
+                        height: 14,
+                        colorFilter: ColorFilter.mode(
+                          _isDisabledIncreaseDate
+                              ? colorScheme.onPrimary.withOpacity(0.4)
+                              : colorScheme.onPrimary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                width: 10,
               ),
               ButtonWidget(
                 height: 40,
@@ -160,6 +197,70 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
     );
 
     return result ?? '';
+  }
+
+  bool get _isDisabledDecreaseDate {
+    return _selectedDate.isSame(
+      other: widget.startDate,
+      withoutHour: true,
+      withoutMinute: true,
+      withoutSecond: true,
+    );
+  }
+
+  void _onDecreaseDate() {
+    if (_isDisabledDecreaseDate) {
+      return;
+    }
+
+    setState(() {
+      _selectedDate = _selectedDate.subtract(
+        const Duration(days: 1),
+      );
+    });
+  }
+
+  Future<void> _onDate() async {
+    try {
+      final result = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: widget.startDate,
+        lastDate: _nowDate,
+      );
+      if (result == null || result == _selectedDate) {
+        return;
+      }
+
+      setState(() {
+        _selectedDate = result;
+      });
+    } catch (error) {
+      context.showWarningToast(
+        message: error.message(context),
+      );
+    }
+  }
+
+  bool get _isDisabledIncreaseDate {
+    return _selectedDate.isSame(
+      other: _nowDate,
+      withoutHour: true,
+      withoutMinute: true,
+      withoutSecond: true,
+    );
+  }
+
+  void _onIncreaseDate() {
+    if (_isDisabledIncreaseDate) {
+      return;
+    }
+
+    setState(() {
+      _selectedDate = _selectedDate.add(
+        const Duration(days: 1),
+      );
+    });
   }
 
   void _onSave() {

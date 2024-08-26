@@ -241,12 +241,8 @@ class WeightGoalRemoteDataSourceImpl implements WeightGoalRemoteDataSource {
         queryParameters: {
           "page": page,
           "limit": limit,
-          "from": fromDate?.formatDate(
-            format: 'yyyy-MM-dd',
-          ),
-          "to": toDate?.formatDate(
-            format: 'yyyy-MM-dd',
-          ),
+          "from": fromDate?.formatShortDateApi,
+          "to": toDate?.formatShortDateApi,
         },
       );
       Logger.success('getWeightHistory response: $response');

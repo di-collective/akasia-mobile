@@ -1,15 +1,17 @@
+import 'package:akasia365mc/core/ui/extensions/dynamic_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 import '../../../../core/ui/widget/states/state_error_widget.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
+import '../../domain/entities/weight_goal_entity.dart';
 import '../cubit/weight_goal/weight_goal_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
 import '../widgets/emergency_call_widget.dart';
+import '../widgets/weight_chart_loading_widget.dart';
 import '../widgets/weight_chart_widget.dart';
 
 class MyTreatmentPage extends StatefulWidget {
@@ -78,87 +80,60 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
               const SizedBox(
                 height: 32,
               ),
-              BlocBuilder<WeightHistoryCubit, WeightHistoryState>(
+              BlocBuilder<WeightGoalCubit, WeightGoalState>(
                 builder: (context, state) {
-                  if (state is WeightHistoryLoading) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ShimmerLoading.rectangular(
-                                height: 26,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 50,
-                            ),
-                            ShimmerLoading.rectangular(
-                              height: 26,
-                              width: 50,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 24,
-                        ),
-                        SizedBox(
-                          height: 300,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ShimmerLoading.rectangular(
-                                height: 26,
-                                width: 50,
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              ListView.separated(
-                                itemCount: 5,
-                                primary: false,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(
-                                    height: 10,
-                                  );
-                                },
-                                itemBuilder: (context, index) {
-                                  return ShimmerLoading.rectangular(
-                                    height: 30,
-                                    width: 50,
-                                  );
-                                },
-                              ),
-                              const Spacer(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ShimmerLoading.rectangular(
-                                    height: 48,
-                                    width: 100,
-                                  ),
-                                  ShimmerLoading.rectangular(
-                                    height: 48,
-                                    width: 152,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  } else if (state is WeightHistoryError) {
-                    return StateErrorWidget(
-                      description: state.error.message(context),
+                  WeightGoalEntity? weightGoal;
+                  if (state is WeightGoalLoaded) {
+                    weightGoal = state.weightGoal;
+                  }
+                  if (weightGoal == null) {
+                    return const WeightChartWidget(
+                      isDisabled: true,
                     );
                   }
 
-                  return const WeightChartWidget();
+                  return BlocBuilder<WeightHistoryCubit, WeightHistoryState>(
+                    builder: (context, state) {
+                      if (state is WeightHistoryLoading) {
+                        return const WeightChartLoadingWidget();
+                      } else if (state is WeightHistoryError) {
+                        return StateErrorWidget(
+                          width: context.width,
+                          paddingTop: context.height * 0.2,
+                          description: state.error.message(context),
+                          buttonText: context.locale.refresh,
+                          onTapButton: () {
+                            _onRefresh(
+                              isUseFullScreenLoading: true,
+                            );
+                          },
+                        );
+                      } else if (state is WeightHistoryLoaded) {
+                        final weights = state.weights;
+                        bool isDisabled = true;
+
+                        final startDate =
+                            weightGoal?.startingDate.dynamicToDateTime;
+                        final targetDate =
+                            weightGoal?.targetDate.dynamicToDateTime;
+                        if (startDate != null && targetDate != null) {
+                          final now = DateTime.now();
+                          if (now.isAfter(startDate) &&
+                              now.isBefore(targetDate)) {
+                            isDisabled = false;
+                          }
+                        }
+
+                        return WeightChartWidget(
+                          isDisabled: isDisabled,
+                          weights: weights,
+                          weightGoal: weightGoal,
+                        );
+                      }
+
+                      return const SizedBox.shrink();
+                    },
+                  );
                 },
               ),
               SizedBox(
@@ -172,16 +147,50 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
   }
 
   Future<void> _onGetWeightHistory() async {
-    await BlocProvider.of<WeightHistoryCubit>(context).getWeightHistory();
+    String? startDate;
+    final weightGoalState = BlocProvider.of<WeightGoalCubit>(context).state;
+    if (weightGoalState is WeightGoalLoaded) {
+      startDate = weightGoalState.weightGoal?.startingDate;
+    }
+
+    await BlocProvider.of<WeightHistoryCubit>(context).getWeightHistory(
+      fromDate: startDate,
+      toDate: DateTime.now().toString(),
+    );
   }
 
-  Future<void> _onRefresh() async {
-    await Future.wait([
-      // get weight history
-      BlocProvider.of<WeightHistoryCubit>(context).refreshWeightHistory(),
+  Future<void> _onRefresh({
+    bool? isUseFullScreenLoading,
+  }) async {
+    try {
+      if (isUseFullScreenLoading == true) {
+        context.showFullScreenLoading();
+      }
 
-      // get weight goal
-      BlocProvider.of<WeightGoalCubit>(context).getWeightGoal(),
-    ]);
+      String? startDate;
+      final weightGoalState = BlocProvider.of<WeightGoalCubit>(context).state;
+      if (weightGoalState is WeightGoalLoaded) {
+        startDate = weightGoalState.weightGoal?.startingDate;
+      }
+
+      await Future.wait([
+        // get weight history
+        BlocProvider.of<WeightHistoryCubit>(context).refreshWeightHistory(
+          fromDate: startDate,
+          toDate: DateTime.now().toString(),
+        ),
+
+        // get weight goal
+        BlocProvider.of<WeightGoalCubit>(context).getWeightGoal(),
+      ]);
+    } catch (error) {
+      context.showErrorToast(
+        message: error.message(context),
+      );
+    } finally {
+      if (isUseFullScreenLoading == true) {
+        context.hideFullScreenLoading;
+      }
+    }
   }
 }

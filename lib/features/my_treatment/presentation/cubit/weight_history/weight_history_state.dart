@@ -12,30 +12,30 @@ final class WeightHistoryInitial extends WeightHistoryState {}
 final class WeightHistoryLoading extends WeightHistoryState {}
 
 final class WeightHistoryLoaded extends WeightHistoryState {
-  final List<WeightHistoryEntity> histories;
+  final List<WeightHistoryEntity> weights;
 
   const WeightHistoryLoaded({
-    required this.histories,
+    required this.weights,
   });
 
   WeightHistoryLoaded copyWith({
-    List<WeightHistoryEntity>? histories,
+    List<WeightHistoryEntity>? weights,
   }) {
     return WeightHistoryLoaded(
-      histories: histories ?? this.histories,
+      weights: weights ?? this.weights,
     );
   }
 
-  WeightHistoryEntity? get latestHistory {
-    if (histories.isEmpty) {
+  WeightHistoryEntity? get latestWeight {
+    if (weights.isEmpty) {
       return null;
     }
 
-    return histories.first;
+    return weights.first;
   }
 
   @override
-  List<Object> get props => [histories];
+  List<Object> get props => [weights];
 }
 
 final class WeightHistoryError extends WeightHistoryState {

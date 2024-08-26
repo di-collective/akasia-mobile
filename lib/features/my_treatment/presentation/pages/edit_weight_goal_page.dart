@@ -75,6 +75,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
               isStartDateSameAsToday = startDate.isSame(
                 other: DateTime.now(),
                 withoutHour: true,
+                withoutMinute: true,
                 withoutSecond: true,
               );
             }
@@ -128,7 +129,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                   builder: (context, state) {
                     List<WeightHistoryEntity> weightHistories = [];
                     if (state is WeightHistoryLoaded) {
-                      weightHistories = state.histories;
+                      weightHistories = state.weights;
                     }
 
                     return OptionsButtonWidget(
@@ -159,7 +160,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                     WeightHistoryEntity? latestHistory;
                     String formmatedCurrentWeight = "0";
                     if (state is WeightHistoryLoaded) {
-                      latestHistory = state.latestHistory;
+                      latestHistory = state.latestWeight;
                       if (latestHistory != null) {
                         final weight = latestHistory.weight?.parseToString;
                         if (weight != null) {
@@ -334,6 +335,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
           selectedDate.isSame(
             other: currentStartDate,
             withoutHour: true,
+            withoutMinute: true,
             withoutSecond: true,
           )) {
         return;
@@ -348,6 +350,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
         return element.date!.isSame(
           other: selectedDate,
           withoutHour: true,
+          withoutMinute: true,
           withoutSecond: true,
         );
       });
@@ -357,21 +360,23 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
         await _onUpdateWeightGoal(
           startingDate: selectedDate,
         );
-        return;
+      } else {
+        // show warning toast
+        context.showWarningToast(
+          message:
+              "Your weight on this date is not available. Please fill weight on selected date.",
+          timeInSecForIosWeb: 5,
+        );
+
+        // update starting date and starting weight
+        await _onStartWeight(
+          currentStartWeight: null,
+          currentStartingDate: selectedDate,
+        );
       }
 
-      // show warning toast
-      context.showWarningToast(
-        message:
-            "Your weight on this date is not available. Please fill weight on selected date.",
-        timeInSecForIosWeb: 5,
-      );
-
-      // update starting date and starting weight
-      await _onStartWeight(
-        currentStartWeight: null,
-        currentStartingDate: selectedDate,
-      );
+      // get weight history
+      _onGetWeightHistory();
     } catch (_) {
       rethrow;
     }
@@ -646,5 +651,18 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
       // hide full screen loading
       context.hideFullScreenLoading;
     }
+  }
+
+  Future<void> _onGetWeightHistory() async {
+    String? startDate;
+    final weightGoalState = BlocProvider.of<WeightGoalCubit>(context).state;
+    if (weightGoalState is WeightGoalLoaded) {
+      startDate = weightGoalState.weightGoal?.startingDate;
+    }
+
+    await BlocProvider.of<WeightHistoryCubit>(context).getWeightHistory(
+      fromDate: startDate,
+      toDate: DateTime.now().toString(),
+    );
   }
 }

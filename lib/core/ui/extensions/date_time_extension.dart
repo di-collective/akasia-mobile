@@ -39,6 +39,14 @@ extension DateTimeExtension on DateTime {
     }
   }
 
+  String? get formatShortDateApi {
+    try {
+      return DateFormat('yyyy-MM-dd').format(this);
+    } catch (e) {
+      return null;
+    }
+  }
+
   String? formatDate({
     String? format,
     String? locale,

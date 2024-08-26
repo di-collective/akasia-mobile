@@ -1,3 +1,4 @@
+import 'package:akasia365mc/core/ui/extensions/string_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,8 +20,8 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
   Future<void> getWeightHistory({
     int? page,
     int? limit,
-    DateTime? fromDate,
-    DateTime? toDate,
+    String? fromDate,
+    String? toDate,
   }) async {
     final currentState = state;
     if (currentState is WeightHistoryLoading) {
@@ -34,13 +35,13 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
         GetWeightHistoryUseCaseParams(
           page: page,
           limit: limit,
-          fromDate: fromDate,
-          toDate: toDate,
+          fromDate: fromDate?.toDateTime(),
+          toDate: toDate?.toDateTime(),
         ),
       );
 
       emit(WeightHistoryLoaded(
-        histories: result,
+        weights: result,
       ));
     } catch (error) {
       emit(WeightHistoryError(
@@ -54,8 +55,8 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
   Future<void> refreshWeightHistory({
     int? page,
     int? limit,
-    DateTime? fromDate,
-    DateTime? toDate,
+    String? fromDate,
+    String? toDate,
   }) async {
     final currentState = state;
     if (currentState is WeightHistoryLoading) {
@@ -67,13 +68,13 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
         GetWeightHistoryUseCaseParams(
           page: page,
           limit: limit,
-          fromDate: fromDate,
-          toDate: toDate,
+          fromDate: fromDate?.toDateTime(),
+          toDate: toDate?.toDateTime(),
         ),
       );
 
       emit(WeightHistoryLoaded(
-        histories: result,
+        weights: result,
       ));
     } catch (error) {
       if (currentState is! WeightHistoryLoaded) {
@@ -121,7 +122,7 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
     final currentState = state;
     if (currentState is WeightHistoryLoaded) {
       final currentHistories = List<WeightHistoryEntity>.from(
-        currentState.histories,
+        currentState.weights,
       );
 
       final index = currentHistories.indexWhere(
@@ -137,11 +138,11 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
 
       // update the state
       emit(currentState.copyWith(
-        histories: currentHistories,
+        weights: currentHistories,
       ));
     } else {
       emit(WeightHistoryLoaded(
-        histories: [newWeight],
+        weights: [newWeight],
       ));
     }
   }
