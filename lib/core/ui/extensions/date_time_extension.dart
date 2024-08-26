@@ -140,12 +140,24 @@ extension DateTimeExtension on DateTime {
   }) {
     if (other == null) return false;
 
-    if (withoutYear != true && year != other.year) return false;
-    if (withoutMonth != true && month != other.month) return false;
-    if (withoutDay != true && day != other.day) return false;
-    if (withoutHour != true && hour != other.hour) return false;
-    if (withoutMinute == true && minute != other.minute) return false;
-    if (withoutSecond != true && second != other.second) return false;
+    if (withoutYear != true && year != other.year) {
+      return false;
+    }
+    if (withoutMonth != true && month != other.month) {
+      return false;
+    }
+    if (withoutDay != true && day != other.day) {
+      return false;
+    }
+    if (withoutHour != true && hour != other.hour) {
+      return false;
+    }
+    if (withoutMinute != true && minute != other.minute) {
+      return false;
+    }
+    if (withoutSecond != true && second != other.second) {
+      return false;
+    }
 
     return true;
   }

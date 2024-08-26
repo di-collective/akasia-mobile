@@ -1,4 +1,3 @@
-import 'package:akasia365mc/core/ui/extensions/dynamic_extension.dart';
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/double_extension.dart';
+import '../../../../core/ui/extensions/dynamic_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
@@ -187,15 +187,23 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
         date: date,
       );
 
-      final profileState = BlocProvider.of<ProfileCubit>(context).state;
-      if (profileState is ProfileLoaded) {
-        // update weight on profile
-        await BlocProvider.of<ProfileCubit>(context).updateProfile(
-          newProfile: ProfileEntity(
-            userId: profileState.profile.userId,
-            weight: newWeight,
-          ),
-        );
+      // if selected date is current date, update weight on profile
+      if (date.isSame(
+        other: DateTime.now(),
+        withoutHour: true,
+        withoutMinute: true,
+        withoutSecond: true,
+      )) {
+        final profileState = BlocProvider.of<ProfileCubit>(context).state;
+        if (profileState is ProfileLoaded) {
+          // update weight on profile
+          await BlocProvider.of<ProfileCubit>(context).updateProfile(
+            newProfile: ProfileEntity(
+              userId: profileState.profile.userId,
+              weight: newWeight,
+            ),
+          );
+        }
       }
 
       // show success message
