@@ -136,10 +136,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     sex = profile.sex;
                     bloodType = profile.bloodType;
                     if (profile.weight != null) {
-                      weight = '${profile.weight?.parseToString ?? "-"} kgs';
+                      weight = '${profile.weight?.parseToString() ?? "-"} kgs';
                     }
                     if (profile.height != null) {
-                      height = '${profile.height?.parseToString ?? "-"} cm';
+                      height = '${profile.height?.parseToString() ?? "-"} cm';
                     }
                     activityLevel = profile.activityLevel;
                   }

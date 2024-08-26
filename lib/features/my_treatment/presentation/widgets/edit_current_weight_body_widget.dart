@@ -37,7 +37,7 @@ class _EditCurrentWeightBodyWidgetState
   void _init() {
     if (widget.currentWeight != null) {
       _currentWeightTextController.text =
-          widget.currentWeight?.parseToString ?? "";
+          widget.currentWeight?.parseToString() ?? "";
     }
   }
 

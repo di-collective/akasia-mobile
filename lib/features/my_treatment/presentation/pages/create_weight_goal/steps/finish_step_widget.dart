@@ -30,7 +30,7 @@ class FinishStepWidget extends StatelessWidget {
         if (state is WeightGoalLoaded) {
           final weightGoal = state.weightGoal?.targetWeight;
           if (weightGoal != null) {
-            formmatedWeightGoal = weightGoal.parseToString;
+            formmatedWeightGoal = weightGoal.parseToString();
           }
 
           final flag = state.weightGoal?.flag;
@@ -47,7 +47,7 @@ class FinishStepWidget extends StatelessWidget {
           }
           final caloriesToMaintain = state.weightGoal?.caloriesToMaintain;
           if (caloriesToMaintain != null) {
-            formattedCaloriesToMaintain = caloriesToMaintain.parseToString;
+            formattedCaloriesToMaintain = caloriesToMaintain.parseToString();
           }
         }
 

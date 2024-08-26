@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartx/dartx.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -60,19 +62,6 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
       )} per week";
     }
 
-    double firstWeight = 0;
-
-    double targetWeight = 0;
-    double minimumWeight = 0;
-    double firstDate = 0;
-    double maxDate = 0;
-    if (widget.isDisabled != true) {
-      firstWeight = 52;
-      targetWeight = 47.2;
-      minimumWeight = targetWeight - 1;
-      maxDate = 10;
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -107,14 +96,10 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
           height: 8,
         ),
         _ChartWidget(
-          firstWeight: firstWeight,
-          targetWeight: targetWeight,
-          minimumWeight: minimumWeight,
-          firstDate: firstDate,
-          maxDate: maxDate,
           isDisabled: widget.isDisabled,
           onRecordWeight: _onRecordWeight,
           weights: weights,
+          targetWeight: widget.weightGoal?.targetWeight,
         ),
       ],
     );
@@ -230,25 +215,16 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
 }
 
 class _ChartWidget extends StatefulWidget {
-  final double firstWeight;
-  final double targetWeight;
-  final double minimumWeight;
-  final double firstDate;
-  final double maxDate;
   final List<WeightHistoryEntity> weights;
-
   final bool? isDisabled;
   final Function() onRecordWeight;
+  final double? targetWeight;
 
   const _ChartWidget({
-    required this.firstWeight,
-    required this.targetWeight,
-    required this.minimumWeight,
-    required this.firstDate,
-    required this.maxDate,
     required this.isDisabled,
     required this.onRecordWeight,
     required this.weights,
+    required this.targetWeight,
   });
 
   @override
@@ -271,6 +247,8 @@ class _ChartWidgetState extends State<_ChartWidget> {
     DateTime? lastDate;
     String? fomattedStartDate;
     String? formattedLastDate;
+    double? minX;
+    double? maxX;
     if (weightsHistory.isNotEmpty) {
       // get the first weight
       firstWeightHistory = weightsHistory.last;
@@ -290,58 +268,91 @@ class _ChartWidgetState extends State<_ChartWidget> {
 
       // get all weights
       weights = weightsHistory.map((e) {
-        return e.weight ?? 0;
+        final weight = e.weight ?? 0;
+
+        // get min and max x
+        if (minX == null || maxX == null) {
+          minX = weight;
+          maxX = weight;
+        } else {
+          minX = min(minX!, weight);
+          maxX = max(maxX!, weight);
+        }
+
+        return weight;
       }).toList();
+
+      // reverse the list
+      weights = weights.reversed.toList();
     }
+
+    // TODO: Get target weight for max and min x
 
     firstWeight ??= 0;
     lastWeight ??= 0;
 
     final differenceWeight = firstWeight - lastWeight;
+    final isGainWeight = differenceWeight < 0;
+    String? arrowIconPath;
+    Color? arrowIconColor;
+    if (differenceWeight != 0) {
+      arrowIconPath =
+          isGainWeight ? AssetIconsPath.icArrowUp : AssetIconsPath.icArrowDown;
+      arrowIconColor =
+          isGainWeight ? colorScheme.onSurfaceDim : colorScheme.success;
+    }
 
-    List<LineChartBarData> lineBarsData = [];
-    if (widget.isDisabled != true) {
-      lineBarsData = [
-        LineChartBarData(
-          spots: [
-            FlSpot(
-              0,
-              firstWeight,
-            ),
-            // FlSpot(
-            //   1,
-            //   lastWeight,
-            // ),
-          ],
-          // spots: weights.asMap().entries.map(
-          //   (entry) {
-          //     final index = entry.key;
-          //     final weight = entry.value.weight;
+    final spots = weights.asMap().entries.map(
+      (entry) {
+        final index = entry.key;
+        final weight = entry.value;
 
-          //     return FlSpot(
-          //       index.toDouble(),
-          //       weight ?? 0,
-          //     );
-          //   },
-          // ).toList(),
-          // barWidth: 2,
-          color: colorScheme.onSurfaceDim,
-          dotData: FlDotData(
-            show: true,
-            checkToShowDot: (spot, barData) {
-              return spot.y != widget.targetWeight;
-            },
-            getDotPainter: (spot, percent, barData, index) {
-              return FlDotCirclePainter(
-                radius: 4,
-                color: spot.y == lastWeight
-                    ? colorScheme.error
-                    : colorScheme.onSurfaceDim,
-              );
-            },
-          ),
+        return FlSpot(
+          index.toDouble(),
+          weight,
+        );
+      },
+    ).toList();
+
+    final lineBarsData = [
+      LineChartBarData(
+        spots: spots,
+        barWidth: 2,
+        color: colorScheme.onSurfaceDim,
+        dotData: FlDotData(
+          show: true,
+          checkToShowDot: (spot, barData) {
+            if (spot.x.isSame(
+              otherValue: 0,
+            )) {
+              return true;
+            }
+
+            if (spot.x.isSame(
+              otherValue: weights.length - 1,
+            )) {
+              return true;
+            }
+
+            return false;
+          },
+          getDotPainter: (spot, percent, barData, index) {
+            return FlDotCirclePainter(
+              radius: 4,
+              strokeColor: colorScheme.white,
+              strokeWidth: 1,
+              color: spot.y == lastWeight
+                  ? colorScheme.error
+                  : colorScheme.onSurfaceDim,
+            );
+          },
         ),
-      ];
+      ),
+    ];
+
+    LineChartBarData? tooltipsOnBar;
+    if (lineBarsData.isNotEmpty) {
+      tooltipsOnBar = lineBarsData.first;
     }
 
     return Container(
@@ -374,17 +385,25 @@ class _ChartWidgetState extends State<_ChartWidget> {
                 children: [
                   Row(
                     children: [
-                      SvgPicture.asset(
-                        AssetIconsPath.icArrowDown,
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
+                      if (arrowIconPath != null && arrowIconColor != null) ...[
+                        SvgPicture.asset(
+                          arrowIconPath,
+                          colorFilter: ColorFilter.mode(
+                            arrowIconColor,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                      ],
                       Text.rich(
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: differenceWeight.parseToString,
+                              text: differenceWeight.parseToString(
+                                isRemoveMinus: true,
+                              ),
                               style: TextStyle(
                                 color: colorScheme.onSurfaceDim,
                                 fontWeight: FontWeight.bold,
@@ -429,10 +448,6 @@ class _ChartWidgetState extends State<_ChartWidget> {
               ),
               child: LineChart(
                 LineChartData(
-                  minX: widget.firstDate,
-                  maxX: widget.maxDate,
-                  minY: widget.minimumWeight,
-                  maxY: widget.firstWeight,
                   lineBarsData: lineBarsData,
                   lineTouchData: LineTouchData(
                     enabled: false,
@@ -444,14 +459,14 @@ class _ChartWidgetState extends State<_ChartWidget> {
 
                         return colorScheme.onSurfaceDim;
                       },
-                      tooltipRoundedRadius: 2,
+                      tooltipRoundedRadius: 4,
                       tooltipPadding: const EdgeInsets.all(4),
-                      tooltipMargin: 10,
+                      tooltipMargin: 6,
                       getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
                         return lineBarsSpot.map(
                           (lineBarSpot) {
                             return LineTooltipItem(
-                              lineBarSpot.y.parseToString,
+                              lineBarSpot.y.parseToString(),
                               textTheme.bodySmall.copyWith(
                                 color: colorScheme.onPrimary,
                                 fontSize: 8,
@@ -473,14 +488,23 @@ class _ChartWidgetState extends State<_ChartWidget> {
                     rightTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
+                        reservedSize: 30,
+                        interval: 1,
                         getTitlesWidget: (value, axisSide) {
+                          final isTargetWeight = value.isSame(
+                            otherValue: widget.targetWeight,
+                          );
+
                           return SideTitleWidget(
                             axisSide: AxisSide.right,
                             child: Text(
-                              value.parseToString,
+                              value.parseToString(),
                               style: textTheme.labelSmall.copyWith(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: isTargetWeight
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
                                 color: colorScheme.onSurfaceBright,
+                                fontSize: isTargetWeight ? 12 : 10,
                               ),
                             ),
                           );
@@ -511,28 +535,28 @@ class _ChartWidgetState extends State<_ChartWidget> {
                         strokeWidth: 0.5,
                       );
                     },
-                    horizontalInterval: 1,
                   ),
                   borderData: FlBorderData(
                     show: false,
                   ),
-                  // showingTooltipIndicators: weights.map(
-                  //   (weight) {
-                  //     return ShowingTooltipIndicators(
-                  //       [
-                  //         LineBarSpot(
-                  //           lineBarsData.first,
-                  //           lineBarsData.indexOf(lineBarsData.first),
-                  //           lineBarsData.first.spots.firstWhere(
-                  //             (element) {
-                  //               return element.y == weight;
-                  //             },
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     );
-                  //   },
-                  // ).toList(),
+                  showingTooltipIndicators: weights.asMap().entries.map(
+                    (entry) {
+                      final index = entry.key;
+
+                      return ShowingTooltipIndicators(
+                        [
+                          if (tooltipsOnBar != null &&
+                              (index == 0 || index == weights.length - 1)) ...[
+                            LineBarSpot(
+                              tooltipsOnBar,
+                              lineBarsData.indexOf(tooltipsOnBar),
+                              tooltipsOnBar.spots[index],
+                            ),
+                          ],
+                        ],
+                      );
+                    },
+                  ).toList(),
                 ),
               ),
             ),
@@ -556,7 +580,7 @@ class _ChartWidgetState extends State<_ChartWidget> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: lastWeight.parseToString,
+                        text: lastWeight.parseToString(),
                         style: textTheme.headlineLarge.copyWith(
                           color: colorScheme.onSurfaceDim,
                           fontWeight: FontWeight.w700,
@@ -595,11 +619,11 @@ class _ChartWidgetState extends State<_ChartWidget> {
     final colorScheme = context.theme.appColorScheme;
 
     String? text;
-    if (value == 0.toDouble()) {
+    if (value.isSame(otherValue: 0)) {
       text = firstDate?.formatDate(
         format: 'dd MMM',
       );
-    } else if (value == weightsLength.toDouble()) {
+    } else if (value.isSame(otherValue: weightsLength - 1)) {
       text = lastDate?.formatDate(
         format: 'dd MMM',
       );

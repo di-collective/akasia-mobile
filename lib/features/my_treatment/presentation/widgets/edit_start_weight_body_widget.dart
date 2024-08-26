@@ -34,7 +34,7 @@ class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
 
   void _init() {
     _startWeightTextController.text =
-        widget.currentStartWeight?.parseToString ?? "";
+        widget.currentStartWeight?.parseToString() ?? "";
   }
 
   @override

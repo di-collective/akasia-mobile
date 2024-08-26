@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -82,12 +81,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
 
             final startWeight = currentWeightGoal?.startingWeight;
             if (startWeight != null) {
-              formmatedStartWeight = startWeight.parseToString;
+              formmatedStartWeight = startWeight.parseToString();
             }
 
             final goalWeight = currentWeightGoal?.targetWeight;
             if (goalWeight != null) {
-              formmatedTargetWeight = goalWeight.parseToString;
+              formmatedTargetWeight = goalWeight.parseToString();
             }
 
             final activityLevel = currentWeightGoal?.activityLevel;
@@ -112,7 +111,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
 
             final caloriesToMaintain = currentWeightGoal?.caloriesToMaintain;
             if (caloriesToMaintain != null) {
-              formattedCaloriesToMaintain = caloriesToMaintain.parseToString;
+              formattedCaloriesToMaintain = caloriesToMaintain.parseToString();
             }
           }
 
@@ -162,7 +161,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                     if (state is WeightHistoryLoaded) {
                       latestHistory = state.latestWeight;
                       if (latestHistory != null) {
-                        final weight = latestHistory.weight?.parseToString;
+                        final weight = latestHistory.weight?.parseToString();
                         if (weight != null) {
                           formmatedCurrentWeight = weight;
                         }
@@ -341,39 +340,10 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
         return;
       }
 
-      // if weight on selected starting date is null, need to update start weight too
-      final weightOnSelectedDate = weightHistories.firstWhereOrNull((element) {
-        if (element.date == null) {
-          return false;
-        }
-
-        return element.date!.isSame(
-          other: selectedDate,
-          withoutHour: true,
-          withoutMinute: true,
-          withoutSecond: true,
-        );
-      });
-
-      if (weightOnSelectedDate != null) {
-        // only update starting date
-        await _onUpdateWeightGoal(
-          startingDate: selectedDate,
-        );
-      } else {
-        // show warning toast
-        context.showWarningToast(
-          message:
-              "Your weight on this date is not available. Please fill weight on selected date.",
-          timeInSecForIosWeb: 5,
-        );
-
-        // update starting date and starting weight
-        await _onStartWeight(
-          currentStartWeight: null,
-          currentStartingDate: selectedDate,
-        );
-      }
+      // update starting date
+      await _onUpdateWeightGoal(
+        startingDate: selectedDate,
+      );
 
       // get weight history
       _onGetWeightHistory();

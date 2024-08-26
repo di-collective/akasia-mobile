@@ -231,7 +231,9 @@ extension TextEditingControllerExtension on TextEditingController {
       // validate minimum amount
       if (minimum != null) {
         if (amount < minimum) {
-          return context.locale.minimumAmount(minimum.parseToString);
+          return context.locale.minimumAmount(
+            minimum.parseToString(),
+          );
         }
       }
     }
@@ -269,7 +271,9 @@ extension TextEditingControllerExtension on TextEditingController {
       // validate minimum amount
       if (minimum != null) {
         if (amount < minimum) {
-          return context.locale.minimumAmount(minimum.parseToString);
+          return context.locale.minimumAmount(
+            minimum.parseToString(),
+          );
         }
       }
     }

@@ -35,7 +35,7 @@ class _EditTargetWeightBodyWidgetState
 
   void _init() {
     _targetWeightTextController.text =
-        widget.currentTargetWeight?.parseToString ?? "";
+        widget.currentTargetWeight?.parseToString() ?? "";
   }
 
   @override

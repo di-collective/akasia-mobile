@@ -197,11 +197,11 @@ class __BodyState extends State<_Body> {
       return;
     }
 
-    _weightTextController.text = _activeProfile?.weight?.parseToString ?? "";
+    _weightTextController.text = _activeProfile?.weight?.parseToString() ?? "";
     _selectedDateOfBirth = _activeProfile?.dob?.toDateTime();
     _dateOfBirthTextController.text = _selectedDateOfBirth?.formatDate() ?? "";
     _selectedSex = SexTypeExtension.fromString(_activeProfile?.sex);
-    _heightTextController.text = _activeProfile?.height?.parseToString ?? "";
+    _heightTextController.text = _activeProfile?.height?.parseToString() ?? "";
     _selectedActivityLevel = WeightGoalActivityLevelExtension.fromString(
       _activeProfile?.activityLevel,
     );

@@ -255,7 +255,7 @@ class _ItemWidget extends StatelessWidget {
     final dailyCaloriesBudget = pacing.dailyCaloriesBudget;
     String formmatedDailyCaloriesBudget = "0";
     if (dailyCaloriesBudget != null) {
-      formmatedDailyCaloriesBudget = dailyCaloriesBudget.parseToString;
+      formmatedDailyCaloriesBudget = dailyCaloriesBudget.parseToString();
     }
 
     final targetDate = pacing.targetDate?.toDateTime();
