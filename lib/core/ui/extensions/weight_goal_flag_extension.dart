@@ -3,6 +3,7 @@ import '../../config/asset_path.dart';
 enum WeightGoalFlag {
   loss,
   gain,
+  maintain,
 }
 
 extension WeightGoalFlagExtension on WeightGoalFlag {
@@ -12,6 +13,8 @@ extension WeightGoalFlagExtension on WeightGoalFlag {
         return "Loss";
       case WeightGoalFlag.gain:
         return "Gain";
+      case WeightGoalFlag.maintain:
+        return "Maintain";
     }
   }
 
@@ -20,6 +23,7 @@ extension WeightGoalFlagExtension on WeightGoalFlag {
       case WeightGoalFlag.loss:
         return AssetIconsPath.icArrowCircleDown;
       case WeightGoalFlag.gain:
+      case WeightGoalFlag.maintain:
         return AssetIconsPath.icArrowCircleUp;
     }
   }
@@ -35,6 +39,8 @@ extension WeightGoalFlagExtension on WeightGoalFlag {
         return WeightGoalFlag.loss;
       case "gain":
         return WeightGoalFlag.gain;
+      case "maintain":
+        return WeightGoalFlag.maintain;
     }
 
     return null;
