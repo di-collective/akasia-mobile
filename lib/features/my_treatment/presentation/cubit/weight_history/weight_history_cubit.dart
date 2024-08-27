@@ -1,7 +1,8 @@
-import 'package:akasia365mc/core/ui/extensions/string_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/ui/extensions/date_time_extension.dart';
+import '../../../../../core/ui/extensions/string_extension.dart';
 import '../../../domain/entities/weight_history_entity.dart';
 import '../../../domain/usecases/get_weight_history_usecase.dart';
 import '../../../domain/usecases/update_weight_usecase.dart';
@@ -125,15 +126,37 @@ class WeightHistoryCubit extends Cubit<WeightHistoryState> {
         currentState.weights,
       );
 
-      final index = currentHistories.indexWhere(
-        (element) => element.date == newWeight.date,
-      );
+      final newHeightDate = newWeight.date;
+      if (newHeightDate == null) {
+        return;
+      }
+
+      final index = currentHistories.indexWhere((element) {
+        return element.date?.isSame(
+              other: newHeightDate,
+              withoutHour: true,
+              withoutMinute: true,
+              withoutSecond: true,
+            ) ??
+            false;
+      });
       if (index != -1) {
         // Update the existing history
         currentHistories[index] = newWeight;
       } else {
-        // Add the new history to first index
-        currentHistories.insert(0, newWeight);
+        // Add the new history to specific index
+        final insertIndex = currentHistories.indexWhere((element) {
+          return element.date?.isBefore(
+                newHeightDate,
+              ) ??
+              false;
+        });
+
+        // Insert the new history to the correct index
+        currentHistories.insert(
+          insertIndex == -1 ? 0 : insertIndex,
+          newWeight,
+        );
       }
 
       // update the state
