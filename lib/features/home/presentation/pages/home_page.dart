@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverAppBar(
               pinned: true,

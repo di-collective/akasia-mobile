@@ -54,6 +54,7 @@ class _MyTreatmentPageState extends State<MyTreatmentPage> {
           padding: EdgeInsets.symmetric(
             horizontal: context.paddingHorizontal,
           ),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -25,6 +25,7 @@ import '../../../account/domain/entities/profile_entity.dart';
 import '../../../account/presentation/cubit/profile/profile_cubit.dart';
 import '../../domain/entities/weight_goal_entity.dart';
 import '../../domain/entities/weight_history_entity.dart';
+import '../cubit/weight_goal/weight_goal_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
 import 'record_weight_body_widget.dart';
 
@@ -172,7 +173,7 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
         date: date,
       );
 
-      // if selected date is current date, update weight on profile
+      // if date is current date, update weight on profile
       if (date.isSame(
         other: DateTime.now(),
         withoutHour: true,
@@ -189,6 +190,22 @@ class _WeightChartWidgetState extends State<WeightChartWidget> {
             ),
           );
         }
+      }
+
+      // if date is starting date, update starting weight in weight goal
+      final startingDate = widget.weightGoal?.startingDate?.dynamicToDateTime;
+      if (date.isSame(
+        other: startingDate,
+        withoutHour: true,
+        withoutMinute: true,
+        withoutSecond: true,
+      )) {
+        // update starting weight in weight goal
+        await BlocProvider.of<WeightGoalCubit>(context).updateWeightGoal(
+          newWeightGoal: WeightGoalEntity(
+            startingWeight: newWeight,
+          ),
+        );
       }
 
       // show success message
