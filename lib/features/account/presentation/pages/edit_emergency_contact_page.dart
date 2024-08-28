@@ -341,6 +341,7 @@ class __BodyState extends State<_Body> {
       // update emergency contact state
       BlocProvider.of<ProfileCubit>(context).emitProfileData(
         newProfile.copyWith(
+          ecCountryCode: _selectedCountry?.phoneCode,
           ecRelation: _activeEcRelation,
           ecName: _activeEcName,
           ecPhone: _activeEcPhone,
