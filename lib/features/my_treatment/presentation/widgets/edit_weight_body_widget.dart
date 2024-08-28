@@ -28,8 +28,8 @@ class EditWeightBodyWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          height: 58,
           padding: EdgeInsets.symmetric(
-            vertical: 4,
             horizontal: context.paddingHorizontal,
           ),
           decoration: BoxDecoration(

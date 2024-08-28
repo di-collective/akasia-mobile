@@ -7,12 +7,23 @@ import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import 'edit_weight_body_widget.dart';
 
 class EditStartWeightBodyWidget extends StatefulWidget {
+  final bool isStartDateSameAsToday;
+  final bool? isAutoFocusStartWeight;
+  final bool? isAutoFocusCurrentWeight;
   final double? currentStartWeight;
-  final Function(String value) onSave;
+  final double? currentWeight;
+  final Function(
+    String? startWeight,
+    String? currentWeight,
+  ) onSave;
 
   const EditStartWeightBodyWidget({
     super.key,
+    required this.isStartDateSameAsToday,
+    this.isAutoFocusStartWeight,
+    this.isAutoFocusCurrentWeight,
     required this.currentStartWeight,
+    required this.currentWeight,
     required this.onSave,
   });
 
@@ -24,6 +35,7 @@ class EditStartWeightBodyWidget extends StatefulWidget {
 class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _startWeightTextController = TextEditingController();
+  final _currentWeightTextController = TextEditingController();
 
   @override
   void initState() {
@@ -35,12 +47,15 @@ class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
   void _init() {
     _startWeightTextController.text =
         widget.currentStartWeight?.parseToString() ?? "";
+    _currentWeightTextController.text =
+        widget.currentWeight?.parseToString() ?? "";
   }
 
   @override
   void dispose() {
     super.dispose();
 
+    _currentWeightTextController.dispose();
     _startWeightTextController.dispose();
   }
 
@@ -67,7 +82,21 @@ class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
                 context.locale.weight,
               ),
               isRequired: true,
-              autofocus: true,
+              autofocus: widget.isAutoFocusStartWeight,
+              readOnly: widget.isStartDateSameAsToday,
+              onEditingComplete: _onSave,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            WeightTextFormWidget(
+              context: context,
+              controller: _currentWeightTextController,
+              title: context.locale.currentItem(
+                context.locale.weight,
+              ),
+              isRequired: true,
+              autofocus: widget.isAutoFocusCurrentWeight,
               onEditingComplete: _onSave,
             ),
           ],
@@ -81,6 +110,29 @@ class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
       return;
     }
 
-    widget.onSave(_startWeightTextController.text);
+    final startWeight = _startWeightTextController.text;
+    final currentWeight = _currentWeightTextController.text;
+
+    String? newStartWeight;
+    final activeStartWeight = widget.currentStartWeight?.parseToString();
+    if (!startWeight.isSame(otherValue: activeStartWeight)) {
+      newStartWeight = startWeight;
+    }
+
+    String? newCurrentWeight;
+    final activeCurrentWeight = widget.currentWeight?.parseToString();
+    if (!currentWeight.isSame(otherValue: activeCurrentWeight)) {
+      newCurrentWeight = currentWeight;
+    }
+
+    if (widget.isStartDateSameAsToday) {
+      // if start date is same as today, then new start weight is same as new current weight
+      newStartWeight = newCurrentWeight;
+    }
+
+    widget.onSave(
+      newStartWeight,
+      newCurrentWeight,
+    );
   }
 }

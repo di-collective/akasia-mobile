@@ -22,7 +22,6 @@ import '../../domain/entities/weight_history_entity.dart';
 import '../cubit/weight_goal/weight_goal_cubit.dart';
 import '../cubit/weight_history/weight_history_cubit.dart';
 import '../widgets/edit_activity_level_body_widget.dart';
-import '../widgets/edit_current_weight_body_widget.dart';
 import '../widgets/edit_pacing_body_widget.dart';
 import '../widgets/edit_start_weight_body_widget.dart';
 import '../widgets/edit_target_weight_body_widget.dart';
@@ -180,9 +179,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                           isDisabled: isStartDateSameAsToday,
                           onTap: () {
                             _onStartWeight(
+                              isStartDateSameAsToday: isStartDateSameAsToday,
+                              isAutoFocusStartWeight: true,
                               currentStartingDate: startDate,
                               currentStartWeight:
                                   currentWeightGoal?.startingWeight,
+                              currentWeight: latestHistory,
                             );
                           },
                         ),
@@ -193,10 +195,16 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                               )
                               .toCapitalizes(),
                           description: "$formmatedCurrentWeight kgs",
-                          onTap: () => _onCurrentWeight(
-                            currentWeightDate: latestHistory?.date,
-                            currentWeight: latestHistory?.weight,
-                          ),
+                          onTap: () {
+                            _onStartWeight(
+                              isStartDateSameAsToday: isStartDateSameAsToday,
+                              isAutoFocusCurrentWeight: true,
+                              currentStartingDate: startDate,
+                              currentStartWeight:
+                                  currentWeightGoal?.startingWeight,
+                              currentWeight: latestHistory,
+                            );
+                          },
                         ),
                       ],
                     );
@@ -353,8 +361,12 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
   }
 
   Future<bool?> _onStartWeight({
-    required double? currentStartWeight,
+    required bool isStartDateSameAsToday,
+    bool? isAutoFocusStartWeight,
+    bool? isAutoFocusCurrentWeight,
     required DateTime? currentStartingDate,
+    required double? currentStartWeight,
+    required WeightHistoryEntity? currentWeight,
   }) async {
     try {
       // show confirmation dialog
@@ -366,59 +378,42 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
               bottom: context.viewInsetsBottom,
             ),
             child: EditStartWeightBodyWidget(
+              isStartDateSameAsToday: isStartDateSameAsToday,
+              isAutoFocusStartWeight: isAutoFocusStartWeight,
+              isAutoFocusCurrentWeight: isAutoFocusCurrentWeight,
               currentStartWeight: currentStartWeight,
-              onSave: (value) async {
-                final isSuccess = await _onUpdateWeightGoal(
-                  startingWeight: value.parseToDouble,
-                  startingDate: currentStartingDate,
-                );
-                if (isSuccess != true) {
-                  return;
+              currentWeight: currentWeight?.weight,
+              onSave: (newStartWeight, newCurrentWeight) async {
+                bool? isSuccess;
+                if (newStartWeight != null) {
+                  // update starting weight on weight goal
+                  isSuccess = await _onUpdateWeightGoal(
+                    startingDate: currentStartingDate,
+                    startingWeight: newStartWeight.parseToDouble,
+                  );
+                  if (isSuccess != true) {
+                    return;
+                  }
+
+                  // emit weight history loaded
+                  BlocProvider.of<WeightHistoryCubit>(context)
+                      .emitUpdateLoadedData(
+                    newWeight: WeightHistoryEntity(
+                      date: currentStartingDate,
+                      weight: newStartWeight.parseToDouble,
+                    ),
+                  );
                 }
 
-                // emit weight history loaded
-                BlocProvider.of<WeightHistoryCubit>(context)
-                    .emitUpdateLoadedData(
-                  newWeight: WeightHistoryEntity(
-                    date: currentStartingDate,
-                    weight: value.parseToDouble,
-                  ),
-                );
-
-                // close dialog
-                Navigator.of(context).pop(isSuccess);
-              },
-            ),
-          );
-        },
-      );
-    } catch (_) {
-      rethrow;
-    }
-  }
-
-  Future<void> _onCurrentWeight({
-    required DateTime? currentWeightDate,
-    required double? currentWeight,
-  }) async {
-    try {
-      // show confirmation dialog
-      return await sl<BottomSheetInfo>().showMaterialModal(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: context.viewInsetsBottom,
-            ),
-            child: EditCurrentWeightBodyWidget(
-              currentWeight: currentWeight,
-              onSave: (value) async {
-                final isSuccess = await _onUpdateCurrentWeight(
-                  currentWeightDate: currentWeightDate,
-                  newCurrentWeight: value.parseToDouble,
-                );
-                if (isSuccess != true) {
-                  return;
+                if (newCurrentWeight != null) {
+                  // update current weight
+                  isSuccess = await _onUpdateCurrentWeight(
+                    currentWeightDate: currentWeight?.date,
+                    newCurrentWeight: newCurrentWeight.parseToDouble,
+                  );
+                  if (isSuccess != true) {
+                    return;
+                  }
                 }
 
                 // close dialog

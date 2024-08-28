@@ -4,21 +4,17 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../config/asset_path.dart';
-import '../../theme/color_scheme.dart';
 import '../../theme/dimens.dart';
-import '../../theme/text_theme.dart';
 
 class OptionButtonItem {
   final String label;
   final String? description;
-  final bool? isHideArrowIcon;
   final Function() onTap;
   final bool? isDisabled;
 
   OptionButtonItem({
     required this.label,
     this.description,
-    this.isHideArrowIcon,
     required this.onTap,
     this.isDisabled,
   });
@@ -59,7 +55,6 @@ class OptionsButtonWidget extends StatelessWidget {
           borderRadius: borderRadius,
           label: item.label,
           description: item.description,
-          isHideArrowIcon: item.isHideArrowIcon,
           onTap: item.onTap,
           isDisabled: item.isDisabled,
         );
@@ -68,12 +63,11 @@ class OptionsButtonWidget extends StatelessWidget {
   }
 }
 
-class _ItemWidget extends StatefulWidget {
+class _ItemWidget extends StatelessWidget {
   final String title;
   final BorderRadius? borderRadius;
   final String label;
   final String? description;
-  final bool? isHideArrowIcon;
   final bool? isDisabled;
 
   final Function() onTap;
@@ -83,100 +77,76 @@ class _ItemWidget extends StatefulWidget {
     this.borderRadius,
     required this.label,
     this.description,
-    this.isHideArrowIcon,
     required this.onTap,
     required this.isDisabled,
   });
 
-  @override
-  State<_ItemWidget> createState() => _ItemWidgetState();
-}
-
-class _ItemWidgetState extends State<_ItemWidget> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
     final colorScheme = context.theme.appColorScheme;
 
     return Material(
-      color: (widget.isDisabled == true)
-          ? colorScheme.surfaceDim
-          : colorScheme.white,
-      borderRadius: widget.borderRadius,
+      color: (isDisabled == true) ? colorScheme.surfaceDim : colorScheme.white,
+      borderRadius: borderRadius,
       child: InkWell(
-        onTap: widget.isDisabled == true ? null : widget.onTap,
-        borderRadius: widget.borderRadius,
+        onTap: isDisabled == true ? null : onTap,
+        borderRadius: borderRadius,
         child: Container(
           padding: const EdgeInsets.all(16),
           width: context.width,
-          child: _buildChild(
-            colorScheme: colorScheme,
-            textTheme: textTheme,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: (description != null)
+                      ? context.width * 0.4
+                      : context.width,
+                ),
+                child: Text(
+                  title,
+                  maxLines: 3,
+                  style: textTheme.bodyMedium.copyWith(
+                    color: colorScheme.onSurfaceDim,
+                  ),
+                ),
+              ),
+              if (description != null) ...[
+                const SizedBox(
+                  height: 8,
+                ),
+                Expanded(
+                  child: Text(
+                    description!,
+                    textAlign: TextAlign.end,
+                    maxLines: 3,
+                    style: textTheme.bodyMedium.copyWith(
+                      color: colorScheme.onSurfaceDim,
+                    ),
+                  ),
+                ),
+              ],
+              if (isDisabled == true) ...[
+                const SizedBox(
+                  width: 13,
+                ),
+              ] else ...[
+                const SizedBox(
+                  width: 8,
+                ),
+                SvgPicture.asset(
+                  AssetIconsPath.icChevronRight,
+                  colorFilter: ColorFilter.mode(
+                    colorScheme.onSurfaceBright,
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildChild({
-    required AppColorScheme colorScheme,
-    required AppTextTheme textTheme,
-  }) {
-    Widget? descriptionWidget;
-    if (widget.description != null) {
-      descriptionWidget = Text(
-        widget.description!,
-        textAlign: TextAlign.end,
-        maxLines: 3,
-        style: textTheme.bodyMedium.copyWith(
-          color: colorScheme.onSurfaceDim,
-        ),
-      );
-    }
-
-    Widget? iconWidget;
-    if (widget.isHideArrowIcon != true) {
-      iconWidget = SvgPicture.asset(
-        AssetIconsPath.icChevronRight,
-        colorFilter: ColorFilter.mode(
-          colorScheme.onSurfaceBright,
-          BlendMode.srcIn,
-        ),
-      );
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: (descriptionWidget != null)
-                ? context.width * 0.4
-                : context.width,
-          ),
-          child: Text(
-            widget.title,
-            maxLines: 3,
-            style: textTheme.bodyMedium.copyWith(
-              color: colorScheme.onSurfaceDim,
-            ),
-          ),
-        ),
-        if (descriptionWidget != null) ...[
-          const SizedBox(
-            height: 8,
-          ),
-          Expanded(
-            child: descriptionWidget,
-          ),
-        ],
-        if (iconWidget != null) ...[
-          const SizedBox(
-            width: 8,
-          ),
-          iconWidget,
-        ],
-      ],
     );
   }
 }

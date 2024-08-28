@@ -13,6 +13,7 @@ class WeightTextFormWidget extends TextFormWidget {
     super.title,
     super.hintText,
     super.isRequired,
+    super.readOnly,
     super.onChanged,
     super.onTap,
     super.autofocus,

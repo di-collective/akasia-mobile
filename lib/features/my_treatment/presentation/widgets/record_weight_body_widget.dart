@@ -66,8 +66,8 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          height: 58,
           padding: EdgeInsets.symmetric(
-            vertical: 4,
             horizontal: context.paddingHorizontal,
           ),
           decoration: BoxDecoration(
