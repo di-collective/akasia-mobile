@@ -482,6 +482,7 @@ class _ChartWidgetState extends State<_ChartWidget> {
                             TextSpan(
                               text: differenceWeight.parseToString(
                                 isRemoveMinus: true,
+                                maxFractionDigits: 2,
                               ),
                               style: TextStyle(
                                 color: colorScheme.onSurfaceDim,

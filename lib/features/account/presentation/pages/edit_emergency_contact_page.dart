@@ -322,7 +322,7 @@ class __BodyState extends State<_Body> {
         userId: newProfile.userId,
         ecRelation: newEcRelation,
         ecName: newEcName,
-        ecCountryCode: null, // TODO: Dynamic country
+        ecCountryCode: _selectedCountry?.phoneCode,
         ecPhone: newEcPhone,
       );
 
