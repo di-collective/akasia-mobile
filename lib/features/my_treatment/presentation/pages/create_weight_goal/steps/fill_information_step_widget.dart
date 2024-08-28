@@ -13,7 +13,7 @@ import '../../../../../../core/ui/widget/forms/height_text_form_widget.dart';
 import '../../../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../../../core/ui/widget/radios/gender_radio_widget.dart';
 
-class FillInformationStepWidget extends StatefulWidget {
+class FillInformationStepWidget extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController weightTextController;
   final TextEditingController weightGoalTextController;
@@ -28,6 +28,7 @@ class FillInformationStepWidget extends StatefulWidget {
   final Function(DateTime?) onSelectedDateOfBirth;
   final Function(SexType?) onSelectedSexType;
   final Function(WeightGoalActivityLevel?) onSelectedActivityLevel;
+  final Function() onReloadState;
 
   const FillInformationStepWidget({
     super.key,
@@ -44,14 +45,9 @@ class FillInformationStepWidget extends StatefulWidget {
     required this.onSelectedDateOfBirth,
     required this.onSelectedSexType,
     required this.onSelectedActivityLevel,
+    required this.onReloadState,
   });
 
-  @override
-  State<FillInformationStepWidget> createState() =>
-      _FillInformationStepWidgetState();
-}
-
-class _FillInformationStepWidgetState extends State<FillInformationStepWidget> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextTheme;
@@ -106,20 +102,20 @@ class _FillInformationStepWidgetState extends State<FillInformationStepWidget> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Form(
-              key: widget.formKey,
+              key: formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
                   WeightTextFormWidget(
                     context: context,
-                    controller: widget.weightTextController,
+                    controller: weightTextController,
                     title: context.locale.your(
                       context.locale.weight,
                     ),
                     isRequired: true,
                     onChanged: (_) {
-                      // reload
-                      setState(() {});
+                      // reload state
+                      onReloadState();
                     },
                   ),
                   const SizedBox(
@@ -127,19 +123,19 @@ class _FillInformationStepWidgetState extends State<FillInformationStepWidget> {
                   ),
                   WeightTextFormWidget(
                     context: context,
-                    controller: widget.weightGoalTextController,
+                    controller: weightGoalTextController,
                     title: context.locale.weightGoal,
                     isRequired: true,
                     onChanged: (_) {
-                      // reload
-                      setState(() {});
+                      // reload state
+                      onReloadState();
                     },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   DateFormWidget(
-                    controller: widget.dateOfBirthTextController,
+                    controller: dateOfBirthTextController,
                     title: context.locale.dateOfBirth,
                     hintText: context.locale.select(
                       context.locale.date,
@@ -147,8 +143,8 @@ class _FillInformationStepWidgetState extends State<FillInformationStepWidget> {
                     isRequired: true,
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
-                    initialDate: widget.selectedDateOfBirth,
-                    onSelectedDate: widget.onSelectedDateOfBirth,
+                    initialDate: selectedDateOfBirth,
+                    onSelectedDate: onSelectedDateOfBirth,
                   ),
                   const SizedBox(
                     height: 20,
@@ -156,22 +152,22 @@ class _FillInformationStepWidgetState extends State<FillInformationStepWidget> {
                   GenderRadioWidget(
                     title: context.locale.gender,
                     isRequired: true,
-                    groupValue: widget.selectedSex,
-                    onChanged: widget.onSelectedSexType,
+                    groupValue: selectedSex,
+                    onChanged: onSelectedSexType,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   HeightTextFormWidget(
                     context: context,
-                    controller: widget.heightTextController,
+                    controller: heightTextController,
                     title: context.locale.your(
                       context.locale.height,
                     ),
                     isRequired: true,
                     onChanged: (_) {
-                      // reload
-                      setState(() {});
+                      // reload state
+                      onReloadState();
                     },
                   ),
                   const SizedBox(
@@ -181,13 +177,14 @@ class _FillInformationStepWidgetState extends State<FillInformationStepWidget> {
                     context: context,
                     title: context.locale.activityLevel,
                     hintText: context.locale.choose,
-                    selectedValue: widget.selectedActivityLevel,
+                    selectedValue: selectedActivityLevel,
                     isRequired: true,
-                    onChanged: widget.onSelectedActivityLevel,
+                    onChanged: onSelectedActivityLevel,
                     validator: (val) {
                       if (val == null) {
                         return context.locale.cannotBeEmpty;
                       }
+
                       return null;
                     },
                   ),

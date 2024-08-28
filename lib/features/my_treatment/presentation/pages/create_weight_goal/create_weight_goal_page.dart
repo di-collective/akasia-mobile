@@ -14,6 +14,7 @@ import '../../../../../core/ui/extensions/weight_goal_activity_level_extension.d
 import '../../../../../core/ui/extensions/weight_goal_pace_extension.dart';
 import '../../../../../core/ui/theme/theme.dart';
 import '../../../../../core/ui/widget/buttons/button_widget.dart';
+import '../../../../../core/utils/logger.dart';
 import '../../../../../core/utils/service_locator.dart';
 import '../../../../account/domain/entities/profile_entity.dart';
 import '../../../../account/presentation/cubit/profile/profile_cubit.dart';
@@ -138,6 +139,7 @@ class __BodyState extends State<_Body> {
                           onSelectedDateOfBirth: _onChangeDateOfBirth,
                           onSelectedSexType: _onSelectedGender,
                           onSelectedActivityLevel: _onSelectedActivityLevel,
+                          onReloadState: _onReloadState,
                         ),
                         SelectPaceStepWidget(
                           selectedPace: _selectedPace,
@@ -272,6 +274,11 @@ class __BodyState extends State<_Body> {
     }
   }
 
+  // reload state
+  void _onReloadState() {
+    setState(() {});
+  }
+
   bool get _isDisabled {
     if (_currentPage == 0) {
       return _formKey.currentState?.validate() != true || _selectedSex == null;
@@ -302,6 +309,9 @@ class __BodyState extends State<_Body> {
 
       // show full screen loading
       context.showFullScreenLoading();
+
+      // update profile
+      await _onUpdateProfile();
 
       // get simulation
       await BlocProvider.of<SimulationCubit>(context).getSimulation(
@@ -338,15 +348,6 @@ class __BodyState extends State<_Body> {
         targetWeight: _weightGoalTextController.text,
       );
 
-      // update profile
-      try {
-        await _onUpdateProfile();
-      } catch (error) {
-        context.showErrorToast(
-          message: error.message(context),
-        );
-      }
-
       // go to success page
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -375,16 +376,26 @@ class __BodyState extends State<_Body> {
       }
 
       // new dob
-      final newDob = _selectedDateOfBirth?.formatDate(
-        format: "yyyy-MM-dd",
-      );
-      final activeDob = _activeProfile?.dob?.formatDate(
-        format: "yyyy-MM-dd",
-      );
-      if (newDob?.isSame(otherValue: activeDob) != true) {
-        newProfile = newProfile.copyWith(
-          dob: _selectedDateOfBirth?.toDateApi,
+      if (_selectedDateOfBirth != null) {
+        final newDob = _selectedDateOfBirth!.formatDate(
+          format: "yyyy-MM-dd",
         );
+        final activeDob = _activeProfile?.dob?.formatDate(
+          format: "yyyy-MM-dd",
+        );
+        if (newDob?.isSame(otherValue: activeDob) != true) {
+          newProfile = newProfile.copyWith(
+            dob: _selectedDateOfBirth!.toDateApi,
+          );
+
+          // calculate age
+          final nowDate = DateTime.now();
+          final ageinDays = nowDate.difference(_selectedDateOfBirth!).inDays;
+          final ageInYears = (ageinDays / 365).floor();
+          newProfile = newProfile.copyWith(
+            age: ageInYears.toString(),
+          );
+        }
       }
 
       // new gender
@@ -412,6 +423,9 @@ class __BodyState extends State<_Body> {
           activityLevel: newActivityLevel,
         );
       }
+      Logger.info('_onUpdateProfile newProfile: $newProfile');
+
+      // if profile data is not changed, return
       if (newProfile.isNull) {
         return;
       }
@@ -421,10 +435,22 @@ class __BodyState extends State<_Body> {
         userId: _activeProfile?.userId,
       );
 
-      // if profile data is changed, update profile data
+      // update profile data
       await BlocProvider.of<ProfileCubit>(context).updateProfile(
         newProfile: newProfile,
       );
+
+      // set active profile
+      setState(() {
+        _activeProfile = _activeProfile?.copyWith(
+          weight: newProfile.weight,
+          dob: newProfile.dob,
+          age: newProfile.age,
+          sex: newProfile.sex,
+          height: newProfile.height,
+          activityLevel: newProfile.activityLevel,
+        );
+      });
     } catch (_) {
       rethrow;
     }
