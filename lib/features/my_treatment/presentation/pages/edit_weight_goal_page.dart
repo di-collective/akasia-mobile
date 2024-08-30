@@ -177,6 +177,7 @@ class _EditWeightGoalPageState extends State<EditWeightGoalPage> {
                               .toCapitalizes(),
                           description: "$formmatedStartWeight kgs",
                           isDisabled: isStartDateSameAsToday,
+                          isHideArrowButton: true,
                           onTap: () {
                             _onStartWeight(
                               isStartDateSameAsToday: isStartDateSameAsToday,

@@ -84,7 +84,6 @@ class _EditStartWeightBodyWidgetState extends State<EditStartWeightBodyWidget> {
               isRequired: true,
               autofocus: widget.isAutoFocusStartWeight,
               readOnly: widget.isStartDateSameAsToday,
-              onEditingComplete: _onSave,
             ),
             const SizedBox(
               height: 20,

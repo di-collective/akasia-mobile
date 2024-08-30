@@ -10,13 +10,14 @@ class OptionButtonItem {
   final String label;
   final String? description;
   final Function() onTap;
-  final bool? isDisabled;
+  final bool? isDisabled, isHideArrowButton;
 
   OptionButtonItem({
     required this.label,
     this.description,
     required this.onTap,
     this.isDisabled,
+    this.isHideArrowButton,
   });
 }
 
@@ -57,6 +58,7 @@ class OptionsButtonWidget extends StatelessWidget {
           description: item.description,
           onTap: item.onTap,
           isDisabled: item.isDisabled,
+          isHideArrowButton: item.isHideArrowButton,
         );
       },
     );
@@ -68,7 +70,7 @@ class _ItemWidget extends StatelessWidget {
   final BorderRadius? borderRadius;
   final String label;
   final String? description;
-  final bool? isDisabled;
+  final bool? isDisabled, isHideArrowButton;
 
   final Function() onTap;
 
@@ -79,6 +81,7 @@ class _ItemWidget extends StatelessWidget {
     this.description,
     required this.onTap,
     required this.isDisabled,
+    required this.isHideArrowButton,
   });
 
   @override
@@ -127,7 +130,7 @@ class _ItemWidget extends StatelessWidget {
                   ),
                 ),
               ],
-              if (isDisabled == true) ...[
+              if (isDisabled == true || isHideArrowButton == true) ...[
                 const SizedBox(
                   width: 13,
                 ),
