@@ -111,11 +111,33 @@ extension StringExtension on String {
     String? format,
   }) {
     try {
+      Logger.info('toDateTime params: this $this, format $format');
+
       if (isEmpty) {
         return null;
       }
 
-      return DateFormat(format ?? 'yyyy-MM-ddTHH:mm:ssZ').parse(this);
+      String? selectedFormat = format;
+      if (selectedFormat == null) {
+        if (contains('T') && contains('Z')) {
+          // iso format
+          selectedFormat = 'yyyy-MM-ddTHH:mm:ssZ';
+        } else if (!contains(":")) {
+          // only date
+          selectedFormat = 'yyyy-MM-dd';
+        } else if (contains('T') && (contains('+') || contains('-'))) {
+          selectedFormat = 'yyyy-MM-ddTHH:mm:ssZ';
+        } else if (contains('.')) {
+          // example: 2024-08-23 15:29:04.273477
+          selectedFormat = 'yyyy-MM-dd HH:mm:ss.SSSSSS';
+        }
+      }
+      Logger.info('toDateTime selectedFormat: $selectedFormat');
+
+      final result = DateFormat(selectedFormat).parse(this);
+      Logger.success('toDateTime result: $result');
+
+      return result;
     } catch (error) {
       Logger.error('toDateTime error: $error');
 

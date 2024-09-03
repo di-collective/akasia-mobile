@@ -10,6 +10,7 @@ abstract class ToastInfo {
     required ToastType type,
     required String message,
     required BuildContext context,
+    int? timeInSecForIosWeb,
   });
 }
 
@@ -19,6 +20,7 @@ class ToastInfoImpl implements ToastInfo {
     required ToastType type,
     required String message,
     required BuildContext context,
+    int? timeInSecForIosWeb,
   }) async {
     // cancel all toasts before showing a new one
     await _cancelAllToasts();
@@ -33,6 +35,7 @@ class ToastInfoImpl implements ToastInfo {
         backgroundColor: type.backgroundColor(context),
         textColor: type.textColor(context),
         fontSize: textTheme.labelMedium.fontSize,
+        timeInSecForIosWeb: timeInSecForIosWeb ?? 1,
       );
     } catch (_) {
       rethrow;

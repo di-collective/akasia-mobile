@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import '../../utils/logger.dart';
 import '../../common/exception.dart';
+import '../../utils/logger.dart';
 
 class AppHttpClient {
   final Dio dio;
@@ -50,19 +50,8 @@ class AppHttpClient {
       );
 
       return response;
-    } on DioException catch (e) {
-      final response = e.response;
-      final message = e.message;
-
-      if (response != null) {
-        throw AppHttpException(
-          code: response.statusCode,
-        );
-      } else {
-        throw AppUnexpectedException(
-          message: message,
-        );
-      }
+    } on DioException catch (_) {
+      rethrow;
     } catch (e) {
       throw const AppUnexpectedException();
     }
@@ -106,20 +95,8 @@ class AppHttpClient {
       );
 
       return response;
-    } on DioException catch (e) {
-      final response = e.response;
-      final message = e.message;
-
-      if (response != null) {
-        throw AppHttpException(
-          code: response.statusCode,
-          message: message,
-        );
-      } else {
-        throw AppUnexpectedException(
-          message: message,
-        );
-      }
+    } on DioException catch (_) {
+      rethrow;
     } catch (e) {
       throw const AppUnexpectedException();
     }
@@ -164,19 +141,54 @@ class AppHttpClient {
       );
 
       return response;
-    } on DioException catch (e) {
-      final response = e.response;
-      final message = e.message;
-      if (response != null) {
-        throw AppHttpException(
-          code: response.statusCode,
-          message: message,
-        );
-      } else {
-        throw AppUnexpectedException(
-          message: message,
-        );
+    } on DioException catch (_) {
+      rethrow;
+    } catch (e) {
+      throw const AppUnexpectedException();
+    }
+  }
+
+  Future<Response> put({
+    required String url,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
+    FormData? formData,
+    Map<String, dynamic>? headers,
+    CancelToken? cancelToken,
+  }) async {
+    try {
+      Logger.info("---- URL ----\n$url");
+
+      Logger.info("---- DATA ----\n$data");
+
+      Logger.info("---- QUERY PARAMETERS ----\n$queryParameters");
+
+      Logger.info("---- FORMDATA ----\n${formData?.fields}");
+
+      // add default headers
+      headers ??= {};
+      if (headers['Content-Type'] == null) {
+        // add default content type
+        headers['Content-Type'] = 'application/json';
       }
+
+      Logger.info("---- HEADERS ----\n$headers");
+
+      Logger.info("---- CANCELTOKEN ----\n$cancelToken");
+
+      final response = await dio.put(
+        url,
+        data: data ?? formData,
+        queryParameters: queryParameters,
+        options: Options(
+          headers: headers,
+        ),
+        cancelToken: cancelToken,
+      );
+
+      return response;
+    } on DioException catch (_) {
+      rethrow;
     } catch (e) {
       throw const AppUnexpectedException();
     }

@@ -5,20 +5,41 @@ extension DoubleExtension on double {
     return this == otherValue;
   }
 
-  String? get parseToString {
-    try {
-      // split zero after dot
-      final String value = toString();
-      final List<String> splitValue = value.split('.');
-      if (splitValue.length == 2) {
-        if (splitValue[1] == '0') {
-          return splitValue[0];
+  String parseToString({
+    bool? isRemoveMinus,
+    int? maxFractionDigits,
+  }) {
+    String result = toString();
+
+    // remove minus
+    if (isRemoveMinus == true) {
+      if (result.startsWith('-')) {
+        result = result.substring(1);
+      }
+    }
+
+    // split zero after dot
+    if (result.contains('.')) {
+      final split = result.split('.');
+      if (split.length == 2) {
+        final decimal = split[1];
+        if (decimal == '0') {
+          result = split.first;
         }
       }
 
-      return value;
-    } catch (_) {
-      return null;
+      // max fraction digits
+      if (maxFractionDigits != null) {
+        final split = result.split('.');
+        if (split.length == 2) {
+          final decimal = split[1];
+          if (decimal.length > maxFractionDigits) {
+            result = '${split[0]}.${decimal.substring(0, maxFractionDigits)}';
+          }
+        }
+      }
     }
+
+    return result;
   }
 }

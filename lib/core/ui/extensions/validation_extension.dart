@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'build_context_extension.dart';
+import 'double_extension.dart';
 import 'string_extension.dart';
 
 extension TextEditingControllerExtension on TextEditingController {
@@ -204,6 +205,7 @@ extension TextEditingControllerExtension on TextEditingController {
   String? validateWeight({
     required BuildContext context,
     bool? isRequired,
+    double? minimum,
   }) {
     if (isRequired == true) {
       if (text.isEmpty) {
@@ -219,11 +221,20 @@ extension TextEditingControllerExtension on TextEditingController {
       return context.locale.onlyNumber;
     }
 
-    // validate maximum amount
     final amount = text.parseToDouble;
     if (amount != null) {
+      // validate maximum amount
       if (amount > 999) {
         return context.locale.maximum(999);
+      }
+
+      // validate minimum amount
+      if (minimum != null) {
+        if (amount < minimum) {
+          return context.locale.minimumAmount(
+            minimum.parseToString(),
+          );
+        }
       }
     }
 
@@ -232,7 +243,9 @@ extension TextEditingControllerExtension on TextEditingController {
 
   String? validateHeight({
     required BuildContext context,
+    required int maximum,
     bool? isRequired,
+    double? minimum,
   }) {
     if (isRequired == true) {
       if (text.isEmpty) {
@@ -248,11 +261,20 @@ extension TextEditingControllerExtension on TextEditingController {
       return context.locale.onlyNumber;
     }
 
-    // validate maximum amount
     final amount = text.parseToDouble;
     if (amount != null) {
-      if (amount > 999) {
-        return context.locale.maximum(999);
+      // validate maximum amount
+      if (amount > maximum) {
+        return context.locale.maximum(maximum);
+      }
+
+      // validate minimum amount
+      if (minimum != null) {
+        if (amount < minimum) {
+          return context.locale.minimumAmount(
+            minimum.parseToString(),
+          );
+        }
       }
     }
 

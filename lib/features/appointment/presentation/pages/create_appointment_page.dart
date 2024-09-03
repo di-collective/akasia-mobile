@@ -28,7 +28,7 @@ import '../widgets/calendar_information_widget.dart';
 import '../widgets/clinic_location_item_widget.dart';
 import '../widgets/clinic_locations_loading_widget.dart';
 import '../widgets/date_picker_widget.dart';
-import '../widgets/hour_widget.dart';
+import '../widgets/arrival_time_widget.dart';
 
 enum CreateAppointmentStep {
   chooseClinic,
@@ -352,7 +352,7 @@ class __BodyState extends State<_Body> {
                           const SizedBox(
                             height: 24,
                           ),
-                          ArrivalWidget(
+                          ArrivalTimeWidget(
                             isToday: _selectedDate?.isToday == true,
                             selectedHour: _selectedTime,
                             clinicLocation: _selectedClinicLocation,

@@ -9,8 +9,8 @@ import '../../../../core/ui/extensions/app_locale_extension.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/int_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/buttons/options_button_widget.dart';
 import '../cubit/steps/steps_cubit.dart';
-import '../widgets/option_button_item_widget.dart';
 import '../widgets/weekly_chart_widget.dart';
 
 class StepsPage extends StatefulWidget {
@@ -85,7 +85,7 @@ class _StepsPageState extends State<StepsPage> {
 
                     // calculate average
                     final total = stepsTotal.sum();
-                    if (dataInWeek.isNotEmpty) {
+                    if (stepsTotal.isNotEmpty) {
                       average = total ~/ stepsTotal.length;
                     }
                   }
@@ -121,20 +121,17 @@ class _StepsPageState extends State<StepsPage> {
             const SizedBox(
               height: 8,
             ),
-            OptionButtonItemWidget(
-              title: context.locale.showAllData,
-              onTap: _onShowAllData,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            const Divider(),
-            OptionButtonItemWidget(
-              title: context.locale.dataSourceAndAccess,
-              onTap: _onDataSourceAndAccess,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
+            OptionsButtonWidget(
+              items: [
+                OptionButtonItem(
+                  label: context.locale.showAllData,
+                  onTap: _onShowAllData,
+                ),
+                OptionButtonItem(
+                  label: context.locale.dataSourceAndAccess,
+                  onTap: _onDataSourceAndAccess,
+                ),
+              ],
             ),
             SizedBox(
               height: context.paddingBottom,

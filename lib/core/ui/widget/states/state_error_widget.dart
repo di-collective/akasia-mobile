@@ -68,6 +68,7 @@ class StateErrorWidget extends StatelessWidget {
               text: buttonText,
               width: context.width * 0.6,
               onTap: onTapButton,
+              height: 40,
               padding: const EdgeInsets.symmetric(
                 vertical: 8,
                 horizontal: 16,

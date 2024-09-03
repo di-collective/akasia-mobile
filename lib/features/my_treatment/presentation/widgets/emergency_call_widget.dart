@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/common/open_app_info.dart';
 import '../../../../core/config/asset_path.dart';
-import '../../../../core/config/env_config.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
@@ -13,10 +12,12 @@ import '../../../../core/utils/service_locator.dart';
 
 class EmergencyCallWidget extends StatefulWidget {
   final bool isDisabled;
+  final String? phoneNumber;
 
   const EmergencyCallWidget({
     super.key,
     required this.isDisabled,
+    required this.phoneNumber,
   });
 
   @override
@@ -75,7 +76,9 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
           ),
           ButtonWidget(
             onTap: _onCall,
-            padding: const EdgeInsets.all(25),
+            width: 62,
+            height: 62,
+            padding: const EdgeInsets.all(16),
             backgroundColor: widget.isDisabled
                 ? colorScheme.onSurfaceBright
                 : colorScheme.primary,
@@ -85,6 +88,9 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
             borderRadius: BorderRadius.circular(99),
             child: SvgPicture.asset(
               AssetIconsPath.icCall,
+              height: 30,
+              width: 30,
+              fit: BoxFit.contain,
               colorFilter: ColorFilter.mode(
                 colorScheme.onPrimary,
                 BlendMode.srcIn,
@@ -102,18 +108,15 @@ class _EmergencyCallWidgetState extends State<EmergencyCallWidget> {
         return;
       }
 
-      final phoneNumber = EnvConfig.chatUsNumber.toString();
-      try {
-        // open whatsapp
-        await sl<OpenAppInfo>().openLink(
-          url: phoneNumber.toWhatsappUrl,
-        );
-      } catch (error) {
-        // if whatsapp error, try open phone telphone
-        await sl<OpenAppInfo>().openLink(
-          url: phoneNumber.toTelpUrl,
-        );
+      final phoneNumber = widget.phoneNumber;
+      if (phoneNumber == null) {
+        return;
       }
+
+      // open phone telphone
+      await sl<OpenAppInfo>().openLink(
+        url: phoneNumber.toTelpUrl,
+      );
     } catch (error) {
       context.showErrorToast(
         message: error.message(context),

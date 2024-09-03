@@ -9,7 +9,7 @@ import '../../../../core/ui/extensions/build_context_extension.dart';
 import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/widget/border_radius_config.dart';
+import '../../../../core/ui/theme/dimens.dart';
 import '../../../../core/ui/widget/loadings/shimmer_loading.dart';
 
 const _maxDataLength = 7;
@@ -257,7 +257,7 @@ class _ContainerWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadiusConfig.l,
+          borderRadius: BorderRadius.circular(AppRadius.large),
           border: Border.all(
             color: colorScheme.outlineBright,
           ),

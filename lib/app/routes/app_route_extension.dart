@@ -12,6 +12,7 @@ import '../../features/account_setting/presentation/pages/change_phone_number_pa
 import '../../features/account_setting/presentation/pages/deactive_account_page.dart';
 import '../../features/account_setting/presentation/pages/success_deactive_account_page.dart';
 import '../../features/appointment/presentation/pages/create_appointment_page.dart';
+import '../../features/appointment/presentation/pages/my_schedule_page.dart';
 import '../../features/auth/presentation/pages/create_new_password_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
@@ -39,11 +40,11 @@ import '../../features/health/presentation/pages/workout/workout_details_page.da
 import '../../features/health/presentation/pages/workout/workout_page.dart';
 import '../../features/help_center/presentation/pages/help_center_page.dart';
 import '../../features/main/presentation/pages/main_page.dart';
-import '../../features/appointment/presentation/pages/my_schedule_page.dart';
+import '../../features/my_treatment/presentation/pages/create_weight_goal/create_weight_goal_page.dart';
+import '../../features/my_treatment/presentation/pages/edit_weight_goal_page.dart';
 import '../../features/notification/presentation/pages/notifications_page.dart';
 import '../../features/partner_service/presentation/pages/partner_connect_page.dart';
 import '../../features/partner_service/presentation/pages/partner_services_page.dart';
-import '../../features/personal_information/presentation/pages/fill_personal_information_page.dart';
 import '../../features/ratings/presentation/pages/give_rating_page.dart';
 import '../../features/ratings/presentation/pages/ratings_page.dart';
 import '../../features/ratings/presentation/pages/write_review_page.dart';
@@ -99,8 +100,10 @@ extension AppRouteExtension on AppRoute {
         return 'give-ratings';
       case AppRoute.writeReview:
         return 'write-review';
-      case AppRoute.fillPersonalInformation:
-        return 'fill-personal-information';
+      case AppRoute.createWeightGoal:
+        return 'create-weight-goal';
+      case AppRoute.editWeightGoal:
+        return 'edit-weight-goal';
       case AppRoute.createAppointment:
         return 'create-appointment';
       case AppRoute.mySchedule:
@@ -256,8 +259,10 @@ extension AppRouteExtension on AppRoute {
         return WriteReviewPage(
           args: params,
         );
-      case AppRoute.fillPersonalInformation:
-        return const FillPersonalInformationPage();
+      case AppRoute.createWeightGoal:
+        return const CreateWeightGoalPage();
+      case AppRoute.editWeightGoal:
+        return const EditWeightGoalPage();
       case AppRoute.createAppointment:
         return const CreateAppointmentPage();
       case AppRoute.mySchedule:

@@ -1,12 +1,13 @@
-import 'package:akasia365mc/core/ui/widget/dividers/title_divider_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routes/app_route.dart';
 import '../../../../core/ui/extensions/build_context_extension.dart';
+import '../../../../core/ui/extensions/double_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
+import '../../../../core/ui/widget/dividers/title_divider_widget.dart';
 import '../../../../core/ui/widget/images/network_image_widget.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../cubit/profile/profile_cubit.dart';
@@ -135,10 +136,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     sex = profile.sex;
                     bloodType = profile.bloodType;
                     if (profile.weight != null) {
-                      weight = '${profile.weight} kgs';
+                      weight = '${profile.weight?.parseToString() ?? "-"} kgs';
                     }
                     if (profile.height != null) {
-                      height = '${profile.height} cm';
+                      height = '${profile.height?.parseToString() ?? "-"} cm';
                     }
                     activityLevel = profile.activityLevel;
                   }

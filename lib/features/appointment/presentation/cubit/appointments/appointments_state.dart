@@ -26,6 +26,14 @@ final class AppointmentsLoaded extends AppointmentsState {
     );
   }
 
+  AppointmentEntity? get nextAppointment {
+    if (appointments.isEmpty) {
+      return null;
+    }
+
+    return appointments.first;
+  }
+
   @override
   List<Object> get props => [appointments];
 }

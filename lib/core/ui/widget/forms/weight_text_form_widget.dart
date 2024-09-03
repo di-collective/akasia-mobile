@@ -13,17 +13,21 @@ class WeightTextFormWidget extends TextFormWidget {
     super.title,
     super.hintText,
     super.isRequired,
+    super.readOnly,
     super.onChanged,
     super.onTap,
+    super.autofocus,
+    super.onEditingComplete,
   }) : super(
           keyboardType: const TextInputType.numberWithOptions(
             decimal: true,
           ),
-          suffixText: "kg",
+          suffixText: "kgs",
           validator: (val) {
             return controller?.validateWeight(
               context: context,
               isRequired: isRequired,
+              minimum: 1,
             );
           },
         );

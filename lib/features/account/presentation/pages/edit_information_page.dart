@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +11,6 @@ import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
 import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/dropdowns/activity_level_dropdown_widget.dart';
 import '../../../../core/ui/widget/dropdowns/string_dropdown_widget.dart';
 import '../../../../core/ui/widget/forms/date_form_widget.dart';
 import '../../../../core/ui/widget/forms/height_text_form_widget.dart';
@@ -21,13 +19,9 @@ import '../../../../core/ui/widget/forms/phone_number_text_form_widget.dart';
 import '../../../../core/ui/widget/forms/text_form_widget.dart';
 import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 import '../../../../core/ui/widget/radios/gender_radio_widget.dart';
-import '../../../../core/utils/service_locator.dart';
-import '../../../activity_level/data/datasources/local/activity_level_config.dart';
-import '../../../activity_level/domain/entities/activity_level_entity.dart';
 import '../../../country/domain/entities/country_entity.dart';
 import '../../data/datasources/local/blood_type_config.dart';
 import '../../domain/entities/profile_entity.dart';
-import '../cubit/edit_information/edit_information_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
 
 class EditInformationPageParams {
@@ -38,7 +32,7 @@ class EditInformationPageParams {
   });
 }
 
-class EditInformationPage extends StatelessWidget {
+class EditInformationPage extends StatefulWidget {
   final EditInformationPageParams? params;
 
   const EditInformationPage({
@@ -47,28 +41,10 @@ class EditInformationPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<EditInformationCubit>(),
-      child: _Body(
-        params: params,
-      ),
-    );
-  }
+  State<EditInformationPage> createState() => _EditInformationPageState();
 }
 
-class _Body extends StatefulWidget {
-  final EditInformationPageParams? params;
-
-  const _Body({
-    this.params,
-  });
-
-  @override
-  State<_Body> createState() => __BodyState();
-}
-
-class __BodyState extends State<_Body> {
+class _EditInformationPageState extends State<EditInformationPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _membershipIdTextController = TextEditingController();
@@ -83,7 +59,7 @@ class __BodyState extends State<_Body> {
   final _bloodTypeTextController = TextEditingController();
   final _weightTextController = TextEditingController();
   final _heightTextController = TextEditingController();
-  ActivityLevelEntity? _selectedActivityLevel;
+  // ActivityLevelEntity? _selectedActivityLevel;
 
   ProfileEntity? _activeProfile;
 
@@ -116,12 +92,12 @@ class __BodyState extends State<_Body> {
       _bloodTypeTextController.text = _activeProfile?.bloodType ?? '';
       _weightTextController.text = _activeProfile?.weight?.toString() ?? '';
       _heightTextController.text = _activeProfile?.height?.toString() ?? '';
-      _selectedActivityLevel =
-          ActivityLevelLocalConfig.allActivityLevels.firstWhereOrNull(
-        (element) => (element.activity ?? '').isSame(
-          otherValue: _activeProfile?.activityLevel,
-        ),
-      );
+      // _selectedActivityLevel =
+      //     ActivityLevelLocalConfig.allActivityLevels.firstWhereOrNull(
+      //   (element) => (element.activity ?? '').isSame(
+      //     otherValue: _activeProfile?.activityLevel,
+      //   ),
+      // );
     }
   }
 
@@ -147,249 +123,243 @@ class __BodyState extends State<_Body> {
 
     return GestureDetector(
       onTap: () => context.closeKeyboard,
-      child: BlocBuilder<EditInformationCubit, EditInformationState>(
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(context.locale.information),
-            ),
-            body: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.paddingHorizontal,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            Text(
-                              context.locale.personalInformation,
-                              style: textTheme.titleMedium.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurfaceDim,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            TextFormWidget(
-                              controller: _membershipIdTextController,
-                              title: context.locale.membershipId,
-                              keyboardType: TextInputType.number,
-                              readOnly: true,
-                              isRequired: true,
-                              validator: (val) {
-                                return _membershipIdTextController.cannotEmpty(
-                                  context: context,
-                                );
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            KtpTextFormWidget(
-                              context: context,
-                              controller: _eKtpTextController,
-                              title: context.locale.eKtpNumber,
-                              readOnly: _activeProfile?.nik !=
-                                  null, // if user has eKtp, set to true
-                              isRequired: _activeProfile?.nik !=
-                                  null, // if user has eKtp, set to true
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            TextFormWidget(
-                              controller: _fullNameTextController,
-                              title: context.locale.fullName,
-                              isRequired: true,
-                              readOnly: true,
-                              validator: (val) {
-                                return _fullNameTextController.validateName(
-                                  context: context,
-                                  isRequired: true,
-                                );
-                              },
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            PhoneNumberTextFormWidget(
-                              context: context,
-                              controller: _phoneTextController,
-                              title: context.locale.phoneNumber,
-                              selectedCountry: _selectedCountry,
-                              isRequired: true,
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            TextFormWidget(
-                              controller: _ageTextController,
-                              title: context.locale.age,
-                              suffixText: "yo",
-                              keyboardType: TextInputType.number,
-                              validator: (val) {
-                                return _ageTextController.validateOnlyNumber(
-                                  context: context,
-                                );
-                              },
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            DateFormWidget(
-                              controller: _dateOfBirthTextController,
-                              title: context.locale.dateOfBirth,
-                              hintText: context.locale.choose,
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime.now(),
-                              initialDate: _selectedDateOfBirth,
-                              onSelectedDate: (val) {
-                                if (val == null) {
-                                  return;
-                                }
-                                if (val == _selectedDateOfBirth) {
-                                  return;
-                                }
-
-                                final newDate = val.formatDate();
-                                if (newDate == null) {
-                                  return;
-                                }
-
-                                setState(() {
-                                  _dateOfBirthTextController.text = newDate;
-                                  _selectedDateOfBirth = val;
-                                });
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            GenderRadioWidget(
-                              groupValue: _selectedSex,
-                              title: context.locale.gender,
-                              onChanged: (val) {
-                                if (val != null && val != _selectedSex) {
-                                  setState(() {
-                                    _selectedSex = val;
-                                  });
-                                }
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            StringDropdownWidget(
-                              title: context.locale.bloodType,
-                              hintText: context.locale.choose,
-                              options: BloodTypeConfig.allBloodTypes,
-                              selectedValue:
-                                  _bloodTypeTextController.text.isEmpty
-                                      ? null
-                                      : _bloodTypeTextController.text,
-                              onChanged: (option) {
-                                if (option != null &&
-                                    option != _bloodTypeTextController.text) {
-                                  setState(() {
-                                    _bloodTypeTextController.text = option;
-                                  });
-                                }
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            WeightTextFormWidget(
-                              context: context,
-                              controller: _weightTextController,
-                              title: context.locale.weight,
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            HeightTextFormWidget(
-                              context: context,
-                              controller: _heightTextController,
-                              title: context.locale.height,
-                              onChanged: (_) {
-                                // reload
-                                setState(() {});
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ActivityLevelDropdownWidget(
-                              context: context,
-                              title: context.locale.activityLevel,
-                              hintText: context.locale.choose,
-                              selectedValue: _selectedActivityLevel,
-                              onChanged: (option) {
-                                if (option != null &&
-                                    option != _selectedActivityLevel) {
-                                  setState(() {
-                                    _selectedActivityLevel = option;
-                                  });
-                                }
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(context.locale.information),
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.paddingHorizontal,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 16,
                         ),
-                      ),
+                        Text(
+                          context.locale.personalInformation,
+                          style: textTheme.titleMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurfaceDim,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        TextFormWidget(
+                          controller: _membershipIdTextController,
+                          title: context.locale.membershipId,
+                          keyboardType: TextInputType.number,
+                          readOnly: true,
+                          isRequired: true,
+                          validator: (val) {
+                            return _membershipIdTextController.cannotEmpty(
+                              context: context,
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        KtpTextFormWidget(
+                          context: context,
+                          controller: _eKtpTextController,
+                          title: context.locale.eKtpNumber,
+                          readOnly: _activeProfile?.nik !=
+                              null, // if user has eKtp, set to true
+                          isRequired: _activeProfile?.nik !=
+                              null, // if user has eKtp, set to true
+                          onChanged: (_) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormWidget(
+                          controller: _fullNameTextController,
+                          title: context.locale.fullName,
+                          isRequired: true,
+                          readOnly: true,
+                          validator: (val) {
+                            return _fullNameTextController.validateName(
+                              context: context,
+                              isRequired: true,
+                            );
+                          },
+                          onChanged: (_) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        PhoneNumberTextFormWidget(
+                          context: context,
+                          controller: _phoneTextController,
+                          title: context.locale.phoneNumber,
+                          selectedCountry: _selectedCountry,
+                          isRequired: true,
+                          onChanged: (_) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormWidget(
+                          controller: _ageTextController,
+                          title: context.locale.age,
+                          suffixText: "yo",
+                          keyboardType: TextInputType.number,
+                          validator: (val) {
+                            return _ageTextController.validateOnlyNumber(
+                              context: context,
+                            );
+                          },
+                          onChanged: (_) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        DateFormWidget(
+                          controller: _dateOfBirthTextController,
+                          title: context.locale.dateOfBirth,
+                          hintText: context.locale.choose,
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime.now(),
+                          initialDate: _selectedDateOfBirth,
+                          onSelectedDate: (val) {
+                            if (val == null) {
+                              return;
+                            }
+                            if (val == _selectedDateOfBirth) {
+                              return;
+                            }
+
+                            final newDate = val.formatDate();
+                            if (newDate == null) {
+                              return;
+                            }
+
+                            setState(() {
+                              _dateOfBirthTextController.text = newDate;
+                              _selectedDateOfBirth = val;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        GenderRadioWidget(
+                          groupValue: _selectedSex,
+                          title: context.locale.gender,
+                          onChanged: (val) {
+                            if (val != null && val != _selectedSex) {
+                              setState(() {
+                                _selectedSex = val;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        StringDropdownWidget(
+                          title: context.locale.bloodType,
+                          hintText: context.locale.choose,
+                          options: BloodTypeConfig.allBloodTypes,
+                          selectedValue: _bloodTypeTextController.text.isEmpty
+                              ? null
+                              : _bloodTypeTextController.text,
+                          onChanged: (option) {
+                            if (option != null &&
+                                option != _bloodTypeTextController.text) {
+                              setState(() {
+                                _bloodTypeTextController.text = option;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        WeightTextFormWidget(
+                          context: context,
+                          controller: _weightTextController,
+                          title: context.locale.weight,
+                          onChanged: (_) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        HeightTextFormWidget(
+                          context: context,
+                          controller: _heightTextController,
+                          title: context.locale.height,
+                          onChanged: (_) {
+                            // reload
+                            setState(() {});
+                          },
+                        ),
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
+                        // ActivityLevelDropdownWidget(
+                        //   context: context,
+                        //   title: context.locale.activityLevel,
+                        //   hintText: context.locale.choose,
+                        //   selectedValue: _selectedActivityLevel,
+                        //   onChanged: (option) {
+                        //     if (option != null &&
+                        //         option != _selectedActivityLevel) {
+                        //       setState(() {
+                        //         _selectedActivityLevel = option;
+                        //       });
+                        //     }
+                        //   },
+                        // ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ButtonWidget(
-                    text: context.locale.save,
-                    width: context.width,
-                    isLoading: state is EditInformationLoading,
-                    isDisabled: _isDisabled,
-                    onTap: _onSave,
-                  ),
-                  SizedBox(
-                    height: context.paddingBottom,
-                  ),
-                ],
+                ),
               ),
-            ),
-          );
-        },
+              const SizedBox(
+                height: 10,
+              ),
+              ButtonWidget(
+                text: context.locale.save,
+                width: context.width,
+                isDisabled: _isDisabled,
+                onTap: _onSave,
+              ),
+              SizedBox(
+                height: context.paddingBottom,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -452,10 +422,10 @@ class __BodyState extends State<_Body> {
       return false;
     }
 
-    if (!(_selectedActivityLevel?.activity ?? '')
-        .isSame(otherValue: _activeProfile?.activityLevel ?? '')) {
-      return false;
-    }
+    // if (!(_selectedActivityLevel?.activity ?? '')
+    //     .isSame(otherValue: _activeProfile?.activityLevel ?? '')) {
+    //   return false;
+    // }
 
     return true;
   }
@@ -470,14 +440,14 @@ class __BodyState extends State<_Body> {
       // close keyboard
       context.closeKeyboard;
 
-      ProfileEntity profile = ProfileEntity(
+      ProfileEntity newProfile = ProfileEntity(
         userId: _activeProfile?.userId,
       );
 
       // nik
       if (!(_activeProfile?.nik ?? '')
           .isSame(otherValue: _eKtpTextController.text)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           nik: _eKtpTextController.text,
         );
       }
@@ -485,7 +455,7 @@ class __BodyState extends State<_Body> {
       // country code
       if (!(_activeProfile?.countryCode ?? '')
           .isSame(otherValue: _selectedCountry?.phoneCode ?? '')) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           countryCode: _selectedCountry?.phoneCode ?? '',
         );
       }
@@ -493,7 +463,7 @@ class __BodyState extends State<_Body> {
       // phone number
       if (!(_activeProfile?.phone ?? '')
           .isSame(otherValue: _phoneTextController.text)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           phone: _phoneTextController.text,
         );
       }
@@ -501,7 +471,7 @@ class __BodyState extends State<_Body> {
       // age
       if (!(_activeProfile?.age ?? '')
           .isSame(otherValue: _ageTextController.text)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           age: _ageTextController.text,
         );
       }
@@ -509,14 +479,14 @@ class __BodyState extends State<_Body> {
       // date of birth
       if (!(_activeProfile?.dob?.formatDate() ?? '')
           .isSame(otherValue: _dateOfBirthTextController.text)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           dob: _selectedDateOfBirth?.toDateApi,
         );
       }
 
       // sex
       if (!(_selectedSex?.name ?? '').isSame(otherValue: _activeProfile?.sex)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           sex: _selectedSex?.name.toCapitalize(),
         );
       }
@@ -524,7 +494,7 @@ class __BodyState extends State<_Body> {
       // blood type
       if (!(_activeProfile?.bloodType ?? '')
           .isSame(otherValue: _bloodTypeTextController.text)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           bloodType: _bloodTypeTextController.text,
         );
       }
@@ -533,7 +503,7 @@ class __BodyState extends State<_Body> {
       if (!(_activeProfile?.weight
               ?.isSame(otherValue: _weightTextController.text.parseToDouble) ??
           true)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           weight: _weightTextController.text.parseToDouble,
         );
       }
@@ -542,56 +512,46 @@ class __BodyState extends State<_Body> {
       if (!(_activeProfile?.height
               ?.isSame(otherValue: _heightTextController.text.parseToDouble) ??
           true)) {
-        profile = profile.copyWith(
+        newProfile = newProfile.copyWith(
           height: _heightTextController.text.parseToDouble,
         );
       }
 
-      // activity level
-      if (!(_activeProfile?.activityLevel ?? '')
-          .isSame(otherValue: _selectedActivityLevel?.activity ?? '')) {
-        profile = profile.copyWith(
-          activityLevel: _selectedActivityLevel?.activity ?? '',
-        );
-      }
+      // // activity level
+      // if (!(_activeProfile?.activityLevel ?? '')
+      //     .isSame(otherValue: _selectedActivityLevel?.activity ?? '')) {
+      //   profile = profile.copyWith(
+      //     activityLevel: _selectedActivityLevel?.activity ?? '',
+      //   );
+      // }
+
+      // show full screen loading
+      context.showFullScreenLoading();
 
       // save to API
-      await BlocProvider.of<EditInformationCubit>(context).saveEditInformation(
-        profile: profile,
+      final result = await BlocProvider.of<ProfileCubit>(context).updateProfile(
+        newProfile: newProfile,
       );
+      if (result == null) {
+        return;
+      }
+
+      // update active profile
+      setState(() {
+        _activeProfile = result;
+      });
 
       // show toast
       context.showSuccessToast(
         message: context.locale.successEditInformation,
       );
-
-      // update active profile
-      setState(() {
-        _activeProfile = _activeProfile?.copyWith(
-          nik: profile.nik,
-          name: profile.name,
-          countryCode: profile.countryCode,
-          phone: profile.phone,
-          age: profile.age,
-          dob: profile.dob,
-          sex: profile.sex,
-          bloodType: profile.bloodType,
-          weight: profile.weight,
-          height: profile.height,
-          activityLevel: profile.activityLevel,
-        );
-      });
-
-      // update profile state
-      if (_activeProfile != null) {
-        BlocProvider.of<ProfileCubit>(context).emitProfileData(
-          _activeProfile!,
-        );
-      }
     } catch (error) {
       context.showErrorToast(
         message: error.message(context),
       );
+    } finally {
+      // hide full screen loading
+      context.hideFullScreenLoading;
     }
   }
 }

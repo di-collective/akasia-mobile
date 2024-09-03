@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/exception.dart';
+import '../../network/http/dio_interceptor.dart';
 import 'build_context_extension.dart';
 import 'exception_extension.dart';
 
@@ -23,6 +24,8 @@ extension AppExceptionExtension on AppException {
           }
 
           return code.toString();
+        } else if (code is NotFoundException) {
+          return "Data not found";
         } else {
           return code.toString();
         }

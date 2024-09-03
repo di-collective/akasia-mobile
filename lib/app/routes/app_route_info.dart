@@ -66,7 +66,8 @@ class AppRouteInfoImpl implements AppRouteInfo {
           ),
           AppRoute.helpCenter.route(),
           AppRoute.notifications.route(),
-          AppRoute.fillPersonalInformation.route(),
+          AppRoute.createWeightGoal.route(),
+          AppRoute.editWeightGoal.route(),
           AppRoute.createAppointment.route(),
           AppRoute.mySchedule.route(),
           AppRoute.dietPlan.route(

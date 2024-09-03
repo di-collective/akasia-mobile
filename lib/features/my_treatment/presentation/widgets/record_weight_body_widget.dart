@@ -7,20 +7,23 @@ import '../../../../core/ui/extensions/date_time_extension.dart';
 import '../../../../core/ui/extensions/object_extension.dart';
 import '../../../../core/ui/extensions/string_extension.dart';
 import '../../../../core/ui/extensions/theme_data_extension.dart';
-import '../../../../core/ui/extensions/validation_extension.dart';
 import '../../../../core/ui/widget/buttons/button_widget.dart';
-import '../../../../core/ui/widget/dialogs/confirmation_dialog_widget.dart';
-import '../../../../core/ui/widget/forms/text_form_widget.dart';
+import '../../../../core/ui/widget/forms/weight_text_form_widget.dart';
 
 class RecordWeightBodyWidget extends StatefulWidget {
   final Function() onCancel;
+  final DateTime startDate;
+  final DateTime endDate;
   final Future<void> Function(
     String value,
+    DateTime date,
   ) onSave;
 
   const RecordWeightBodyWidget({
     super.key,
     required this.onCancel,
+    required this.startDate,
+    required this.endDate,
     required this.onSave,
   });
 
@@ -32,6 +35,7 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _weightTextController = TextEditingController();
 
+  late DateTime _nowDate;
   late DateTime _selectedDate;
 
   @override
@@ -42,7 +46,8 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
   }
 
   void _init() {
-    _selectedDate = DateTime.now();
+    _nowDate = DateTime.now();
+    _selectedDate = _nowDate;
   }
 
   @override
@@ -61,8 +66,8 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          height: 58,
           padding: EdgeInsets.symmetric(
-            vertical: 4,
             horizontal: context.paddingHorizontal,
           ),
           decoration: BoxDecoration(
@@ -73,8 +78,12 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
           ),
           child: Row(
             children: [
-              GestureDetector(
+              ButtonWidget(
                 onTap: widget.onCancel,
+                height: 40,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 0,
+                ),
                 child: SizedBox(
                   width: 50,
                   child: Text(
@@ -86,9 +95,6 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +105,9 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
                         AssetIconsPath.icChevronLeft,
                         height: 14,
                         colorFilter: ColorFilter.mode(
-                          colorScheme.onPrimary,
+                          _isDisabledDecreaseDate
+                              ? colorScheme.onPrimary.withOpacity(0.4)
+                              : colorScheme.onPrimary,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -122,7 +130,9 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
                         AssetIconsPath.icChevronRight,
                         height: 14,
                         colorFilter: ColorFilter.mode(
-                          colorScheme.onPrimary,
+                          _isDisabledIncreaseDate
+                              ? colorScheme.onPrimary.withOpacity(0.4)
+                              : colorScheme.onPrimary,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -130,19 +140,12 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
                   ],
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-
-                  widget.onSave(
-                    _weightTextController.text,
-                  );
-                },
+              ButtonWidget(
+                height: 40,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 0,
+                ),
+                onTap: _onSave,
                 child: SizedBox(
                   width: 50,
                   child: Text(
@@ -170,33 +173,13 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
               Form(
                 key: _formKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: TextFormWidget(
+                child: WeightTextFormWidget(
+                  context: context,
                   controller: _weightTextController,
+                  isRequired: true,
                   autofocus: true,
-                  suffixText: "kgs",
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: false,
-                  ),
-                  validator: (_) {
-                    return _weightTextController.validateOnlyNumber(
-                      context: context,
-                      isRequired: true,
-                      minimumAmount: 1,
-                    );
-                  },
+                  onEditingComplete: _onSave,
                 ),
-              ),
-              const SizedBox(
-                height: 36,
-              ),
-              ButtonWidget(
-                text: context.locale.deleteItem(
-                  context.locale.weight,
-                ),
-                width: context.width,
-                textColor: colorScheme.primary,
-                backgroundColor: colorScheme.primaryTonal,
-                onTap: _onDeleteWeight,
               ),
             ],
           ),
@@ -216,7 +199,20 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
     return result ?? '';
   }
 
+  bool get _isDisabledDecreaseDate {
+    return _selectedDate.isSame(
+      other: widget.startDate,
+      withoutHour: true,
+      withoutMinute: true,
+      withoutSecond: true,
+    );
+  }
+
   void _onDecreaseDate() {
+    if (_isDisabledDecreaseDate) {
+      return;
+    }
+
     setState(() {
       _selectedDate = _selectedDate.subtract(
         const Duration(days: 1),
@@ -226,12 +222,11 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
 
   Future<void> _onDate() async {
     try {
-      final currentDate = DateTime.now();
       final result = await showDatePicker(
         context: context,
         initialDate: _selectedDate,
-        firstDate: currentDate.addDays(-365), // TODO: Change this from API
-        lastDate: currentDate.addDays(365), // TODO: Change this from API
+        firstDate: widget.startDate,
+        lastDate: _nowDate,
       );
       if (result == null || result == _selectedDate) {
         return;
@@ -247,7 +242,20 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
     }
   }
 
+  bool get _isDisabledIncreaseDate {
+    return _selectedDate.isSame(
+      other: _nowDate,
+      withoutHour: true,
+      withoutMinute: true,
+      withoutSecond: true,
+    );
+  }
+
   void _onIncreaseDate() {
+    if (_isDisabledIncreaseDate) {
+      return;
+    }
+
     setState(() {
       _selectedDate = _selectedDate.add(
         const Duration(days: 1),
@@ -255,55 +263,14 @@ class _RecordWeightBodyWidgetState extends State<RecordWeightBodyWidget> {
     });
   }
 
-  Future<void> _onDeleteWeight() async {
-    try {
-      // show confirmation dialog
-      final isConfirm = await showDialog<bool?>(
-        context: context,
-        builder: (context) {
-          return ConfirmationDialogWidget(
-            title: context.locale.deleteItem(
-              context.locale.weight,
-            ),
-            description: context.locale.deleteWeightConfirmation,
-            confirmText: context.locale.delete,
-            cancelText: context.locale.cancel,
-          );
-        },
-      );
-      if (isConfirm != true) {
-        return;
-      }
-
-      // close keyboard
-      context.closeKeyboard;
-
-      // show full screen loading
-      context.showFullScreenLoading();
-
-      // TODO: Implement delete weight
-      await Future.delayed(
-        const Duration(seconds: 1),
-      );
-
-      // show success toast
-      context.showSuccessToast(
-        message: context.locale.successItem(
-          context.locale.deleteItem(
-            context.locale.weight,
-          ),
-        ),
-      );
-
-      // close dialog
-      widget.onCancel();
-    } catch (error) {
-      context.showWarningToast(
-        message: error.message(context),
-      );
-    } finally {
-      // hide full screen loading
-      context.hideFullScreenLoading;
+  void _onSave() {
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+
+    widget.onSave(
+      _weightTextController.text,
+      _selectedDate,
+    );
   }
 }

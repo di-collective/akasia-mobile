@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../common/local_picker_info.dart';
 import '../../utils/service_locator.dart';
 import '../widget/dialogs/toast_info.dart';
 import '../widget/loadings/cubit/full_screen_loading/full_screen_loading_cubit.dart';
@@ -49,11 +50,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showErrorToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.error,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -62,11 +65,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showSuccessToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.success,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -75,11 +80,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showWarningToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.warning,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -88,11 +95,13 @@ extension BuildContextExtension on BuildContext {
 
   Future<bool?> showInfoToast({
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await _showToast(
         type: ToastType.info,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -102,12 +111,14 @@ extension BuildContextExtension on BuildContext {
   Future<bool?> _showToast({
     required ToastType type,
     required String message,
+    int? timeInSecForIosWeb,
   }) async {
     try {
       return await sl<ToastInfo>().show(
         context: this,
         type: type,
         message: message,
+        timeInSecForIosWeb: timeInSecForIosWeb,
       );
     } catch (_) {
       rethrow;
@@ -149,6 +160,23 @@ extension BuildContextExtension on BuildContext {
       return ScreenHeightType.medium;
     } else {
       return ScreenHeightType.large;
+    }
+  }
+
+  Future<DateTime?> selectDate({
+    DateTime? initialDate,
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) async {
+    try {
+      return await sl<LocalPickerInfo>().selectDate(
+        context: this,
+        initialDate: initialDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+      );
+    } catch (_) {
+      rethrow;
     }
   }
 }

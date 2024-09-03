@@ -9,6 +9,7 @@ class RadioWidget<T> extends StatelessWidget {
   final void Function(T?)? onChanged;
   final String? title;
   final TextStyle? titleStyle;
+  final int? maxLines;
 
   const RadioWidget({
     super.key,
@@ -17,6 +18,7 @@ class RadioWidget<T> extends StatelessWidget {
     this.onChanged,
     this.title,
     this.titleStyle,
+    this.maxLines,
   });
 
   @override
@@ -37,22 +39,20 @@ class RadioWidget<T> extends StatelessWidget {
             }
 
             // inactive
-            return colorScheme.surfaceDim;
+            return colorScheme.outlineDim;
           }),
           onChanged: onChanged,
         ),
         if (title != null && title!.isNotEmpty) ...[
           Text(
             title!,
+            maxLines: maxLines,
             style: titleStyle ??
                 textTheme.bodyLarge.copyWith(
                   color: colorScheme.onSurfaceDim,
                 ),
           ),
         ],
-        const SizedBox(
-          width: 16,
-        ),
       ],
     );
   }

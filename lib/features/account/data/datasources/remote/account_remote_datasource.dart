@@ -19,7 +19,7 @@ abstract class AccountRemoteDataSource {
     required File image,
     required String? userId,
   });
-  Future<void> updateProfile({
+  Future<ProfileModel> updateProfile({
     required String accessToken,
     required ProfileEntity profile,
   });
@@ -108,7 +108,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
   }
 
   @override
-  Future<void> updateProfile({
+  Future<ProfileModel> updateProfile({
     required String accessToken,
     required ProfileEntity profile,
   }) async {
@@ -136,6 +136,10 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         },
       );
       Logger.success('updateProfile result: $result');
+
+      return ProfileModel.fromJson(
+        result.data?['data'],
+      );
     } catch (error) {
       Logger.error('updateProfile error: $error');
 

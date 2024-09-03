@@ -1,3 +1,4 @@
+import 'package:akasia365mc/features/my_treatment/di/depedency_injection.dart';
 import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -23,7 +24,6 @@ import '../../features/health/di/depedency_injection.dart';
 import '../../features/main/di/depedency_inject.dart';
 import '../../features/notification/di/depedency_injection.dart';
 import '../../features/partner_service/di/depedency_injection.dart';
-import '../../features/personal_information/di/depedency_injection.dart';
 import '../../features/ratings/di/depedency_injection.dart';
 
 Future<void> init() async {
@@ -47,8 +47,6 @@ Future<void> init() async {
 
   NotificationDI.inject();
 
-  PersonalInformationDI.inject();
-
   AppointmentDI.inject();
 
   DietPlanDI.inject();
@@ -56,6 +54,8 @@ Future<void> init() async {
   HealthDI.inject();
 
   PartnerServiceDI.inject();
+
+  MyTreatmentDI.inject();
 }
 
 Future<void> _injectPackages() async {

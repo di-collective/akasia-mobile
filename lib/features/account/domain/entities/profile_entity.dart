@@ -93,6 +93,8 @@ class ProfileEntity extends Equatable {
     );
   }
 
+  bool get isNull => this == const ProfileEntity();
+
   @override
   List<Object?> get props => [
         userId,

@@ -82,7 +82,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<void> updateProfile({
+  Future<ProfileEntity> updateProfile({
     required ProfileEntity profile,
   }) async {
     if (await networkInfo.isConnected) {
@@ -94,7 +94,7 @@ class AccountRepositoryImpl implements AccountRepository {
           );
         }
 
-        await accountRemoteDataSource.updateProfile(
+        return await accountRemoteDataSource.updateProfile(
           accessToken: accessToken,
           profile: profile,
         );

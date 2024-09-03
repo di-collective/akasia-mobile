@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
-import 'package:intl/intl.dart';
 
 import '../../utils/logger.dart';
+import 'string_extension.dart';
 
 extension DynamicExtension on dynamic {
   /// Convert dynamic to double
@@ -43,7 +43,7 @@ extension DynamicExtension on dynamic {
       DateTime? result;
 
       if (this is String) {
-        result = DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(this);
+        result = (this as String).toDateTime();
       }
 
       Logger.success('dynamicToDateTime result $result');
